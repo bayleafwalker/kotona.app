@@ -87,8 +87,16 @@ Useful commands:
 - `npm run deploy` builds and deploys the Worker
 - `npm run cf-typegen` regenerates `worker-configuration.d.ts` after binding changes
 
-The Cloudflare dashboard can manage the custom domain attachment itself. This
-repo only defines the Worker runtime and build/deploy settings.
+Production deploys are handled by `.github/workflows/deploy.yml` after the `ci`
+workflow succeeds on `main`.
+
+Set these GitHub repository secrets before expecting deploys to run:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+The Cloudflare dashboard can still manage the custom domain attachment itself.
+This repo defines the Worker runtime, build settings, and deployment path.
 
 CI lives in `.github/workflows/ci.yml` and runs install, format check, lint,
 Astro checks, and the production build.
