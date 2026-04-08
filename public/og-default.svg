@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">kotona.app</title>
+  <desc id="desc">Writing and technical notes from kotona.app.</desc>
+  <rect width="1200" height="630" fill="#f7f4ec" />
+  <rect x="84" y="84" width="1032" height="462" rx="28" fill="#fbf8f1" stroke="#d8d0c2" />
+  <text x="140" y="240" fill="#1f2520" font-size="74" font-family="Georgia, serif">kotona.app</text>
+  <text x="140" y="322" fill="#31584c" font-size="30" font-family="'IBM Plex Sans', 'Avenir Next', sans-serif">
+    solution analyst / data engineer
+  </text>
+  <text x="140" y="396" fill="#5f675f" font-size="28" font-family="Georgia, serif">
+    writing, notes, failure write-ups
+  </text>
+  <text x="140" y="454" fill="#5f675f" font-size="28" font-family="Georgia, serif">
+    infrastructure-first, static, intentionally small
+  </text>
+</svg>

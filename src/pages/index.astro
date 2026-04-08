@@ -1,0 +1,96 @@
+---
+import { getCollection } from "astro:content";
+
+import EntryCard from "../components/EntryCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getVisibleEntries, sortByDateAndTitle } from "../lib/content";
+import { getContactLinks, getHomeTitle, siteConfig } from "../site";
+
+const caseStudies = sortByDateAndTitle(await getCollection("caseStudies"));
+const visibleCaseStudies = getVisibleEntries(caseStudies);
+const featuredCaseStudies = visibleCaseStudies.slice(0, 3);
+const posts = sortByDateAndTitle(await getCollection("posts"));
+const visiblePosts = getVisibleEntries(posts);
+const recentPosts = visiblePosts.slice(0, 5);
+const contactLinks = getContactLinks();
+const homeTitle = getHomeTitle();
+---
+
+<BaseLayout>
+  <section class="intro-panel">
+    <p class="eyebrow">kotona.app</p>
+    <h1 class="page-title">{homeTitle}</h1>
+    <p class="page-copy">{siteConfig.profile.summary}</p>
+    <p class="page-copy">
+      The first batch is drawn from repos under /projects/dev. A few had enough
+      ADRs, roadmaps, and operational notes to support a fair retelling. The
+      rest can wait until they stop being mostly scaffolding.
+    </p>
+
+    {
+      contactLinks.length > 0 ? (
+        <ul class="link-row" aria-label="External links">
+          {contactLinks.map((link) => (
+            <li>
+              <a class="link-chip" href={link.href} rel="noreferrer">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : null
+    }
+  </section>
+
+  <section class="page-section">
+    <div class="section-heading">
+      <h2>Case studies</h2>
+      <a href="/case-studies/">All case studies</a>
+    </div>
+
+    {
+      featuredCaseStudies.length > 0 ? (
+        <div class="entry-list">
+          {featuredCaseStudies.map((entry) => (
+            <EntryCard
+              href={`/case-studies/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              date={entry.data.date}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No published case studies yet.</p>
+      )
+    }
+  </section>
+
+  <section class="page-section">
+    <div class="section-heading">
+      <h2>Recent writing</h2>
+      <a href="/writing/">All writing</a>
+    </div>
+
+    {
+      recentPosts.length > 0 ? (
+        <div class="entry-list">
+          {recentPosts.map((entry) => (
+            <EntryCard
+              href={`/writing/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              date={entry.data.date}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No published posts yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>

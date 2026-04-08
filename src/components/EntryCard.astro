@@ -1,0 +1,38 @@
+---
+import { formatDate } from "../lib/content";
+
+type Props = {
+  href: string;
+  title: string;
+  summary?: string;
+  tags?: string[];
+  date: Date;
+  draft?: boolean;
+};
+
+const { href, title, summary, tags = [], date, draft = false } = Astro.props;
+const formattedDate = formatDate(date);
+---
+
+<article class="entry-card">
+  <div class="entry-meta">
+    {draft ? <span class="pill pill-muted">Draft</span> : null}
+    <time class="pill" datetime={date.toISOString()}>{formattedDate}</time>
+  </div>
+
+  <h2 class="entry-title">
+    <a href={href}>{title}</a>
+  </h2>
+
+  {summary ? <p class="entry-summary">{summary}</p> : null}
+
+  {
+    tags.length > 0 ? (
+      <ul class="tag-list" aria-label="Tags">
+        {tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+    ) : null
+  }
+</article>

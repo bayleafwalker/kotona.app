@@ -1,0 +1,35 @@
+---
+import { getContactLinks } from "../site";
+
+const contactLinks = getContactLinks();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer-inner">
+    <div>
+      <p class="footer-title">Static, small, and slightly overbuilt.</p>
+      <p class="footer-copy">
+        Posts arrive irregularly. The machinery stays ready.
+      </p>
+    </div>
+
+    {
+      contactLinks.length > 0 ? (
+        <ul class="footer-links" aria-label="External links">
+          {contactLinks.map((link) => (
+            <li>
+              <a href={link.href} rel="noreferrer">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="footer-copy footer-note">
+          GitHub, LinkedIn, and email render here once real values are
+          configured.
+        </p>
+      )
+    }
+  </div>
+</footer>

@@ -1,0 +1,29 @@
+---
+type Heading = {
+  depth: number;
+  slug: string;
+  text: string;
+};
+
+type Props = {
+  headings: Heading[];
+};
+
+const { headings } = Astro.props;
+const visibleHeadings = headings.filter((heading) => heading.depth <= 3);
+---
+
+{
+  visibleHeadings.length > 0 ? (
+    <aside class="toc-panel" aria-label="Table of contents">
+      <p class="toc-title">On this page</p>
+      <ol class="toc-list">
+        {visibleHeadings.map((heading) => (
+          <li class:list={{ [`depth-${heading.depth}`]: true }}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  ) : null
+}

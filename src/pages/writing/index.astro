@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+
+import EntryCard from "../../components/EntryCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+
+const posts = sortByDateAndTitle(await getCollection("posts"));
+const visiblePosts = getVisibleEntries(posts);
+---
+
+<BaseLayout
+  title="Writing"
+  description="Posts, notes, and failure write-ups in reverse chronological order."
+>
+  <section class="page-intro">
+    <p class="eyebrow">Writing</p>
+    <h1 class="page-title">Posts, notes, and failure write-ups.</h1>
+    <p class="page-copy">
+      Everything stays flat and chronological. If the archive is short, that is
+      an honest reflection of how often something is worth publishing.
+    </p>
+  </section>
+
+  <section class="page-section">
+    {
+      visiblePosts.length > 0 ? (
+        <div class="entry-list">
+          {visiblePosts.map((entry) => (
+            <EntryCard
+              href={`/writing/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              date={entry.data.date}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No published posts yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>

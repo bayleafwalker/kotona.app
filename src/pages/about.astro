@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getContactLinks, siteConfig } from "../site";
+
+const contactLinks = getContactLinks();
+const { about, location, role } = siteConfig.profile;
+---
+
+<BaseLayout
+  title="About"
+  description="Short context around the site, the work, and the writing cadence."
+>
+  <section class="page-intro">
+    <p class="eyebrow">About</p>
+    <h1 class="page-title">{role}</h1>
+
+    <p class="page-copy">{about}</p>
+
+    <p class="page-copy">
+      The current material is built mostly from repo history: ADRs, planning
+      notes, sprint snapshots, runbooks, and the occasional incident fix that
+      says more than a polished README ever will.
+    </p>
+
+    <p class="page-copy">
+      The recurring themes are plain enough: declarative infrastructure,
+      boundaries that can survive iteration, and a preference for keeping tools
+      in the role they are actually good at. Home Assistant stays an edge
+      runtime. Flux stays the reconciler. A case study only gets published once
+      the repo has enough evidence to support one.
+    </p>
+
+    {location ? <p class="page-copy">Location: {location}</p> : null}
+
+    {
+      contactLinks.length > 0 ? (
+        <ul class="link-row" aria-label="External links">
+          {contactLinks.map((link) => (
+            <li>
+              <a class="link-chip" href={link.href} rel="noreferrer">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="publication-note">
+          GitHub, LinkedIn, and email are supported by the site config and only
+          render once real values are set.
+        </p>
+      )
+    }
+  </section>
+</BaseLayout>
