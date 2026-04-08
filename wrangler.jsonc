@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "kotona-app",
   "main": "./dist/_worker.js/index.js",
-  "compatibility_date": "2026-04-09",
+  "compatibility_date": "2026-04-08",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "preview_urls": true,
@@ -12,6 +12,7 @@
   "kv_namespaces": [
     {
       "binding": "SESSION",
+      "id": "50bfc5aa99b64e638a6350bced0f9a63",
     },
   ],
   "assets": {
