@@ -84,7 +84,7 @@ Useful commands:
 
 - `npm run build` builds the Worker and static assets into `dist/`
 - `npm run preview` builds and starts a local Wrangler preview
-- `npm run deploy` builds and deploys the Worker
+- `npm run deploy` builds, excludes the generated `_worker.js` bundle from static asset upload, and deploys the Worker
 - `npm run cf-typegen` regenerates `worker-configuration.d.ts` after binding changes
 
 Production deploys are handled by `.github/workflows/deploy.yml` after the `ci`

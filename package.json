@@ -10,7 +10,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "npm run build && printf '_worker.js\n' > dist/.assetsignore && wrangler deploy",
     "cf-typegen": "wrangler types",
     "check": "astro check",
     "lint": "eslint .",
