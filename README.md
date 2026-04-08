@@ -10,7 +10,7 @@ they survive compression from work and hobby projects.
 
 - Astro with TypeScript
 - MDX-enabled content collections
-- Static output
+- Cloudflare Worker deployment via Wrangler
 - Minimal custom CSS
 - RSS and sitemap generation
 
@@ -21,6 +21,12 @@ This repo targets Node 20 LTS.
 ```bash
 npm ci
 npm run dev
+```
+
+To preview the deployed Worker behavior locally:
+
+```bash
+npm run preview
 ```
 
 ## Validation
@@ -71,13 +77,18 @@ Draft behavior:
 
 ## Deployment
 
-This repo builds to static files in `dist/`, so it can be hosted on Cloudflare
-Pages or any other static host.
+This repo deploys to Cloudflare Workers using the Astro Cloudflare adapter and
+`wrangler.jsonc` as the deployment source of truth.
 
-Cloudflare Pages settings:
+Useful commands:
 
-- Build command: `npm run build`
-- Output directory: `dist`
+- `npm run build` builds the Worker and static assets into `dist/`
+- `npm run preview` builds and starts a local Wrangler preview
+- `npm run deploy` builds and deploys the Worker
+- `npm run cf-typegen` regenerates `worker-configuration.d.ts` after binding changes
+
+The Cloudflare dashboard can manage the custom domain attachment itself. This
+repo only defines the Worker runtime and build/deploy settings.
 
 CI lives in `.github/workflows/ci.yml` and runs install, format check, lint,
 Astro checks, and the production build.

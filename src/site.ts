@@ -6,7 +6,7 @@ export const siteConfig = {
   defaultOgImage: "/og-default.svg",
   profile: {
     name: "",
-    role: "Solution analyst / data engineer",
+    role: "Solution analyst",
     summary:
       "Mostly declarative infrastructure, operational tooling, and boundary-setting work. The useful part is usually in the trade-offs, not the headline.",
     about:
