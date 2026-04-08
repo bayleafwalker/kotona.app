@@ -1,10 +1,11 @@
+import type { APIRoute } from "astro";
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
 import { getPublishedEntries, sortByDateAndTitle } from "../lib/content";
 import { siteConfig } from "../site";
 
-export async function GET(context) {
+export const GET: APIRoute = async (context) => {
   const posts = sortByDateAndTitle(await getCollection("posts"));
   const published = getPublishedEntries(posts);
 
@@ -20,4 +21,4 @@ export async function GET(context) {
       categories: entry.data.tags,
     })),
   });
-}
+};
