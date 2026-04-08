@@ -1,6 +1,6 @@
 ---
 title: Freezing service boundaries before the demo platform gets ideas
-summary: The recurring risk was building a demo business platform that immediately cheats: shared databases, simulator shortcuts, and infra work outrunning service semantics. The chosen response was to start with versioned service contracts, scenario overlays, and local validation before substantial runtime code, accepting that Phase 0 feels slower in exchange for cleaner later pressure.
+summary: "The recurring risk was building a demo business platform that immediately cheats: shared databases, simulator shortcuts, and infra work outrunning service semantics. The chosen response was to start with versioned service contracts, scenario overlays, and local validation before substantial runtime code, accepting that Phase 0 feels slower in exchange for cleaner later pressure."
 date: 2026-04-06
 draft: false
 project: box

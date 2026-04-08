@@ -19,10 +19,12 @@ const caseStudies = defineCollection({
     ...baseEntrySchema,
     project: z.string().min(1),
     status: z.string().min(1).optional(),
+    repoUrl: z.string().url().optional(),
+    externalUrl: z.string().url().optional(),
   }),
 });
 
 export const collections = {
-  caseStudies,
+  "case-studies": caseStudies,
   posts,
 };
