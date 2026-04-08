@@ -3,21 +3,19 @@
   "name": "kotona-app",
   "main": "./dist/_worker.js/index.js",
   "compatibility_date": "2026-04-09",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
+  "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "preview_urls": true,
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "kv_namespaces": [
     {
-      "binding": "SESSION"
-    }
+      "binding": "SESSION",
+    },
   ],
   "assets": {
     "binding": "ASSETS",
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+  },
 }

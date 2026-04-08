@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+
+import EntryCard from "../../components/EntryCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+
+export const prerender = true;
+
+const allCaseStudies = sortByDateAndTitle(await getCollection("case-studies"));
+const visibleCaseStudies = getVisibleEntries(allCaseStudies);
+const published = visibleCaseStudies.filter((entry) => !entry.data.draft);
+const drafts = import.meta.env.PROD
+  ? []
+  : visibleCaseStudies.filter((entry) => entry.data.draft);
+---
+
+<BaseLayout
+  title="Case studies"
+  description="Long-form technical writeups that focus on context, constraints, implementation choices, and trade-offs."
+>
+  <section class="listing-hero">
+    <p class="eyebrow">Case studies</p>
+    <h1 class="page-title">Decision stories, not portfolio theater.</h1>
+    <p class="page-copy">
+      The goal here is to make judgment visible: what was being solved, what
+      constraints actually mattered, which options were rejected, and how the
+      final implementation was validated.
+    </p>
+  </section>
+
+  <section class="page-section">
+    <div class="section-heading">
+      <h2>Published</h2>
+    </div>
+
+    {
+      published.length > 0 ? (
+        <div class="card-grid">
+          {published.map((entry) => (
+            <EntryCard
+              href={`/case-studies/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              date={entry.data.date}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No published case studies yet.</p>
+      )
+    }
+  </section>
+
+  {
+    drafts.length > 0 ? (
+      <section class="page-section">
+        <div class="section-heading">
+          <h2>Draft scaffolds</h2>
+        </div>
+
+        <div class="card-grid">
+          {drafts.map((entry) => (
+            <EntryCard
+              href={`/case-studies/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              date={entry.data.date}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+</BaseLayout>
