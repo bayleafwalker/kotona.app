@@ -10,6 +10,8 @@ import {
 } from "../../lib/content";
 import { siteConfig } from "../../site";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const entries = sortByDateAndTitle(await getCollection("posts"));
   const visibleEntries = getVisibleEntries(entries);
