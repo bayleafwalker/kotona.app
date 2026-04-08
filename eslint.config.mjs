@@ -2,7 +2,7 @@ import js from "@eslint/js";
 import astro from "eslint-plugin-astro";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default [
   {
     ignores: [".astro", "dist", "node_modules"],
   },
@@ -16,4 +16,4 @@ export default tseslint.config(
       sourceType: "module",
     },
   },
-);
+];
