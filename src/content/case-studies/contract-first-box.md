@@ -2,6 +2,7 @@
 title: Freezing service boundaries before the demo platform gets ideas
 summary: Box risked becoming a demo platform that cheats with shared databases and simulator shortcuts. The repo answers by freezing versioned service contracts first, keeping scenarios as overlays, and requiring local validation before substantial runtime code.
 date: 2026-04-06
+contextWindow: Phase 0 platform work, 2026
 draft: false
 project: box
 status: Phase 0 complete
@@ -99,9 +100,9 @@ claims about runtime behavior because the three-service kernel and simulator are
 still future phases. The honest reading is that the design discipline exists and
 the runtime proof is still to come.
 
-[TODO: clarify whether NATS JetStream is a permanent eventing choice or only a
-Phase 0 local dependency for the compose-based stack. The current material shows
-it in local setup but does not present it as a settled architectural decision.]
+One architectural point is still not fully closed: the reviewed material shows
+NATS JetStream in the local stack, but not clearly enough to treat it as a
+settled long-term eventing choice rather than a Phase 0 convenience.
 
 ## Trade-offs and limits
 

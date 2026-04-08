@@ -1,6 +1,7 @@
 ---
 title: Gatus does not need to monitor everything
 date: 2026-04-08T17:00:00Z
+contextWindow: cluster monitoring work, 2025-2026
 draft: false
 summary: "The monitoring split that held up best was also the less ambitious one: keep Gatus on in-cluster checks, keep edge probes in blackbox-exporter, and stop trying to make one checker own every route shape."
 tags:

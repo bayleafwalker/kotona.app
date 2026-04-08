@@ -1,6 +1,7 @@
 ---
 title: You can fix contract drift or you can pretend the frontend is authoritative
 date: 2026-04-08T12:00:00Z
+contextWindow: contract governance work, 2025-2026
 draft: false
 summary: Backend-owned contract exports are mainly a way to stop arguing with a stale frontend view of reality. The useful part is not code generation by itself but making the backend the source of truth and then checking the drift explicitly.
 tags:
@@ -61,8 +62,10 @@ The goal is not really to have prettier generated code. The goal is to remove
 the quiet ambiguity about who is allowed to define what the API and publication
 surface currently are.
 
-`[TODO: clarify whether there were concrete incidents of frontend/backed drift
-before this workstream, or whether the design was mostly preventative.]`
+What is still less clear is whether this work followed concrete incidents of
+frontend and backend drift or whether it was primarily preventative. The
+material is stronger on why the boundary matters than on one specific failure
+that forced it.
 
 Either answer would still make the note worthwhile. Preventing a predictable
 class of nonsense before it becomes expensive is a respectable use of effort.

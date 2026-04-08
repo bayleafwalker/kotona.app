@@ -5,13 +5,13 @@ export const siteConfig = {
     "Case studies and technical notes from declarative infrastructure, household systems, and contract-first platform work.",
   defaultOgImage: "/og-default.svg",
   profile: {
-    name: "",
+    name: "Juha Huotari",
     role: "Solution analyst",
     summary:
-      "Mostly declarative infrastructure, operational tooling, and boundary-setting work. The useful part is usually in the trade-offs, not the headline.",
+      "Solution analyst in Helsinki. I work on data platforms, integration-heavy systems, and infrastructure that benefits from being slightly harder to misuse.",
     about:
-      "Most of the material here starts as ADRs, runbooks, sprint notes, or an awkward fix committed after the problem became expensive enough. This site is where some of that gets compressed into something readable.",
-    location: "",
+      "I’m Juha Huotari, a solution analyst based in Helsinki. Day to day I work around data platforms, requirements, integration boundaries, and the awkward places where useful systems become expensive to reason about. This site holds selected case studies and notes from that work and from adjacent personal systems work when the lesson transfers.",
+    location: "Helsinki",
   },
   externalLinks: {
     github: "https://github.com/bayleafwalker",
@@ -26,10 +26,6 @@ export const siteNavigation = [
   { href: "/writing/", label: "Writing" },
   { href: "/about/", label: "About" },
 ] as const;
-
-export function getHomeTitle() {
-  return siteConfig.profile.name || siteConfig.profile.role;
-}
 
 export function getContactLinks() {
   const { github, linkedin, email } = siteConfig.externalLinks;

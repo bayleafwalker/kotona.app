@@ -2,6 +2,7 @@
 title: Turning household analytics into an operating platform
 summary: A household analytics project had outgrown dashboards, but turning it into Home Assistant logic or many services would have hurt the semantics. The repo instead moves toward a modular monolith with Home Assistant as a partner layer and a staged path toward planning and policy.
 date: 2026-04-08
+contextWindow: platform direction work, 2025-2026
 draft: false
 project: homelab-analytics
 status: Stage 2 complete; Stages 3-5 partial
@@ -34,10 +35,9 @@ runtime, device hub, family-facing UI, and primary actuation surface, while the
 platform keeps the cross-domain semantics that Home Assistant does not model
 well.
 
-[TODO: clarify when the identity shift from analytics platform to operating
-platform first became visible in runtime behavior rather than only in the
-documentation. The reviewed material is stronger on direction than on the exact
-turning point.]
+One part of the chronology is still less precise than I would like: the shift
+from analytics platform to operating platform is clearer in the roadmap and
+direction documents than in one clean runtime turning point.
 
 ## Problem
 

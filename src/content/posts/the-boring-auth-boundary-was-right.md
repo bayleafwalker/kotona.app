@@ -1,6 +1,7 @@
 ---
 title: The boring auth boundary was right
 date: 2026-04-08T16:00:00Z
+contextWindow: auth hardening work, 2025-2026
 draft: false
 summary: Homelab analytics had enough auth surface to accidentally grow a second identity product. The useful decision was to keep identity proof upstream, keep authorization local, and demote local login to a narrow break-glass path.
 tags:

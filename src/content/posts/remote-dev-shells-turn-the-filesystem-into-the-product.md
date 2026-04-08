@@ -1,6 +1,7 @@
 ---
 title: Remote dev shells turn the filesystem into the product
 date: 2026-04-08T14:00:00Z
+contextWindow: remote shell cutover work, 2025-2026
 draft: false
 summary: The interesting part of the remote dev shell cutover was not SSH or code-server. It was moving the real working state onto shared storage without corrupting repo-local databases or pretending two writable trees could coexist peacefully.
 tags:
@@ -77,9 +78,9 @@ Remote development stops being "just another workload" as soon as the important
 state is no longer disposable. After that, the storage layout, migration order,
 and write-exclusivity rules matter at least as much as the shell image.
 
-`[TODO: confirm whether the workstation bind-mount cutover was completed exactly
-as the runbook describes, or whether the final state diverged in some practical
-way.]`
+One operational detail is still slightly open: the runbook makes the intended
+workstation cutover clear, but the material I reviewed is better at describing
+the plan than at proving the final state matched it exactly.
 
 Either way, the design pressure is clear. Once the filesystem carries repo code,
 credentials, worktrees, and local execution state, it is not a plumbing detail

@@ -1,6 +1,7 @@
 ---
 title: Compatibility reports should be a little rude
 date: 2026-04-08T15:00:00Z
+contextWindow: contract governance work, 2025-2026
 draft: false
 summary: Backend-owned contracts only become useful release artifacts once the compatibility tooling is conservative enough to complain about real breakage instead of politely missing it.
 tags:
@@ -75,10 +76,10 @@ That is exactly why I like the approach. The tool is not trying to replace
 judgment. It is trying to make weak judgment harder to hide.
 
 If there is one small follow-up I would still want, it is a better sense of how
-often these reports actually changed a release decision rather than just being
-attached to one. `[TODO: clarify whether the current workflow has already caught
-breaking drift before release, or whether the value so far is mainly defensive
-and future-facing.]`
+often these reports have already changed a release decision rather than merely
+strengthening the process before that kind of breakage becomes routine. The
+repo is stronger on why the checks matter than on a specific release they have
+already blocked.
 
 Even without that, the note holds up.
 

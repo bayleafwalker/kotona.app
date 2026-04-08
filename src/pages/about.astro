@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { getContactLinks, siteConfig } from "../site";
 
 const contactLinks = getContactLinks();
-const { about, location, role } = siteConfig.profile;
+const { about, name } = siteConfig.profile;
 ---
 
 <BaseLayout
@@ -12,25 +12,17 @@ const { about, location, role } = siteConfig.profile;
 >
   <section class="page-intro">
     <p class="eyebrow">About</p>
-    <h1 class="page-title">{role}</h1>
+    <h1 class="page-title">{name}</h1>
 
     <p class="page-copy">{about}</p>
 
     <p class="page-copy">
-      The current material is built mostly from repo history: ADRs, planning
-      notes, sprint snapshots, runbooks, and the occasional incident fix that
-      says more than a polished README ever will.
+      Most material here starts as ADRs, planning notes, sprint snapshots,
+      runbooks, and the occasional incident fix that says more than a polished
+      README ever will. The recurring themes are declarative infrastructure,
+      integration boundaries that can survive iteration, and a preference for
+      keeping tools in the role they are actually good at.
     </p>
-
-    <p class="page-copy">
-      The recurring themes are plain enough: declarative infrastructure,
-      boundaries that can survive iteration, and a preference for keeping tools
-      in the role they are actually good at. Home Assistant stays an edge
-      runtime. Flux stays the reconciler. A case study only gets published once
-      the repo has enough evidence to support one.
-    </p>
-
-    {location ? <p class="page-copy">Location: {location}</p> : null}
 
     {
       contactLinks.length > 0 ? (

@@ -51,10 +51,19 @@ const formattedDate = formatDate(entry.data.date);
 
         <div class="entry-meta">
           {entry.data.draft ? <span class="pill pill-muted">Draft</span> : null}
-          <time class="pill" datetime={entry.data.date.toISOString()}>
-            {formattedDate}
-          </time>
         </div>
+
+        {
+          formattedDate || entry.data.contextWindow ? (
+            <p class="content-context">
+              {formattedDate ? `Published ${formattedDate}` : null}
+              {formattedDate && entry.data.contextWindow ? " · " : null}
+              {entry.data.contextWindow
+                ? `Context window: ${entry.data.contextWindow}`
+                : null}
+            </p>
+          ) : null
+        }
 
         {
           entry.data.tags.length > 0 ? (
@@ -66,6 +75,8 @@ const formattedDate = formatDate(entry.data.date);
           ) : null
         }
       </header>
+
+      <ContentToc headings={headings} />
 
       {
         entry.data.draft ? (
@@ -80,7 +91,5 @@ const formattedDate = formatDate(entry.data.date);
         <Content />
       </div>
     </article>
-
-    <ContentToc headings={headings} />
   </section>
 </BaseLayout>

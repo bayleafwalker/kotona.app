@@ -1,6 +1,7 @@
 ---
 title: Local execution state should stay local
 date: 2026-04-08T13:00:00Z
+contextWindow: workflow tooling work, 2025-2026
 draft: false
 summary: The sprintctl and kctl workflow is useful largely because it does not pretend every intermediate agent artifact belongs in Git. Live state stays local, committed artifacts stay small, and promotion has to be deliberate.
 tags:

@@ -2,6 +2,7 @@
 title: Running a homelab cluster as a Git repository, not as muscle memory
 summary: Appservice is less about bootstrapping Kubernetes than keeping day-two changes, secrets, and upgrades recoverable. The repo uses a strict Flux, Talos, and SOPS operating model with explicit runbooks, trading convenience for an auditable recovery story.
 date: 2026-04-07
+contextWindow: cluster operations, 2025-2026
 draft: false
 project: appservice
 status: Active operations repo

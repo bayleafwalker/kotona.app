@@ -1,6 +1,7 @@
 ---
 title: A GitOps rollback needs time to reach Git
 date: 2026-04-08T18:00:00Z
+contextWindow: cluster operations, 2025-2026
 draft: false
 summary: A live rollback fixed a crashlooping workload, but the more interesting part was needing to suspend reconciliation long enough for the fix to become the desired state instead of a temporary lie.
 tags:
@@ -68,9 +69,9 @@ remaining follow-up. That is more useful than pretending the live patch never
 happened.
 
 There is still one unresolved part I would want to close before claiming the
-incident is fully understood: `[TODO: confirm what changed in the bad image
-revision beyond the observed regression and the fact that the earlier revision
-stopped crashing.]`
+incident is fully understood: the reviewed material is clear about which image
+revision regressed and which revision recovered, but not yet about what changed
+inside the bad image strongly enough to cause the crashloop.
 
 That gap does not block the operational conclusion. The service came back, the
 dangerous state was contained, and the remaining work is procedural rather than

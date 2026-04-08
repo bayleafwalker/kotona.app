@@ -4,6 +4,7 @@ const baseEntrySchema = {
   title: z.string().min(1),
   summary: z.string().max(280).optional(),
   date: z.coerce.date(),
+  contextWindow: z.string().min(1).optional(),
   tags: z.array(z.string().min(1)).default([]),
   draft: z.boolean().default(true),
 };
