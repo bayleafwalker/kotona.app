@@ -1,6 +1,6 @@
 ---
 title: Turning household analytics into an operating platform
-summary: A household data project had outgrown descriptive dashboards, but collapsing it into Home Assistant or a small fleet of services would have made the semantics worse. The chosen direction was a modular monolith with Home Assistant as a first-class partner layer, explicit semantic contracts, and a staged roadmap from reporting toward planning, simulation, and policy.
+summary: A household analytics project had outgrown dashboards, but turning it into Home Assistant logic or many services would have hurt the semantics. The repo instead moves toward a modular monolith with Home Assistant as a partner layer and a staged path toward planning and policy.
 date: 2026-04-08
 draft: false
 project: homelab-analytics
