@@ -58,8 +58,19 @@ const relatedLinks = [
               <span class="pill pill-accent">{entry.data.status}</span>
             ) : null
           }
-          {formattedDate ? <span class="pill">{formattedDate}</span> : null}
         </div>
+
+        {
+          formattedDate || entry.data.contextWindow ? (
+            <p class="content-context">
+              {formattedDate ? `Published ${formattedDate}` : null}
+              {formattedDate && entry.data.contextWindow ? " · " : null}
+              {entry.data.contextWindow
+                ? `Context window: ${entry.data.contextWindow}`
+                : null}
+            </p>
+          ) : null
+        }
 
         <ul class="tag-list" aria-label="Tags">
           {entry.data.tags.map((tag) => <li>{tag}</li>)}
@@ -80,6 +91,8 @@ const relatedLinks = [
         }
       </header>
 
+      <ContentToc headings={headings} />
+
       {
         entry.data.draft ? (
           <p class="draft-note">
@@ -94,7 +107,5 @@ const relatedLinks = [
         <Content />
       </div>
     </article>
-
-    <ContentToc headings={headings} />
   </section>
 </BaseLayout>
