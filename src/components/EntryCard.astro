@@ -30,7 +30,9 @@ const showMeta = draft || Boolean(formattedDate);
       <div class="entry-meta">
         {draft ? <span class="pill pill-muted">Draft</span> : null}
         {formattedDate && date ? (
-          <time class="pill" datetime={date.toISOString()}>{formattedDate}</time>
+          <time class="pill" datetime={date.toISOString()}>
+            {formattedDate}
+          </time>
         ) : null}
       </div>
     ) : null
