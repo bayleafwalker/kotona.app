@@ -1,23 +1,25 @@
 import { defineCollection, z } from "astro:content";
 
-const baseEntrySchema = {
+const sharedEntrySchema = {
   title: z.string().min(1),
   summary: z.string().max(280).optional(),
   date: z.coerce.date(),
-  contextWindow: z.string().min(1).optional(),
   tags: z.array(z.string().min(1)).default([]),
   draft: z.boolean().default(true),
 };
 
 const posts = defineCollection({
   type: "content",
-  schema: z.object(baseEntrySchema),
+  schema: z.object({
+    ...sharedEntrySchema,
+    contextWindow: z.string().min(1).optional(),
+  }),
 });
 
-const caseStudies = defineCollection({
+const projects = defineCollection({
   type: "content",
   schema: z.object({
-    ...baseEntrySchema,
+    ...sharedEntrySchema,
     project: z.string().min(1),
     status: z.string().min(1).optional(),
     repoUrl: z.string().url().optional(),
@@ -26,6 +28,6 @@ const caseStudies = defineCollection({
 });
 
 export const collections = {
-  "case-studies": caseStudies,
+  projects,
   posts,
 };

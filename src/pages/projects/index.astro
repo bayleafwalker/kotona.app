@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+
+import EntryCard from "../../components/EntryCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+
+export const prerender = true;
+
+const allProjects = sortByDateAndTitle(await getCollection("projects"));
+const visibleProjects = getVisibleEntries(allProjects);
+const published = visibleProjects.filter((entry) => !entry.data.draft);
+const drafts = import.meta.env.PROD
+  ? []
+  : visibleProjects.filter((entry) => entry.data.draft);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Project summaries that explain what each repository is for, how it is shaped, and where it currently stands."
+>
+  <section class="listing-hero">
+    <p class="eyebrow">Projects</p>
+    <h1 class="page-title">Repository work, described plainly.</h1>
+    <p class="page-copy">
+      Each page is a stable summary of a repo: what it does, how the system is
+      shaped, and what state the work is in. Writing covers narrower arguments,
+      implementation notes, and decisions that are better left as notes.
+    </p>
+  </section>
+
+  <section class="page-section">
+    <div class="section-heading">
+      <h2>Published</h2>
+    </div>
+
+    {
+      published.length > 0 ? (
+        <div class="card-grid">
+          {published.map((entry) => (
+            <EntryCard
+              href={`/projects/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              draft={entry.data.draft}
+              showDate={false}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No published projects yet.</p>
+      )
+    }
+  </section>
+
+  {
+    drafts.length > 0 ? (
+      <section class="page-section">
+        <div class="section-heading">
+          <h2>Drafts</h2>
+        </div>
+
+        <div class="card-grid">
+          {drafts.map((entry) => (
+            <EntryCard
+              href={`/projects/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              draft={entry.data.draft}
+              showDate={false}
+            />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+</BaseLayout>

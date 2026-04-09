@@ -272,6 +272,11 @@ main {
   max-width: var(--reading-width);
 }
 
+.project-panel,
+.project-shell .prose {
+  max-width: 46rem;
+}
+
 .content-back-link {
   display: inline-flex;
   margin-bottom: 1rem;
@@ -289,6 +294,15 @@ main {
   max-width: 18ch;
   font-size: clamp(2rem, 3.2vw, 3.25rem);
   line-height: 1.04;
+}
+
+.project-shell .content-title {
+  max-width: 20ch;
+}
+
+.project-shell .content-header {
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .content-context {

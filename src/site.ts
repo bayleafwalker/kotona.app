@@ -2,7 +2,7 @@ export const siteConfig = {
   siteUrl: "https://www.kotona.app",
   title: "kotona.app",
   description:
-    "Case studies and technical notes from declarative infrastructure, household systems, and contract-first platform work.",
+    "Projects and writing on declarative infrastructure, household systems, and contract-first platform work.",
   defaultOgImage: "/og-default.svg",
   profile: {
     name: "Juha Huotari",
@@ -10,7 +10,7 @@ export const siteConfig = {
     summary:
       "Solution analyst in Helsinki. I work on data platforms, integration-heavy systems, and infrastructure that benefits from being slightly harder to misuse.",
     about:
-      "I’m Juha Huotari, a solution analyst based in Helsinki. Day to day I work around data platforms, requirements, integration boundaries, and the awkward places where useful systems become expensive to reason about. This site holds selected case studies and notes from that work and from adjacent personal systems work when the lesson transfers.",
+      "I’m Juha Huotari, a solution analyst based in Helsinki. Day to day I work around data platforms, requirements, integration boundaries, and the awkward places where useful systems become expensive to reason about. This site holds project summaries and notes from that work and from adjacent personal systems work when the lesson transfers.",
     location: "Helsinki",
   },
   externalLinks: {
@@ -22,7 +22,7 @@ export const siteConfig = {
 
 export const siteNavigation = [
   { href: "/", label: "Home" },
-  { href: "/case-studies/", label: "Case studies" },
+  { href: "/projects/", label: "Projects" },
   { href: "/writing/", label: "Writing" },
   { href: "/about/", label: "About" },
 ] as const;

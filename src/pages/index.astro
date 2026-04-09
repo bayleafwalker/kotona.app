@@ -6,9 +6,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { getVisibleEntries, sortByDateAndTitle } from "../lib/content";
 import { getContactLinks, siteConfig } from "../site";
 
-const caseStudies = sortByDateAndTitle(await getCollection("case-studies"));
-const visibleCaseStudies = getVisibleEntries(caseStudies);
-const featuredCaseStudies = visibleCaseStudies.slice(0, 3);
+const projectEntries = sortByDateAndTitle(await getCollection("projects"));
+const visibleProjects = getVisibleEntries(projectEntries);
+const featuredProjects = visibleProjects.slice(0, 3);
 const posts = sortByDateAndTitle(await getCollection("posts"));
 const visiblePosts = getVisibleEntries(posts);
 const recentPosts = visiblePosts.slice(0, 5);
@@ -21,9 +21,9 @@ const contactLinks = getContactLinks();
     <h1 class="page-title">{siteConfig.profile.name}</h1>
     <p class="page-copy">{siteConfig.profile.summary}</p>
     <p class="page-copy">
-      The first batch is drawn from ongoing repo work with enough ADRs, incident
-      notes, and implementation history to support a fair retelling. The rest
-      can wait until they stop being mostly scaffolding.
+      The project pages say what each repo is for, how it is shaped, and where
+      the work currently stands. Writing covers narrower notes, arguments, and
+      failure reports that do not need a permanent project page.
     </p>
 
     {
@@ -43,26 +43,26 @@ const contactLinks = getContactLinks();
 
   <section class="page-section">
     <div class="section-heading">
-      <h2>Case studies</h2>
-      <a href="/case-studies/">All case studies</a>
+      <h2>Projects</h2>
+      <a href="/projects/">All projects</a>
     </div>
 
     {
-      featuredCaseStudies.length > 0 ? (
+      featuredProjects.length > 0 ? (
         <div class="entry-list">
-          {featuredCaseStudies.map((entry) => (
+          {featuredProjects.map((entry) => (
             <EntryCard
-              href={`/case-studies/${entry.slug}/`}
+              href={`/projects/${entry.slug}/`}
               title={entry.data.title}
               summary={entry.data.summary}
               tags={entry.data.tags}
-              date={entry.data.date}
               draft={entry.data.draft}
+              showDate={false}
             />
           ))}
         </div>
       ) : (
-        <p class="empty-state">No published case studies yet.</p>
+        <p class="empty-state">No published projects yet.</p>
       )
     }
   </section>
