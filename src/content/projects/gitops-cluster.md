@@ -31,9 +31,9 @@ The cluster's current shape is the result of several deliberate migrations
 rather than an initial design that held. Ingress moved from Traefik to NGINX to
 Envoy Gateway API, each time because the previous choice had either outgrown
 its operational model or was fighting the rest of the stack. The DNS layer
-settled on a split between OPNsense, AdGuard Home, and Unbound, which is more 
-moving parts than anyone would choose from scratch but reflects a layered 
-resolution of ad blocking, local DNS, and upstream forwarding that actually 
+settled on a split between OPNsense, AdGuard Home, and Unbound, which is more
+moving parts than anyone would choose from scratch but reflects a layered
+resolution of ad blocking, local DNS, and upstream forwarding that actually
 stayed stable once the port allocation was explicit.
 
 The underlying storage is TrueNAS with ZFS pools, and the relationship between
@@ -63,15 +63,15 @@ convenience-access cases that benefit from its mesh model and identity layer,
 and OPNsense stays as the boundary device rather than being bypassed by either.
 
 This is, again, more of a resolution of slow operational changes than explicit
-architecture. WireGuard was the original VPN of choice allowing ingress into 
+architecture. WireGuard was the original VPN of choice allowing ingress into
 LAN from external networks, but later multi-cluster setups and scaling of nodes
 resulted in Tailscale filling a more meaningful role (lovely onboarding there).
 
 ## Current state
 
-This is an active operations repo, not a frozen reference. Checking out my recent 
+This is an active operations repo, not a frozen reference. Checking out my recent
 repository work history shows the repository being used to handle live incidents
-, including a workload image rollback after a CrashLoopBackOff issue, remediation 
+, including a workload image rollback after a CrashLoopBackOff issue, remediation
 documentation, health check updates, and cluster-health training material.
 
 That history matters because it shows the repo being used for day-two work, not
@@ -79,7 +79,7 @@ only for initial setup. The cluster state, the decisions around it, and the
 incident response notes are being kept together instead of drifting apart.
 
 Of all my projects, this is pretty much the longest lasting and maybe surprisingly
-*not* the most updated. I'm pretty happy with the scope of operating my homelab
+_not_ the most updated. I'm pretty happy with the scope of operating my homelab
 from the kubernetes cluster, especially running on talos nodes which have been
 very hands off and easy to maintain after initial stress on understanding their
 very different maintenance model.

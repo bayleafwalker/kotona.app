@@ -23,7 +23,8 @@ type Props = {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const repoLinks = entry.data.repoUrls.map((href, i) => ({
-  label: entry.data.repoUrls.length === 1 ? "Repository" : `Repository ${i + 1}`,
+  label:
+    entry.data.repoUrls.length === 1 ? "Repository" : `Repository ${i + 1}`,
   href,
 }));
 const relatedLinks = [

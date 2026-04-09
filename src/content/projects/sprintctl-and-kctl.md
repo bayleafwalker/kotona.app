@@ -89,12 +89,12 @@ The knowledge extraction side (kctl) is also younger than the sprint management
 side. The read-only relationship to sprintctl's database is clean, but the
 extraction model itself is still being shaped by use rather than by a settled
 design. I have existing guideline based patterns for capturing full(er) prompt
-outputs as future training artifacts, but those are still pretty limited in 
+outputs as future training artifacts, but those are still pretty limited in
 implementation scope.
 
 The broader question, how far schema-enforced tooling can go as a coordination
 layer for agentic work before it needs something more dynamic, is still open
 and probably the most interesting thing about the project.
 
-I already have some planned work for an overarching orchestrator, but that gets 
+I already have some planned work for an overarching orchestrator, but that gets
 into something that I don't really have a problem with yet (nor the budget for).

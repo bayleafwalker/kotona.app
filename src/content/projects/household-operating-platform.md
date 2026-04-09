@@ -26,8 +26,8 @@ operational behavior at the same time.
 The project carries habits from professional data platform work in financial
 services and regulatory reporting. The bronze, silver, and gold data boundaries
 are not a homelab affectation, they are the same separation pattern that keeps
-transformation layers auditable under constraints, applied here because the 
-household domain has enough cross-cutting facts across finance, utilities, 
+transformation layers auditable under constraints, applied here because the
+household domain has enough cross-cutting facts across finance, utilities,
 contracts, and device state that a looser model would quietly rot.
 
 The shift from analytics to operating platform followed the same path it
@@ -64,7 +64,7 @@ papered over by an abstraction layer.
 
 ## Current state
 
-Is rapidly evolving, so this section is promised to be out of date at any 
+Is rapidly evolving, so this section is promised to be out of date at any
 given time. Regardless, brief notes follow in this section to capture some
 idea of the state of the work.
 

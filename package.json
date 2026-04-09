@@ -16,7 +16,8 @@
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "validate": "npm run format && npm run lint && npm run check && npm run build"
+    "validate": "npm run format && npm run lint && npm run check && npm run build",
+    "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",

@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# Ensure node is on PATH — try system first, then the repo-adjacent .tools dir
+if ! command -v node > /dev/null 2>&1; then
+  TOOLS_NODE="$(dirname "$REPO_ROOT")/.tools/node-v22.22.2-linux-x64/bin"
+  if [ -x "$TOOLS_NODE/node" ]; then
+    export PATH="$TOOLS_NODE:$PATH"
+  else
+    echo "pre-commit: node not found, skipping hook" >&2
+    exit 0
+  fi
+fi
+
+cd "$REPO_ROOT"
+node_modules/.bin/prettier --write .
+git add -u
+node_modules/.bin/eslint .
