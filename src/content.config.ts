@@ -22,7 +22,7 @@ const projects = defineCollection({
     ...sharedEntrySchema,
     project: z.string().min(1),
     status: z.string().min(1).optional(),
-    repoUrl: z.string().url().optional(),
+    repoUrls: z.array(z.string().url()).default([]),
     externalUrl: z.string().url().optional(),
   }),
 });

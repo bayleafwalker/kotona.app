@@ -1,9 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getContactLinks, siteConfig } from "../site";
+import { getContactLinks } from "../site";
 
 const contactLinks = getContactLinks();
-const { about, name } = siteConfig.profile;
 ---
 
 <BaseLayout
@@ -12,16 +11,39 @@ const { about, name } = siteConfig.profile;
 >
   <section class="page-intro">
     <p class="eyebrow">About</p>
-    <h1 class="page-title">{name}</h1>
-
-    <p class="page-copy">{about}</p>
+    <h1 class="page-title">Solution analyst</h1>
 
     <p class="page-copy">
-      Most material here starts as ADRs, planning notes, sprint snapshots,
-      runbooks, and the occasional incident fix that says more than a polished
-      README ever will. The recurring themes are declarative infrastructure,
-      integration boundaries that can survive iteration, and a preference for
-      keeping tools in the role they are actually good at.
+      I work in financial services data platforms — regulatory reporting,
+      analytics infrastructure, and the boundary work between source systems and
+      the models that need to trust them. The professional stack is Python, SQL,
+      Databricks, and Spark, and the recurring problems are data lineage,
+      semantic governance, and keeping transformation layers honest under
+      regulatory constraints and business needs.
+    </p>
+
+    <p class="page-copy">
+      The projects on this site are personal infrastructure and tooling work, but
+      they start from the same instincts. A household operating platform uses
+      bronze, silver, and gold data tiers because that separation works.
+      Sprint tooling enforces schema-level constraints because I have seen what 
+      happens when shared state is a document that everyone edits optimistically. 
+      A homelab cluster runs through GitOps because the alternative is a system 
+      that only the last person who touched it can recover, and for a homelab 
+      that's going to be me.
+    </p>
+
+    <p class="page-copy">
+      The recurring themes are boundaries that survive iteration, tools kept in
+      the role they are actually good at, and a preference for making the
+      trade-offs visible rather than hiding them behind a clean interface.
+    </p>
+
+    <p class="page-copy">
+      Most of the material here starts as iterative prompts, and is followed by 
+      ADRs, runbooks, sprint notes, or a fix committed after the problem 
+      became expensive enough. The site is where some of that gets compressed 
+      into something someone else could read without needing the full repo history.
     </p>
 
     {

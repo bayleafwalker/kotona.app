@@ -9,7 +9,8 @@ date: 2026-04-06
 draft: false
 project: box
 status: Phase 0 complete
-repoUrl: https://github.com/bayleafwalker/box
+repoUrls:
+  - https://github.com/bayleafwalker/box
 tags:
   - contracts
   - architecture
@@ -26,6 +27,9 @@ shortcuts erase the boundaries it is supposed to test.
 The scope is intentionally narrow. The point is not to model every possible
 business correctly, but to prove that a small service set can keep clean
 interfaces while different scenarios reuse the same platform shape.
+
+It's pretty much just a simple evolution of the homelab-analytics context,
+evolving the platform into a more generalizable setup (business-in-a-box <-> box).
 
 ## System shape
 
@@ -48,6 +52,9 @@ and local validation tooling for contracts and scenario content.
 What it does not claim yet is a finished runtime. The current state is stronger
 on boundary discipline than on service behavior, which is appropriate for the
 phase the repo is in.
+
+Absolutely a work in progress, in more of the forgotten child right now than a
+fully remembered one.
 
 ## Open edges
 

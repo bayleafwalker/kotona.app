@@ -4,7 +4,8 @@ date: 2026-04-08
 draft: true
 project: replace-me
 status: Optional current state
-repoUrl: https://github.com/owner/repo
+repoUrls:
+  - https://github.com/owner/repo
 tags:
   - replace-me
 summary: One or two sentences explaining what the repository is for.
@@ -13,6 +14,8 @@ summary: One or two sentences explaining what the repository is for.
 ## Overview
 
 State what the project does in plain terms.
+
+Give also any available thought behind the purpose and ideation behind the project.
 
 ## System shape
 
