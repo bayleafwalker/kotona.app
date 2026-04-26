@@ -9,7 +9,13 @@ export const prerender = true;
 
 const allProjects = sortByDateAndTitle(await getCollection("projects"));
 const visibleProjects = getVisibleEntries(allProjects);
-const published = visibleProjects.filter((entry) => !entry.data.draft);
+
+const engineering = visibleProjects.filter(
+  (entry) => entry.data.kind === "engineering" && !entry.data.draft,
+);
+const fiction = visibleProjects.filter(
+  (entry) => entry.data.kind === "fiction" && !entry.data.draft,
+);
 const drafts = import.meta.env.PROD
   ? []
   : visibleProjects.filter((entry) => entry.data.draft);
@@ -17,27 +23,27 @@ const drafts = import.meta.env.PROD
 
 <BaseLayout
   title="Projects"
-  description="Project summaries that explain what each repository is for, how it is shaped, and where it currently stands."
+  description="Project summaries — repositories and worlds — described plainly."
 >
   <section class="page-intro">
     <p class="eyebrow">Projects</p>
-    <h1 class="page-title">Repository work, described plainly.</h1>
+    <h1 class="page-title">Bounded efforts with declared state.</h1>
     <p class="page-copy">
-      Each page is a stable summary of a repo: what it does, how the system is
-      shaped, and what state the work is in. Writing covers narrower arguments,
-      implementation notes, and decisions that are better left as notes.
+      Each page is a stable summary of a project: what it does, how it is
+      shaped, and what state the work is in. Some are repositories, some are
+      worlds. The shell is the same.
     </p>
   </section>
 
-  <section class="page-section">
-    <div class="section-heading">
-      <h2>Published</h2>
-    </div>
+  {
+    engineering.length > 0 ? (
+      <section class="page-section">
+        <div class="section-heading">
+          <h2>Repositories</h2>
+        </div>
 
-    {
-      published.length > 0 ? (
         <div class="entry-list">
-          {published.map((entry) => (
+          {engineering.map((entry) => (
             <EntryCard
               href={`/projects/${entry.slug}/`}
               title={entry.data.title}
@@ -48,11 +54,32 @@ const drafts = import.meta.env.PROD
             />
           ))}
         </div>
-      ) : (
-        <p class="empty-state">No published projects yet.</p>
-      )
-    }
-  </section>
+      </section>
+    ) : null
+  }
+
+  {
+    fiction.length > 0 ? (
+      <section class="page-section">
+        <div class="section-heading">
+          <h2>Worlds</h2>
+        </div>
+
+        <div class="entry-list">
+          {fiction.map((entry) => (
+            <EntryCard
+              href={`/projects/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={entry.data.tags}
+              draft={entry.data.draft}
+              showDate={false}
+            />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
 
   {
     drafts.length > 0 ? (

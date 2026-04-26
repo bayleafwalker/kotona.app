@@ -7,6 +7,7 @@ summary: >-
 date: 2026-04-07
 draft: false
 project: appservice
+kind: engineering
 status: Active operations repo
 repoUrls:
   - https://github.com/bayleafwalker/appservice

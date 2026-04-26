@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { formatDate } from "../lib/content";
+import changelog from "../data/changelog.json";
+
+export const prerender = true;
+
+type ChangelogEntry = { date: string; entry: string };
+const entries = (changelog as ChangelogEntry[]).map((item) => ({
+  ...item,
+  formattedDate: formatDate(new Date(item.date)),
+}));
+---
+
+<BaseLayout
+  title="Log"
+  description="Chronological record of site changes and project state transitions."
+>
+  <section class="page-intro">
+    <p class="eyebrow">Log</p>
+    <h1 class="page-title">Site changelog</h1>
+    <p class="page-copy">
+      A terse chronological list of site changes and project state transitions.
+      Not a feed — just an honest record of when things landed.
+    </p>
+  </section>
+
+  <section class="page-section">
+    <ol class="changelog-list" reversed>
+      {
+        entries.map((item) => (
+          <li class="changelog-entry">
+            <time class="changelog-date" datetime={item.date}>
+              {item.formattedDate}
+            </time>
+            <span class="changelog-text">{item.entry}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</BaseLayout>

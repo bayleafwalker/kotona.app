@@ -3,12 +3,13 @@ title: Replace with a concrete project title
 date: 2026-04-08
 draft: true
 project: replace-me
+kind: engineering
 status: Optional current state
 repoUrls:
   - https://github.com/owner/repo
 tags:
   - replace-me
-summary: One or two sentences explaining what the repository is for.
+summary: One or two sentences explaining what the project is for.
 ---
 
 ## Overview

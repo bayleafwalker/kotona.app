@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2026-04-13",
+    "entry": "About page updated: name, Helsinki, professional context now lead."
+  },
+  {
+    "date": "2026-04-13",
+    "entry": "Household operating platform project page rewritten with motivation section."
+  },
+  {
+    "date": "2026-04-13",
+    "entry": "Project schema extended with kind field; projects index now groups by Repositories and Worlds."
+  },
+  {
+    "date": "2026-04-13",
+    "entry": "Site changelog added at /log/."
+  },
+  {
+    "date": "2026-04-09",
+    "entry": "sprintctl and kctl project page published."
+  },
+  {
+    "date": "2026-04-08",
+    "entry": "Eight writing posts published as launch batch."
+  },
+  {
+    "date": "2026-04-08",
+    "entry": "Household operating platform project page published."
+  },
+  {
+    "date": "2026-04-07",
+    "entry": "GitOps cluster project page published."
+  },
+  {
+    "date": "2026-04-06",
+    "entry": "Contract-first box project page published."
+  },
+  {
+    "date": "2026-04-06",
+    "entry": "Site launched on Cloudflare Pages."
+  }
+]

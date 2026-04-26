@@ -452,3 +452,29 @@ main {
     gap: 0.65rem;
   }
 }
+
+/* Changelog */
+
+.changelog-list {
+  list-style: none;
+  padding: 0;
+}
+
+.changelog-entry {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.changelog-date {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  min-width: 5.5rem;
+}
+
+.changelog-text {
+  font-size: 0.95rem;
+}

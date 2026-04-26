@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getContactLinks } from "../site";
+import { getContactLinks, siteConfig } from "../site";
 
 const contactLinks = getContactLinks();
 ---
@@ -11,15 +11,16 @@ const contactLinks = getContactLinks();
 >
   <section class="page-intro">
     <p class="eyebrow">About</p>
-    <h1 class="page-title">Solution analyst</h1>
+    <h1 class="page-title">{siteConfig.profile.name}</h1>
 
     <p class="page-copy">
-      I work in financial services data platforms — regulatory reporting,
-      analytics infrastructure, and the boundary work between source systems and
-      the models that need to trust them. The professional stack is Python, SQL,
-      Databricks, and Spark, and the recurring problems are data lineage,
-      semantic governance, and keeping transformation layers honest under
-      regulatory constraints and business needs.
+      I'm Juha Huotari, a solution analyst based in Helsinki. My day job is in
+      insurance data platforms: reporting pipelines, analytics development, and
+      the kind of integration work that has to be correct before it becomes
+      useful. Before that, regulatory reporting in wealth management. The
+      projects here come from the same instinct — that the interesting problems
+      in a system are usually boundary problems, and that making a boundary
+      explicit is almost always worth the cost.
     </p>
 
     <p class="page-copy">

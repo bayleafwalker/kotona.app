@@ -7,6 +7,7 @@ summary: >-
 date: 2026-04-08
 draft: false
 project: homelab-analytics
+kind: engineering
 status: Stage 2 complete; Stages 3-5 partial
 repoUrls:
   - https://github.com/bayleafwalker/homelab-analytics
@@ -18,26 +19,34 @@ tags:
 
 ## Overview
 
-Homelab Analytics is the repository for a household data and decision layer. It
-started from reporting work and now centers on keeping household facts,
-planning inputs, and policy logic in one place that can support analytics and
-operational behavior at the same time.
+A household has enough cross-cutting facts — finance, utilities, contracts,
+device state, planning constraints — that modelling them properly matters. A
+spreadsheet handles one dimension at a time. Home Assistant handles device
+behavior well but is not built to be the semantic core for long-lived household
+reasoning. The right structure was a proper domain model with explicit data
+tiers, not a sprawl of automations or a reporting layer that pretends to support
+decisions it was never designed for.
 
-The project carries habits from professional data platform work in financial
-services and regulatory reporting. The bronze, silver, and gold data boundaries
-are not a homelab affectation, they are the same separation pattern that keeps
-transformation layers auditable under constraints, applied here because the
-household domain has enough cross-cutting facts across finance, utilities,
-contracts, and device state that a looser model would quietly rot.
+The project exists partly because the alternative — a spreadsheet, a stack of
+Home Assistant automations, some informal rules held in memory — was already
+failing at the kind of question I actually wanted to answer. Modelling a
+household loan repayment against heating costs against an investment plan
+requires a proper domain model and proper data boundaries, not a formula in
+column G. The day job involves building exactly this kind of thing at larger
+scale. It seemed worth applying the same discipline at home, if only to find
+out where the analogies break.
 
-The shift from analytics to operating platform followed the same path it
-follows in enterprise work: descriptive reporting becomes useful, then someone
-asks a planning question the reporting layer cannot answer without pretending to
-be something else. Rather than bolting simulation and policy onto a reporting
-codebase or pushing cross-domain reasoning into Home Assistant because it
-already has the dashboards, the repo formalized the boundary and kept the
-semantic model explicit enough that later stages can build on it without
-rewriting the foundation.
+Homelab Analytics is that model. The bronze, silver, and gold data boundaries
+are the same separation pattern that keeps transformation layers auditable under
+regulatory constraints in financial services work — applied here because the
+problem structure is the same, not as a homelab affectation. The shift from
+analytics to operating platform followed the same path it follows in enterprise
+work: descriptive reporting becomes useful, then someone asks a planning
+question the reporting layer cannot answer without pretending to be something
+else. Rather than bolting simulation and policy onto a reporting codebase or
+pushing cross-domain reasoning into Home Assistant, the repo formalized the
+boundary and kept the semantic model explicit enough that later stages can build
+on it without rewriting the foundation.
 
 The repo is not trying to turn Home Assistant into the whole platform or split
 every surface into its own service. Its role is to hold the cross-domain model

@@ -8,6 +8,7 @@ summary: >-
 date: 2026-04-09
 draft: false
 project: sprintctl-and-kctl
+kind: engineering
 status: Published and in active use
 repoUrls:
   - https://github.com/bayleafwalker/sprintctl

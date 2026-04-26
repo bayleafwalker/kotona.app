@@ -21,6 +21,7 @@ const projects = defineCollection({
   schema: z.object({
     ...sharedEntrySchema,
     project: z.string().min(1),
+    kind: z.enum(["engineering", "fiction"]).default("engineering"),
     status: z.string().min(1).optional(),
     repoUrls: z.array(z.string().url()).default([]),
     externalUrl: z.string().url().optional(),

@@ -8,6 +8,7 @@ summary: >-
 date: 2026-04-06
 draft: false
 project: box
+kind: engineering
 status: Phase 0 complete
 repoUrls:
   - https://github.com/bayleafwalker/box
