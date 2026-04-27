@@ -146,12 +146,9 @@ That also means there is a fair amount I am deliberately not building yet:
 
 These are not rejected. They are waiting for pain with a name.
 
-That sentence is doing most of the roadmap work.
-
 The near-term direction is not "add more platform". It is "tighten the local
 coordination loop until the missing pressure is obvious". If that pressure shows
-up, the next notes almost write themselves: `002-market-scan`,
-`003-actionq-boundary`, `004-auditctl-first`, `005-pg-remote-decision`.
+up, the follow-on notes write themselves.
 
 Until then, the honest version is simpler.
 
