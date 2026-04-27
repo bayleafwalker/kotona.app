@@ -1,8 +1,8 @@
 ---
-title: The agent work happens. The problem is that the system forgets
+title: The missing layer is binding, not intelligence
 date: 2026-04-27T08:00:00Z
 contextWindow: agent workflow tooling work, 2025-2026
-draft: false
+draft: true
 summary: The useful workflow layer for solo agent work is not a giant orchestration stack. It is a local-first system that remembers claims, checkpoints, routing choices, and promotion boundaries without pretending one operator needs a whole platform team.
 tags:
   - note
@@ -39,13 +39,28 @@ For me, the coordination layer needs to remember a few things reliably:
 - what handoff or audit artifact exists
 - what should be promoted into Git and what should stay local
 
+This is also not hypothetical substrate design. The pieces already exist:
+`sprintctl` for sprint state and claims, `.agents/skills/` for reusable
+operating instructions, `.agents/handoffs/` for session continuity, and thin
+harnesses around planning, implementation, and review so the routing stays
+explicit. None of those pieces is especially grand on its own. The point is
+that they already have jobs, and the missing layer is the glue that binds them
+into one repeatable loop.
+
 Everything outside that boundary should stay suspiciously plain.
 
-OpenHands is interesting. Windmill is interesting. Temporal is interesting.
-None of them are the shape of problem I have today. My pressure is not missing
-workflow primitives. My pressure is that planning, implementation, and review
-need different memory and budget envelopes, and the handoff between them needs
-to survive a session ending.
+OpenHands is interesting because it adds a more integrated agent runtime and
+task loop, but that still would not solve my need for explicit local claims,
+handoff state, and promotion boundaries. Windmill is interesting because it
+adds a serious execution plane for jobs, secrets, schedules, and a control UI,
+but those are benefits for shared operations rather than for remembering what a
+single operator session was doing. Temporal is interesting because it gives you
+durable orchestration and retries, but durable orchestration is not the same
+thing as deciding what should be claimed, reviewed, promoted, or left as local
+residue. That is why none of them is the shape of problem I have today. My
+pressure is not missing workflow primitives. My pressure is that planning,
+implementation, and review need different memory and budget envelopes, and the
+handoff between them needs to survive a session ending.
 
 That is why the routing detail matters.
 
@@ -112,6 +127,13 @@ the pain justifies it. If the hard part is remembering ownership and checkpoints
 between sessions, then the first thing to build is the coordination surface. The
 database engine swap can wait until the coordination problem actually grows into
 a remote systems problem.
+
+That is also why `auditctl` comes before any bigger orchestrator in my head. If
+I am adding one more binding layer, the first thing I want is better audit and
+checkpoint memory: what was claimed, which route was chosen, what validations
+ran, what artifact became the handoff, and what actually got promoted. That
+order of operations matters more than it first sounds. A small system that can
+explain a run is more valuable than a larger system that can launch one.
 
 That also means there is a fair amount I am deliberately not building yet:
 
