@@ -2,7 +2,7 @@
 title: The missing layer is binding, not intelligence
 date: 2026-04-27T08:00:00Z
 contextWindow: agent workflow tooling work, 2025-2026
-draft: true
+draft: false
 summary: The useful workflow layer for solo agent work is not a giant orchestration stack. It is a local-first system that remembers claims, checkpoints, routing choices, and promotion boundaries without pretending one operator needs a whole platform team.
 tags:
   - note
