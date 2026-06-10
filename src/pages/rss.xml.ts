@@ -6,18 +6,26 @@ import { getPublishedEntries, sortByDateAndTitle } from "../lib/content";
 import { siteConfig } from "../site";
 
 export const GET: APIRoute = async (context) => {
-  const posts = sortByDateAndTitle(await getCollection("posts"));
-  const published = getPublishedEntries(posts);
+  const notes = sortByDateAndTitle(
+    (await getCollection("notes")).map((entry) => ({
+      ...entry,
+      data: {
+        ...entry.data,
+        date: entry.data.lastRevised,
+      },
+    })),
+  );
+  const published = getPublishedEntries(notes);
 
   return rss({
-    title: `${siteConfig.title} writing`,
-    description: "Posts and technical notes from kotona.app.",
+    title: `${siteConfig.title} notes`,
+    description: "Project notes and system notes from kotona.app.",
     site: context.site ?? siteConfig.siteUrl,
     items: published.map((entry) => ({
       title: entry.data.title,
       description: entry.data.summary ?? "",
-      pubDate: entry.data.date,
-      link: `/writing/${entry.slug}/`,
+      pubDate: entry.data.lastRevised,
+      link: `/notes/${entry.slug}/`,
       categories: entry.data.tags,
     })),
   });

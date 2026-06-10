@@ -30,5 +30,5 @@ Describe what is already in place and what evidence supports that state.
 
 Describe what is unfinished, still being decided, or intentionally left out.
 
-Use Writing for argument-heavy notes, retrospectives, and narrower technical
+Use Notes for argument-heavy notes, reference designs, and narrower technical
 ideas that do not need a stable project page.

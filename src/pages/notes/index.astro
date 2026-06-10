@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+
+import EntryCard from "../../components/EntryCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+
+const notes = sortByDateAndTitle(
+  (await getCollection("notes")).map((entry) => ({
+    ...entry,
+    data: {
+      ...entry.data,
+      date: entry.data.lastRevised,
+    },
+  })),
+);
+const visibleNotes = getVisibleEntries(notes);
+---
+
+<BaseLayout
+  title="Notes"
+  description="Project notes and system notes in reverse chronological order."
+>
+  <section class="page-intro">
+    <p class="eyebrow">Notes</p>
+    <h1 class="page-title">Project notes and system notes.</h1>
+    <p class="page-copy">
+      Terse operating models, architectural rules, and reference designs.
+      Prospective where needed; guiding where already useful.
+    </p>
+  </section>
+
+  <section class="page-section">
+    {
+      visibleNotes.length > 0 ? (
+        <div class="entry-list">
+          {visibleNotes.map((entry) => (
+            <EntryCard
+              href={`/notes/${entry.slug}/`}
+              title={entry.data.title}
+              summary={entry.data.summary}
+              tags={[entry.data.status, entry.data.area, ...entry.data.tags]}
+              date={entry.data.lastRevised}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No published notes yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>

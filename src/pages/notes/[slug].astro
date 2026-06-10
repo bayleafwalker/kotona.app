@@ -13,7 +13,15 @@ import { siteConfig } from "../../site";
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const entries = sortByDateAndTitle(await getCollection("posts"));
+  const entries = sortByDateAndTitle(
+    (await getCollection("notes")).map((entry) => ({
+      ...entry,
+      data: {
+        ...entry.data,
+        date: entry.data.lastRevised,
+      },
+    })),
+  );
   const visibleEntries = getVisibleEntries(entries);
 
   return visibleEntries.map((entry) => ({
@@ -23,12 +31,12 @@ export async function getStaticPaths() {
 }
 
 type Props = {
-  entry: CollectionEntry<"posts">;
+  entry: CollectionEntry<"notes">;
 };
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const formattedDate = formatDate(entry.data.date);
+const formattedDate = formatDate(entry.data.lastRevised);
 ---
 
 <BaseLayout
@@ -38,10 +46,10 @@ const formattedDate = formatDate(entry.data.date);
 >
   <section class="content-shell">
     <article class="content-panel">
-      <a class="content-back-link" href="/writing/">Back to writing</a>
+      <a class="content-back-link" href="/notes/">Back to notes</a>
 
       <header class="content-header">
-        <p class="eyebrow">{entry.data.draft ? "Draft post" : "Post"}</p>
+        <p class="eyebrow">{entry.data.draft ? "Draft note" : "System note"}</p>
         <h1 class="content-title">{entry.data.title}</h1>
         {
           entry.data.summary ? (
@@ -49,27 +57,17 @@ const formattedDate = formatDate(entry.data.date);
           ) : null
         }
 
-        <div class="entry-meta">
-          {entry.data.draft ? <span class="pill pill-muted">Draft</span> : null}
-        </div>
+        <p class="content-context">
+          {entry.data.status} / {entry.data.area} / Revised {formattedDate}
+        </p>
 
         {
-          formattedDate || entry.data.contextWindow ? (
-            <p class="content-context">
-              {formattedDate ? `Published ${formattedDate}` : null}
-              {formattedDate && entry.data.contextWindow ? " · " : null}
-              {entry.data.contextWindow
-                ? `Context window: ${entry.data.contextWindow}`
-                : null}
-            </p>
-          ) : null
-        }
-
-        {
-          entry.data.tags.length > 0 ? (
-            <ul class="tag-list" aria-label="Tags">
-              {entry.data.tags.map((tag) => (
-                <li>{tag}</li>
+          entry.data.relates.length > 0 ? (
+            <ul class="tag-list" aria-label="Related notes">
+              {entry.data.relates.map((slug) => (
+                <li>
+                  <a href={`/notes/${slug}/`}>{slug}</a>
+                </li>
               ))}
             </ul>
           ) : null

@@ -9,9 +9,17 @@ import { getContactLinks, siteConfig } from "../site";
 const projectEntries = sortByDateAndTitle(await getCollection("projects"));
 const visibleProjects = getVisibleEntries(projectEntries);
 const featuredProjects = visibleProjects.slice(0, 3);
-const posts = sortByDateAndTitle(await getCollection("posts"));
-const visiblePosts = getVisibleEntries(posts);
-const recentPosts = visiblePosts.slice(0, 5);
+const notes = sortByDateAndTitle(
+  (await getCollection("notes")).map((entry) => ({
+    ...entry,
+    data: {
+      ...entry.data,
+      date: entry.data.lastRevised,
+    },
+  })),
+);
+const visibleNotes = getVisibleEntries(notes);
+const recentNotes = visibleNotes.slice(0, 5);
 const contactLinks = getContactLinks();
 ---
 
@@ -21,9 +29,9 @@ const contactLinks = getContactLinks();
     <h1 class="page-title">{siteConfig.profile.name}</h1>
     <p class="page-copy">{siteConfig.profile.summary}</p>
     <p class="page-copy">
-      The project pages say what each repo is for, how it is shaped, and where
-      the work currently stands. Writing covers narrower notes, arguments, and
-      failure reports that do not need a permanent project page.
+      Project pages hold stable work surfaces. System notes hold compressed
+      patterns, rules, and reference designs that guide the work without
+      pretending to be logs.
     </p>
 
     {
@@ -69,26 +77,26 @@ const contactLinks = getContactLinks();
 
   <section class="page-section">
     <div class="section-heading">
-      <h2>Recent writing</h2>
-      <a href="/writing/">All writing</a>
+      <h2>System notes</h2>
+      <a href="/notes/">All notes</a>
     </div>
 
     {
-      recentPosts.length > 0 ? (
+      recentNotes.length > 0 ? (
         <div class="entry-list">
-          {recentPosts.map((entry) => (
+          {recentNotes.map((entry) => (
             <EntryCard
-              href={`/writing/${entry.slug}/`}
+              href={`/notes/${entry.slug}/`}
               title={entry.data.title}
               summary={entry.data.summary}
               tags={entry.data.tags}
-              date={entry.data.date}
+              date={entry.data.lastRevised}
               draft={entry.data.draft}
             />
           ))}
         </div>
       ) : (
-        <p class="empty-state">No published posts yet.</p>
+        <p class="empty-state">No published notes yet.</p>
       )
     }
   </section>

@@ -8,11 +8,17 @@ const sharedEntrySchema = {
   draft: z.boolean().default(true),
 };
 
-const posts = defineCollection({
+const notes = defineCollection({
   type: "content",
   schema: z.object({
-    ...sharedEntrySchema,
-    contextWindow: z.string().min(1).optional(),
+    title: z.string().min(1),
+    summary: z.string().max(280).optional(),
+    status: z.string().min(1),
+    area: z.string().min(1),
+    lastRevised: z.coerce.date(),
+    relates: z.array(z.string().min(1)).default([]),
+    tags: z.array(z.string().min(1)).default([]),
+    draft: z.boolean().default(false),
   }),
 });
 
@@ -29,6 +35,6 @@ const projects = defineCollection({
 });
 
 export const collections = {
+  notes,
   projects,
-  posts,
 };

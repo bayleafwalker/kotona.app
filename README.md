@@ -1,10 +1,10 @@
 # kotona.app
 
-Small Astro site for writing, notes, and failure write-ups.
+Small Astro site for project notes and system notes.
 
 The scope is intentionally narrow. This is not a portfolio product surface or a
-content machine. It is a minimal static site for things worth writing down when
-they survive compression from work and hobby projects.
+content machine. It is a minimal static site for compressed project context,
+system rules, and reference designs.
 
 ## Stack
 
@@ -50,13 +50,14 @@ npm run validate
 
 Site metadata and public links live in `src/site.ts`.
 
-Posts live in `src/content/posts/`.
+Project notes live in `src/content/projects/`.
+System notes live in `src/content/notes/`.
 
-To add a post:
+To add a system note:
 
-1. Copy `docs/templates/post-template.md` into `src/content/posts/`.
+1. Create a Markdown file in `src/content/notes/`.
 2. Fill in the frontmatter.
-3. Keep the structure as simple as the subject allows.
+3. Keep the structure terse and diagram-heavy where useful.
 
 Frontmatter is schema-validated during `npm run check` and `npm run build`.
 
@@ -68,11 +69,11 @@ Draft behavior:
 
 ## Information architecture
 
-- `/` home page with a short intro and recent writing
-- `/writing/` reverse chronological writing index
-- `/writing/[slug]/` post detail pages
+- `/` home page with a short intro, projects, and recent notes
+- `/notes/` reverse chronological notes index
+- `/notes/[slug]/` note detail pages
 - `/about/` short context page
-- `/rss.xml` RSS feed for published posts
+- `/rss.xml` RSS feed for published notes
 - `/404/` custom not found page
 
 ## Deployment
