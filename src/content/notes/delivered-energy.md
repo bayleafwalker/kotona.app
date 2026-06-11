@@ -81,13 +81,13 @@ exciting version (national tariff arbitrage on wheels).
 Cost stack per delivered kWh, second-life pack at €30/kWh, seasonal cottage
 service (5 swaps/winter of ~400 kWh):
 
-| Component | €/kWh |
-| --- | --- |
-| Pack amortization (10-yr calendar life, ~50 lifetime cycles) | 0.06 |
-| Depot charging (behind-the-meter PPA, curtailment hours) | 0.00–0.02 |
-| Logistics (routed swap, ~8 stops/day) | 0.03–0.05 |
-| Depot, handling, overhead | 0.02 |
-| **Delivered cost** | **0.11–0.15** |
+| Component                                                    | €/kWh         |
+| ------------------------------------------------------------ | ------------- |
+| Pack amortization (10-yr calendar life, ~50 lifetime cycles) | 0.06          |
+| Depot charging (behind-the-meter PPA, curtailment hours)     | 0.00–0.02     |
+| Logistics (routed swap, ~8 stops/day)                        | 0.03–0.05     |
+| Depot, handling, overhead                                    | 0.02          |
+| **Delivered cost**                                           | **0.11–0.15** |
 
 Against the alternatives the target customer actually faces: effective grid
 cost €0.30–0.45/kWh at cottage consumption levels, or €15–45k connection capex
@@ -101,12 +101,12 @@ through the existing wire.
 
 ## Market sizing, Finland
 
-| Segment | Size | Annual value/customer | Realistic SAM |
-| --- | --- | --- | --- |
-| Electrified cottages, low consumption, high fixed cost | ~500k cottages, est. 50–100k in viable density clusters | €600–1,200 | €30–120M/yr |
-| New rural builds avoiding connection | ~2–4k/yr in expensive-connection zones | €800–1,500 | €2–6M/yr |
-| Remaining oil-heated houses (full replacement) | ~100k, shrinking | n/a | excluded — heat pumps win |
-| Construction / events / grid-queue temporary power | existing market, diesel-priced | €0.30–0.60/kWh | adjacent, already contested |
+| Segment                                                | Size                                                    | Annual value/customer | Realistic SAM               |
+| ------------------------------------------------------ | ------------------------------------------------------- | --------------------- | --------------------------- |
+| Electrified cottages, low consumption, high fixed cost | ~500k cottages, est. 50–100k in viable density clusters | €600–1,200            | €30–120M/yr                 |
+| New rural builds avoiding connection                   | ~2–4k/yr in expensive-connection zones                  | €800–1,500            | €2–6M/yr                    |
+| Remaining oil-heated houses (full replacement)         | ~100k, shrinking                                        | n/a                   | excluded — heat pumps win   |
+| Construction / events / grid-queue temporary power     | existing market, diesel-priced                          | €0.30–0.60/kWh        | adjacent, already contested |
 
 SOM for a pilot operator: hundreds of customers, low single-digit €M revenue,
 one depot, one truck route geometry. This is a lifestyle-business ceiling
