@@ -375,7 +375,8 @@ main {
 .prose ul,
 .prose ol,
 .prose blockquote,
-.prose pre {
+.prose pre,
+.prose table {
   margin: 0.95rem 0;
 }
 
@@ -400,6 +401,37 @@ main {
   padding-left: 1rem;
   border-left: 3px solid var(--accent);
   color: var(--muted);
+}
+
+.prose table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.prose th,
+.prose td {
+  min-width: 9rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--bg-strong);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.prose tbody tr:nth-child(even) {
+  background: rgba(31, 37, 32, 0.025);
 }
 
 .site-footer {

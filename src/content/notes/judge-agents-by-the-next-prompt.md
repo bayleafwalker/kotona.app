@@ -16,9 +16,17 @@ summary: New agents carry more work from intent to evidence, but that changes ra
 
 The best evidence that an agent understood the work is the next thing I have to tell it.
 
-If the follow-up is "run an actual scan", "check every port", or "find a specific product", the first answer transferred the unfinished reasoning back to me. If the follow-up is "publish it", "roll it out", or simply "approved", the agent did something more useful: it turned an underspecified intention into work I could extend or authorize.
+The categories are visible in ordinary follow-ups:
+
+| Next prompt                                                               | What it reveals                                                                |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **Correction** — "run an actual scan" or "check every port"               | The agent transferred unfinished reasoning back to me.                         |
+| **Extension** — "compare those results" or "apply it to the next service" | The result is usable; the new prompt adds work instead of repairing it.        |
+| **Authorization** — "publish it", "roll it out", or "approved"            | The agent carried the work to a boundary where the remaining decision is mine. |
 
 That distinction has become a better evaluation method than comparing prose, counting tool calls, or asking which model feels smartest. It measures the part that matters in practice: supervision.
+
+## Different agents, different exams
 
 I reached it by comparing recent agent sessions across several small tools and infrastructure repositories. The work ranged from creative workflow design to concurrency semantics and live cluster changes. Three current agents looked strong in three different ways. One was best at carrying a product's internal logic through long implementation sessions. One was best at turning an ambiguous cross-repository problem into explicit invariants, worker contracts, and rollout evidence. One moved through bounded integration work with exceptional speed.
 
@@ -40,6 +48,8 @@ The comparison itself needed the same discipline. One set of chat logs covered o
 
 This sounds like a statistical footnote. It is actually an operating rule. Agent evaluation goes wrong when evidence from one task family is promoted into a general law. A model that is excellent at finding protocol boundaries may still be the wrong choice for living inside a creative domain for four hours. A model that evolves that domain beautifully may be untested as the principal operator of a production migration. "Best" is often just an unlabelled statement about which work was sampled.
 
+## What changed with the newest agents
+
 There was still a generational change underneath the uneven comparison. It was not prettier prose or a higher ceiling on isolated answers. Earlier agents were often very capable answer generators. They could explain an implementation, suggest a design, or produce a useful first pass. The supervision cost appeared in the next turn: inspect the actual repository, run the scan instead of describing one, check the whole surface, choose a concrete product, carry the recommendation into an artifact.
 
 The newest agents more often absorb that second turn into the first. They inspect before generalizing, recognize a pattern across projects, preserve design constraints for longer, and continue from analysis into a plan, issue, test packet, pull request, or deployed change. The practical shift is from "here is how you could do it" toward "here is the bounded thing, the evidence I gathered, and the next decision that remains yours." That is why the reduction in repair prompts matters more than any improvement in style. It is a reduction in babysitting.
@@ -50,17 +60,40 @@ Some of the improvement belongs to the environment. The agents now have reposito
 
 The new generation has therefore changed the main review question. With older agents I asked whether the answer was grounded and complete enough to use. With newer agents I more often ask whether a well-grounded conclusion has been allowed to grow too far. A capable agent can turn a useful local convention into a cross-repository standard before the convention has earned that authority. The old failure was stopping at advice. The new failure is arriving with a rollout programme for a premise that still needed one human decision.
 
-I now find three roles more useful than one ranking.
+## How I route the work now
 
-The principal analyst takes ambiguous architecture, inspects the real systems, cuts scope, names the invariants, and defines what evidence would count. This role should be expensive enough to avoid shallow decomposition, but constrained enough not to convert every finding into a programme.
+I now find three roles more useful than one ranking. Outside the fixed dispatch path, I route frontier agents by the behavior I have actually observed:
 
-The embedded product builder stays close to one domain. It carries terminology, user friction, tests, and deliberate exclusions across sessions. This is where continuity matters more than raw breadth. The work should end at clean checkpoints because the model's main risk is not misunderstanding the product; it is continuing past a sensible stopping point.
+| Role                     | Current agent | Best fit                                                                                             | Required guardrail                                                           |
+| ------------------------ | ------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Principal analyst        | GPT-5.6 Sol   | Ambiguous systems work, cross-repository invariants, and operational changes that need live evidence | A scope ceiling so a sound finding does not become an unauthorized programme |
+| Embedded product builder | Claude Fable  | Domain-rich work where terminology, user friction, and product taste need to survive a long session  | Clean checkpoints before continuity becomes uncontrolled continuation        |
+| Bounded executor         | GPT-5.6 Terra | Integration and rollout work after the decision boundary is already visible                          | An inventory check and explicit verification target                          |
 
-The bounded executor receives a crisp contract and moves quickly through implementation, integration, and rollout. Its contract needs an inventory check and an explicit verification target. Otherwise it can complete the visible work while confidently stepping around the thing nobody enumerated.
+These are current assignments, not claims about provider identity or permanent model character. The names record which agent produced the evidence; they do not turn three unlike sessions into a leaderboard.
 
 This is close to the model routing I already use for plan, build, and review, but with one correction: capability tier is not enough. The assignment should encode the shape of judgment required. Planning a concurrency protocol and planning a writer's workflow are both "planning" only at a distance. Up close, one needs adversarial state reasoning and the other needs sustained product empathy.
 
-The evaluation loop also needs a record better than memory. For each substantial session, the useful questions are small:
+### The repeatable dispatch path
+
+The repeatable path is still tiered inside Claude. It encodes where errors are allowed to occur and which later stage must catch them:
+
+| Stage      | Model  | Receives                                                   | Must leave behind                                        |
+| ---------- | ------ | ---------------------------------------------------------- | -------------------------------------------------------- |
+| Coordinate | Sonnet | Sprint state, constraints, and model headroom              | Sequencing and scope decisions, but no deliverable edits |
+| Plan       | Opus   | Ambiguous architecture or an unsettled acceptance boundary | A decision-complete contract for implementation          |
+| Build      | Haiku  | An approved plan or tightly scoped work item               | The implementation and targeted verification             |
+| Review     | Sonnet | A stable diff and its validation output                    | Findings-first review or explicit approval               |
+
+A weak plan contaminates everything downstream, so planning gets the expensive model. A bounded build can be cheap because the plan and review surround it. Review gets a model strong enough to challenge the result without paying the planning rate for every mechanical check.
+
+### When I overlap models
+
+I do not normally give several frontier models the same prompt and vote on the answers. That spends budget on artificial consensus while preserving the ambiguity in the task. I use overlap when evaluating a new model generation, when a decision is expensive to reverse, or when a second agent can test a specific claim independently. Most comparisons should be longitudinal: whether the model entrusted with a role keeps making the next prompt smaller, more decisive, and less corrective.
+
+## Evaluation still ends in human authority
+
+The evaluation loop needs a record better than memory. For each substantial session, the useful questions are small:
 
 - Did the next turn repair the agent's understanding, extend the work, or authorize it?
 - Did the agent inspect the real state before forming a conclusion?
