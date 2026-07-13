@@ -2,14 +2,22 @@
 title: Moving a live cluster to a new subnet
 status: guiding
 area: cluster operations
-lastRevised: 2026-06-10
+published: 2026-06-10
+lastRevised: 2026-07-13
+projects:
+  - gitops-cluster
 tags:
   - operations
   - kubernetes
 summary: "Migrating a Talos cluster from a legacy subnet to its own VLAN while it kept serving. The design was mostly an ordering problem, plus one bootstrap loop: the network controller lives inside the network it manages."
 ---
 
-The cluster sat on a legacy 192.168.87.0/24 interface — a known debt rather than a decision — and the target was a dedicated VLAN 20 at 192.168.20.0/24, with an address plan worth writing down once: API VIP at .10, control plane low, a 170-address L2 pool in the middle for load balancers, static infrastructure high. Both MetalLB and Cilium announce in this cluster, so every pool change means two pairs of resources, not one.
+The cluster sat on a legacy flat private subnet — a known debt rather than a
+decision — and the target was a dedicated cluster VLAN with an address plan
+worth writing down once: API VIP, control-plane range, load-balancer pool, and
+static infrastructure each had a declared place. Both MetalLB and Cilium
+announce in this cluster, so every pool change means two pairs of resources,
+not one.
 
 The prep work was Flux hygiene: parameterize every hardcoded LB IP and CIDR before touching anything live. Five variables across the cluster settings covered the registry, Forgejo SSH, the LDAP outpost, Postgres, and the LAN CIDR in six network policies — with one documented exception, a registry mirror that uses the IP as a YAML mapping key and gets handled by plain string replacement at cutover. The exception went in the runbook, which is where exceptions belong.
 

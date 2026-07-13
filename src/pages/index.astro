@@ -3,23 +3,41 @@ import { getCollection } from "astro:content";
 
 import EntryCard from "../components/EntryCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getVisibleEntries, sortByDateAndTitle } from "../lib/content";
+import {
+  getVisibleEntries,
+  sortByDateAndTitle,
+  sortByLastVerifiedAndTitle,
+} from "../lib/content";
 import { getContactLinks, siteConfig } from "../site";
 
-const projectEntries = sortByDateAndTitle(await getCollection("projects"));
+const projectEntries = sortByLastVerifiedAndTitle(
+  await getCollection("projects"),
+);
 const visibleProjects = getVisibleEntries(projectEntries);
-const featuredProjects = visibleProjects.slice(0, 3);
+const featuredProjects = visibleProjects.filter((entry) => entry.data.featured);
 const notes = sortByDateAndTitle(
   (await getCollection("notes")).map((entry) => ({
     ...entry,
     data: {
       ...entry.data,
-      date: entry.data.lastRevised,
+      date: entry.data.published,
     },
   })),
 );
 const visibleNotes = getVisibleEntries(notes);
-const recentNotes = visibleNotes.slice(0, 5);
+const startHereSlugs = [
+  "schema-on-split",
+  "moving-a-live-cluster-to-a-new-subnet",
+  "judge-agents-by-the-next-prompt",
+  "delivered-energy",
+] as const;
+const startHereNotes = startHereSlugs.flatMap((slug) => {
+  const entry = visibleNotes.find((note) => note.slug === slug);
+  return entry ? [entry] : [];
+});
+const recentNotes = visibleNotes
+  .filter((note) => !startHereSlugs.some((slug) => slug === note.slug))
+  .slice(0, 5);
 const contactLinks = getContactLinks();
 ---
 
@@ -29,9 +47,10 @@ const contactLinks = getContactLinks();
     <h1 class="page-title">{siteConfig.profile.name}</h1>
     <p class="page-copy">{siteConfig.profile.summary}</p>
     <p class="page-copy">
-      Project pages hold stable work surfaces. System notes hold compressed
-      patterns, rules, and reference designs that guide the work without
-      pretending to be logs.
+      This is a field notebook for systems that have to keep working: data
+      platforms, infrastructure, contracts, and agent-assisted engineering.
+      Projects explain what exists. Notes keep the decisions, failures, and
+      evidence worth reusing.
     </p>
 
     {
@@ -39,12 +58,45 @@ const contactLinks = getContactLinks();
         <ul class="link-row" aria-label="External links">
           {contactLinks.map((link) => (
             <li>
-              <a class="link-chip" href={link.href} rel="noreferrer">
+              <a
+                class="link-chip"
+                href={link.href}
+                rel={link.href.startsWith("http") ? "me noreferrer" : undefined}
+              >
                 {link.label}
               </a>
             </li>
           ))}
         </ul>
+      ) : null
+    }
+  </section>
+
+  <section class="page-section">
+    <div class="section-heading">
+      <h2>Start here</h2>
+    </div>
+    <p class="page-copy">
+      Four ways into the work: data, operations, agent workflows, and applied
+      exploration.
+    </p>
+
+    {
+      startHereNotes.length > 0 ? (
+        <div class="entry-list start-here-list">
+          {startHereNotes.map((entry) => (
+            <EntryCard
+              href={`/notes/${entry.slug}/`}
+              title={entry.data.title}
+              headingLevel={3}
+              summary={entry.data.summary}
+              context={entry.data.area}
+              tags={entry.data.tags}
+              date={entry.data.published}
+              draft={entry.data.draft}
+            />
+          ))}
+        </div>
       ) : null
     }
   </section>
@@ -62,10 +114,13 @@ const contactLinks = getContactLinks();
             <EntryCard
               href={`/projects/${entry.slug}/`}
               title={entry.data.title}
+              headingLevel={3}
               summary={entry.data.summary}
-              tags={entry.data.tags}
+              context={entry.data.status}
+              tags={[entry.data.project, ...entry.data.tags]}
+              date={entry.data.lastVerified}
+              dateLabel="Verified"
               draft={entry.data.draft}
-              showDate={false}
             />
           ))}
         </div>
@@ -77,7 +132,7 @@ const contactLinks = getContactLinks();
 
   <section class="page-section">
     <div class="section-heading">
-      <h2>System notes</h2>
+      <h2>Recent notes</h2>
       <a href="/notes/">All notes</a>
     </div>
 
@@ -88,9 +143,11 @@ const contactLinks = getContactLinks();
             <EntryCard
               href={`/notes/${entry.slug}/`}
               title={entry.data.title}
+              headingLevel={3}
               summary={entry.data.summary}
+              context={entry.data.area}
               tags={entry.data.tags}
-              date={entry.data.lastRevised}
+              date={entry.data.published}
               draft={entry.data.draft}
             />
           ))}

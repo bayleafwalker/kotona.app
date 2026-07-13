@@ -2,7 +2,10 @@
 title: Delivered energy
 status: exploration
 area: energy systems
-lastRevised: 2026-06-11
+published: 2026-06-11
+lastRevised: 2026-07-13
+projects:
+  - household-operating-platform
 tags:
   - batteries
   - off-grid
@@ -38,10 +41,13 @@ vastly exceeds their remaining cycle life.
 Five environmental curves matter. Three bend toward the idea, one bends away,
 one cuts both ways.
 
-**Pack prices.** Stationary-storage packs averaged $70/kWh in 2025 (BNEF), down
-45% in one year; the cheapest observed LFP packs hit $50/kWh. Second-life EV
-packs are expected at €20–40/kWh as Europe's first major EV retirement wave
-lands ~2027–2030. Direction: strongly favorable, near-certain.
+**Pack prices.** Stationary-storage packs averaged $70/kWh in 2025, down 45% in
+one year according to
+[BloombergNEF's 2025 survey](https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/).
+The cheapest observed LFP packs hit $50/kWh. The model assumes second-life EV
+packs at €20–40/kWh as Europe's first major EV retirement wave lands
+~2027–2030. Direction: strongly favorable, but the second-life price is still an
+assumption rather than a quoted supply contract.
 
 **Second-life fit.** The core economic flaw of swap-based heating is cycle
 waste: a pack swapped monthly cycles ~12 times a year, throwing away thousands
@@ -57,13 +63,14 @@ customers, for whom effective all-in distribution cost already reaches
 €0.30–0.45/kWh. Rural connection fees of €15–45k keep rising. Direction:
 favorable, and it strengthens before the regulatory countermeasure arrives.
 
-**Cheap charging hours — the eroding enabler.** Finland logged 724
-negative-price hours in 2024 (~10% of hours zero or negative), then 447 in
-2025, down 38%, because flexible demand — grid batteries, 1 GW of electric
-boilers in district heating — is absorbing the spread. The arbitrage the depot
-depends on is being competed away by stationary players with no trucks.
-Direction: unfavorable; probability the spread stays exploitable through 2030,
-maybe 40–50%.
+**Cheap charging hours — the eroding enabler.** Finland logged 725
+negative-price hours in 2024 and 465 in 2025, according to
+[Finnish Energy's 2025 review](https://energia.fi/wp-content/uploads/2026/01/Electricity-Year-2025-1.pdf)
+using ENTSO-E data. Flexible demand — including grid batteries and electric
+boilers in district heating — is absorbing more of the spread. The arbitrage
+the depot depends on is being competed away by stationary players with no
+trucks. Direction: unfavorable; the model assigns a 40–50% probability that the
+spread stays exploitable through 2030.
 
 **Regulatory seams.** Every margin component — avoided fixed fees, avoided
 winter transfer, sähkövero classification of a charged pack as goods rather than
@@ -101,12 +108,12 @@ through the existing wire.
 
 ## Market sizing, Finland
 
-| Segment                                                | Size                                                    | Annual value/customer | Realistic SAM               |
-| ------------------------------------------------------ | ------------------------------------------------------- | --------------------- | --------------------------- |
-| Electrified cottages, low consumption, high fixed cost | ~500k cottages, est. 50–100k in viable density clusters | €600–1,200            | €30–120M/yr                 |
-| New rural builds avoiding connection                   | ~2–4k/yr in expensive-connection zones                  | €800–1,500            | €2–6M/yr                    |
-| Remaining oil-heated houses (full replacement)         | ~100k, shrinking                                        | n/a                   | excluded — heat pumps win   |
-| Construction / events / grid-queue temporary power     | existing market, diesel-priced                          | €0.30–0.60/kWh        | adjacent, already contested |
+| Segment                                                | Size                                                              | Annual value/customer | Realistic SAM               |
+| ------------------------------------------------------ | ----------------------------------------------------------------- | --------------------- | --------------------------- |
+| Electrified cottages, low consumption, high fixed cost | 495k registered cottages; est. 50–100k in viable density clusters | €600–1,200            | €30–120M/yr                 |
+| New rural builds avoiding connection                   | ~2–4k/yr in expensive-connection zones                            | €800–1,500            | €2–6M/yr                    |
+| Remaining oil-heated houses (full replacement)         | shrinking; register data materially overstates active oil heating | n/a                   | excluded — heat pumps win   |
+| Construction / events / grid-queue temporary power     | existing market, diesel-priced                                    | €0.30–0.60/kWh        | adjacent, already contested |
 
 SOM for a pilot operator: hundreds of customers, low single-digit €M revenue,
 one depot, one truck route geometry. This is a lifestyle-business ceiling
@@ -180,9 +187,24 @@ grid-queue-delayed industry, and the deep cottage belt. Everywhere else, the
 1960s oil-truck nostalgia loses to the boring fact that the pipe was already
 built.
 
----
+## Sources and model boundary
 
-_Numbers are order-of-magnitude estimates from public sources (BNEF 2025 pack
-survey, Energiateollisuus 2024 statistics, Nord Pool) and a long conversation
-that repeatedly tried to kill the idea. The idea survived in one room of the
-house. That room has no electricity, which is the point._
+The external anchors are deliberately few:
+
+- [BloombergNEF's 2025 battery survey](https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/)
+  for new stationary-pack pricing
+- [Finnish Energy's Electricity Year 2025](https://energia.fi/wp-content/uploads/2026/01/Electricity-Year-2025-1.pdf)
+  for negative-price hours
+- [Statistics Finland's 2025 overview](https://otos.stat.fi/server/api/core/bitstreams/f814d535-d394-411b-b813-daea6e78ead3/content)
+  for 495,145 registered free-time residences in 2024
+- [Statistics Finland's building-stock documentation](https://stat.fi/en/documentation/documentation-of-statistics/raku)
+  for the warning that register data overstates active oil heating
+
+Everything else in the cost stack and market sizing is an order-of-magnitude
+model assumption: second-life pack price and life, route density, depot cost,
+eligible-customer share, connection cost, and future tariff response. None is a
+supplier quote, regulatory ruling, or investment recommendation. The analysis
+is useful only if those inputs remain visible enough to replace.
+
+The idea survived a long attempt to kill it in one room of the house. That room
+has no electricity, which is the point.

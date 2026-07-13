@@ -2,8 +2,12 @@
 title: The missing layer is binding, not intelligence
 status: guiding
 area: agent workflow
-lastRevised: 2026-04-27
+published: 2026-04-27
+lastRevised: 2026-07-13
+projects:
+  - sprintctl-and-kctl
 relates:
+  - judge-agents-by-the-next-prompt
   - subprocess-not-service
   - the-coordinator-never-touches-the-repo
 tags:
@@ -13,6 +17,16 @@ summary: The useful workflow layer for solo agent work is not a giant orchestrat
 ---
 
 The agent work happens. The problem is that the system forgets.
+
+> **Update, July 2026.** The coordination boundary later did become remote:
+> `actionq` now owns shared action and session lifecycle in Postgres, sprintctl
+> supports remote state, and a contract-bound cockpit projects the combined
+> state and routes narrow authenticated writes through the owning tools. The
+> rule survived; some implementation details below record the smaller April
+> system that established it. The model assignments are likewise a dated
+> snapshot, not current routing guidance.
+
+## The April model
 
 That is the actual failure mode I keep tripping over. The model can plan. The
 model can write code. The model can even review its own output well enough to
@@ -148,12 +162,20 @@ That also means there is a fair amount I am deliberately not building yet:
 
 These are not rejected. They are waiting for pain with a name.
 
-The near-term direction is not "add more platform". It is "tighten the local
-coordination loop until the missing pressure is obvious". If that pressure shows
-up, the follow-on notes write themselves.
+The near-term direction in April was not "add more platform". It was "tighten
+the local coordination loop until the missing pressure is obvious". If that
+pressure showed up, the follow-on notes would write themselves.
 
-Until then, the honest version is simpler.
+That was the honest version at the time.
+
+## What survived
+
+By July, the pressure had names: work crossing hosts, shared queue state,
+concurrent dispatch, and an operator who needed one read surface across several
+repositories. Postgres, actionq, and the cockpit arrived because those pains
+were now observable, not because the local-first rule had been abandoned.
 
 The agent work is already good enough to matter. The missing system is the one
 that remembers what the work meant, how it was routed, what should survive the
-session, and which pains have actually earned more machinery.
+session, and which pains have actually earned more machinery. The
+implementation grew; that binding remains the product.

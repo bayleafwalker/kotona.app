@@ -13,6 +13,21 @@ export function sortByDateAndTitle<
   });
 }
 
+export function sortByLastVerifiedAndTitle<
+  T extends { data: { lastVerified: Date; title: string } },
+>(entries: T[]) {
+  return [...entries].sort((left, right) => {
+    const leftTime = left.data.lastVerified.getTime();
+    const rightTime = right.data.lastVerified.getTime();
+
+    if (leftTime !== rightTime) {
+      return rightTime - leftTime;
+    }
+
+    return left.data.title.localeCompare(right.data.title);
+  });
+}
+
 export function getVisibleEntries<T extends { data: { draft?: boolean } }>(
   entries: T[],
 ) {

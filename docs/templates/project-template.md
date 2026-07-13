@@ -1,10 +1,13 @@
 ---
 title: Replace with a concrete project title
-date: 2026-04-08
+published: YYYY-MM-DD
+lastRevised: YYYY-MM-DD
+lastVerified: YYYY-MM-DD
 draft: true
 project: replace-me
 kind: engineering
-status: Optional current state
+status: Replace with the current state
+featured: false
 repoUrls:
   - https://github.com/owner/repo
 tags:
@@ -22,7 +25,8 @@ Describe the main operating model, boundaries, or runtime layout.
 
 ## Current state
 
-Describe what is already in place and the evidence that supports that state.
+Describe what is already in place as of `lastVerified` and the evidence that
+supports that state.
 
 ## Open edges
 

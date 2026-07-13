@@ -1,5 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 
+import { htmlToMarkdown, prefersMarkdown } from "./lib/markdown-response.js";
+
 const homepageLinks = [
   '</.well-known/agent-skills/index.json>; rel="describedby"; type="application/json"',
   '</llms.txt>; rel="describedby"; type="text/markdown"',
@@ -23,14 +25,6 @@ const legacyWritingPaths: Record<string, string> = {
     "/notes/compatibility-reports-should-be-a-little-rude/",
 };
 
-function acceptsMarkdown(value: string | null) {
-  return value
-    ?.split(",")
-    .some((mediaType) =>
-      mediaType.trim().toLowerCase().startsWith("text/markdown"),
-    );
-}
-
 function appendVary(headers: Headers, value: string) {
   const existing = headers.get("Vary");
   const values = new Set(
@@ -42,51 +36,13 @@ function appendVary(headers: Headers, value: string) {
   headers.set("Vary", [...values].join(", "));
 }
 
-function decodeEntities(value: string) {
-  return value
-    .replaceAll("&amp;", "&")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'");
-}
-
-// This is deliberately a small, dependency-free HTML-to-Markdown projection.
-// The canonical representation remains HTML; this provides agents a readable
-// response without inventing a second content store.
-function htmlToMarkdown(html: string) {
-  const markdown = html
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<(script|style|svg)[\s\S]*?<\/\1>/gi, "")
-    .replace(
-      /<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi,
-      (_, level, content) => `\n\n${"#".repeat(Number(level))} ${content}\n\n`,
-    )
-    .replace(/<a[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi, "[$2]($1)")
-    .replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, "\n- $1")
-    .replace(
-      /<(p|div|section|article|header|main|footer|nav|ul|ol)[^>]*>/gi,
-      "\n\n",
-    )
-    .replace(
-      /<\/(p|div|section|article|header|main|footer|nav|ul|ol)>/gi,
-      "\n\n",
-    )
-    .replace(/<br\s*\/?>(\n)?/gi, "\n")
-    .replace(/<[^>]+>/g, "");
-
-  return decodeEntities(markdown)
-    .replace(/\n[ \t]+/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim()
-    .concat("\n");
-}
-
 export const onRequest = defineMiddleware(async (context, next) => {
   const legacyTarget = legacyWritingPaths[context.url.pathname];
 
   if (legacyTarget) {
-    return Response.redirect(new URL(legacyTarget, context.url), 301);
+    const target = new URL(legacyTarget, context.url);
+    target.search = context.url.search;
+    return Response.redirect(target, 301);
   }
 
   const response = await next();
@@ -102,13 +58,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
     response.headers.set("Link", homepageLinks);
   }
 
-  if (!acceptsMarkdown(context.request.headers.get("Accept"))) {
+  if (!prefersMarkdown(context.request.headers.get("Accept"))) {
     return response;
   }
 
-  const markdown = htmlToMarkdown(await response.text());
   const headers = new Headers(response.headers);
   headers.set("Content-Type", "text/markdown; charset=utf-8");
+  headers.delete("Content-Length");
+  headers.delete("ETag");
+
+  if (context.request.method === "HEAD") {
+    return new Response(null, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
+
+  const markdown = htmlToMarkdown(await response.text());
   headers.set(
     "x-markdown-tokens",
     String(markdown.split(/\s+/).filter(Boolean).length),

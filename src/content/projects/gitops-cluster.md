@@ -1,16 +1,18 @@
 ---
 title: Running a homelab cluster as a Git repository, not as muscle memory
 summary: >-
-  Appservice is the operations repo for a Talos-based homelab cluster. It
-  treats reconciliation, encrypted secrets, upgrades, and incident capture as
-  repository state rather than operator memory.
-date: 2026-04-07
+  Appservice is the operations repository for a Talos-based Kubernetes cluster.
+  Reconciliation, encrypted secrets, recovery gates, upgrades, and incident
+  evidence live with the desired state instead of in operator memory.
+published: 2026-04-07
+lastRevised: 2026-07-13
+lastVerified: 2026-07-13
 draft: false
 project: appservice
 kind: engineering
 status: Active operations repo
-repoUrls:
-  - https://github.com/bayleafwalker/appservice
+featured: true
+repoUrls: []
 tags:
   - gitops
   - kubernetes
@@ -19,85 +21,69 @@ tags:
 
 ## Overview
 
-Appservice is the operations repo for a Talos-based homelab cluster. The point
-of the repository is not only to declare workloads, but to keep the cluster
-recoverable by storing the expected state, the secret handling model, the
-upgrade path, and the operating notes in one place.
+Appservice is the operations repository for a Talos-based Kubernetes cluster.
+It declares workloads, but that is the least interesting part. The repository
+also holds the secret model, upgrade rules, recovery procedures, health-check
+protocols, and sanitized incident records needed to operate the cluster after
+the bootstrap excitement has worn off.
 
-The repo is therefore closer to an operating surface than to a bootstrap
-artifact. It is meant to reduce the amount of cluster knowledge that lives in
-shell history or individual operator habits.
-
-The cluster's current shape is the result of several deliberate migrations
-rather than an initial design that held. Ingress moved from Traefik to NGINX to
-Envoy Gateway API, each time because the previous choice had either outgrown
-its operational model or was fighting the rest of the stack. The DNS layer
-settled on a split between OPNsense, AdGuard Home, and Unbound, which is more
-moving parts than anyone would choose from scratch but reflects a layered
-resolution of ad blocking, local DNS, and upstream forwarding that actually
-stayed stable once the port allocation was explicit.
-
-The underlying storage is TrueNAS with ZFS pools, and the relationship between
-TrueNAS and the cluster has its own operational history. Earlier iterations
-included running TalosOS and ArgoCD on TrueNAS Scale VMs,
-CNPG/PostgreSQL with documented reboot-recovery procedures, and enough
-failure-and-fix cycles that the current recovery documentation is a product of
-experience rather than speculation.
+The architecture is the result of migrations rather than a pristine first
+draft. Ingress eventually settled on Envoy Gateway API after earlier controller
+choices became poor fits. Storage, DNS, database recovery, and application
+backups acquired their current rules through failures that were reproduced and
+written down. The repo is an operating surface, not a diagram of the system I
+once intended to build.
 
 ## System shape
 
-The operating model is strict GitOps around Talos, Flux, and SOPS. Cluster
-state lives under the main cluster tree, secrets stay encrypted, and changes
-are expected to reconcile through the repo rather than through manual cluster
-mutation.
+Talos and Kubernetes provide the cluster base; Flux owns reconciliation; SOPS
+and age keep committed secrets encrypted. Networking, load balancing, storage,
+application backup, databases, monitoring, and synthetic probes are composed
+through the same desired-state tree. Manual mutation is for diagnosis or
+contained recovery, and any durable fix belongs back in Git.
 
-Around that core, the repo defines the rest of the platform boundary: Cilium
-networking, MetalLB, Longhorn and OpenEBS storage, VolSync, Prometheus and
-Loki, internal health checks with Gatus, and external probing with Blackbox
-Exporter. Runbooks, disabled-service notes, and upgrade guidance are treated as
-part of the same operating model.
-
-Network access runs through WireGuard and Tailscale, with OPNsense handling the
-firewall boundary. The combination of VPN layers is deliberate: WireGuard
-provides the raw tunnel for infrastructure access, Tailscale covers the
-convenience-access cases that benefit from its mesh model and identity layer,
-and OPNsense stays as the boundary device rather than being bypassed by either.
-
-This is, again, more of a resolution of slow operational changes than explicit
-architecture. WireGuard was the original VPN of choice allowing ingress into
-LAN from external networks, but later multi-cluster setups and scaling of nodes
-resulted in Tailscale filling a more meaningful role (lovely onboarding there).
+Recovery is split by failure domain. Application data uses storage snapshots,
+VolSync, and database-native backups with scheduled restore drills. Control
+plane state is written from outside the cluster, encrypted before upload,
+validated, stored under immutable retention, and checked by an independent
+monitor. A pre-upgrade gate rejects snapshots that are missing, stale, or
+unverified.
 
 ## Current state
 
-This is an active operations repo, not a frozen reference. Checking out my recent
-repository work history shows the repository being used to handle live incidents
-, including a workload image rollback after a CrashLoopBackOff issue, remediation
-documentation, health check updates, and cluster-health training material.
+On 13 July 2026, the old in-cluster control-plane snapshot writer was retired
+through GitOps after the external path passed upload, checksum, encryption,
+remote verification, scheduled monitoring, and an offline restore drill. The
+retired namespace and Flux resource were then verified absent. Backup recovery
+is no longer the thin edge described by the original version of this page.
 
-That history matters because it shows the repo being used for day-two work, not
-only for initial setup. The cluster state, the decisions around it, and the
-incident response notes are being kept together instead of drifting apart.
+The same gate was used before a serialized upgrade to Talos 1.13.6 and
+Kubernetes 1.36.2. The upgrade finished with healthy control-plane state,
+workloads, storage, DNS, monitoring, and a new verified post-upgrade snapshot.
+The version pins and runtime compatibility fixes are now recorded in the
+repository.
 
-Of all my projects, this is pretty much the longest lasting and maybe surprisingly
-_not_ the most updated. I'm pretty happy with the scope of operating my homelab
-from the kubernetes cluster, especially running on talos nodes which have been
-very hands off and easy to maintain after initial stress on understanding their
-very different maintenance model.
+That sequence matters more than the version numbers. An early readiness check
+stopped when Talos access and snapshot posture were broken. The work resumed
+only after rollback evidence existed, and the obsolete backup path was removed
+only after its replacement had survived an independent check and restore
+exercise.
 
 ## Open edges
 
-Some recovery paths are still thinner than the rest of the operating model.
-Backup health, certificate renewal failure, and first-time operator bootstrap
-still need tighter runbook coverage.
+The restore drill proves that an externally stored snapshot can be retrieved,
+checked, decrypted, and read with compatible tooling. It does not pretend to be
+a production control-plane restore; that remains a disruptive incident path.
+The evidence also has to be renewed on schedule rather than treated as a
+one-time achievement.
 
-The operator surface is also still being narrowed. The minimal MCP service is a
-placeholder, and some access patterns are described with more caution than
-closure. The repo already has a clear operational stance, but a few boundary
-decisions are still being tightened.
+The external backup spans this repository and a separate host-configuration
+repository, so interface drift between the two is a real maintenance risk.
+Provider-specific storage behavior remains part of the recurring validation.
+Neither is a reason to restore the retired in-cluster writer, but both belong in
+the operating backlog.
 
-The ingress migration history also left some documentation gaps. The reasons for
-each transition are clear in commit history and operator memory but not fully
-captured as decision records in the repo itself. Writing those down, even
-briefly, would make the current Envoy Gateway API choice easier to evaluate for
-anyone who was not present for the previous two iterations.
+The upgrade found another useful edge: an automation controller with stale
+version pins can try to undo a manual upgrade. Future runs now need both the
+backup gate and agreement between Git, live plans, and the selected target
+before the first node changes.

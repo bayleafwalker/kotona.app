@@ -1,9 +1,26 @@
 import type { APIRoute } from "astro";
+import { getCollection } from "astro:content";
 
+import {
+  getPublishedEntries,
+  sortByDateAndTitle,
+  sortByLastVerifiedAndTitle,
+} from "../lib/content";
 import { siteConfig } from "../site";
 
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = async ({ site }) => {
   const baseUrl = site ?? new URL(siteConfig.siteUrl);
+  const projects = getPublishedEntries(
+    sortByLastVerifiedAndTitle(await getCollection("projects")),
+  );
+  const notes = getPublishedEntries(
+    sortByDateAndTitle(
+      (await getCollection("notes")).map((entry) => ({
+        ...entry,
+        data: { ...entry.data, date: entry.data.published },
+      })),
+    ),
+  );
   const body = [
     `# ${siteConfig.title}`,
     "",
@@ -15,10 +32,25 @@ export const GET: APIRoute = ({ site }) => {
     "",
     `- [Home](${new URL("/", baseUrl)})`,
     `- [Projects](${new URL("/projects/", baseUrl)})`,
-    `- [System notes](${new URL("/notes/", baseUrl)})`,
+    `- [Notes](${new URL("/notes/", baseUrl)})`,
     `- [About](${new URL("/about/", baseUrl)})`,
+    `- [Publication and project log](${new URL("/log/", baseUrl)})`,
     `- [RSS feed](${new URL("/rss.xml", baseUrl)})`,
     `- [XML sitemap](${new URL("/sitemap-index.xml", baseUrl)})`,
+    "",
+    "## Projects",
+    "",
+    ...projects.map(
+      (entry) =>
+        `- [${entry.data.title}](${new URL(`/projects/${entry.slug}/`, baseUrl)}): ${entry.data.summary ?? "Project context and current state."}`,
+    ),
+    "",
+    "## Notes",
+    "",
+    ...notes.map(
+      (entry) =>
+        `- [${entry.data.title}](${new URL(`/notes/${entry.slug}/`, baseUrl)}): ${entry.data.summary ?? "System note."}`,
+    ),
   ].join("\n");
 
   return new Response(body, {

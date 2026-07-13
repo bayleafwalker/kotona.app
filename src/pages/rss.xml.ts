@@ -11,7 +11,7 @@ export const GET: APIRoute = async (context) => {
       ...entry,
       data: {
         ...entry.data,
-        date: entry.data.lastRevised,
+        date: entry.data.published,
       },
     })),
   );
@@ -24,9 +24,9 @@ export const GET: APIRoute = async (context) => {
     items: published.map((entry) => ({
       title: entry.data.title,
       description: entry.data.summary ?? "",
-      pubDate: entry.data.lastRevised,
+      pubDate: entry.data.published,
       link: `/notes/${entry.slug}/`,
-      categories: entry.data.tags,
+      categories: [entry.data.area, ...entry.data.tags],
     })),
   });
 };

@@ -47,12 +47,22 @@ const contactLinks = getContactLinks();
       project notes and system notes instead of chronology.
     </p>
 
+    <p class="page-copy">
+      Agents help inspect, test, compare, and draft. I decide what the material
+      claims, verify the current-state evidence, and own the published result.
+      Prompt transcripts and generated options are source material, not canon.
+    </p>
+
     {
       contactLinks.length > 0 ? (
         <ul class="link-row" aria-label="External links">
           {contactLinks.map((link) => (
             <li>
-              <a class="link-chip" href={link.href} rel="noreferrer">
+              <a
+                class="link-chip"
+                href={link.href}
+                rel={link.href.startsWith("http") ? "me noreferrer" : undefined}
+              >
                 {link.label}
               </a>
             </li>

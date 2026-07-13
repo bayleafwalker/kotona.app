@@ -3,11 +3,12 @@ import { getCollection } from "astro:content";
 
 import EntryCard from "../../components/EntryCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+import {
+  getVisibleEntries,
+  sortByLastVerifiedAndTitle,
+} from "../../lib/content";
 
-export const prerender = true;
-
-const allProjects = sortByDateAndTitle(await getCollection("projects"));
+const allProjects = sortByLastVerifiedAndTitle(await getCollection("projects"));
 const visibleProjects = getVisibleEntries(allProjects);
 
 const engineering = visibleProjects.filter(
@@ -19,6 +20,10 @@ const fiction = visibleProjects.filter(
 const drafts = import.meta.env.PROD
   ? []
   : visibleProjects.filter((entry) => entry.data.draft);
+const projectIntro =
+  fiction.length > 0
+    ? "Each page is a stable summary of a project: what it does, how it is shaped, and what state the work is in. Some are repositories, some are worlds. The evidence standard is the same."
+    : "Each page is a stable summary of a project: what it does, how it is shaped, what state the work is in, and when that state was last verified.";
 ---
 
 <BaseLayout
@@ -28,11 +33,7 @@ const drafts = import.meta.env.PROD
   <section class="page-intro">
     <p class="eyebrow">Projects</p>
     <h1 class="page-title">Bounded efforts with declared state.</h1>
-    <p class="page-copy">
-      Each page is a stable summary of a project: what it does, how it is
-      shaped, and what state the work is in. Some are repositories, some are
-      worlds. The shell is the same.
-    </p>
+    <p class="page-copy">{projectIntro}</p>
   </section>
 
   {
@@ -47,10 +48,13 @@ const drafts = import.meta.env.PROD
             <EntryCard
               href={`/projects/${entry.slug}/`}
               title={entry.data.title}
+              headingLevel={3}
               summary={entry.data.summary}
-              tags={entry.data.tags}
+              tags={[entry.data.project, ...entry.data.tags]}
+              context={entry.data.status}
+              date={entry.data.lastVerified}
+              dateLabel="Verified"
               draft={entry.data.draft}
-              showDate={false}
             />
           ))}
         </div>
@@ -70,10 +74,13 @@ const drafts = import.meta.env.PROD
             <EntryCard
               href={`/projects/${entry.slug}/`}
               title={entry.data.title}
+              headingLevel={3}
               summary={entry.data.summary}
-              tags={entry.data.tags}
+              tags={[entry.data.project, ...entry.data.tags]}
+              context={entry.data.status}
+              date={entry.data.lastVerified}
+              dateLabel="Verified"
               draft={entry.data.draft}
-              showDate={false}
             />
           ))}
         </div>
@@ -93,10 +100,13 @@ const drafts = import.meta.env.PROD
             <EntryCard
               href={`/projects/${entry.slug}/`}
               title={entry.data.title}
+              headingLevel={3}
               summary={entry.data.summary}
-              tags={entry.data.tags}
+              tags={[entry.data.project, ...entry.data.tags]}
+              context={entry.data.status}
+              date={entry.data.lastVerified}
+              dateLabel="Verified"
               draft={entry.data.draft}
-              showDate={false}
             />
           ))}
         </div>

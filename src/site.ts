@@ -2,8 +2,9 @@ export const siteConfig = {
   siteUrl: "https://www.kotona.app",
   title: "kotona.app",
   description:
-    "Project notes and system notes on declarative infrastructure, data platforms, and contract-first platform work.",
-  defaultOgImage: "/og-default.svg",
+    "Project and system notes on declarative infrastructure, data platforms, agent workflows, and contract-first systems.",
+  defaultOgImage: "/og-default.png",
+  defaultOgImageAlt: "kotona.app — systems, decisions, and failure modes",
   profile: {
     name: "Juha Huotari",
     role: "Solution analyst",

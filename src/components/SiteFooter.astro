@@ -2,34 +2,35 @@
 import { getContactLinks } from "../site";
 
 const contactLinks = getContactLinks();
+const footerLinks = [
+  { label: "Log", href: "/log/" },
+  { label: "RSS", href: "/rss.xml" },
+  ...contactLinks,
+];
 ---
 
 <footer class="site-footer">
   <div class="container site-footer-inner">
     <div>
-      <p class="footer-title">Static, small, and slightly overbuilt.</p>
+      <p class="footer-title">Read-only, small, and slightly overbuilt.</p>
       <p class="footer-copy">
         Notes arrive when the shape is clearer than the log.
       </p>
     </div>
 
-    {
-      contactLinks.length > 0 ? (
-        <ul class="footer-links" aria-label="External links">
-          {contactLinks.map((link) => (
-            <li>
-              <a href={link.href} rel="noreferrer">
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p class="footer-copy footer-note">
-          GitHub, LinkedIn, and email render here once real values are
-          configured.
-        </p>
-      )
-    }
+    <ul class="footer-links" aria-label="Site and external links">
+      {
+        footerLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              rel={link.href.startsWith("http") ? "me noreferrer" : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </footer>
