@@ -8,7 +8,10 @@ on:
       - completed
 
 concurrency:
-  group: production-deploy
+  # A completed PR build also triggers this workflow before the deploy job is
+  # skipped. Keep those runs out of the production queue so they cannot cancel
+  # a newer main deployment.
+  group: production-deploy-${{ github.event.workflow_run.event }}-${{ github.event.workflow_run.head_branch }}
   cancel-in-progress: true
 
 jobs:
