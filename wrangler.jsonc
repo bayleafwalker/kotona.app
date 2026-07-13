@@ -8,10 +8,6 @@
   "preview_urls": true,
   "routes": [
     {
-      "pattern": "kotona.app",
-      "custom_domain": true,
-    },
-    {
       "pattern": "www.kotona.app",
       "custom_domain": true,
     },

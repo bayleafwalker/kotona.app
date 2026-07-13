@@ -96,10 +96,10 @@ Set these GitHub repository secrets before expecting deploys to run:
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-The production hostnames are declared as Worker custom domains in
-`wrangler.jsonc`. Wrangler reconciles their DNS records and certificates during
-deployment, so do not add separate origin records for those hostnames in the
-Cloudflare dashboard.
+The production hostname `www.kotona.app` is declared as a Worker custom domain
+in `wrangler.jsonc`. Wrangler reconciles its DNS record and certificate during
+deployment. The apex `kotona.app` hostname belongs to a separate service and
+must not be attached to this Worker.
 
 CI lives in `.github/workflows/ci.yml` and runs install, format check, lint,
 Astro checks, and the production build.
