@@ -7,6 +7,7 @@ tags:
 summary: Optional one-line summary.
 ---
 
-Write the post.
+State the point or conclusion first.
 
-Keep the structure as simple as the subject allows.
+Then add only the evidence, trade-offs, and next action the point needs. See
+`docs/writing-style.md` before adding structure for its own sake.

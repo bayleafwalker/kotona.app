@@ -14,9 +14,7 @@ summary: One or two sentences explaining what the project is for.
 
 ## Overview
 
-State what the project does in plain terms.
-
-Give also any available thought behind the purpose and ideation behind the project.
+State what the project does and why that problem deserves a mechanism.
 
 ## System shape
 
@@ -24,11 +22,12 @@ Describe the main operating model, boundaries, or runtime layout.
 
 ## Current state
 
-Describe what is already in place and what evidence supports that state.
+Describe what is already in place and the evidence that supports that state.
 
 ## Open edges
 
 Describe what is unfinished, still being decided, or intentionally left out.
+Name the next verification or bounded implementation slice where relevant.
 
 Use Notes for argument-heavy notes, reference designs, and narrower technical
 ideas that do not need a stable project page.
