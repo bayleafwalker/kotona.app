@@ -7,6 +7,9 @@ type Props = {
   summary?: string;
   tags?: string[];
   date?: Date;
+  dateLabel?: string;
+  context?: string;
+  headingLevel?: 2 | 3;
   draft?: boolean;
   showDate?: boolean;
 };
@@ -17,11 +20,15 @@ const {
   summary,
   tags = [],
   date,
+  dateLabel,
+  context,
+  headingLevel = 2,
   draft = false,
   showDate = true,
 } = Astro.props;
 const formattedDate = showDate && date ? formatDate(date) : null;
 const showMeta = draft || Boolean(formattedDate);
+const Heading = `h${headingLevel}` as "h2" | "h3";
 ---
 
 <article class="entry-card">
@@ -31,16 +38,18 @@ const showMeta = draft || Boolean(formattedDate);
         {draft ? <span class="pill pill-muted">Draft</span> : null}
         {formattedDate && date ? (
           <time class="pill" datetime={date.toISOString()}>
-            {formattedDate}
+            {dateLabel ? `${dateLabel} ${formattedDate}` : formattedDate}
           </time>
         ) : null}
       </div>
     ) : null
   }
 
-  <h2 class="entry-title">
+  <Heading class="entry-title">
     <a href={href}>{title}</a>
-  </h2>
+  </Heading>
+
+  {context ? <p class="entry-context">{context}</p> : null}
 
   {summary ? <p class="entry-summary">{summary}</p> : null}
 

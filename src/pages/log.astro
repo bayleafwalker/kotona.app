@@ -1,15 +1,35 @@
 ---
+import { getCollection } from "astro:content";
+
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { formatDate } from "../lib/content";
+import { formatDate, getVisibleEntries } from "../lib/content";
 import changelog from "../data/changelog.json";
 
-export const prerender = true;
-
-type ChangelogEntry = { date: string; entry: string };
-const entries = (changelog as ChangelogEntry[]).map((item) => ({
-  ...item,
-  formattedDate: formatDate(new Date(item.date)),
-}));
+type ChangelogEntry = { date: string; entry: string; href?: string };
+const notes = getVisibleEntries(await getCollection("notes"));
+const projects = getVisibleEntries(await getCollection("projects"));
+const generatedEntries: ChangelogEntry[] = [
+  ...notes.map((note) => ({
+    date: note.data.published.toISOString().slice(0, 10),
+    entry: `Published note: ${note.data.title}.`,
+    href: `/notes/${note.slug}/`,
+  })),
+  ...projects.map((project) => ({
+    date: project.data.lastVerified.toISOString().slice(0, 10),
+    entry: `Verified project state: ${project.data.project}.`,
+    href: `/projects/${project.slug}/`,
+  })),
+];
+const entries = [...(changelog as ChangelogEntry[]), ...generatedEntries]
+  .sort(
+    (left, right) =>
+      new Date(right.date).getTime() - new Date(left.date).getTime() ||
+      left.entry.localeCompare(right.entry),
+  )
+  .map((item) => ({
+    ...item,
+    formattedDate: formatDate(new Date(item.date)),
+  }));
 ---
 
 <BaseLayout
@@ -18,10 +38,10 @@ const entries = (changelog as ChangelogEntry[]).map((item) => ({
 >
   <section class="page-intro">
     <p class="eyebrow">Log</p>
-    <h1 class="page-title">Site changelog</h1>
+    <h1 class="page-title">Publication and project log</h1>
     <p class="page-copy">
-      A terse chronological list of site changes and project state transitions.
-      Not a feed — just an honest record of when things landed.
+      Published notes and verified project states are generated from content
+      metadata. Site-level changes remain a small manual record.
     </p>
   </section>
 
@@ -33,7 +53,9 @@ const entries = (changelog as ChangelogEntry[]).map((item) => ({
             <time class="changelog-date" datetime={item.date}>
               {item.formattedDate}
             </time>
-            <span class="changelog-text">{item.entry}</span>
+            <span class="changelog-text">
+              {item.href ? <a href={item.href}>{item.entry}</a> : item.entry}
+            </span>
           </li>
         ))
       }

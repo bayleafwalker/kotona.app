@@ -15,12 +15,6 @@
   "observability": {
     "enabled": true,
   },
-  "kv_namespaces": [
-    {
-      "binding": "SESSION",
-      "id": "50bfc5aa99b64e638a6350bced0f9a63",
-    },
-  ],
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist",

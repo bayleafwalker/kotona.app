@@ -1,18 +1,23 @@
 ---
-title: Building sprint tooling because agents kept editing the wrong line
+title: Building an AgentOps substrate because agents kept editing the wrong line
 summary: >-
-  sprintctl and kctl are CLI tools for sprint lifecycle management and knowledge
-  extraction. They exist because markdown-based sprint state failed under
-  agentic editing, and the fix was a schema-enforced database rather than better
-  prompts.
-date: 2026-04-09
+  sprintctl and kctl began as schema-enforced sprint and knowledge tools. They
+  now sit beside actionq, auditctl, and a live AgentOps cockpit, with each tool
+  owning one kind of operational state.
+published: 2026-04-09
+lastRevised: 2026-07-13
+lastVerified: 2026-07-13
 draft: false
 project: sprintctl-and-kctl
 kind: engineering
 status: Published and in active use
+featured: true
 repoUrls:
   - https://github.com/bayleafwalker/sprintctl
   - https://github.com/bayleafwalker/kctl
+  - https://github.com/bayleafwalker/actionq
+  - https://github.com/bayleafwalker/auditctl
+  - https://github.com/bayleafwalker/agentops
 tags:
   - agents
   - workflow
@@ -21,108 +26,83 @@ tags:
 
 ## Overview
 
-sprintctl is a Python CLI for managing sprint lifecycle state. kctl is a
-companion tool for extracting knowledge from sprint history. They exist because
-the previous approach, markdown files edited by both humans and AI agents,
-kept failing in the same way: agents would pattern-match on prose structure and
-silently corrupt the state they were supposed to update.
+sprintctl started with a mundane failure: humans and agents were editing the
+same Markdown sprint files, and agents kept pattern-matching against the wrong
+piece of prose. Better prompts reduced the frequency but did not change the
+failure mode. The durable fix was to move live sprint state into a schema and
+make a CLI the write authority.
 
-The fix was not better instructions with more careful prompting, or rather I got
-tired of applying this "fix". The actual fix I arrived after some brainstorming
-sessions was removing the ambiguity entirely by putting sprint state into a
-schema-enforced SQLite database and making the CLI the only write path. If the
-tool rejects a transition, the transition does not happen. That is a smaller
-problem than reconstructing what an agent thought it was editing.
+kctl followed as the read-only knowledge path. It consumes sprint history,
+extracts durable and coordination candidates, and puts them through explicit
+review and publication. It does not silently turn every session note into
+canon, and it never writes work back into sprintctl.
 
-The broader motivation came from the same observation: state managed by
-convention rather than enforcement eventually gets reinterpreted. Tooling that
-enforces its own transitions keeps structural authority with the human without
-requiring the agent to be careful about it.
-
-As a neat side benefit, skills and hooks become much standardized between multiple
-agentic models and much of the ambiguity I was running into when using three
-different frontier model providers was mitigated; if there's only one way to
-pick up work and land it then of course it's going to be landed that way.
-
-At the time of work this seemed to be something like a small niche, or rather
-my workflow of building a backlog of thoughts, landed as planned work items and
-finally implemented throughout single agent sessions seems like unique enough
-problem that the existing tooling (shout out marcus/td!) didn't fit the bill.
-
-Generally existing tools were much more tradationally focused on team collaboration
-or then focused on the particular problems caused by orchestrating agentic swarms
-or agentic handovers than what I was actually facing. So, what's better than throwing
-one more tool in the mix to fix problems that I probably cause to myself!
+Those two tools are still useful on their own. They are no longer the whole
+story. The same state-ownership rule has grown into a small AgentOps substrate:
+each repository owns one operational domain, and the cockpit composes their
+read surfaces instead of becoming a new database with opinions about all of
+them.
 
 ## System shape
 
-Both tools are Python packages installed globally via pipx, with project-local
-SQLite databases configured through direnv (`SPRINTCTL_DB`, `KCTL_DB`). The
-database directories are gitignored; committed artifacts are rendered snapshots
-that serve as the diffable sync surface.
+sprintctl owns sprints, work items, dependencies, events, claims, and handoffs.
+It runs against repo-local SQLite or a shared PostgreSQL backend, and a declared
+backend mismatch fails rather than quietly opening a different source of truth.
+Claim tokens prove ownership; resume and handoff commands turn live state into
+deterministic context for a new operator or agent session.
 
-sprintctl enforces a schema across Sprint, Track, WorkItem, and Event tables
-with explicit status transitions. The CLI is the authority: there is no backdoor
-through direct database writes during normal operation.
+kctl reads sprintctl events and owns the extraction, review, publication, and
+rendering of knowledge artifacts. The relationship is deliberately one-way.
+Rendered Markdown remains useful for review and Git history, but it is a
+projection, not the live control plane.
 
-kctl reads sprintctl's database read-only and runs `sprintctl maintain check`
-as a pre-flight before doing its own work.
+The sibling tools fill different gaps:
 
-That same constraint — one write path enforced by the CLI — is what makes
-coordinating work across multiple model tiers tractable. sprintctl becomes
-the shared coordination surface rather than a convention each tier has to
-honor separately.
+- `actionq` owns PostgreSQL-backed action and session lifecycles with a strict
+  queue contract and append-only events.
+- `auditctl` owns a repo-local audit index plus durable daily NDJSON artifacts
+  that can be rebuilt and read independently.
+- `agentops` owns cross-repository plans and the cockpit. It reads sprint state,
+  queue sessions, audit artifacts, and cost signals; dispatch writes go through
+  the actionq contract, while authenticated sprint mutations go through
+  sprintctl's MCP contract rather than direct database mutation.
 
-The orchestration layer around these tools is a multi-model dispatch pattern
-using a three-tier routing setup. Heavier reasoning and planning work routes to
-Opus, structured code generation routes to Sonnet, and lightweight checks and
-formatting go to Haiku. sprintctl and kctl serve as the shared state surface
-that all tiers write to and read from, which means the coordination point is a
-database with enforced transitions rather than a shared document that each model
-interprets differently.
-
-Session budget management follows from the same instinct. Extended thinking
-tokens are expensive and poorly suited to code generation, so the preferred
-pattern is minimal isolated sessions with a markdown handoff file (or copy pasted
-prompts!) as stateful context. Each session gets one brief, works against the
-database, and stops at an explicit checkpoint. `sprint-current.txt` is populated as
-semi-transient 'working note', and is small enough that a fresh session can orient
-without replaying the full history and gives the human operator, e.g. me, a quick
-reference point. Sprint DB can also give a fresh context through single commands,
-so picking up work is always easy enough. For longer breaks and multi-session
-handovers additional guidelines help land more robust session notes that also
-allow for claim upkeep and human intervention.
+The rule across all five is simple: state ownership decides repository
+ownership. It is also the main defense against building a cockpit-shaped
+monolith.
 
 ## Current state
 
-Both tools are published and in active use (by me). sprintctl has full test coverage
-with stdlib-only dependencies except Click, WAL-mode SQLite, and idempotent
-rendering. kctl has a working extraction pipeline against sprintctl's database.
+The tools are public and used across active repositories. sprintctl supports
+both local and remote modes, recoverable claims, provenance links, and a
+single-command resume bundle. kctl has a functioning two-stream extraction and
+review pipeline. actionq supplies the queue and session read contracts, while
+auditctl emits portable audit shards.
 
-Recent operational work included moving the full test suite from a blocking
-sprint-close gate to an operator-initiated task, a decision that came out of
-sprint #23 after the gate created more friction than safety. Pending
-implementation items include claim token persistence to disk, architecture
-contract tests in dispatch-build verification, and re-logging a coordination
-lesson as a durable event.
+The AgentOps cockpit is live and can show repository and sprint state, claims,
+session and dispatch lifecycles, audit outcomes, and bounded cost or model
+headroom signals. Its dispatch surface forwards work through actionq. sprintctl
+state and workspace artifacts remain separate service contracts rather than
+tables the UI is free to rewrite.
+
+This is a different system from the original pair of pipx-installed SQLite
+tools. Local-first operation is still the default for a small repository, but
+PostgreSQL and the cockpit now provide a shared view when work crosses hosts or
+needs an operator surface.
 
 ## Open edges
 
-The multi-model dispatch pattern works but is still partly implicit in how
-sessions are structured rather than fully declared in tooling. The routing is a
-convention enforced by the operator rather than by sprintctl itself, which means
-it depends on discipline more than it should.
+The substrate has enough parts that it must continually justify them. A tool
+designed to remove coordination ambiguity can recreate it through version
+drift, overlapping commands, or unclear recovery rules between repositories.
+Interface contracts and end-to-end verification matter more now than another
+feature in any one CLI.
 
-The knowledge extraction side (kctl) is also younger than the sprint management
-side. The read-only relationship to sprintctl's database is clean, but the
-extraction model itself is still being shaped by use rather than by a settled
-design. I have existing guideline based patterns for capturing full(er) prompt
-outputs as future training artifacts, but those are still pretty limited in
-implementation scope.
+kctl and auditctl are also less exercised than sprintctl and the cockpit. Their
+clean ownership boundaries are promising, but durable extraction and recovery
+need more operational mileage before they should be treated as settled.
 
-The broader question, how far schema-enforced tooling can go as a coordination
-layer for agentic work before it needs something more dynamic, is still open
-and probably the most interesting thing about the project.
-
-I already have some planned work for an overarching orchestrator, but that gets
-into something that I don't really have a problem with yet (nor the budget for).
+The cockpit write surface should stay narrow. Dispatch and explicit sprint
+operations are useful; turning the UI into a privileged backdoor around claim,
+queue, or audit rules would recreate the original Markdown problem with better
+CSS.

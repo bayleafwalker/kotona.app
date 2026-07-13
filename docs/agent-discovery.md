@@ -10,8 +10,8 @@ authentication surface that does not exist.
 - `/.well-known/agent-skills/index.json` points to a small, integrity-pinned
   guide for navigating the site's public material.
 - `/llms.txt` provides a compact map of the site's primary content surfaces.
-- HTML responses negotiate to Markdown when the request accepts
-  `text/markdown`. HTML remains the default.
+- HTML responses negotiate to Markdown when the request prefers
+  `text/markdown`. HTML remains the default when qualities tie.
 - `robots.txt` allows search and AI input, while declining AI training:
   `ai-train=no, search=yes, ai-input=yes`.
 - Former `/writing/` URLs with observed agent demand permanently redirect to

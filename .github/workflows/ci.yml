@@ -29,8 +29,20 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Unit tests
+        run: npm test
+
+      - name: Project freshness policy
+        run: npm run check:content-freshness
+
       - name: Type and content checks
         run: npm run check
 
       - name: Build
         run: npm run build
+
+      - name: Worker integration smoke test
+        run: npm run test:worker
+
+      - name: External link check
+        run: npm run check:links

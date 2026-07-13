@@ -2,7 +2,10 @@
 title: Compatibility reports should be a little rude
 status: archival
 area: contract governance
+published: 2026-04-08
 lastRevised: 2026-04-08
+projects:
+  - household-operating-platform
 draft: false
 summary: Backend-owned contracts only become useful release artifacts once the compatibility tooling is conservative enough to complain about real breakage instead of politely missing it.
 tags:

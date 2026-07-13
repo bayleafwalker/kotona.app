@@ -1,0 +1,12 @@
+/case-studies         /projects/       301
+/case-studies/        /projects/       301
+/writing                                                /notes/                                                301
+/writing/                                               /notes/                                                301
+/writing/the-boring-auth-boundary-was-right             /notes/the-boring-auth-boundary-was-right/             301
+/writing/the-boring-auth-boundary-was-right/            /notes/the-boring-auth-boundary-was-right/             301
+/writing/a-gitops-rollback-needs-time-to-reach-git      /notes/a-gitops-rollback-needs-time-to-reach-git/      301
+/writing/a-gitops-rollback-needs-time-to-reach-git/     /notes/a-gitops-rollback-needs-time-to-reach-git/      301
+/writing/compatibility-reports-should-be-a-little-rude  /notes/compatibility-reports-should-be-a-little-rude/  301
+/writing/compatibility-reports-should-be-a-little-rude/ /notes/compatibility-reports-should-be-a-little-rude/  301
+/case-studies/:slug   /projects/:slug/ 301
+/case-studies/:slug/  /projects/:slug/ 301

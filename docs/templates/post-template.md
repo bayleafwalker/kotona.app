@@ -1,10 +1,15 @@
 ---
 title: Replace with a concrete title
-date: 2026-04-08
+status: prospective
+area: replace-with-area
+published: 2026-07-13
+lastRevised: 2026-07-13
+projects: []
+relates: []
 draft: true
 tags:
   - replace-me
-summary: Optional one-line summary.
+summary: Replace with a one-line statement of what the note establishes.
 ---
 
 State the point or conclusion first.

@@ -1,14 +1,17 @@
 ---
 title: Turning household analytics into an operating platform
 summary: >-
-  Homelab Analytics is a household operating platform that keeps planning,
-  simulation, and policy logic in one repo, with Home Assistant used as a
-  device-facing partner rather than as the core execution model.
-date: 2026-04-08
+  Homelab Analytics keeps household reporting, planning, simulation, policy,
+  trust, and agent-facing retrieval in one semantic model. Home Assistant is
+  the device-facing partner, not the system of record for household reasoning.
+published: 2026-04-08
+lastRevised: 2026-07-13
+lastVerified: 2026-07-13
 draft: false
 project: homelab-analytics
 kind: engineering
-status: Stage 2 complete; Stages 3-5 partial
+status: Active household operating platform
+featured: true
 repoUrls:
   - https://github.com/bayleafwalker/homelab-analytics
 tags:
@@ -19,82 +22,75 @@ tags:
 
 ## Overview
 
-A household has enough cross-cutting facts — finance, utilities, contracts,
-device state, planning constraints — that modelling them properly matters. A
-spreadsheet handles one dimension at a time. Home Assistant handles device
-behavior well but is not built to be the semantic core for long-lived household
-reasoning. The right structure was a proper domain model with explicit data
-tiers, not a sprawl of automations or a reporting layer that pretends to support
-decisions it was never designed for.
+A household has enough cross-cutting facts — income, debt, utilities, contracts,
+assets, device state, and infrastructure cost — that modelling them properly
+matters. A spreadsheet handles one slice at a time. Home Assistant handles
+devices well, but entity state is a poor semantic core for long-horizon planning
+and cross-domain decisions.
 
-The project exists partly because the alternative — a spreadsheet, a stack of
-Home Assistant automations, some informal rules held in memory — was already
-failing at the kind of question I actually wanted to answer. Modelling a
-household loan repayment against heating costs against an investment plan
-requires a proper domain model and proper data boundaries, not a formula in
-column G. The day job involves building exactly this kind of thing at larger
-scale. It seemed worth applying the same discipline at home, if only to find
-out where the analogies break.
-
-Homelab Analytics is that model. The bronze, silver, and gold data boundaries
-are the same separation pattern that keeps transformation layers auditable under
-regulatory constraints in financial services work — applied here because the
-problem structure is the same, not as a homelab affectation. The shift from
-analytics to operating platform followed the same path it follows in enterprise
-work: descriptive reporting becomes useful, then someone asks a planning
-question the reporting layer cannot answer without pretending to be something
-else. Rather than bolting simulation and policy onto a reporting codebase or
-pushing cross-domain reasoning into Home Assistant, the repo formalized the
-boundary and kept the semantic model explicit enough that later stages can build
-on it without rewriting the foundation.
-
-The repo is not trying to turn Home Assistant into the whole platform or split
-every surface into its own service. Its role is to hold the cross-domain model
-behind finance, utilities, planning, and household policy.
+Homelab Analytics keeps that reasoning in an explicit household model. The
+bronze, silver, and gold data boundaries are borrowed from larger data systems
+because provenance, repeatability, and semantic ownership still matter at
+household scale. The project stopped being merely an analytics stack when the
+useful questions changed from "what happened?" to "what should happen, what if
+the assumptions change, and may the system act on the answer?"
 
 ## System shape
 
-The current architecture is a modular monolith with explicit internal strata
-for kernel logic, semantic handling, product packs, and delivery surfaces.
-Bronze, silver, and gold data boundaries remain explicit.
+The codebase remains a modular monolith with one deployment story and four
+internal stability strata: kernel, semantic engine, capability packs, and
+delivery surfaces. Finance, utilities, homelab, and cross-domain overview packs
+publish reusable operating views instead of binding every answer to one UI.
 
-Home Assistant stays as a partner layer for device-facing behavior. The current
-design treats it as the edge runtime, family-facing UI, and actuation surface,
-while the repo keeps the longer-lived semantics that do not fit neatly into
-entity state and automations.
+Postgres is the canonical operational and published-reporting store for shared
+deployments. DuckDB remains the worker and local analytical engine, while
+SQLite is a bootstrap fallback. Keeping those roles explicit is less elegant
+than calling every database interchangeable, but it is also true.
 
-The database separation between Postgres and DuckDB reflects a principle that
-shows up in any data platform with both operational and analytical workloads:
-the storage that serves transactional reads and the storage that supports
-analytical queries should not be forced into the same engine just because the
-data is related. Here, Postgres holds the operational state and DuckDB handles
-the analytical surfaces, and the boundary between them is explicit rather than
-papered over by an abstraction layer.
+Home Assistant is the edge runtime, device hub, family-facing interface, and
+actuation layer. The platform owns the longer-lived semantics, scenarios,
+policies, approvals, and cross-domain joins. Outputs return to Home Assistant as
+synthetic entities and approved actions; device control does not migrate into a
+private automation framework for the sake of architectural purity.
 
 ## Current state
 
-Is rapidly evolving, so this section is promised to be out of date at any
-given time. Regardless, brief notes follow in this section to capture some
-idea of the state of the work.
+Stage 2 operating views shipped as `v0.1.0`. Planning surfaces now cover budgets,
+loans, affordability, recurring commitments, and household cost. Five scenario
+types cover loan, income, expense, utility-tariff, and homelab cost-benefit
+questions with saved assumptions and staleness tracking.
 
-Stage 2 is marked complete and released as `v0.1.0`. Later stages for
-planning, simulation, and policy are partially in place, with scenario support,
-a Home Assistant bridge, policy evaluation, approval flows, and synthetic
-entity publication already present in the worktree.
+The reporting layer now includes finance, assets, energy, infrastructure, and
+home-automation marts. Source pages expose freshness and remediation paths, and
+lineage and confidence are visible parts of the product rather than metadata
+kept for a future governance phase.
 
-The repo also carries a large pytest suite across architecture contracts,
-domain logic, storage adapters, and API behavior. That does not make the later
-roadmap stages complete, but it does mean the project is being exercised as
-software rather than only described as intent.
+Later roadmap stages have landed out of numerical order. The Home Assistant
+bridge can ingest state, publish synthetic entities, evaluate policy, and route
+approval-aware actions. Policies have a persisted Postgres registry. The first
+agent-facing slice provides a semantic publication index, narrow MCP tools, and
+a shared proposal queue: an agent can retrieve published meaning and draft an
+action, but approval remains the only route to execution.
+
+The repository has therefore moved beyond the older description of Stages 3–5
+as mostly provisional. It is still incomplete, but it is incomplete software
+with operating surfaces, not an eleven-stage architecture document waiting for
+an implementation.
 
 ## Open edges
 
-The remaining work is mostly about finishing the semantic cleanup that earlier
-stages depend on and tightening the adapter contracts around Home Assistant and
-other boundary integrations. Publication semantics and a few household-dimension
-details are still not fully closed.
+The roadmap is now less linear than the stage numbers imply. A small amount of
+canonical-model and publication cleanup remains while policy, trust, and agent
+surfaces already exist. The documentation needs to keep distinguishing a
+shipped slice from a completed stage or it will overstate both.
 
-The later trust and agent-oriented layers are directionally defined more
-clearly than they are operationally delivered. The project already has the
-shape of an operating platform, but some of the later layers are still roadmap
-commitments rather than closed implementation surfaces.
+Home Assistant is still the only full reference integration. The generic
+adapter contracts are present, but a second serious adapter is needed to prove
+that the abstraction was extracted rather than merely renamed around the first
+implementation.
+
+The agent surface is intentionally narrow. It retrieves publication-backed
+facts and creates auditable proposals; it is not a general household oracle or
+an autonomous operator. Better explanations, broader semantic coverage, and a
+useful assistant experience can grow from that base without weakening the
+approval boundary.

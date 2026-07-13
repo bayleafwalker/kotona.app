@@ -2,7 +2,10 @@
 title: Schema on split
 status: guiding
 area: data architecture
+published: 2026-05-15
 lastRevised: 2026-05-15
+projects:
+  - household-operating-platform
 relates:
   - log-as-system
 tags:

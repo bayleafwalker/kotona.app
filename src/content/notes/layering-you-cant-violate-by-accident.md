@@ -2,7 +2,10 @@
 title: Layering you can't violate by accident
 status: guiding
 area: software architecture
+published: 2026-06-10
 lastRevised: 2026-06-10
+projects:
+  - household-operating-platform
 relates:
   - the-coordinator-never-touches-the-repo
 tags:

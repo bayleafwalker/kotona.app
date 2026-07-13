@@ -2,7 +2,9 @@
 title: NFC tokens pointing at a manifest
 status: prospective
 area: hardware contracts
+published: 2026-06-10
 lastRevised: 2026-06-10
+projects: []
 tags:
   - hardware
   - contracts

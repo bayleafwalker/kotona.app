@@ -1,5 +1,5 @@
 ---
-import { getCollection, render, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -10,46 +10,69 @@ import {
 } from "../../lib/content";
 import { siteConfig } from "../../site";
 
-export const prerender = true;
+const slug = Astro.params.slug;
+const entry = slug ? await getEntry("notes", slug) : undefined;
 
-export async function getStaticPaths() {
-  const entries = sortByDateAndTitle(
-    (await getCollection("notes")).map((entry) => ({
-      ...entry,
-      data: {
-        ...entry.data,
-        date: entry.data.lastRevised,
-      },
-    })),
-  );
-  const visibleEntries = getVisibleEntries(entries);
-
-  return visibleEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+if (!entry || (import.meta.env.PROD && entry.data.draft)) {
+  Astro.response.status = 404;
+  return Astro.rewrite("/404");
 }
 
-type Props = {
-  entry: CollectionEntry<"notes">;
-};
-
-const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const formattedDate = formatDate(entry.data.lastRevised);
+const formattedPublishedDate = formatDate(entry.data.published);
+const wasRevised =
+  entry.data.lastRevised.getTime() !== entry.data.published.getTime();
+const formattedRevisedDate = formatDate(entry.data.lastRevised);
+const projectEntries = getVisibleEntries(
+  (
+    await Promise.all(
+      entry.data.projects.map((reference) => getEntry(reference)),
+    )
+  ).filter((project) => project !== undefined),
+);
+const visibleNotes = getVisibleEntries(await getCollection("notes"));
+const explicitlyRelated = getVisibleEntries(
+  (
+    await Promise.all(
+      entry.data.relates.map((reference) => getEntry(reference)),
+    )
+  ).filter((note) => note !== undefined),
+);
+const backlinks = visibleNotes.filter((note) =>
+  note.data.relates.some((reference) => reference.id === entry.slug),
+);
+const relatedBySlug = new Map(
+  [...explicitlyRelated, ...backlinks]
+    .filter((note) => note.slug !== entry.slug)
+    .map((note) => [note.slug, note]),
+);
+const relatedNotes = sortByDateAndTitle(
+  [...relatedBySlug.values()].map((note) => ({
+    ...note,
+    data: { ...note.data, date: note.data.published },
+  })),
+);
+const noteKind = entry.data.draft
+  ? "Draft note"
+  : projectEntries.length > 0
+    ? "Project note"
+    : "System note";
 ---
 
 <BaseLayout
   title={entry.data.title}
   description={entry.data.summary ?? siteConfig.description}
   noindex={entry.data.draft}
+  pageType="article"
+  publishedDate={entry.data.published}
+  modifiedDate={entry.data.lastRevised}
 >
   <section class="content-shell">
     <article class="content-panel">
       <a class="content-back-link" href="/notes/">Back to notes</a>
 
       <header class="content-header">
-        <p class="eyebrow">{entry.data.draft ? "Draft note" : "System note"}</p>
+        <p class="eyebrow">{noteKind}</p>
         <h1 class="content-title">{entry.data.title}</h1>
         {
           entry.data.summary ? (
@@ -58,15 +81,20 @@ const formattedDate = formatDate(entry.data.lastRevised);
         }
 
         <p class="content-context">
-          {entry.data.status} / {entry.data.area} / Revised {formattedDate}
+          {entry.data.status} / {entry.data.area} / Published {
+            formattedPublishedDate
+          }{wasRevised ? ` / Revised ${formattedRevisedDate}` : ""}
         </p>
 
         {
-          entry.data.relates.length > 0 ? (
-            <ul class="tag-list" aria-label="Related notes">
-              {entry.data.relates.map((slug) => (
+          projectEntries.length > 0 ? (
+            <ul class="relation-links" aria-label="Related projects">
+              {projectEntries.map((project) => (
                 <li>
-                  <a href={`/notes/${slug}/`}>{slug}</a>
+                  Project:{" "}
+                  <a href={`/projects/${project.slug}/`}>
+                    {project.data.project}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -79,8 +107,8 @@ const formattedDate = formatDate(entry.data.lastRevised);
       {
         entry.data.draft ? (
           <p class="publication-note">
-            This draft is visible in development and excluded from production
-            builds.
+            This draft is visible in development and is not published in
+            production.
           </p>
         ) : null
       }
@@ -88,6 +116,21 @@ const formattedDate = formatDate(entry.data.lastRevised);
       <div class="prose">
         <Content />
       </div>
+
+      {
+        relatedNotes.length > 0 ? (
+          <nav class="related-content" aria-labelledby="related-notes-title">
+            <h2 id="related-notes-title">Related notes</h2>
+            <ul>
+              {relatedNotes.map((note) => (
+                <li>
+                  <a href={`/notes/${note.slug}/`}>{note.data.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null
+      }
     </article>
   </section>
 </BaseLayout>
