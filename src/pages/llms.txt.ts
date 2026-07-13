@@ -42,14 +42,14 @@ export const GET: APIRoute = async ({ site }) => {
     "",
     ...projects.map(
       (entry) =>
-        `- [${entry.data.title}](${new URL(`/projects/${entry.slug}/`, baseUrl)}): ${entry.data.summary ?? "Project context and current state."}`,
+        `- [${entry.data.title}](${new URL(`/projects/${entry.id}/`, baseUrl)}): ${entry.data.summary ?? "Project context and current state."}`,
     ),
     "",
     "## Notes",
     "",
     ...notes.map(
       (entry) =>
-        `- [${entry.data.title}](${new URL(`/notes/${entry.slug}/`, baseUrl)}): ${entry.data.summary ?? "System note."}`,
+        `- [${entry.data.title}](${new URL(`/notes/${entry.id}/`, baseUrl)}): ${entry.data.summary ?? "System note."}`,
     ),
   ].join("\n");
 

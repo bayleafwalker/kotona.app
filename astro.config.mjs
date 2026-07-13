@@ -58,7 +58,9 @@ export default defineConfig({
   // The site does not use Astro sessions. An explicit null driver keeps the
   // Worker independent of an otherwise-unused Cloudflare KV binding.
   session: {
-    driver: "null",
+    driver: {
+      entrypoint: "unstorage/drivers/null",
+    },
   },
   site: siteConfig.siteUrl,
   trailingSlash: "always",

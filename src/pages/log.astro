@@ -12,12 +12,12 @@ const generatedEntries: ChangelogEntry[] = [
   ...notes.map((note) => ({
     date: note.data.published.toISOString().slice(0, 10),
     entry: `Published note: ${note.data.title}.`,
-    href: `/notes/${note.slug}/`,
+    href: `/notes/${note.id}/`,
   })),
   ...projects.map((project) => ({
     date: project.data.lastVerified.toISOString().slice(0, 10),
     entry: `Verified project state: ${project.data.project}.`,
-    href: `/projects/${project.slug}/`,
+    href: `/projects/${project.id}/`,
   })),
 ];
 const entries = [...(changelog as ChangelogEntry[]), ...generatedEntries]

@@ -9,8 +9,8 @@ import {
   sortByDateAndTitle,
 } from "../../lib/content";
 
-const slug = Astro.params.slug;
-const entry = slug ? await getEntry("projects", slug) : undefined;
+const id = Astro.params.slug;
+const entry = id ? await getEntry("projects", id) : undefined;
 
 if (!entry || (import.meta.env.PROD && entry.data.draft)) {
   Astro.response.status = 404;
@@ -24,7 +24,7 @@ const formattedVerifiedDate = formatDate(entry.data.lastVerified);
 const relatedNotes = sortByDateAndTitle(
   getVisibleEntries(await getCollection("notes"))
     .filter((note) =>
-      note.data.projects.some((reference) => reference.id === entry.slug),
+      note.data.projects.some((reference) => reference.id === entry.id),
     )
     .map((note) => ({
       ...note,
@@ -121,7 +121,7 @@ const relatedLinks = [
             <ul>
               {relatedNotes.map((note) => (
                 <li>
-                  <a href={`/notes/${note.slug}/`}>{note.data.title}</a>
+                  <a href={`/notes/${note.id}/`}>{note.data.title}</a>
                 </li>
               ))}
             </ul>

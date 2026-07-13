@@ -1,4 +1,6 @@
-import { defineCollection, reference, z } from "astro:content";
+import { defineCollection, reference } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
 
 const sharedProjectSchema = {
   title: z.string().min(1),
@@ -11,7 +13,10 @@ const sharedProjectSchema = {
 };
 
 const notes = defineCollection({
-  type: "content",
+  loader: glob({
+    base: "./src/content/notes",
+    pattern: "**/*.{md,mdx}",
+  }),
   schema: z.object({
     title: z.string().min(1),
     summary: z.string().max(280).optional(),
@@ -27,15 +32,18 @@ const notes = defineCollection({
 });
 
 const projects = defineCollection({
-  type: "content",
+  loader: glob({
+    base: "./src/content/projects",
+    pattern: "**/*.{md,mdx}",
+  }),
   schema: z.object({
     ...sharedProjectSchema,
     project: z.string().min(1),
     kind: z.enum(["engineering", "fiction"]).default("engineering"),
     status: z.string().min(1),
     featured: z.boolean().default(false),
-    repoUrls: z.array(z.string().url()).default([]),
-    externalUrl: z.string().url().optional(),
+    repoUrls: z.array(z.url()).default([]),
+    externalUrl: z.url().optional(),
   }),
 });
 

@@ -25,18 +25,18 @@ const notes = sortByDateAndTitle(
   })),
 );
 const visibleNotes = getVisibleEntries(notes);
-const startHereSlugs = [
+const startHereIds = [
   "schema-on-split",
   "moving-a-live-cluster-to-a-new-subnet",
   "judge-agents-by-the-next-prompt",
   "delivered-energy",
 ] as const;
-const startHereNotes = startHereSlugs.flatMap((slug) => {
-  const entry = visibleNotes.find((note) => note.slug === slug);
+const startHereNotes = startHereIds.flatMap((id) => {
+  const entry = visibleNotes.find((note) => note.id === id);
   return entry ? [entry] : [];
 });
 const recentNotes = visibleNotes
-  .filter((note) => !startHereSlugs.some((slug) => slug === note.slug))
+  .filter((note) => !startHereIds.some((id) => id === note.id))
   .slice(0, 5);
 const contactLinks = getContactLinks();
 ---
@@ -86,7 +86,7 @@ const contactLinks = getContactLinks();
         <div class="entry-list start-here-list">
           {startHereNotes.map((entry) => (
             <EntryCard
-              href={`/notes/${entry.slug}/`}
+              href={`/notes/${entry.id}/`}
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
@@ -112,7 +112,7 @@ const contactLinks = getContactLinks();
         <div class="entry-list">
           {featuredProjects.map((entry) => (
             <EntryCard
-              href={`/projects/${entry.slug}/`}
+              href={`/projects/${entry.id}/`}
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
@@ -141,7 +141,7 @@ const contactLinks = getContactLinks();
         <div class="entry-list">
           {recentNotes.map((entry) => (
             <EntryCard
-              href={`/notes/${entry.slug}/`}
+              href={`/notes/${entry.id}/`}
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}

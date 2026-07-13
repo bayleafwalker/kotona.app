@@ -10,11 +10,11 @@ import { fileURLToPath, URL } from "node:url";
 
 const rootDirectory = fileURLToPath(new URL("../", import.meta.url));
 const require = createRequire(import.meta.url);
-const wranglerPackagePath = require.resolve("wrangler/package.json");
-const wranglerPackage = JSON.parse(await readFile(wranglerPackagePath, "utf8"));
-const wranglerBin = path.resolve(
-  path.dirname(wranglerPackagePath),
-  wranglerPackage.bin.wrangler,
+const astroPackagePath = require.resolve("astro/package.json");
+const astroPackage = JSON.parse(await readFile(astroPackagePath, "utf8"));
+const astroBin = path.resolve(
+  path.dirname(astroPackagePath),
+  astroPackage.bin.astro,
 );
 
 const workerLogLimit = 40_000;
@@ -97,20 +97,11 @@ async function availablePort() {
   return address.port;
 }
 
-function startWorker(port, inspectorPort) {
+function startWorker(port) {
   const detached = process.platform !== "win32";
   worker = spawn(
     process.execPath,
-    [
-      wranglerBin,
-      "dev",
-      "--ip",
-      "127.0.0.1",
-      "--port",
-      String(port),
-      "--inspector-port",
-      String(inspectorPort),
-    ],
+    [astroBin, "preview", "--host", "127.0.0.1", "--port", String(port)],
     {
       cwd: rootDirectory,
       detached,
@@ -128,7 +119,7 @@ function startWorker(port, inspectorPort) {
   workerExit = new Promise((resolve) => {
     worker.once("error", (error) => {
       workerSpawnError = error;
-      appendWorkerLog(`Wrangler spawn error: ${error.stack ?? error}\n`);
+      appendWorkerLog(`Astro preview spawn error: ${error.stack ?? error}\n`);
       resolve({ code: null, signal: null });
     });
     worker.once("exit", (code, signal) => resolve({ code, signal }));
@@ -187,7 +178,7 @@ async function waitForReady(baseUrl) {
     if (worker.exitCode !== null) {
       const result = await workerExit;
       throw new Error(
-        `Wrangler exited before readiness (code=${result.code}, signal=${result.signal})`,
+        `Astro preview exited before readiness (code=${result.code}, signal=${result.signal})`,
       );
     }
 
@@ -207,7 +198,9 @@ async function waitForReady(baseUrl) {
     await delay(100);
   }
 
-  throw new Error(`Wrangler was not ready within 30s: ${lastError?.message}`);
+  throw new Error(
+    `Astro preview was not ready within 30s: ${lastError?.message}`,
+  );
 }
 
 async function runChecks(baseUrl) {
@@ -482,9 +475,9 @@ async function runChecks(baseUrl) {
 
 async function main() {
   for (const relativePath of [
-    "dist/_worker.js/index.js",
-    "dist/sitemap-index.xml",
-    "dist/sitemap-0.xml",
+    "dist/server/entry.mjs",
+    "dist/client/sitemap-index.xml",
+    "dist/client/sitemap-0.xml",
   ]) {
     try {
       await access(path.join(rootDirectory, relativePath));
@@ -494,23 +487,19 @@ async function main() {
   }
 
   const port = await availablePort();
-  let inspectorPort = await availablePort();
-  while (inspectorPort === port) {
-    inspectorPort = await availablePort();
-  }
   const baseUrl = `http://127.0.0.1:${port}/`;
-  const detached = startWorker(port, inspectorPort);
+  const detached = startWorker(port);
   let smokeError;
 
   const stopForSignal = (signal, exitCode) => {
     void stopWorker(detached).finally(() => process.exit(exitCode));
-    output(`received ${signal}; stopping Wrangler`);
+    output(`received ${signal}; stopping Astro preview`);
   };
   process.once("SIGINT", () => stopForSignal("SIGINT", 130));
   process.once("SIGTERM", () => stopForSignal("SIGTERM", 143));
 
   try {
-    output(`starting Wrangler on ${baseUrl}`);
+    output(`starting Astro preview on ${baseUrl}`);
     await waitForReady(baseUrl);
     await runChecks(baseUrl);
   } catch (error) {
@@ -520,11 +509,15 @@ async function main() {
   }
 
   if (/Invalid binding [`'"]?SESSION|\benv\.SESSION\b/i.test(workerLogs)) {
-    smokeError ??= new Error("Wrangler reported an unexpected SESSION binding");
+    smokeError ??= new Error(
+      "Astro preview reported an unexpected SESSION binding",
+    );
   }
 
   if (smokeError) {
-    process.stderr.write(`\n[worker-smoke] Wrangler output:\n${workerLogs}\n`);
+    process.stderr.write(
+      `\n[worker-smoke] Astro preview output:\n${workerLogs}\n`,
+    );
     throw smokeError;
   }
 

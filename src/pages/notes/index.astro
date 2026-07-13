@@ -38,7 +38,7 @@ const visibleNotes = getVisibleEntries(notes);
         <div class="entry-list">
           {visibleNotes.map((entry) => (
             <EntryCard
-              href={`/notes/${entry.slug}/`}
+              href={`/notes/${entry.id}/`}
               title={entry.data.title}
               summary={entry.data.summary}
               context={`${entry.data.status} / ${entry.data.area}`}
