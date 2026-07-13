@@ -96,8 +96,10 @@ Set these GitHub repository secrets before expecting deploys to run:
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-The Cloudflare dashboard can still manage the custom domain attachment itself.
-This repo defines the Worker runtime, build settings, and deployment path.
+The production hostnames are declared as Worker custom domains in
+`wrangler.jsonc`. Wrangler reconciles their DNS records and certificates during
+deployment, so do not add separate origin records for those hostnames in the
+Cloudflare dashboard.
 
 CI lives in `.github/workflows/ci.yml` and runs install, format check, lint,
 Astro checks, and the production build.
