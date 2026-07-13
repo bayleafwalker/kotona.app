@@ -16,7 +16,7 @@ system rules, and reference designs.
 
 ## Local development
 
-This repo targets Node 20 LTS.
+This repo targets Node 24 LTS.
 
 ```bash
 npm ci
@@ -37,6 +37,7 @@ Run the same checks locally that CI runs:
 npm run format
 npm run lint
 npm test
+npm run audit:dependencies
 npm run check:content-freshness
 npm run check
 npm run build
@@ -64,7 +65,7 @@ To add a note:
 3. Keep the structure terse and diagram-heavy where useful.
 
 Frontmatter is schema-validated during `npm run check` and `npm run build`.
-Note `projects` and `relates` values are collection slugs and are validated as
+Note `projects` and `relates` values are collection IDs and are validated as
 references during those checks.
 
 Published project pages must also keep `lastVerified` current. The freshness
@@ -101,8 +102,8 @@ This repo deploys to Cloudflare Workers using the Astro Cloudflare adapter and
 Useful commands:
 
 - `npm run build` builds the Worker and static assets into `dist/`
-- `npm run preview` builds and starts a local Wrangler preview
-- `npm run deploy` builds, excludes the generated `_worker.js` bundle from static asset upload, and deploys the Worker
+- `npm run preview` builds and starts the Cloudflare-backed Astro preview
+- `npm run deploy` builds and deploys the Worker through Wrangler
 - `npm run cf-typegen` regenerates `worker-configuration.d.ts` after binding changes
 
 Production deploys are handled by `.github/workflows/deploy.yml` after the `ci`
@@ -118,6 +119,7 @@ in `wrangler.jsonc`. Wrangler reconciles its DNS record and certificate during
 deployment. The apex `kotona.app` hostname belongs to a separate service and
 must not be attached to this Worker.
 
-CI lives in `.github/workflows/ci.yml` and runs install, format check, lint,
-unit tests, project freshness and Astro checks, the production build, a local
-Worker integration smoke test, and an external-link check.
+CI lives in `.github/workflows/ci.yml` and runs install, dependency audit,
+format check, lint, unit tests, project freshness and Astro checks, the
+production build, a local Worker integration smoke test, and an external-link
+check.

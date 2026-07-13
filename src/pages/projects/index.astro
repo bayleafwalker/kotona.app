@@ -46,7 +46,7 @@ const projectIntro =
         <div class="entry-list">
           {engineering.map((entry) => (
             <EntryCard
-              href={`/projects/${entry.slug}/`}
+              href={`/projects/${entry.id}/`}
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
@@ -72,7 +72,7 @@ const projectIntro =
         <div class="entry-list">
           {fiction.map((entry) => (
             <EntryCard
-              href={`/projects/${entry.slug}/`}
+              href={`/projects/${entry.id}/`}
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
@@ -98,7 +98,7 @@ const projectIntro =
         <div class="entry-list">
           {drafts.map((entry) => (
             <EntryCard
-              href={`/projects/${entry.slug}/`}
+              href={`/projects/${entry.id}/`}
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}

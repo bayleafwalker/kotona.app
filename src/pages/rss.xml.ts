@@ -25,7 +25,7 @@ export const GET: APIRoute = async (context) => {
       title: entry.data.title,
       description: entry.data.summary ?? "",
       pubDate: entry.data.published,
-      link: `/notes/${entry.slug}/`,
+      link: `/notes/${entry.id}/`,
       categories: [entry.data.area, ...entry.data.tags],
     })),
   });
