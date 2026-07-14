@@ -270,7 +270,7 @@ async function runChecks(baseUrl) {
     assertContentType(canonical.response, "text/html");
     assertEqual(
       canonicalFromHtml(canonical.body),
-      "https://www.kotona.app/about/",
+      "https://kotona.app/about/",
       "/about/ canonical",
     );
   });
@@ -384,7 +384,7 @@ async function runChecks(baseUrl) {
     assertContentType(sitemapIndex.response, "application/xml");
     assertIncludes(
       sitemapIndex.body,
-      "https://www.kotona.app/sitemap-0.xml",
+      "https://kotona.app/sitemap-0.xml",
       "sitemap index",
     );
 
@@ -395,12 +395,12 @@ async function runChecks(baseUrl) {
     assertContentType(sitemap.response, "application/xml");
     assertIncludes(
       sitemap.body,
-      "https://www.kotona.app/notes/schema-on-split/",
+      "https://kotona.app/notes/schema-on-split/",
       "sitemap note",
     );
     assertIncludes(
       sitemap.body,
-      "https://www.kotona.app/projects/gitops-cluster/",
+      "https://kotona.app/projects/gitops-cluster/",
       "sitemap project",
     );
     assert(
@@ -425,11 +425,7 @@ async function runChecks(baseUrl) {
     await Promise.all(
       locations.map(async (location) => {
         const publicUrl = new URL(location);
-        assertEqual(
-          publicUrl.origin,
-          "https://www.kotona.app",
-          "sitemap origin",
-        );
+        assertEqual(publicUrl.origin, "https://kotona.app", "sitemap origin");
         const page = await request(publicUrl.pathname);
         assertEqual(page.response.status, 200, `${publicUrl.pathname} status`);
         assertContentType(page.response, "text/html");
@@ -467,7 +463,7 @@ async function runChecks(baseUrl) {
     assertContentType(robots.response, "text/plain");
     assertIncludes(
       robots.body,
-      "https://www.kotona.app/sitemap-index.xml",
+      "https://kotona.app/sitemap-index.xml",
       "robots.txt sitemap",
     );
   });

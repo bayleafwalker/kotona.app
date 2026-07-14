@@ -1,5 +1,5 @@
 export const siteConfig = {
-  siteUrl: "https://www.kotona.app",
+  siteUrl: "https://kotona.app",
   title: "kotona.app",
   description:
     "Project and system notes on declarative infrastructure, data platforms, agent workflows, and contract-first systems.",

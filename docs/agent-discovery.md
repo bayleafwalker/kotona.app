@@ -41,7 +41,7 @@ authoritative `kotona.app` DNS zone and DNSSEC at the zone's delegation.
 Do not add a DNS-AID record merely to satisfy a scanner. First deploy a real
 agent protocol endpoint. Then publish a record for the hostname that serves
 that endpoint (for the current public host, likely under
-`_agents.www.kotona.app`), using the protocol's current DNS-AID profile and
+`_agents.kotona.app`), using the protocol's current DNS-AID profile and
 its required `alpn`, endpoint, and experimental numeric SvcParamKey fields.
 Enable DNSSEC in Cloudflare, verify the DS record at the registrar, then verify
 with a validating resolver before announcing the endpoint.

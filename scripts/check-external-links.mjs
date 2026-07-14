@@ -9,7 +9,7 @@ import { pathToFileURL } from "node:url";
 const DEFAULT_CONCURRENCY = 6;
 const DEFAULT_TIMEOUT_MS = 12_000;
 const USER_AGENT =
-  "kotona.app-link-checker/1.0 (+https://www.kotona.app/; read-only CI check)";
+  "kotona.app-link-checker/1.0 (+https://kotona.app/; read-only CI check)";
 
 const SOURCE_EXTENSIONS = new Set([".astro", ".md", ".mdx"]);
 const SKIPPED_DIRECTORIES = new Set([

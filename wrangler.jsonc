@@ -1,12 +1,16 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "kotona-app",
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-04-08",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "preview_urls": true,
   "routes": [
+    {
+      "pattern": "kotona.app",
+      "custom_domain": true,
+    },
     {
       "pattern": "www.kotona.app",
       "custom_domain": true,
