@@ -5,8 +5,8 @@ summary: >-
   now sit beside actionq, auditctl, and a live AgentOps cockpit, with each tool
   owning one kind of operational state.
 published: 2026-04-09
-lastRevised: 2026-07-13
-lastVerified: 2026-07-13
+lastRevised: 2026-07-17
+lastVerified: 2026-07-17
 draft: false
 project: sprintctl-and-kctl
 kind: engineering
@@ -18,6 +18,7 @@ repoUrls:
   - https://github.com/bayleafwalker/actionq
   - https://github.com/bayleafwalker/auditctl
   - https://github.com/bayleafwalker/agentops
+externalUrl: https://bayleafwalker.github.io/agentops/
 tags:
   - agents
   - workflow
@@ -42,6 +43,13 @@ story. The same state-ownership rule has grown into a small AgentOps substrate:
 each repository owns one operational domain, and the cockpit composes their
 read surfaces instead of becoming a new database with opinions about all of
 them.
+
+## Interactive ecosystem map
+
+[Explore the interactive AgentOps ecosystem map](https://bayleafwalker.github.io/agentops/)
+to follow the wider lifecycle across sprintctl, kctl, actionq, the dispatcher,
+auditctl, deployment, and the cockpit. It focuses on state ownership and the
+handoffs between tools rather than treating the cockpit as the system itself.
 
 ## System shape
 
