@@ -2,14 +2,17 @@ export const siteConfig = {
   siteUrl: "https://kotona.app",
   title: "kotona.app",
   description:
-    "Project and system notes on declarative infrastructure, data platforms, agent workflows, and contract-first systems.",
+    "Operated projects and reusable system notes on declarative infrastructure, data platforms, agent workflows, and contract-first systems.",
   defaultOgImage: "/og-default.png",
   defaultOgImageAlt: "kotona.app — systems, decisions, and failure modes",
+  home: {
+    heading: "Operated projects and reusable system notes",
+    summary:
+      "Field notes on data platforms, declarative infrastructure, contract-first systems, and agent-assisted engineering.",
+  },
   profile: {
     name: "Juha Huotari",
     role: "Solution analyst",
-    summary:
-      "Solution analyst in Helsinki. I work on data platforms, integration-heavy systems, and infrastructure that benefits from being slightly harder to misuse.",
     about:
       "I’m Juha Huotari, a solution analyst based in Helsinki. Day to day I work around data platforms, requirements, integration boundaries, and the awkward places where useful systems become expensive to reason about. This site holds project notes and system notes from that work and from adjacent personal systems work when the lesson transfers.",
     location: "Helsinki",
