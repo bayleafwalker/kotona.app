@@ -9,3 +9,9 @@ dist/
 worker-configuration.d.ts
 .DS_Store
 temp/
+
+# Local direnv/environment files
+.envrc
+.envrc.local
+.envrc.*
+!.envrc.example
