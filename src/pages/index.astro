@@ -8,7 +8,7 @@ import {
   sortByDateAndTitle,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
-import { getContactLinks, siteConfig } from "../site";
+import { siteConfig } from "../site";
 
 const projectEntries = sortByLastVerifiedAndTitle(
   await getCollection("projects"),
@@ -38,38 +38,17 @@ const startHereNotes = startHereIds.flatMap((id) => {
 const recentNotes = visibleNotes
   .filter((note) => !startHereIds.some((id) => id === note.id))
   .slice(0, 5);
-const contactLinks = getContactLinks();
 ---
 
 <BaseLayout>
   <section class="intro-panel">
     <p class="eyebrow">kotona.app</p>
-    <h1 class="page-title">{siteConfig.profile.name}</h1>
-    <p class="page-copy">{siteConfig.profile.summary}</p>
+    <h1 class="page-title">{siteConfig.home.heading}</h1>
+    <p class="page-copy">{siteConfig.home.summary}</p>
     <p class="page-copy">
-      This is a field notebook for systems that have to keep working: data
-      platforms, infrastructure, contracts, and agent-assisted engineering.
-      Projects explain what exists. Notes keep the decisions, failures, and
-      evidence worth reusing.
+      Projects explain what exists and what is currently true. Notes preserve
+      decisions, boundaries, failures, and evidence worth reusing.
     </p>
-
-    {
-      contactLinks.length > 0 ? (
-        <ul class="link-row" aria-label="External links">
-          {contactLinks.map((link) => (
-            <li>
-              <a
-                class="link-chip"
-                href={link.href}
-                rel={link.href.startsWith("http") ? "me noreferrer" : undefined}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : null
-    }
   </section>
 
   <section class="page-section">
