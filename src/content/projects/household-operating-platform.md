@@ -5,8 +5,8 @@ summary: >-
   trust, and agent-facing retrieval in one semantic model. Home Assistant is
   the device-facing partner, not the system of record for household reasoning.
 published: 2026-04-08
-lastRevised: 2026-07-13
-lastVerified: 2026-07-13
+lastRevised: 2026-07-17
+lastVerified: 2026-07-17
 draft: false
 project: homelab-analytics
 kind: engineering
@@ -14,6 +14,7 @@ status: Active household operating platform
 featured: true
 repoUrls:
   - https://github.com/bayleafwalker/homelab-analytics
+externalUrl: https://bayleafwalker.github.io/homelab-analytics/
 tags:
   - architecture
   - home assistant
@@ -34,6 +35,13 @@ because provenance, repeatability, and semantic ownership still matter at
 household scale. The project stopped being merely an analytics stack when the
 useful questions changed from "what happened?" to "what should happen, what if
 the assumptions change, and may the system act on the answer?"
+
+## Interactive system map
+
+[Explore the interactive household operating platform map](https://bayleafwalker.github.io/homelab-analytics/)
+to trace domain data through bronze, silver, and gold boundaries, then continue
+through publications, scenarios, policy evaluation, approval, Home Assistant
+actuation, and measured feedback.
 
 ## System shape
 
