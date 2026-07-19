@@ -35,7 +35,7 @@ and guest paths must read as separate safe zones.
 Target file:
 `public/images/notes/size-the-spa-to-the-river/hero-winter-rotenburo.webp`
 
-Output: 1600 × 900, 16:9, WebP, target under 350 kB.
+Placed derivative: 1376 × 768, WebP, about 110 kB.
 
 Prompt:
 
@@ -65,7 +65,7 @@ Caption:
 Target file:
 `public/images/notes/size-the-spa-to-the-river/thermal-path-interior.webp`
 
-Output: 1500 × 1000, 3:2, WebP, target under 400 kB.
+Placed derivative: 1264 × 848, WebP, about 90 kB.
 
 Prompt:
 
@@ -94,7 +94,7 @@ Caption:
 Target file:
 `public/images/notes/size-the-spa-to-the-river/mill-energy-room.webp`
 
-Output: 1500 × 1000, 3:2, WebP, target under 400 kB.
+Placed derivative: 1600 × 873, WebP, about 175 kB.
 
 Prompt:
 
@@ -124,7 +124,7 @@ Caption:
 Target file:
 `public/images/notes/size-the-spa-to-the-river/site-oblique.webp`
 
-Output: 1600 × 1000, 8:5, WebP, target under 450 kB.
+Available derivative: 1312 × 816, WebP, about 245 kB.
 
 Prompt:
 
@@ -154,7 +154,7 @@ Caption:
 Target file:
 `public/images/notes/size-the-spa-to-the-river/summer-river-terrace.webp`
 
-Output: 1500 × 1000, 3:2, WebP, target under 400 kB.
+Available derivative: 1500 × 1006, WebP, about 335 kB.
 
 Prompt:
 
@@ -185,9 +185,9 @@ place, add this block to the note frontmatter:
 hero:
   src: /images/notes/size-the-spa-to-the-river/hero-winter-rotenburo.webp
   alt: Two steaming outdoor baths beside a low mill dam in a snowy Finnish forest at dusk.
-  caption: Concept image generated from the design brief; not a surveyed or proposed site.
-  width: 1600
-  height: 900
+  caption: Generated concept image, not a surveyed site or safe hydraulic layout.
+  width: 1376
+  height: 768
 ```
 
 The hero will also become the note's Open Graph image. Add interior images only
@@ -203,13 +203,13 @@ Example inline placement:
   <img
     src="/images/notes/size-the-spa-to-the-river/mill-energy-room.webp"
     alt="A restored mill energy room containing hydro machinery, heat pumps, and large insulated pipes."
-    width="1500"
-    height="1000"
+    width="1600"
+    height="873"
     loading="lazy"
   />
   <figcaption>
-    Concept image: hydroelectricity drives heat pumps connected to a closed
-    tailrace heat-exchanger loop.
+    Generated concept image. It expresses the old-and-new mechanical room, not
+    an equipment schedule, piping design, or safe service clearance.
   </figcaption>
 </figure>
 ```

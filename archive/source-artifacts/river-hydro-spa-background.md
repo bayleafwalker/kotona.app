@@ -2,16 +2,27 @@
 title: River-hydro spa retreat — background analysis
 date: 2026-07-19
 tags: [energy, hydro, concept, finland]
-summary: Source material for a future note on a river-hydro spa retreat in Finland — acquired mill site, Roman/onsen/Finnish bathing stack, spa sized to the dam's annual production. Monthly energy-balance model, Järvisydän-calibrated financials, sources, and the model code. Not publishable as-is.
+summary: First-pass source material for the published river-hydro spa note — monthly energy model, early financial calibration, sources, and model code. Preserved as input, not current authority.
 ---
 
 # River-hydro spa retreat — background analysis
 
-Working material, not a publishable note. The genre is "win the lottery, spend
-10% on the dream": indicative figures, real constraints, no capital, no site,
-no intention to execute soon. The candidate thesis and title for the eventual
-note is **"Size the spa to the river"** — the plant's annual production is the
-budget, and the bathhouse is sized until its annual consumption matches.
+Working material behind `src/content/notes/size-the-spa-to-the-river.md`, not a
+publishable note or current authority. It preserves the first monthly model and
+the assumptions available when that model was built.
+
+The published note deliberately supersedes several of those assumptions: a new
+dam is difficult rather than categorically impossible; monthly 92%
+self-sufficiency is treated as an upper bound rather than an hourly result; the
+retreat is boutique and reservation-led rather than a 40,000-visit regional
+spa; staffing rises from 21 to 25–35 annualised FTE; direct tailrace swimming is
+excluded; and the capital envelope includes water infrastructure, 15%
+professional costs, 20–25% brownfield contingency, and a renewal endowment.
+
+The genre remains "win the lottery, spend part of it on the dream": indicative
+figures, real constraints, no capital, no site, and no intention to execute
+soon. The thesis is **"Size the spa to the river"** — but the river constrains
+the operating envelope, not only the annual electricity total.
 
 ## Premise
 
