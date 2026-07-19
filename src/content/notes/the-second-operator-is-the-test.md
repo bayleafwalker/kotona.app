@@ -60,6 +60,15 @@ rather than identity established by the system.
 
 ## Expired ownership is disposable
 
+> **Update, 2026-07-19 — partially fixed.** PostgreSQL expiry now marks active
+> claims `expired` and retains their rows. Reacquisition preserves the old row
+> before creating its replacement. The current
+> [verification note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/claim-history-retention.md)
+> also states the remaining boundary: SQLite expiry still deletes, and
+> proof-bearing release still deliberately deletes an active claim. The
+> original paragraph below records the behavior at the audited commit; it is no
+> longer the complete PostgreSQL behavior.
+
 Expired sprintctl claims are deleted, not retained as claim history. The
 SQLite maintenance path executes
 [`DELETE FROM claim`](https://github.com/bayleafwalker/sprintctl/blob/11519c42f905a26542bea329d111d91d866e6d5a/sprintctl/maintain.py#L156),
@@ -75,6 +84,15 @@ attempt replaced it; the remaining item state cannot reconstruct the deleted
 lease.
 
 ## Expiry disciplines the holder but does not fence them
+
+> **Update, 2026-07-19 — schema landed, fencing did not.** Sprintctl now stores
+> a `lease_epoch`: remote token rotation increments it, and remote reacquisition
+> advances it across retained claim rows. The
+> [completion note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/lease-epoch-schema.md)
+> says there is no `expected_epoch` command input and no downstream enforcement.
+> The old “no epoch” statement is now historical. The invariant in this section
+> remains: expiry still cannot fence a stale holder's external work, and actionq
+> still does not bind terminal transitions to its current worker.
 
 A claim deadline is a coordination cue, not a fencing epoch. Sprintctl's
 [`claim ownership protocol`](https://github.com/bayleafwalker/sprintctl/blob/11519c42f905a26542bea329d111d91d866e6d5a/docs/protocols/claim-ownership.md#L49)
@@ -125,6 +143,9 @@ and actionq commit
 on 2026-07-19. Code, current schema, tests, and protocol documents outrank the
 project narrative. The claims above are limited to those two revisions. The
 N=2 consequences and five-part resolution are analysis, not implemented state.
+The dated updates were checked against sprintctl commit
+[`80aaa97`](https://github.com/bayleafwalker/sprintctl/commit/80aaa9782cb51fde6d645b6225c2b4be1b285b5c);
+actionq remained at the audited revision.
 
 Coordination infrastructure without a second operator is design theater. The
 correct output is the analysis.

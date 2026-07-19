@@ -109,6 +109,15 @@ commands take effect; they are not a second person's acceptance of completed
 work. The three-way convergence claim came from projecting a possible
 multi-operator design onto an implemented single-operator system. It is cut.
 
+> **Update, 2026-07-19.** Sprintctl subsequently added retained PostgreSQL
+> claim history and a lineage `lease_epoch`. The
+> [retention note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/claim-history-retention.md)
+> records expired remote claims instead of deleting them; the
+> [epoch note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/lease-epoch-schema.md)
+> says explicitly that no fencing enforcement exists yet. Both improve the
+> execution record. Neither changes `done-from-claim`, so the rejected
+> completion-authority assumption remains rejected.
+
 The second assumption survives, but as an assessment rather than a discovered
 standard:
 
@@ -125,10 +134,11 @@ the work existed or whether it counts as complete. **Assessment:** this split is
 useful because each plane can change vendors without forcing the others to
 reinterpret their own state.
 
-There is a naming collision inside the current project. Its “AgentOps
-substrate” and `agentops` cockpit are project-local names; AgentOps.ai is the
-observability product in the landscape above. They are unrelated. Any public
-ecosystem name would need to preserve that distinction.
+> **Update, 2026-07-19.** The naming collision was resolved after this survey.
+> [Vuoro](https://github.com/bayleafwalker/kctl/blob/c831aa016bdf117310fc66c12e8c2e63d2162155/docs/decisions/2026-07-19-ecosystem-public-label.md)
+> is now the public ecosystem label. `agentops` remains an implementation
+> repository and `agent-cockpit` remains the UI name; AgentOps.ai remains the
+> unrelated observability product in the landscape above.
 
 ## What generalization would require
 
