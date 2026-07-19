@@ -16,12 +16,18 @@ tags:
 summary: sprintctl and actionq enforce useful execution discipline, but five current invariants rely on one operator remaining the only source of identity, authority, and audit judgment.
 ---
 
-No second operator, no coordination system. Only disciplined self-management.
+No second human operator, no coordination system. Only disciplined
+self-management.
 
-sprintctl and actionq already arbitrate concurrent work. That is not the same as
-arbitrating between people. Their current contracts assume one human authority
-behind every actor string, claim token, queue worker, and completion decision.
-The assumption is load-bearing in five places.
+Within the
+[sprintctl and kctl project](/projects/sprintctl-and-kctl/), sprintctl owns work
+items, claims, dependencies, and handoffs; actionq owns queued machine actions
+and their execution lifecycle. Both can arbitrate concurrent worker sessions.
+That is not the same as arbitrating between people. Their current contracts
+assume one human authority behind every actor string, claim token, queue worker,
+and completion decision. Here `N=2` means two independent human authorities,
+not two agents operating for the same person. The single-operator assumption is
+load-bearing in five places.
 
 ## The claimant can certify completion
 
@@ -60,12 +66,13 @@ SQLite maintenance path executes
 and the PostgreSQL path does the
 [`same`](https://github.com/bayleafwalker/sprintctl/blob/11519c42f905a26542bea329d111d91d866e6d5a/sprintctl/pg.py#L2360)
 for rows past backend time. The documented remote-mode checklist still tells an
-operator to schedule that purge; claim-history retention has not landed. Claim
-creation and expiry purge do not append matching lifecycle events. With one
-operator, deletion is tolerable because the person reconstructing the incident
-is the person who held the claim. At N=2, expiry erases who occupied the work,
-when their authority lapsed, and which later attempt replaced it; the remaining
-item state cannot reconstruct the deleted lease.
+operator to schedule that purge. No retained claim-history model exists in
+these paths: claim creation and expiry purge do not append matching lifecycle
+events. With one operator, deletion is tolerable because the person
+reconstructing the incident is the person who held the claim. At N=2, expiry
+erases who occupied the work, when their authority lapsed, and which later
+attempt replaced it; the remaining item state cannot reconstruct the deleted
+lease.
 
 ## Expiry disciplines the holder but does not fence them
 

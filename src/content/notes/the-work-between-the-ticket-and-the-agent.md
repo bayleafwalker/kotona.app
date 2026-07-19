@@ -9,6 +9,7 @@ projects:
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-coordinator-never-touches-the-repo
+  - the-second-operator-is-the-test
 tags:
   - agents
   - workflow
@@ -31,6 +32,14 @@ workers, schema-owned sprint state, proof-bearing claims, resumable handoffs, a
 separate execution queue, and a cockpit that composes read surfaces without
 becoming their write authority. The question is what that system would meet if
 its operator boundary were removed.
+
+It tests two working assumptions. First: Linear's assignee/delegate split,
+GitHub's agent-to-pull-request loop, and sprintctl's claim model independently
+converged on the same rule — permission to execute work is not permission to
+declare it complete. Second: the landscape separates cleanly into an externally
+owned work plane, a neutral execution plane, and a pluggable runtime plane,
+with observability beside them rather than inside any one plane. These are
+hypotheses to test, not facts supplied by the sources.
 
 ## The market has edges, not a centre
 
@@ -80,14 +89,19 @@ record between them.
 
 ## What survives removing the product
 
-The strongest proposed finding does not survive intact.
+The product being removed here is the hypothetical neutral execution layer
+described above: the system that would bind authorization, attempts, evidence,
+and acceptance without owning either the backlog or the worker. The point of
+removing it is to keep only conclusions that remain useful without a build.
+
+The first assumption does not survive intact.
 
 Linear explicitly separates the accountable assignee from the executing
 delegate. GitHub has an agent produce a pull request and request review rather
 than treating generated code as accepted work. Those are two independent
 instances of execution authority not being completion authority.
 
-The claimed third instance was sprintctl. It is not one. The current
+Sprintctl was supposed to be the third instance. It is not one. The current
 [sprintctl workflow](https://github.com/bayleafwalker/sprintctl) includes
 `item done-from-claim`: valid claim proof can move the item to done and release
 the claim. Its accepted/rejected authority decisions govern whether proposed
@@ -95,7 +109,7 @@ commands take effect; they are not a second person's acceptance of completed
 work. The three-way convergence claim came from projecting a possible
 multi-operator design onto an implemented single-operator system. It is cut.
 
-The second finding survives, but as an assessment rather than a discovered
+The second assumption survives, but as an assessment rather than a discovered
 standard:
 
 1. The **work plane** is externally owned. Linear, Plane, GitHub, or another
@@ -116,7 +130,7 @@ substrate” and `agentops` cockpit are project-local names; AgentOps.ai is the
 observability product in the landscape above. They are unrelated. Any public
 ecosystem name would need to preserve that distinction.
 
-## Generalization, once
+## What generalization would require
 
 **Assessment:** generalizing the implemented single-operator scope would
 require authenticated human and service principals, project-scoped
@@ -144,7 +158,9 @@ The external anchors are deliberately few and primary:
 - [AgentOps.ai core concepts](https://docs.agentops.ai/v2/concepts/core-concepts)
   only to establish the observability category and disambiguate the name
 
-The two supplied brainstorm documents were discovery prompts, not sources.
+This note began as two model-generated working memos. They supplied search
+terms and the two assumptions stated near the beginning; they are process
+artifacts, not evidence, and a reader does not need them to evaluate the note.
 Product comparisons, category boundaries, the “weakly occupied middle,” the
 three-plane split, vendor-independence claims, and implications for a neutral
 protocol are assessments. No claim about market leadership, adoption, pricing,
