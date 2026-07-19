@@ -1,0 +1,14 @@
+---
+type Props = {
+  term: string;
+  definition: string;
+  id: string;
+};
+
+const { term, definition, id } = Astro.props;
+---
+
+<span class="term-hint">
+  <dfn tabindex="0" aria-describedby={id}>{term}</dfn>
+  <span class="term-note" id={id} role="tooltip">{definition}</span>
+</span>

@@ -1,6 +1,4 @@
 import { execFileSync } from "node:child_process";
-import { readdirSync, readFileSync } from "node:fs";
-import path from "node:path";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 
@@ -9,7 +7,9 @@ import mdx from "@astrojs/mdx";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
+import { readContentMetadata } from "./scripts/lib/content-metadata.mjs";
 import { siteConfig } from "./src/site";
+import { projectTags, tagSlug } from "./src/lib/tag-slug.js";
 
 const rootDirectory = fileURLToPath(new URL(".", import.meta.url));
 const buildRevision =
@@ -25,45 +25,29 @@ const buildRevision =
     }
   })();
 
-function contentFiles(directory) {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const entryPath = path.join(directory, entry.name);
-
-    if (entry.isDirectory()) {
-      return contentFiles(entryPath);
-    }
-
-    return /\.mdx?$/.test(entry.name) ? [entryPath] : [];
-  });
-}
-
-function publishedContentPages(collection, { draftByDefault }) {
-  const contentDirectory = path.join(rootDirectory, "src/content", collection);
-
-  return contentFiles(contentDirectory).flatMap((filePath) => {
-    const source = readFileSync(filePath, "utf8");
-    const frontmatter = source.match(/^---\s*\n([\s\S]*?)\n---/)?.[1] ?? "";
-    const draftValue = frontmatter.match(/^draft:\s*(true|false)\s*$/m)?.[1];
-    const isDraft = draftValue ? draftValue === "true" : draftByDefault;
-
-    if (isDraft) {
-      return [];
-    }
-
-    const slug = path
-      .relative(contentDirectory, filePath)
-      .replaceAll(path.sep, "/")
-      .replace(/\.mdx?$/, "")
-      .replace(/\/index$/, "");
-
-    return [new URL(`/${collection}/${slug}/`, siteConfig.siteUrl).href];
-  });
-}
+const publishedNotes = readContentMetadata(rootDirectory, "notes", {
+  draftByDefault: false,
+}).filter((entry) => !entry.draft);
+const publishedProjects = readContentMetadata(rootDirectory, "projects", {
+  draftByDefault: true,
+}).filter((entry) => !entry.draft);
 
 const canonicalContentPages = [
-  ...publishedContentPages("notes", { draftByDefault: false }),
-  ...publishedContentPages("projects", { draftByDefault: true }),
+  ...publishedNotes.map((entry) =>
+    new URL(`/notes/${entry.id}/`, siteConfig.siteUrl).toString(),
+  ),
+  ...publishedProjects.map((entry) =>
+    new URL(`/projects/${entry.id}/`, siteConfig.siteUrl).toString(),
+  ),
 ];
+const canonicalTagPages = [
+  ...new Set([
+    ...publishedNotes.flatMap((entry) => entry.data.tags ?? []),
+    ...publishedProjects.flatMap((entry) => projectTags(entry.data)),
+  ]),
+].map((tag) =>
+  new URL(`/tags/${tagSlug(tag)}/`, siteConfig.siteUrl).toString(),
+);
 
 export default defineConfig({
   adapter: cloudflare({
@@ -82,7 +66,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      customPages: canonicalContentPages,
+      customPages: [...canonicalContentPages, ...canonicalTagPages],
       filter: (page) => {
         const pathname = new URL(page).pathname;
         return (

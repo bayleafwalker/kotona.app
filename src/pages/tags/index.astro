@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getTagRecords } from "../../lib/tags";
+
+const tags = await getTagRecords();
+---
+
+<BaseLayout
+  title="Tags"
+  description="Browse project and system notes by subject."
+>
+  <section class="page-intro">
+    <p class="eyebrow">Tags</p>
+    <h1 class="page-title">Subjects across projects and notes.</h1>
+    <p class="page-copy">
+      Tags are shared navigation, not a second content hierarchy. A tag may lead
+      to current project state, reusable notes, or both.
+    </p>
+  </section>
+
+  <section class="page-section">
+    <ul class="tag-index-list" aria-label="All tags">
+      {
+        tags.map((tag) => {
+          const count = tag.notes.length + tag.projects.length;
+          return (
+            <li>
+              <a href={`/tags/${tag.slug}/`}>
+                <span>{tag.label}</span>
+                <span class="tag-count">
+                  {count} {count === 1 ? "entry" : "entries"}
+                </span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+</BaseLayout>

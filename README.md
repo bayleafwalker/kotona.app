@@ -80,6 +80,15 @@ proof links, supported integrations, the strongest known limitation, and the
 next meaningful proof. Optional `seoTitle` and `socialTitle` fields can clarify
 an editorial title outside the site without changing the visible heading.
 
+Project-scoped `terms` add accessible definitions to the first occurrence of
+internal terminology in card and project summaries. Keep each definition to one
+responsibility-focused sentence.
+
+Published notes and projects receive generated 1200×630 PNG social cards during
+development and production builds. A note with an authored `hero` image uses
+that image instead. Generated files live under `public/og/generated/` and are
+deliberately ignored because the content metadata is their source of truth.
+
 Published project pages must also keep `lastVerified` current. The freshness
 check enforces date chronology and a maximum verification age of 90 days.
 
@@ -96,6 +105,8 @@ Draft behavior:
 - `/projects/[slug]/` durable project context and current state
 - `/notes/` reverse chronological notes index
 - `/notes/[slug]/` note detail pages
+- `/tags/` subject index
+- `/tags/[tag]/` projects and notes sharing a tag
 - `/about/` short context page
 - `/privacy/` operational disclosure for analytics, request logs, and email
 - `/version.json` deployed source revision and commit URL

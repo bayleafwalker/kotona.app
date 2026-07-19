@@ -25,6 +25,11 @@ evidence:
   nextProof: The next result that would materially strengthen the claim.
 tags:
   - replace-me
+# Optional project-scoped definitions. These annotate the first occurrence in
+# card and project summaries on hover, keyboard focus, and touch focus.
+terms:
+  - term: Internal tool name
+    definition: One sentence explaining the tool's responsibility in this project.
 summary: One or two sentences explaining what the project is for.
 ---
 

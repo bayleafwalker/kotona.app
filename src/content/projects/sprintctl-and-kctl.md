@@ -45,6 +45,21 @@ tags:
   - agents
   - workflow
   - cli-tooling
+terms:
+  - term: Vuoro
+    definition: The public label for this family of small, separately owned agent-workflow tools.
+  - term: sprintctl
+    definition: The CLI and schema that own sprint work, dependencies, claims, and handoffs.
+  - term: kctl
+    definition: The read-only pipeline that turns reviewed sprint history into durable knowledge.
+  - term: actionq
+    definition: The PostgreSQL-backed queue that owns actions, sessions, claims, and outcomes.
+  - term: actionq-dispatch
+    definition: The one-action coordinator that creates a bounded workspace, invokes a worker, and records the result.
+  - term: auditctl
+    definition: The tool that indexes audit events and emits portable daily evidence shards.
+  - term: agent-cockpit
+    definition: The operator interface that composes state from the owning tools without becoming their database.
 ---
 
 ## Overview

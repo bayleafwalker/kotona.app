@@ -13,6 +13,14 @@ const sharedProjectSchema = {
   lastRevised: z.coerce.date(),
   lastVerified: z.coerce.date(),
   tags: z.array(z.string().min(1)).default([]),
+  terms: z
+    .array(
+      z.object({
+        term: z.string().min(1),
+        definition: z.string().min(1).max(240),
+      }),
+    )
+    .default([]),
   draft: z.boolean().default(true),
 };
 

@@ -39,6 +39,9 @@ tags:
   - gitops
   - kubernetes
   - operations
+terms:
+  - term: Appservice
+    definition: The private GitOps repository that holds desired state, recovery rules, and operational evidence for the cluster.
 ---
 
 ## Overview

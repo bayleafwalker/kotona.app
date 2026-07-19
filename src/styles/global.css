@@ -232,7 +232,7 @@ main {
 }
 
 .pill,
-.tag-list li,
+.tag-list a,
 .link-chip {
   display: inline-flex;
   align-items: center;
@@ -244,6 +244,12 @@ main {
   font-family: var(--font-display);
   font-size: 0.82rem;
   text-decoration: none;
+}
+
+.tag-list a:hover,
+.tag-list a:focus-visible {
+  border-color: var(--line-strong);
+  color: var(--text);
 }
 
 .pill-muted {
@@ -277,6 +283,83 @@ main {
 
 .tag-list {
   margin-top: 0.75rem;
+}
+
+.term-hint {
+  position: relative;
+  display: inline-block;
+}
+
+.term-hint dfn {
+  font-style: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+.term-note {
+  position: absolute;
+  bottom: calc(100% + 0.55rem);
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: min(20rem, calc(100vw - 2rem));
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.45rem;
+  background: var(--text);
+  color: var(--bg-strong);
+  box-shadow: 0 0.5rem 1.4rem rgba(31, 37, 32, 0.16);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-style: normal;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0.2rem);
+  visibility: hidden;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 120ms ease;
+}
+
+.term-hint:hover .term-note,
+.term-hint:focus-within .term-note {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
+.tag-index-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tag-index-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+
+.tag-index-list a:hover {
+  text-decoration: underline;
+}
+
+.tag-count {
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .publication-note,
@@ -660,6 +743,25 @@ main {
 
   .start-here-list {
     grid-template-columns: 1fr;
+  }
+
+  .tag-index-list {
+    grid-template-columns: 1fr;
+  }
+
+  .term-note {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    width: auto;
+    max-width: none;
+    transform: translateY(0.2rem);
+  }
+
+  .term-hint:hover .term-note,
+  .term-hint:focus-within .term-note {
+    transform: translateY(0);
   }
 
   .evidence-list > div {

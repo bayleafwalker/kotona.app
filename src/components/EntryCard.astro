@@ -1,5 +1,12 @@
 ---
 import { formatDate } from "../lib/content";
+import AnnotatedText from "./AnnotatedText.astro";
+import TagList from "./TagList.astro";
+
+type Term = {
+  term: string;
+  definition: string;
+};
 
 type Props = {
   href: string;
@@ -12,6 +19,7 @@ type Props = {
   headingLevel?: 2 | 3;
   draft?: boolean;
   showDate?: boolean;
+  terms?: Term[];
 };
 
 const {
@@ -25,6 +33,7 @@ const {
   headingLevel = 2,
   draft = false,
   showDate = true,
+  terms = [],
 } = Astro.props;
 const formattedDate = showDate && date ? formatDate(date) : null;
 const showMeta = draft || Boolean(formattedDate);
@@ -51,15 +60,17 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
 
   {context ? <p class="entry-context">{context}</p> : null}
 
-  {summary ? <p class="entry-summary">{summary}</p> : null}
-
   {
-    tags.length > 0 ? (
-      <ul class="tag-list" aria-label="Tags">
-        {tags.map((tag) => (
-          <li>{tag}</li>
-        ))}
-      </ul>
+    summary ? (
+      <p class="entry-summary">
+        <AnnotatedText
+          text={summary}
+          terms={terms}
+          idPrefix={`card-${href.replace(/[^a-z0-9]+/gi, "-")}`}
+        />
+      </p>
     ) : null
   }
+
+  <TagList tags={tags} />
 </article>

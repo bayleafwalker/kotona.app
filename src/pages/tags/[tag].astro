@@ -1,0 +1,90 @@
+---
+import EntryCard from "../../components/EntryCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getTagRecords, type TagRecord } from "../../lib/tags";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return (await getTagRecords()).map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tag },
+  }));
+}
+
+type Props = {
+  tag: TagRecord;
+};
+
+const { tag } = Astro.props;
+const entryCount = tag.notes.length + tag.projects.length;
+---
+
+<BaseLayout
+  title={`Tag: ${tag.label}`}
+  description={`${entryCount} ${entryCount === 1 ? "entry" : "entries"} tagged ${tag.label} on kotona.app.`}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Tags", path: "/tags/" },
+    { name: tag.label, path: `/tags/${tag.slug}/` },
+  ]}
+>
+  <section class="page-intro">
+    <a class="content-back-link" href="/tags/">All tags</a>
+    <p class="eyebrow">Tag</p>
+    <h1 class="page-title">{tag.label}</h1>
+    <p class="page-copy">
+      {entryCount}
+      {entryCount === 1 ? "entry" : "entries"} across current project state and published
+      notes.
+    </p>
+  </section>
+
+  {
+    tag.projects.length > 0 ? (
+      <section class="page-section">
+        <div class="section-heading">
+          <h2>Projects</h2>
+        </div>
+        <div class="entry-list">
+          {tag.projects.map((entry) => (
+            <EntryCard
+              href={`/projects/${entry.id}/`}
+              title={entry.data.title}
+              headingLevel={3}
+              summary={entry.data.summary}
+              context={entry.data.status}
+              tags={[entry.data.project, ...entry.data.tags]}
+              date={entry.data.lastVerified}
+              dateLabel="Verified"
+              terms={entry.data.terms}
+            />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+
+  {
+    tag.notes.length > 0 ? (
+      <section class="page-section">
+        <div class="section-heading">
+          <h2>Notes</h2>
+        </div>
+        <div class="entry-list">
+          {tag.notes.map((entry) => (
+            <EntryCard
+              href={`/notes/${entry.id}/`}
+              title={entry.data.title}
+              headingLevel={3}
+              summary={entry.data.summary}
+              context={`${entry.data.status} / ${entry.data.lifecycle} / ${entry.data.area}`}
+              tags={entry.data.tags}
+              date={entry.data.published}
+            />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+</BaseLayout>

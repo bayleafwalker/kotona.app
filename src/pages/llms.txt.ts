@@ -35,6 +35,7 @@ export const GET: APIRoute = async ({ site }) => {
     `- [Home](${new URL("/", baseUrl)})`,
     `- [Projects](${new URL("/projects/", baseUrl)})`,
     `- [Notes](${new URL("/notes/", baseUrl)})`,
+    `- [Tags](${new URL("/tags/", baseUrl)})`,
     `- [About](${new URL("/about/", baseUrl)})`,
     `- [Privacy](${new URL("/privacy/", baseUrl)})`,
     `- [Deployed revision](${new URL("/version.json", baseUrl)})`,

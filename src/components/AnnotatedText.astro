@@ -1,0 +1,56 @@
+---
+import { tagSlug } from "../lib/tag-slug.js";
+import TermHint from "./TermHint.astro";
+
+type Term = {
+  term: string;
+  definition: string;
+};
+
+type Props = {
+  text: string;
+  terms?: Term[];
+  idPrefix: string;
+};
+
+const { text, terms = [], idPrefix } = Astro.props;
+const byName = new Map(
+  terms.map((term) => [term.term.toLocaleLowerCase("en"), term]),
+);
+const escapedTerms = [...terms]
+  .sort((left, right) => right.term.length - left.term.length)
+  .map((term) => term.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+const matcher =
+  escapedTerms.length > 0
+    ? new RegExp(
+        `(?<![\\p{L}\\p{N}_])(${escapedTerms.join("|")})(?![\\p{L}\\p{N}_])`,
+        "giu",
+      )
+    : null;
+const seen = new Set<string>();
+const fragments = matcher
+  ? text.split(matcher).map((value) => {
+      const key = value.toLocaleLowerCase("en");
+      const term = byName.get(key);
+
+      if (!term || seen.has(key)) return { text: value };
+
+      seen.add(key);
+      return { text: value, term };
+    })
+  : [{ text }];
+---
+
+{
+  fragments.map((fragment, index) =>
+    fragment.term ? (
+      <TermHint
+        term={fragment.text}
+        definition={fragment.term.definition}
+        id={`${idPrefix}-${tagSlug(fragment.term.term)}-${index}`}
+      />
+    ) : (
+      fragment.text
+    ),
+  )
+}

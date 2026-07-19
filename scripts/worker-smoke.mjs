@@ -336,6 +336,26 @@ async function runChecks(baseUrl) {
     assertIncludes(project.body, 'id="evidence-title"', "project evidence");
     assertIncludes(
       project.body,
+      'role="tooltip"',
+      "project terminology tooltip",
+    );
+    assertIncludes(
+      project.body,
+      "The household data and decision platform",
+      "project terminology definition",
+    );
+    assertIncludes(
+      project.body,
+      'href="/tags/architecture/"',
+      "project tag link",
+    );
+    assertIncludes(
+      project.body,
+      'content="https://kotona.app/og/generated/projects-household-operating-platform.png"',
+      "project social card",
+    );
+    assertIncludes(
+      project.body,
       "v0.1.0 operating-view release",
       "latest proof",
     );
@@ -387,6 +407,28 @@ async function runChecks(baseUrl) {
       "social title",
     );
     assertIncludes(note.body, "Lifecycle: current", "current note lifecycle");
+    assertIncludes(
+      note.body,
+      'content="https://kotona.app/og/generated/notes-the-ref-nobody-adds.png"',
+      "note social card",
+    );
+
+    const illustratedNote = await request("/notes/size-the-spa-to-the-river/");
+    assertIncludes(
+      illustratedNote.body,
+      'content="https://kotona.app/images/notes/size-the-spa-to-the-river/hero-winter-rotenburo.webp"',
+      "authored social image override",
+    );
+
+    const tagIndex = await request("/tags/");
+    assertIncludes(tagIndex.body, 'href="/tags/agents/"', "tag index link");
+    const tagPage = await request("/tags/agents/");
+    assertIncludes(tagPage.body, "<h1", "tag page heading");
+    assertIncludes(
+      tagPage.body,
+      'href="/notes/judge-agents-by-the-next-prompt/"',
+      "tagged note",
+    );
 
     const archivedNote = await request(
       "/notes/a-gitops-rollback-needs-time-to-reach-git/",
@@ -548,6 +590,11 @@ async function runChecks(baseUrl) {
       sitemap.body,
       "https://kotona.app/projects/gitops-cluster/",
       "sitemap project",
+    );
+    assertIncludes(
+      sitemap.body,
+      "https://kotona.app/tags/agents/",
+      "sitemap tag",
     );
     assert(
       !sitemap.body.includes("case-studies"),

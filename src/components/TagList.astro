@@ -1,0 +1,23 @@
+---
+import { tagSlug } from "../lib/tag-slug.js";
+
+type Props = {
+  tags: string[];
+  label?: string;
+};
+
+const { tags, label = "Tags" } = Astro.props;
+const uniqueTags = [...new Set(tags)];
+---
+
+{
+  uniqueTags.length > 0 ? (
+    <ul class="tag-list" aria-label={label}>
+      {uniqueTags.map((tag) => (
+        <li>
+          <a href={`/tags/${tagSlug(tag)}/`}>{tag}</a>
+        </li>
+      ))}
+    </ul>
+  ) : null
+}

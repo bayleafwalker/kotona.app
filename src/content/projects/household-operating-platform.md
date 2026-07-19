@@ -39,8 +39,11 @@ evidence:
     changing the semantic core or approval boundary.
 tags:
   - architecture
-  - home assistant
-  - data platform
+  - home-assistant
+  - data-platforms
+terms:
+  - term: Homelab Analytics
+    definition: The household data and decision platform that owns long-lived semantics, scenarios, policies, and approvals.
 ---
 
 ## Overview

@@ -2,12 +2,14 @@
 import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
+import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   formatDate,
   getVisibleEntries,
   sortByDateAndTitle,
 } from "../../lib/content";
+import { generatedOgImagePath } from "../../lib/og-images.js";
 import { siteConfig } from "../../site";
 
 const id = Astro.params.slug;
@@ -91,8 +93,10 @@ const lifecycleLabel =
   publishedDate={entry.data.published}
   modifiedDate={entry.data.lastRevised}
   creativeWorkStatus={entry.data.lifecycle}
-  ogImage={entry.data.hero?.src}
-  ogImageAlt={entry.data.hero?.alt}
+  ogImage={entry.data.hero?.src ?? generatedOgImagePath("notes", entry.id)}
+  ogImageAlt={entry.data.hero?.alt ?? `Social card for ${entry.data.title}`}
+  ogImageWidth={entry.data.hero?.width ?? 1200}
+  ogImageHeight={entry.data.hero?.height ?? 630}
   breadcrumbs={[
     { name: "Home", path: "/" },
     { name: "Notes", path: "/notes/" },
@@ -124,6 +128,8 @@ const lifecycleLabel =
             wasRevised ? ` / Revised ${formattedRevisedDate}` : ""
           }
         </p>
+
+        <TagList tags={entry.data.tags} />
 
         {
           projectEntries.length > 0 ? (

@@ -2,12 +2,16 @@
 import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
+import AnnotatedText from "../../components/AnnotatedText.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TagList from "../../components/TagList.astro";
 import {
   formatDate,
   getVisibleEntries,
   sortByDateAndTitle,
 } from "../../lib/content";
+import { generatedOgImagePath } from "../../lib/og-images.js";
+import { projectTags } from "../../lib/tag-slug.js";
 
 const id = Astro.params.slug;
 const entry = id ? await getEntry("projects", id) : undefined;
@@ -57,6 +61,10 @@ const relatedLinks = [
   pageType="article"
   publishedDate={entry.data.published}
   modifiedDate={entry.data.lastRevised}
+  ogImage={generatedOgImagePath("projects", entry.id)}
+  ogImageAlt={`Social card for ${entry.data.title}`}
+  ogImageWidth={1200}
+  ogImageHeight={630}
   breadcrumbs={[
     { name: "Home", path: "/" },
     { name: "Projects", path: "/projects/" },
@@ -70,7 +78,13 @@ const relatedLinks = [
       <header class="content-header">
         <p class="eyebrow">Project / {entry.data.project}</p>
         <h1 class="content-title">{entry.data.title}</h1>
-        <p class="content-summary">{entry.data.summary}</p>
+        <p class="content-summary">
+          <AnnotatedText
+            text={entry.data.summary ?? ""}
+            terms={entry.data.terms}
+            idPrefix={`project-${entry.id}`}
+          />
+        </p>
 
         <div class="entry-meta">
           {entry.data.draft ? <span class="pill pill-muted">Draft</span> : null}
@@ -86,9 +100,7 @@ const relatedLinks = [
           {formattedVerifiedDate}
         </p>
 
-        <ul class="tag-list" aria-label="Tags">
-          {entry.data.tags.map((tag) => <li>{tag}</li>)}
-        </ul>
+        <TagList tags={projectTags(entry.data)} />
 
         {
           relatedLinks.length > 0 ? (

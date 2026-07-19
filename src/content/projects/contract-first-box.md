@@ -33,6 +33,9 @@ tags:
   - contracts
   - architecture
   - simulation
+terms:
+  - term: Box
+    definition: A contract-first platform scaffold for testing a small reusable service kernel before implementing its runtime.
 ---
 
 ## Overview
