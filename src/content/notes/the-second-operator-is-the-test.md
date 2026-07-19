@@ -10,6 +10,7 @@ projects:
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-work-between-the-ticket-and-the-agent
+  - a-pipeline-without-a-successor-is-personal-tooling
 tags:
   - agents
   - workflow
