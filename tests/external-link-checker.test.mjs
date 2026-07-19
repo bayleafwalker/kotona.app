@@ -24,7 +24,7 @@ test("extracts and normalizes HTTP links from Markdown and Astro source", () => 
   ]);
 });
 
-test("status policy is strict except for an exact bot-blocked URL", () => {
+test("status policy is strict except for exact bot-blocked URLs", () => {
   assert.equal(classifyStatus("https://example.test/", 204).ok, true);
   assert.equal(classifyStatus("https://example.test/", 301).ok, true);
   assert.equal(classifyStatus("https://example.test/", 403).ok, false);
@@ -38,6 +38,28 @@ test("status policy is strict except for an exact bot-blocked URL", () => {
   );
   assert.equal(
     classifyStatus("https://www.linkedin.com/in/someone-else/", 999).ok,
+    false,
+  );
+  assert.deepEqual(
+    classifyStatus(
+      "https://www.oecd.org/en/publications/the-impact-of-ai-on-the-workplace-main-findings-from-the-oecd-ai-surveys-of-employers-and-workers_ea0a0fe1-en.html",
+      403,
+    ),
+    {
+      ok: true,
+      kind: "automation-blocked",
+      reason: "OECD publication blocks automated link checks",
+    },
+  );
+  assert.equal(
+    classifyStatus("https://www.oecd.org/en/publications/another.html", 403).ok,
+    false,
+  );
+  assert.equal(
+    classifyStatus(
+      "https://www.oecd.org/en/publications/the-impact-of-ai-on-the-workplace-main-findings-from-the-oecd-ai-surveys-of-employers-and-workers_ea0a0fe1-en.html",
+      404,
+    ).ok,
     false,
   );
 });

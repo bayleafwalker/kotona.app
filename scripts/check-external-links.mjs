@@ -38,6 +38,13 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
       reason: "LinkedIn profile blocks automated link checks",
     },
   ],
+  [
+    "https://www.oecd.org/en/publications/the-impact-of-ai-on-the-workplace-main-findings-from-the-oecd-ai-surveys-of-employers-and-workers_ea0a0fe1-en.html",
+    {
+      statuses: new Set([403]),
+      reason: "OECD publication blocks automated link checks",
+    },
+  ],
 ]);
 
 function countCharacter(value, character) {
