@@ -44,6 +44,8 @@ each repository owns one operational domain, and the cockpit composes their
 read surfaces instead of becoming a new database with opinions about all of
 them.
 
+Here, “AgentOps” means the local operational substrate for agent-assisted work on my own repositories, not AgentOps.ai, the commercial agent-observability product.
+
 ## Interactive ecosystem map
 
 [Explore the interactive AgentOps ecosystem map](https://bayleafwalker.github.io/agentops/)
