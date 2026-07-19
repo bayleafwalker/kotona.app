@@ -22,6 +22,13 @@ draft: true
 tags:
   - replace-me
 summary: Replace with a one-line statement of what the note establishes.
+# Optional hero image; omit the whole block until the asset exists.
+# hero:
+#   src: /images/notes/note-slug/hero.webp
+#   alt: Describe the image's meaningful content.
+#   caption: Identify generated concept art or provide source context.
+#   width: 1600
+#   height: 900
 ---
 
 State the point or conclusion first.

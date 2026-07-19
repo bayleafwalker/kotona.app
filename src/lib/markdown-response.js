@@ -225,6 +225,7 @@ function inlineCode(value) {
  */
 function inlineHtmlToMarkdown(value, options = {}) {
   const code = [];
+  const lineBreakToken = "\uE102";
   let markdown = value.replace(
     /<code\b[^>]*>([\s\S]*?)<\/code>/gi,
     (_, content) => {
@@ -250,19 +251,18 @@ function inlineHtmlToMarkdown(value, options = {}) {
     .replace(/<(strong|b)\b[^>]*>([\s\S]*?)<\/\1>/gi, "**$2**")
     .replace(/<(em|i)\b[^>]*>([\s\S]*?)<\/\1>/gi, "*$2*")
     .replace(/<(del|s)\b[^>]*>([\s\S]*?)<\/\1>/gi, "~~$2~~")
-    .replace(/<br\s*\/?\s*>/gi, "<br>")
+    .replace(/<br\s*\/?\s*>/gi, lineBreakToken)
     .replace(/<[^>]+>/g, "");
 
   markdown = decodeEntities(markdown).replace(/[ \t\r\f\v]+/g, " ");
 
   markdown = options.preserveBlockNewlines
     ? markdown.replace(/ *\n */g, "\n").trim()
-    : markdown.replace(/\s*\n\s*/g, "<br>").trim();
+    : markdown.replace(/\s*\n\s*/g, " ").trim();
 
-  return markdown.replace(
-    /\uE100(\d+)\uE101/g,
-    (_, index) => code[Number(index)],
-  );
+  return markdown
+    .replace(/\uE100(\d+)\uE101/g, (_, index) => code[Number(index)])
+    .replaceAll(lineBreakToken, "<br>");
 }
 
 /** @param {string} html */

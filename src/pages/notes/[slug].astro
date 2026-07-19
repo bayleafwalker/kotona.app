@@ -91,6 +91,8 @@ const lifecycleLabel =
   publishedDate={entry.data.published}
   modifiedDate={entry.data.lastRevised}
   creativeWorkStatus={entry.data.lifecycle}
+  ogImage={entry.data.hero?.src}
+  ogImageAlt={entry.data.hero?.alt}
   breadcrumbs={[
     { name: "Home", path: "/" },
     { name: "Notes", path: "/notes/" },
@@ -154,6 +156,25 @@ const lifecycleLabel =
           ) : null
         }
       </header>
+
+      {
+        entry.data.hero ? (
+          <figure class="content-hero">
+            <img
+              src={entry.data.hero.src}
+              alt={entry.data.hero.alt}
+              width={entry.data.hero.width}
+              height={entry.data.hero.height}
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+            {entry.data.hero.caption ? (
+              <figcaption>{entry.data.hero.caption}</figcaption>
+            ) : null}
+          </figure>
+        ) : null
+      }
 
       {
         entry.data.lifecycle !== "current" ? (
