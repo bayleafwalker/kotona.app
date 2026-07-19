@@ -1,6 +1,7 @@
 ---
 title: Schema on split
 status: guiding
+lifecycle: current
 area: data architecture
 published: 2026-05-15
 lastRevised: 2026-05-15

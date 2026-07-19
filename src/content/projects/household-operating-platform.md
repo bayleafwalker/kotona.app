@@ -15,6 +15,28 @@ featured: true
 repoUrls:
   - https://github.com/bayleafwalker/homelab-analytics
 externalUrl: https://bayleafwalker.github.io/homelab-analytics/
+evidence:
+  capability: >-
+    Published operating views, five scenario types, persisted policies,
+    approval-aware Home Assistant actions, and a narrow agent retrieval and
+    proposal surface share one semantic model.
+  latest: v0.1.0 operating-view release with later policy, trust, and agent slices
+  proofLinks:
+    - label: Source repository
+      href: https://github.com/bayleafwalker/homelab-analytics
+    - label: Interactive system map
+      href: https://bayleafwalker.github.io/homelab-analytics/
+  integrations:
+    - Home Assistant
+    - PostgreSQL
+    - DuckDB
+    - MCP
+  knownLimitation: >-
+    Home Assistant is the only full reference adapter, so the generic adapter
+    boundary has not yet survived a second serious integration.
+  nextProof: >-
+    Ship a second production-like adapter through the existing contracts without
+    changing the semantic core or approval boundary.
 tags:
   - architecture
   - home assistant

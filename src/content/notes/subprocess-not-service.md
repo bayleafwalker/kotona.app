@@ -1,6 +1,7 @@
 ---
 title: Subprocess, not service
 status: guiding
+lifecycle: current
 area: agent workflow
 published: 2026-06-10
 lastRevised: 2026-06-10

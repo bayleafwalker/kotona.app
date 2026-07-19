@@ -1,6 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 
 import { htmlToMarkdown, prefersMarkdown } from "./lib/markdown-response.js";
+import { applySecurityHeaders } from "./lib/security-headers.js";
 
 const homepageLinks = [
   '</.well-known/agent-skills/index.json>; rel="describedby"; type="application/json"',
@@ -37,15 +38,32 @@ function appendVary(headers: Headers, value: string) {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  const nonceBytes = crypto.getRandomValues(new Uint8Array(16));
+  const cspNonce = btoa(String.fromCharCode(...nonceBytes));
+  context.locals.cspNonce = cspNonce;
+
   const legacyTarget = legacyWritingPaths[context.url.pathname];
 
   if (legacyTarget) {
     const target = new URL(legacyTarget, context.url);
     target.search = context.url.search;
-    return Response.redirect(target, 301);
+    const response = Response.redirect(target, 301);
+    const headers = new Headers(response.headers);
+    applySecurityHeaders(headers, cspNonce, {
+      development: import.meta.env.DEV,
+    });
+    return new Response(null, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   }
 
   const response = await next();
+  response.headers.set("X-Kotona-Revision", __BUILD_REVISION__);
+  applySecurityHeaders(response.headers, cspNonce, {
+    development: import.meta.env.DEV,
+  });
   const isHtml = response.headers.get("Content-Type")?.startsWith("text/html");
 
   if (!isHtml) {

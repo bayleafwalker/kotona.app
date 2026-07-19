@@ -1,6 +1,7 @@
 ---
 title: Delivered energy
 status: exploration
+lifecycle: current
 area: energy systems
 published: 2026-06-11
 lastRevised: 2026-07-13

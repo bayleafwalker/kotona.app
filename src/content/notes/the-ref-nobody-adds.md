@@ -1,9 +1,12 @@
 ---
 title: The ref nobody adds
+seoTitle: Why agent workflows ignore documentation references
+socialTitle: Agents cannot use documents they are never shown
 status: guiding
+lifecycle: current
 area: agent workflow
 published: 2026-07-13
-lastRevised: 2026-07-13
+lastRevised: 2026-07-19
 projects:
   - sprintctl-and-kctl
 relates:

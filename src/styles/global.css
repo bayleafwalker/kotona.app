@@ -335,6 +335,24 @@ main {
   font-size: 0.92rem;
 }
 
+.note-state {
+  margin-top: 0.8rem;
+}
+
+.lifecycle-note {
+  max-width: var(--reading-width);
+  margin: 0 0 1.5rem;
+}
+
+.lifecycle-note p {
+  margin: 0;
+}
+
+.lifecycle-note ul {
+  margin: 0.55rem 0 0;
+  padding-left: 1.2rem;
+}
+
 .relation-links {
   display: flex;
   flex-wrap: wrap;
@@ -353,6 +371,57 @@ main {
   border: 1px solid var(--line);
   border-left: 3px solid var(--accent);
   background: rgba(49, 88, 76, 0.04);
+}
+
+.evidence-panel {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: rgba(49, 88, 76, 0.04);
+}
+
+.evidence-panel h2 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.evidence-list > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.32fr) minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.evidence-list dt {
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.evidence-list dd {
+  margin: 0;
+}
+
+.evidence-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  padding: 0.8rem 0 0;
+  margin: 0.8rem 0 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  list-style: none;
 }
 
 .toc-title {
@@ -565,6 +634,11 @@ main {
 
   .start-here-list {
     grid-template-columns: 1fr;
+  }
+
+  .evidence-list > div {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
   }
 }
 

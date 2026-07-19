@@ -73,6 +73,14 @@ function canonicalFromHtml(html) {
   )?.[1];
 }
 
+function structuredDataFromHtml(html) {
+  const source = html.match(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i,
+  )?.[1];
+  assert(source, "Page does not include JSON-LD structured data");
+  return JSON.parse(source);
+}
+
 function locationPath(response, baseUrl) {
   const location = response.headers.get("location");
   assert(location, `${response.url} redirect did not include Location`);
@@ -275,6 +283,144 @@ async function runChecks(baseUrl) {
     );
   });
 
+  await check("security headers and CSP nonces", async () => {
+    const page = await request("/notes/schema-on-split/");
+    const policy = page.response.headers.get("content-security-policy") ?? "";
+    const nonce = policy.match(/'nonce-([^']+)'/)?.[1];
+
+    assert(nonce, "CSP does not include a nonce");
+    assertIncludes(
+      policy,
+      "https://static.cloudflareinsights.com",
+      "CSP analytics script origin",
+    );
+    assertIncludes(policy, "frame-ancestors 'none'", "CSP frame policy");
+    assert(
+      !policy.includes("'unsafe-inline'"),
+      "Production CSP allows unsafe inline content",
+    );
+    assertEqual(
+      page.response.headers.get("strict-transport-security"),
+      "max-age=63072000; includeSubDomains; preload",
+      "HSTS",
+    );
+    assertEqual(
+      page.response.headers.get("x-content-type-options"),
+      "nosniff",
+      "content type protection",
+    );
+    assertEqual(
+      page.response.headers.get("referrer-policy"),
+      "strict-origin-when-cross-origin",
+      "referrer policy",
+    );
+    assert(
+      /^[0-9a-f]{40}$/.test(
+        page.response.headers.get("x-kotona-revision") ?? "",
+      ),
+      "Response does not expose a source revision",
+    );
+
+    const scriptNonces = [
+      ...page.body.matchAll(/<script\b[^>]*\bnonce=["']([^"']+)["']/gi),
+    ].map((match) => match[1]);
+    assert(scriptNonces.length >= 2, "Expected JSON-LD and analytics nonces");
+    assert(
+      scriptNonces.every((scriptNonce) => scriptNonce === nonce),
+      "A script nonce does not match the response CSP",
+    );
+  });
+
+  await check("evidence, metadata titles, and content structure", async () => {
+    const project = await request("/projects/household-operating-platform/");
+    assertIncludes(project.body, 'id="evidence-title"', "project evidence");
+    assertIncludes(
+      project.body,
+      "v0.1.0 operating-view release",
+      "latest proof",
+    );
+    const projectMarkdown = await request(
+      "/projects/household-operating-platform/",
+      { accept: "text/markdown" },
+    );
+    assertIncludes(projectMarkdown.body, "## Evidence", "Markdown evidence");
+    assertIncludes(
+      projectMarkdown.body,
+      "Known limitation",
+      "Markdown evidence limitation",
+    );
+    assertIncludes(
+      projectMarkdown.body,
+      "[ Source repository ](https://github.com/bayleafwalker/homelab-analytics)",
+      "Markdown proof link",
+    );
+
+    const projectData = structuredDataFromHtml(project.body);
+    const projectTypes = projectData["@graph"].map((item) => item["@type"]);
+    assert(
+      projectTypes.includes("Article"),
+      "Project Article schema is missing",
+    );
+    assert(
+      projectTypes.includes("BreadcrumbList"),
+      "Project BreadcrumbList schema is missing",
+    );
+    const projectArticle = projectData["@graph"].find(
+      (item) => item["@type"] === "Article",
+    );
+    assertEqual(
+      projectArticle.author.url,
+      "https://kotona.app/about/",
+      "Article author URL",
+    );
+
+    const note = await request("/notes/the-ref-nobody-adds/");
+    assertIncludes(
+      note.body,
+      "<title>Why agent workflows ignore documentation references | kotona.app</title>",
+      "SEO title",
+    );
+    assertIncludes(note.body, ">The ref nobody adds</h1>", "editorial heading");
+    assertIncludes(
+      note.body,
+      'content="Agents cannot use documents they are never shown | kotona.app"',
+      "social title",
+    );
+    assertIncludes(note.body, "Lifecycle: current", "current note lifecycle");
+
+    const archivedNote = await request(
+      "/notes/a-gitops-rollback-needs-time-to-reach-git/",
+      { accept: "text/markdown" },
+    );
+    assertIncludes(
+      archivedNote.body,
+      "Lifecycle: archived",
+      "archived note lifecycle",
+    );
+    assertIncludes(
+      archivedNote.body,
+      "Preserved as a historical incident lesson",
+      "archived note reason",
+    );
+
+    const about = await request("/about/");
+    const aboutTypes = structuredDataFromHtml(about.body)["@graph"].map(
+      (item) => item["@type"],
+    );
+    assert(aboutTypes.includes("ProfilePage"), "ProfilePage schema is missing");
+
+    const home = await request("/");
+    const homeTypes = structuredDataFromHtml(home.body)["@graph"].map(
+      (item) => item["@type"],
+    );
+    assert(homeTypes.includes("WebSite"), "WebSite schema is missing");
+    assertIncludes(
+      home.body,
+      'href="/notes/the-workshop-is-learning-my-accent/"',
+      "editorial model link",
+    );
+  });
+
   await check("Markdown GET and HEAD negotiation", async () => {
     const markdown = await request("/notes/schema-on-split/", {
       accept: "text/markdown",
@@ -457,6 +603,21 @@ async function runChecks(baseUrl) {
     assertEqual(llms.response.status, 200, "llms.txt status");
     assertContentType(llms.response, "text/markdown");
     assertIncludes(llms.body, "# kotona.app", "llms.txt heading");
+    assertIncludes(llms.body, "(archived; archival)", "llms.txt lifecycle");
+
+    const version = await request("/version.json");
+    assertEqual(version.response.status, 200, "version endpoint status");
+    assertContentType(version.response, "application/json");
+    const versionDocument = JSON.parse(version.body);
+    assert(
+      /^[0-9a-f]{40}$/.test(versionDocument.revision),
+      "version endpoint revision is not a commit SHA",
+    );
+    assertEqual(
+      versionDocument.source,
+      `https://github.com/bayleafwalker/kotona.app/commit/${versionDocument.revision}`,
+      "version endpoint source",
+    );
 
     const robots = await request("/robots.txt");
     assertEqual(robots.response.status, 200, "robots.txt status");

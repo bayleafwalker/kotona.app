@@ -14,6 +14,21 @@ status: Phase 0 initialized
 featured: false
 repoUrls:
   - https://github.com/bayleafwalker/box
+evidence:
+  capability: >-
+    Three service contracts and two scenario packs pass local document and
+    schema validation; service implementations and a simulator do not exist.
+  latest: Phase 0 contract baseline
+  proofLinks:
+    - label: Source repository
+      href: https://github.com/bayleafwalker/box
+  integrations: []
+  knownLimitation: >-
+    The repository proves coherent boundaries, not a running platform or
+    service replacement.
+  nextProof: >-
+    Run one end-to-end slice through all three services with service-owned
+    persistence and contract-valid events.
 tags:
   - contracts
   - architecture

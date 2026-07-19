@@ -31,6 +31,23 @@ const projectEntries = getVisibleEntries(
   ).filter((project) => project !== undefined),
 );
 const visibleNotes = getVisibleEntries(await getCollection("notes"));
+const successorNotes = getVisibleEntries(
+  (
+    await Promise.all(
+      entry.data.supersededBy.map((reference) => getEntry(reference)),
+    )
+  ).filter((note) => note !== undefined),
+);
+const invalidatingProjects = getVisibleEntries(
+  (
+    await Promise.all(
+      entry.data.invalidatedByProjects.map((reference) => getEntry(reference)),
+    )
+  ).filter((project) => project !== undefined),
+);
+const supersededNotes = visibleNotes.filter((note) =>
+  note.data.supersededBy.some((reference) => reference.id === entry.id),
+);
 const explicitlyRelated = getVisibleEntries(
   (
     await Promise.all(
@@ -42,7 +59,7 @@ const backlinks = visibleNotes.filter((note) =>
   note.data.relates.some((reference) => reference.id === entry.id),
 );
 const relatedById = new Map(
-  [...explicitlyRelated, ...backlinks]
+  [...explicitlyRelated, ...backlinks, ...successorNotes, ...supersededNotes]
     .filter((note) => note.id !== entry.id)
     .map((note) => [note.id, note]),
 );
@@ -57,15 +74,28 @@ const noteKind = entry.data.draft
   : projectEntries.length > 0
     ? "Project note"
     : "System note";
+const formattedLifecycleDate = entry.data.lifecycleChanged
+  ? formatDate(entry.data.lifecycleChanged)
+  : null;
+const lifecycleLabel =
+  entry.data.lifecycle.charAt(0).toUpperCase() + entry.data.lifecycle.slice(1);
 ---
 
 <BaseLayout
   title={entry.data.title}
+  seoTitle={entry.data.seoTitle}
+  socialTitle={entry.data.socialTitle}
   description={entry.data.summary ?? siteConfig.description}
   noindex={entry.data.draft}
   pageType="article"
   publishedDate={entry.data.published}
   modifiedDate={entry.data.lastRevised}
+  creativeWorkStatus={entry.data.lifecycle}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Notes", path: "/notes/" },
+    { name: entry.data.title, path: `/notes/${entry.id}/` },
+  ]}
 >
   <section class="content-shell">
     <article class="content-panel">
@@ -80,10 +110,17 @@ const noteKind = entry.data.draft
           ) : null
         }
 
+        <div class="entry-meta note-state" aria-label="Note state">
+          <span class="pill pill-accent">{entry.data.status}</span>
+          <span class="pill" data-lifecycle={entry.data.lifecycle}>
+            Lifecycle: {entry.data.lifecycle}
+          </span>
+        </div>
+
         <p class="content-context">
-          {entry.data.status} / {entry.data.area} / Published {
-            formattedPublishedDate
-          }{wasRevised ? ` / Revised ${formattedRevisedDate}` : ""}
+          {entry.data.area} / Published {formattedPublishedDate}{
+            wasRevised ? ` / Revised ${formattedRevisedDate}` : ""
+          }
         </p>
 
         {
@@ -100,7 +137,62 @@ const noteKind = entry.data.draft
             </ul>
           ) : null
         }
+
+        {
+          supersededNotes.length > 0 ? (
+            <ul
+              class="relation-links"
+              aria-label="Notes superseded by this note"
+            >
+              {supersededNotes.map((note) => (
+                <li>
+                  Supersedes:{" "}
+                  <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+                </li>
+              ))}
+            </ul>
+          ) : null
+        }
       </header>
+
+      {
+        entry.data.lifecycle !== "current" ? (
+          <aside
+            class="publication-note lifecycle-note"
+            aria-label="Note lifecycle"
+          >
+            <p>
+              <strong>{lifecycleLabel}</strong>
+              {formattedLifecycleDate
+                ? ` ${formattedLifecycleDate}.`
+                : "."}{" "}
+              {entry.data.lifecycleReason}
+            </p>
+            {successorNotes.length > 0 ? (
+              <ul>
+                {successorNotes.map((note) => (
+                  <li>
+                    Successor:{" "}
+                    <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {invalidatingProjects.length > 0 ? (
+              <ul>
+                {invalidatingProjects.map((project) => (
+                  <li>
+                    Invalidated by project state:{" "}
+                    <a href={`/projects/${project.id}/`}>
+                      {project.data.project}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </aside>
+        ) : null
+      }
 
       <ContentToc headings={headings} />
 

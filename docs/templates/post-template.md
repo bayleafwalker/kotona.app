@@ -1,6 +1,18 @@
 ---
 title: Replace with a concrete title
+# Optional: use only when the editorial title is unclear out of context.
+# seoTitle: A descriptive search-result title
+# socialTitle: A descriptive link-preview title
 status: prospective
+# Publication standing is separate from status. Non-current notes also require
+# lifecycleChanged and lifecycleReason; superseded notes require supersededBy.
+lifecycle: current
+# lifecycleChanged: YYYY-MM-DD
+# lifecycleReason: What changed the note's standing.
+# supersededBy:
+#   - successor-note-id
+# invalidatedByProjects:
+#   - project-id
 area: replace-with-area
 published: 2026-07-13
 lastRevised: 2026-07-13

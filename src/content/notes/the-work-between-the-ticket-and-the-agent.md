@@ -1,6 +1,7 @@
 ---
 title: The work between the ticket and the agent
 status: exploration
+lifecycle: current
 area: agent workflow
 published: 2026-07-19
 lastRevised: 2026-07-19

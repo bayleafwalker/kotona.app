@@ -21,6 +21,26 @@ repoUrls:
   - https://github.com/bayleafwalker/auditctl
   - https://github.com/bayleafwalker/agentops
 externalUrl: https://bayleafwalker.github.io/agentops/
+evidence:
+  capability: >-
+    Public tools own sprint, knowledge, queue, dispatch, audit, and cockpit
+    state through separate contracts, with local and shared operating modes.
+  latest: Public multi-repository Vuoro toolchain with a live agent-cockpit
+  proofLinks:
+    - label: sprintctl source repository
+      href: https://github.com/bayleafwalker/sprintctl
+    - label: Interactive Vuoro system map
+      href: https://bayleafwalker.github.io/agentops/
+  integrations:
+    - SQLite
+    - PostgreSQL
+    - agent-cockpit
+  knownLimitation: >-
+    kctl and auditctl have less operational mileage than sprintctl and the
+    cockpit, while cross-repository version drift remains a recovery risk.
+  nextProof: >-
+    Exercise an end-to-end dispatch, failure, recovery, and audit path across
+    the owning CLIs without allowing the cockpit to bypass their contracts.
 tags:
   - agents
   - workflow

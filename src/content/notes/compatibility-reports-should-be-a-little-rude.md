@@ -1,6 +1,11 @@
 ---
 title: Compatibility reports should be a little rude
 status: archival
+lifecycle: archived
+lifecycleChanged: 2026-04-08
+lifecycleReason: >-
+  Preserved as historical contract-governance evidence; the household platform
+  project page is authoritative for current capability and limitations.
 area: contract governance
 published: 2026-04-08
 lastRevised: 2026-04-08

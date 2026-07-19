@@ -1,0 +1,63 @@
+[
+  {
+    "id": "household-current-authority",
+    "question": "What is the current capability, authoritative repository, latest release, known limitation, and next proof for the household operating platform?",
+    "expectedPath": "/projects/household-operating-platform/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "## Evidence",
+      "v0.1.0 operating-view release",
+      "Source repository",
+      "Known limitation",
+      "Next meaningful proof"
+    ]
+  },
+  {
+    "id": "structured-sprint-authority",
+    "question": "Why did agents editing shared Markdown sprint files lead to schema-enforced sprint state, and which project now owns that authority?",
+    "expectedPath": "/projects/sprintctl-and-kctl/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "## Evidence",
+      "CLI the write authority",
+      "sprintctl owns sprints",
+      "Known limitation"
+    ]
+  },
+  {
+    "id": "gitops-current-over-history",
+    "question": "What is currently true about the GitOps cluster external control-plane snapshots, verified upgrade, and remaining restore limitation?",
+    "expectedPath": "/projects/gitops-cluster/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "## Evidence",
+      "external control-plane snapshot",
+      "Talos 1.13.6 and Kubernetes 1.36.2",
+      "Known limitation"
+    ]
+  },
+  {
+    "id": "historical-rollback-path",
+    "question": "During a historical GitOps incident, why did a live rollback need time to reach Git before reconciliation resumed?",
+    "expectedPath": "/notes/a-gitops-rollback-needs-time-to-reach-git/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "Lifecycle: archived",
+      "Preserved as a historical incident lesson",
+      "current backup, recovery, and upgrade state",
+      "desired state"
+    ]
+  },
+  {
+    "id": "box-absence-of-proof",
+    "question": "What can the Box contract-first project prove today, and which runtime or service-replacement evidence is still absent?",
+    "expectedPath": "/projects/contract-first-box/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "## Evidence",
+      "service implementations and a simulator do not exist",
+      "not a running platform or service replacement",
+      "Next meaningful proof"
+    ]
+  }
+]

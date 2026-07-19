@@ -1,5 +1,8 @@
 ---
 title: Replace with a concrete project title
+# Optional: use only when the editorial title is unclear out of context.
+# seoTitle: A descriptive search-result title
+# socialTitle: A descriptive link-preview title
 published: YYYY-MM-DD
 lastRevised: YYYY-MM-DD
 lastVerified: YYYY-MM-DD
@@ -10,6 +13,16 @@ status: Replace with the current state
 featured: false
 repoUrls:
   - https://github.com/owner/repo
+evidence:
+  capability: What the project can demonstrably do now.
+  latest: The latest release or deployed slice, when one exists.
+  proofLinks:
+    - label: Source repository
+      href: https://github.com/owner/repo
+  integrations:
+    - A supported integration
+  knownLimitation: The most important boundary the current evidence does not cross.
+  nextProof: The next result that would materially strengthen the claim.
 tags:
   - replace-me
 summary: One or two sentences explaining what the project is for.

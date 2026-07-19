@@ -1,6 +1,7 @@
 ---
 title: The missing layer is binding, not intelligence
 status: guiding
+lifecycle: current
 area: agent workflow
 published: 2026-04-27
 lastRevised: 2026-07-13

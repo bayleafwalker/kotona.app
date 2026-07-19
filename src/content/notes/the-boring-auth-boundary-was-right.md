@@ -1,6 +1,11 @@
 ---
 title: The boring auth boundary was right
 status: archival
+lifecycle: archived
+lifecycleChanged: 2026-04-08
+lifecycleReason: >-
+  Preserved as a historical architecture decision; the household platform
+  project page is authoritative for the current integration boundary.
 area: authentication architecture
 published: 2026-04-08
 lastRevised: 2026-04-08

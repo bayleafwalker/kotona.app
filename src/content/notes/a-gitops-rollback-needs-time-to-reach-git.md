@@ -1,6 +1,11 @@
 ---
 title: A GitOps rollback needs time to reach Git
 status: archival
+lifecycle: archived
+lifecycleChanged: 2026-04-08
+lifecycleReason: >-
+  Preserved as a historical incident lesson; the GitOps cluster project page is
+  authoritative for current backup, recovery, and upgrade state.
 area: GitOps operations
 published: 2026-04-08
 lastRevised: 2026-04-08

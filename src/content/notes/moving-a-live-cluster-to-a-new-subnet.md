@@ -1,6 +1,7 @@
 ---
 title: Moving a live cluster to a new subnet
 status: guiding
+lifecycle: current
 area: cluster operations
 published: 2026-06-10
 lastRevised: 2026-07-13

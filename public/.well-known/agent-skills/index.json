@@ -6,7 +6,7 @@
       "type": "skill-md",
       "description": "Find and cite public project and system notes published at kotona.app.",
       "url": "https://www.kotona.app/.well-known/agent-skills/kotona-site-guide/SKILL.md",
-      "digest": "sha256:6c6f0e82bec616c1f71800ad1c9b2d9434c5da95d3a7ee6762f4322155cc7f98"
+      "digest": "sha256:70b9454a4fc4aba2e1b82d5a42a162953468faf0873df45c2675c16c1895d7d2"
     }
   ]
 }

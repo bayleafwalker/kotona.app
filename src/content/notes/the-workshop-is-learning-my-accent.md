@@ -1,6 +1,7 @@
 ---
 title: The workshop is learning my accent
 status: exploration
+lifecycle: current
 area: agent workflow
 published: 2026-07-19
 lastRevised: 2026-07-19

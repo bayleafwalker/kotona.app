@@ -13,6 +13,28 @@ kind: engineering
 status: Active operations repo
 featured: true
 repoUrls: []
+evidence:
+  capability: >-
+    Git reconciles the live cluster, while the external control-plane snapshot
+    path has passed upload, checksum, encryption, remote verification, and an
+    offline restore drill.
+  latest: Talos 1.13.6 and Kubernetes 1.36.2 upgrade with post-upgrade evidence
+  proofLinks:
+    - label: Rollback and reconciliation rule
+      href: /notes/a-gitops-rollback-needs-time-to-reach-git/
+    - label: Live subnet migration record
+      href: /notes/moving-a-live-cluster-to-a-new-subnet/
+  integrations:
+    - Flux
+    - SOPS and age
+    - VolSync
+    - external snapshot storage
+  knownLimitation: >-
+    The offline drill validates the stored artifact and compatible tooling, not
+    a disruptive production control-plane restore.
+  nextProof: >-
+    Renew the independent restore evidence on schedule and verify agreement
+    between Git, live upgrade plans, and the selected target before node changes.
 tags:
   - gitops
   - kubernetes

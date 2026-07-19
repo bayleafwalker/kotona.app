@@ -1,12 +1,20 @@
 ---
+import { getBuildRevisionLink } from "../build";
 import { getContactLinks } from "../site";
 
 const contactLinks = getContactLinks();
+const buildLink = getBuildRevisionLink();
 const footerLinks = [
+  {
+    label: "Editorial model",
+    href: "/notes/the-workshop-is-learning-my-accent/",
+  },
   { label: "Log", href: "/log/" },
+  { label: "Privacy", href: "/privacy/" },
   { label: "RSS", href: "/rss.xml" },
+  buildLink.href ? { label: buildLink.label, href: buildLink.href } : null,
   ...contactLinks,
-];
+].filter((link): link is { label: string; href: string } => Boolean(link));
 ---
 
 <footer class="site-footer">

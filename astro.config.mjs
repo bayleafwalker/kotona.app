@@ -1,5 +1,7 @@
+import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 
 import cloudflare from "@astrojs/cloudflare";
@@ -10,6 +12,18 @@ import sitemap from "@astrojs/sitemap";
 import { siteConfig } from "./src/site";
 
 const rootDirectory = fileURLToPath(new URL(".", import.meta.url));
+const buildRevision =
+  process.env.KOTONA_BUILD_REVISION ??
+  (() => {
+    try {
+      return execFileSync("git", ["rev-parse", "HEAD"], {
+        cwd: rootDirectory,
+        encoding: "utf8",
+      }).trim();
+    } catch {
+      return "unknown";
+    }
+  })();
 
 function contentFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -83,6 +97,11 @@ export default defineConfig({
         light: "github-light",
         dark: "github-dark",
       },
+    },
+  },
+  vite: {
+    define: {
+      __BUILD_REVISION__: JSON.stringify(buildRevision),
     },
   },
 });

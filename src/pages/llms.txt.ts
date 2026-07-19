@@ -6,6 +6,7 @@ import {
   sortByDateAndTitle,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
+import { buildRevision } from "../build";
 import { siteConfig } from "../site";
 
 export const GET: APIRoute = async ({ site }) => {
@@ -27,6 +28,7 @@ export const GET: APIRoute = async ({ site }) => {
     `> ${siteConfig.description}`,
     "",
     "This is a public, read-only site. It has no API, accounts, authentication flow, or MCP server.",
+    `Deployed source revision: ${buildRevision}.`,
     "",
     "## Site map",
     "",
@@ -34,6 +36,8 @@ export const GET: APIRoute = async ({ site }) => {
     `- [Projects](${new URL("/projects/", baseUrl)})`,
     `- [Notes](${new URL("/notes/", baseUrl)})`,
     `- [About](${new URL("/about/", baseUrl)})`,
+    `- [Privacy](${new URL("/privacy/", baseUrl)})`,
+    `- [Deployed revision](${new URL("/version.json", baseUrl)})`,
     `- [Publication and project log](${new URL("/log/", baseUrl)})`,
     `- [RSS feed](${new URL("/rss.xml", baseUrl)})`,
     `- [XML sitemap](${new URL("/sitemap-index.xml", baseUrl)})`,
@@ -49,7 +53,7 @@ export const GET: APIRoute = async ({ site }) => {
     "",
     ...notes.map(
       (entry) =>
-        `- [${entry.data.title}](${new URL(`/notes/${entry.id}/`, baseUrl)}): ${entry.data.summary ?? "System note."}`,
+        `- [${entry.data.title}](${new URL(`/notes/${entry.id}/`, baseUrl)}) (${entry.data.lifecycle}; ${entry.data.status}): ${entry.data.summary ?? "System note."}`,
     ),
   ].join("\n");
 

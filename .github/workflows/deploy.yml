@@ -45,13 +45,13 @@ jobs:
 
       - name: Checkout
         if: steps.deploy_config.outputs.configured == 'true'
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup Node.js
         if: steps.deploy_config.outputs.configured == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .node-version
           cache: npm
@@ -63,3 +63,5 @@ jobs:
       - name: Deploy to Cloudflare Workers
         if: steps.deploy_config.outputs.configured == 'true'
         run: npm run deploy
+        env:
+          KOTONA_BUILD_REVISION: ${{ github.event.workflow_run.head_sha }}

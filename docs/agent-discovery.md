@@ -10,6 +10,7 @@ authentication surface that does not exist.
 - `/.well-known/agent-skills/index.json` points to a small, integrity-pinned
   guide for navigating the site's public material.
 - `/llms.txt` provides a compact map of the site's primary content surfaces.
+- `/version.json` ties the deployed Worker to its source commit.
 - HTML responses negotiate to Markdown when the request prefers
   `text/markdown`. HTML remains the default when qualities tie.
 - `robots.txt` allows search and AI input, while declining AI training:
@@ -17,6 +18,10 @@ authentication surface that does not exist.
 - Former `/writing/` URLs with observed agent demand permanently redirect to
   their published `/notes/` equivalents. The requested articles are retained as
   archival notes rather than redirected to a generic index.
+
+Every note publishes both its claim posture and lifecycle. Treat `superseded`,
+`archived`, and `disproven` notices as authority boundaries, follow declared
+successors, and do not silently restate a non-current note as present guidance.
 
 ## Intentionally not published
 

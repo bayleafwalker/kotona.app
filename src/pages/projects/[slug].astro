@@ -50,11 +50,18 @@ const relatedLinks = [
 
 <BaseLayout
   title={entry.data.title}
+  seoTitle={entry.data.seoTitle}
+  socialTitle={entry.data.socialTitle}
   description={entry.data.summary}
   noindex={entry.data.draft}
   pageType="article"
   publishedDate={entry.data.published}
   modifiedDate={entry.data.lastRevised}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Projects", path: "/projects/" },
+    { name: entry.data.title, path: `/projects/${entry.id}/` },
+  ]}
 >
   <section class="content-shell project-shell">
     <article class="content-panel project-panel">
@@ -107,6 +114,67 @@ const relatedLinks = [
           </p>
         ) : null
       }
+
+      <section class="evidence-panel" aria-labelledby="evidence-title">
+        <h2 id="evidence-title">Evidence</h2>
+        <dl class="evidence-list">
+          <div>
+            <dt>State</dt>
+            <dd>{entry.data.status}</dd>
+          </div>
+          <div>
+            <dt>Verified</dt>
+            <dd>
+              <time datetime={entry.data.lastVerified.toISOString()}>
+                {formattedVerifiedDate}
+              </time>
+            </dd>
+          </div>
+          <div>
+            <dt>Current capability</dt>
+            <dd>{entry.data.evidence.capability}</dd>
+          </div>
+          {
+            entry.data.evidence.latest ? (
+              <div>
+                <dt>Latest release or slice</dt>
+                <dd>{entry.data.evidence.latest}</dd>
+              </div>
+            ) : null
+          }
+          {
+            entry.data.evidence.integrations.length > 0 ? (
+              <div>
+                <dt>Supported integrations</dt>
+                <dd>{entry.data.evidence.integrations.join(", ")}</dd>
+              </div>
+            ) : null
+          }
+          <div>
+            <dt>Known limitation</dt>
+            <dd>{entry.data.evidence.knownLimitation}</dd>
+          </div>
+          <div>
+            <dt>Next meaningful proof</dt>
+            <dd>{entry.data.evidence.nextProof}</dd>
+          </div>
+        </dl>
+
+        <ul class="evidence-links" aria-label="Proof links">
+          {
+            entry.data.evidence.proofLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
 
       <ContentToc headings={headings} />
 

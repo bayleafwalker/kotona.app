@@ -42,6 +42,7 @@ npm run check:content-freshness
 npm run check
 npm run build
 npm run test:worker
+npm run test:retrieval
 npm run check:links
 ```
 
@@ -68,6 +69,17 @@ Frontmatter is schema-validated during `npm run check` and `npm run build`.
 Note `projects` and `relates` values are collection IDs and are validated as
 references during those checks.
 
+Every note declares both a claim posture (`guiding`, `prospective`,
+`exploration`, or `archival`) and a publication lifecycle (`current`,
+`superseded`, `archived`, or `disproven`). Non-current notes require a dated
+reason. Superseded notes also require a successor reference, and project state
+that invalidated a note can be linked explicitly.
+
+Every project declares a compact evidence record: current capability, concrete
+proof links, supported integrations, the strongest known limitation, and the
+next meaningful proof. Optional `seoTitle` and `socialTitle` fields can clarify
+an editorial title outside the site without changing the visible heading.
+
 Published project pages must also keep `lastVerified` current. The freshness
 check enforces date chronology and a maximum verification age of 90 days.
 
@@ -85,6 +97,8 @@ Draft behavior:
 - `/notes/` reverse chronological notes index
 - `/notes/[slug]/` note detail pages
 - `/about/` short context page
+- `/privacy/` operational disclosure for analytics, request logs, and email
+- `/version.json` deployed source revision and commit URL
 - `/log/` chronological site and project-state changelog
 - `/rss.xml` RSS feed for published notes
 - `/llms.txt` compact machine-readable site map
@@ -93,6 +107,12 @@ Draft behavior:
 
 The old `/case-studies/` paths are compatibility redirects. Projects and notes
 are the canonical content surfaces.
+
+The deterministic retrieval evaluation discovers those surfaces from
+`llms.txt`, reads them through public Markdown negotiation, and verifies that
+current authority, historical context, and absent evidence remain retrievable.
+Its cases and operating limits are documented in
+`docs/retrieval-evaluation.md`.
 
 ## Deployment
 
@@ -120,7 +140,16 @@ their DNS records and certificates during deployment. The Worker permanently
 redirects every `www.kotona.app` request to the same path and query on
 `kotona.app` with HTTP 308.
 
+Security headers are set in Astro middleware, including a nonce-based Content
+Security Policy that permits the Cloudflare Web Analytics beacon without
+allowing arbitrary inline scripts.
+
+Production builds receive the triggering commit SHA from the deploy workflow.
+The revision is exposed in the footer, `/version.json`, `llms.txt`, and the
+`X-Kotona-Revision` response header.
+
 CI lives in `.github/workflows/ci.yml` and runs install, dependency audit,
 format check, lint, unit tests, project freshness and Astro checks, the
 production build, a local Worker integration smoke test, and an external-link
-check.
+check. The retrieval evaluation runs after the Worker build and requires no
+external model or network access.

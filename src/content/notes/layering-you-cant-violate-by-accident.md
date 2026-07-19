@@ -1,6 +1,7 @@
 ---
 title: Layering you can't violate by accident
 status: guiding
+lifecycle: current
 area: software architecture
 published: 2026-06-10
 lastRevised: 2026-06-10

@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Privacy"
+  description="A short operational account of analytics, request logs, and email on kotona.app."
+>
+  <section class="page-intro">
+    <p class="eyebrow">Privacy</p>
+    <h1 class="page-title">A small site with a small data surface.</h1>
+
+    <p class="page-copy">
+      Cloudflare provides hosting and Web Analytics. The analytics beacon is
+      used for aggregate traffic and performance measurement, not individual
+      profiling. This site has no accounts, comments, advertising, or
+      behavioural tracking.
+    </p>
+
+    <p class="page-copy">
+      Cloudflare and Worker observability may process ordinary request metadata
+      such as IP address, user agent, requested path, and timestamp for service
+      operation, security, and abuse response.
+    </p>
+
+    <p class="page-copy">
+      Using the email link creates an ordinary email interaction. The message
+      and its addressing metadata are handled by the sender’s and recipient’s
+      email providers and may be retained as correspondence.
+    </p>
+  </section>
+</BaseLayout>

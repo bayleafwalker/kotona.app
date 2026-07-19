@@ -6,49 +6,116 @@ import "../styles/global.css";
 
 type Props = {
   title?: string;
+  seoTitle?: string;
+  socialTitle?: string;
   description?: string;
   noindex?: boolean;
   canonical?: boolean;
-  pageType?: "website" | "article";
+  pageType?: "website" | "article" | "profile";
   publishedDate?: Date;
   modifiedDate?: Date;
+  creativeWorkStatus?: string;
   ogImage?: string;
   ogImageAlt?: string;
+  breadcrumbs?: { name: string; path: string }[];
 };
 
 const {
   title,
+  seoTitle,
+  socialTitle,
   description = siteConfig.description,
   noindex = false,
   canonical = true,
   pageType = "website",
   publishedDate,
   modifiedDate,
+  creativeWorkStatus,
   ogImage = siteConfig.defaultOgImage,
   ogImageAlt = siteConfig.defaultOgImageAlt,
+  breadcrumbs = [],
 } = Astro.props;
 
-const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
+const metadataTitle = seoTitle ?? title;
+const pageTitle = metadataTitle
+  ? `${metadataTitle} | ${siteConfig.title}`
+  : siteConfig.title;
+const shareTitle = socialTitle ?? metadataTitle;
+const socialPageTitle = shareTitle
+  ? `${shareTitle} | ${siteConfig.title}`
+  : siteConfig.title;
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
 const ogImageUrl = new URL(ogImage, siteConfig.siteUrl).toString();
+const aboutUrl = new URL("/about/", siteConfig.siteUrl).toString();
+const websiteId = `${siteConfig.siteUrl}/#website`;
+const schemas: Record<string, unknown>[] = [];
+
+if (Astro.url.pathname === "/") {
+  schemas.push({
+    "@type": "WebSite",
+    "@id": websiteId,
+    url: siteConfig.siteUrl,
+    name: siteConfig.title,
+    description: siteConfig.description,
+  });
+}
+
+if (pageType === "article") {
+  schemas.push({
+    "@type": "Article",
+    "@id": `${canonicalUrl}#article`,
+    headline: title,
+    description,
+    url: canonicalUrl,
+    image: ogImageUrl,
+    datePublished: publishedDate?.toISOString(),
+    dateModified: modifiedDate?.toISOString(),
+    creativeWorkStatus,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+    isPartOf: { "@id": websiteId },
+    author: {
+      "@type": "Person",
+      name: siteConfig.profile.name,
+      url: aboutUrl,
+    },
+  });
+}
+
+if (pageType === "profile") {
+  schemas.push({
+    "@type": "ProfilePage",
+    "@id": canonicalUrl,
+    url: canonicalUrl,
+    name: title,
+    mainEntity: {
+      "@type": "Person",
+      name: siteConfig.profile.name,
+      url: aboutUrl,
+      sameAs: [
+        siteConfig.externalLinks.github,
+        siteConfig.externalLinks.linkedin,
+      ],
+    },
+  });
+}
+
+if (breadcrumbs.length > 0) {
+  schemas.push({
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: new URL(item.path, siteConfig.siteUrl).toString(),
+    })),
+  });
+}
+
 const structuredData =
-  pageType === "article"
-    ? {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        headline: title,
-        description,
-        url: canonicalUrl,
-        image: ogImageUrl,
-        datePublished: publishedDate?.toISOString(),
-        dateModified: modifiedDate?.toISOString(),
-        author: {
-          "@type": "Person",
-          name: siteConfig.profile.name,
-          url: siteConfig.siteUrl,
-        },
-      }
+  schemas.length > 0
+    ? { "@context": "https://schema.org", "@graph": schemas }
     : null;
+const cspNonce = Astro.locals.cspNonce;
 ---
 
 <!doctype html>
@@ -71,7 +138,7 @@ const structuredData =
     {noindex ? <meta name="robots" content="noindex,follow" /> : null}
 
     <meta property="og:type" content={pageType} />
-    <meta property="og:title" content={pageTitle} />
+    <meta property="og:title" content={socialPageTitle} />
     <meta property="og:description" content={description} />
     {canonical ? <meta property="og:url" content={canonicalUrl} /> : null}
     <meta property="og:image" content={ogImageUrl} />
@@ -95,7 +162,7 @@ const structuredData =
     }
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:title" content={socialPageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
@@ -104,6 +171,7 @@ const structuredData =
         <script
           type="application/ld+json"
           is:inline
+          nonce={cspNonce}
           set:html={JSON.stringify(structuredData)}
         />
       ) : null
@@ -122,6 +190,8 @@ const structuredData =
     <!-- Cloudflare Web Analytics -->
     <script
       type="module"
+      is:inline
+      nonce={cspNonce}
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon='{"token":"48e5fc9437d14011a3fe4346a3e1075d"}'></script>
   </body>
