@@ -74,6 +74,10 @@ test("Markdown projection preserves ordered and unordered list semantics", () =>
       </ol>
       <ul>
         <li>Keep the evidence.</li>
+        <li>
+          Keep wrapped text and
+          <a href="/sources/">inline links</a> separated.
+        </li>
       </ul>
     </main>
   `;
@@ -88,6 +92,8 @@ test("Markdown projection preserves ordered and unordered list semantics", () =>
       "8. Record the handoff.",
       "",
       "- Keep the evidence.",
+      "",
+      "- Keep wrapped text and [inline links](/sources/) separated.",
       "",
     ].join("\n"),
   );

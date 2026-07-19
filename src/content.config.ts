@@ -39,6 +39,15 @@ const notes = defineCollection({
       projects: z.array(reference("projects")).default([]),
       relates: z.array(reference("notes")).default([]),
       tags: z.array(z.string().min(1)).default([]),
+      hero: z
+        .object({
+          src: z.string().regex(/^\/[\w./-]+\.(avif|jpe?g|png|webp)$/i),
+          alt: z.string().min(1),
+          caption: z.string().min(1).optional(),
+          width: z.number().int().positive(),
+          height: z.number().int().positive(),
+        })
+        .optional(),
       draft: z.boolean().default(false),
     })
     .superRefine((note, context) => {

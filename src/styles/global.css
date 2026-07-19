@@ -460,6 +460,32 @@ main {
   max-width: var(--reading-width);
 }
 
+.content-hero {
+  max-width: var(--reading-width);
+  margin: 0 0 2rem;
+}
+
+.content-hero img,
+.prose img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: var(--bg-strong);
+}
+
+.content-hero figcaption,
+.prose figcaption {
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.prose figure {
+  margin: 1.5rem 0;
+}
+
 .prose > :first-child {
   margin-top: 0;
 }
