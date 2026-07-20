@@ -7,7 +7,7 @@ const contactLinks = getContactLinks();
 
 <BaseLayout
   title="About"
-  description="Short context around the site, the work, and the note cadence."
+  description="About Juha Huotari and kotona.app: a public field notebook on data platforms, infrastructure, agent-assisted engineering, and operational systems."
   pageType="profile"
 >
   <section class="page-intro">
@@ -15,48 +15,89 @@ const contactLinks = getContactLinks();
     <h1 class="page-title">{siteConfig.profile.name}</h1>
 
     <p class="page-copy">
-      I'm Juha Huotari, a solution analyst based in Helsinki. My day job is in
-      insurance data platforms: reporting pipelines, analytics development, and
-      the kind of integration work that has to be correct before it becomes
-      useful. Before that, regulatory reporting in wealth management. The
-      projects here come from the same instinct — that the interesting problems
-      in a system are usually boundary problems, and that making a boundary
-      explicit is almost always worth the cost.
+      I’m a solution analyst in Finland working on data platforms and
+      integration-heavy systems. My background spans insurance data platforms
+      and regulatory reporting in wealth management—usually where business
+      rules, operational processes, and durable data have to agree.
+    </p>
+
+    <h2>This site</h2>
+
+    <p class="page-copy">
+      kotona.app is a public field notebook for systems, projects, and ideas
+      that should remain understandable after the first successful run.
     </p>
 
     <p class="page-copy">
-      The projects on this site are personal infrastructure and tooling work,
-      but they start from the same instincts. A household operating platform
-      uses bronze, silver, and gold data tiers because that separation works.
-      Sprint tooling enforces schema-level constraints because I have seen what
-      happens when shared state is a document that everyone edits
-      optimistically. A homelab cluster runs through GitOps because the
-      alternative is a system that only the last person who touched it can
-      recover, and for a homelab that's going to be me.
+      The core subjects are data platforms, declarative infrastructure,
+      contract-first software, and agent-assisted engineering. The site also
+      contains bounded explorations in energy, hardware, organizational systems,
+      and the built environment when the useful question is whether an idea can
+      survive its operational constraints.
     </p>
 
     <p class="page-copy">
-      The recurring themes are boundaries that survive iteration, tools kept in
-      the role they are actually good at, and a preference for making the
-      trade-offs visible rather than hiding them behind a clean interface.
+      The common thread is how authority, state, evidence, boundaries, and
+      recovery fit together when a system has to keep working, evolving, and
+      being understood.
+    </p>
+
+    <h2>How to read it</h2>
+
+    <p class="page-copy">
+      <strong>Projects</strong> describe things that exist: what they do, how they
+      are shaped, their current state, and when that state was last verified.
     </p>
 
     <p class="page-copy">
-      Most of the material here starts as iterative prompts, and is followed by
-      ADRs, runbooks, sprint notes, or a fix committed after the problem became
-      expensive enough. The site is where some of that gets compressed into
-      project notes and system notes instead of chronology.
+      <strong>Notes</strong> preserve decisions, failures, operating rules, and reference
+      models worth retrieving later. Their lifecycle describes how they should be
+      interpreted: guiding notes are in current use, prospective notes describe a
+      direction, explorations test an idea, and archival notes preserve useful context
+      without claiming to be current guidance.
     </p>
 
     <p class="page-copy">
-      Agents help inspect, test, compare, and draft. I decide what the material
-      claims, verify the current-state evidence, and own the published result.
-      Prompt transcripts and generated options are source material, not canon.
+      Explorations are developed beyond casual speculation, but they are not
+      automatically plans, forecasts, or recommendations. Sometimes the analysis
+      is the product.
+    </p>
+
+    <p class="page-copy">
+      The writing is usually compact, declarative, and evidence-led. It serves
+      both as public explanation and as durable retrieval material for future
+      work. Some notes use a more personal or creative register when the subject
+      benefits from it.
+    </p>
+
+    <h2>Agents and authorship</h2>
+
+    <p class="page-copy">
+      Agents contribute substantially to the inspection, comparison,
+      implementation, and drafting behind this site. I provide the source
+      material and constraints, make the corrections, verify the claims, and
+      decide what is published.
+    </p>
+
+    <p class="page-copy">
+      Generated output is working material. The published claim is mine.
+    </p>
+
+    <p class="page-copy">
+      For a longer account of the site’s authorship and editorial process, see
+      <a href="/notes/the-workshop-is-learning-my-accent/">
+        <cite>The workshop is learning my accent</cite>
+      </a>.
+    </p>
+
+    <p class="page-copy">
+      This is a personal site. The views published here are my own and do not
+      represent my employer.
     </p>
 
     {
-      contactLinks.length > 0 ? (
-        <ul class="link-row" aria-label="External links">
+      contactLinks.length > 0 && (
+        <ul class="link-row" aria-label="Contact and external profiles">
           {contactLinks.map((link) => (
             <li>
               <a
@@ -69,11 +110,6 @@ const contactLinks = getContactLinks();
             </li>
           ))}
         </ul>
-      ) : (
-        <p class="publication-note">
-          GitHub, LinkedIn, and email are supported by the site config and only
-          render once real values are set.
-        </p>
       )
     }
   </section>
