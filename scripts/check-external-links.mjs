@@ -85,6 +85,14 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
         "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
     },
   ],
+  [
+    "https://www.rtca.org/products/do-330/",
+    {
+      statuses: new Set([403]),
+      reason:
+        "RTCA sits behind a Cloudflare bot challenge that blocks automated link checks",
+    },
+  ],
 ]);
 
 function countCharacter(value, character) {

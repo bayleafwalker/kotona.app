@@ -8,6 +8,7 @@ import {
   sortByDateAndTitle,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
+import { rankEntryPoints } from "../lib/knowledge-graph.js";
 import { siteConfig } from "../site";
 
 const projectEntries = sortByLastVerifiedAndTitle(
@@ -25,18 +26,10 @@ const notes = sortByDateAndTitle(
   })),
 );
 const visibleNotes = getVisibleEntries(notes);
-const startHereIds = [
-  "schema-on-split",
-  "moving-a-live-cluster-to-a-new-subnet",
-  "judge-agents-by-the-next-prompt",
-  "delivered-energy",
-] as const;
-const startHereNotes = startHereIds.flatMap((id) => {
-  const entry = visibleNotes.find((note) => note.id === id);
-  return entry ? [entry] : [];
-});
+const startHereNotes = rankEntryPoints(visibleNotes).slice(0, 4);
+const startHereIds = new Set(startHereNotes.map((entry) => entry.id));
 const recentNotes = visibleNotes
-  .filter((note) => !startHereIds.some((id) => id === note.id))
+  .filter((note) => !startHereIds.has(note.id))
   .slice(0, 5);
 ---
 
@@ -56,8 +49,8 @@ const recentNotes = visibleNotes
       <h2>Start here</h2>
     </div>
     <p class="page-copy">
-      Four ways into the work: data, operations, agent workflows, and applied
-      exploration.
+      Ranked by how densely a note connects to the rest of the corpus, not by
+      publish date.
     </p>
 
     {
