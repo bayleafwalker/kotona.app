@@ -56,6 +56,9 @@ const notes = defineCollection({
           height: z.number().int().positive(),
         })
         .optional(),
+      // A post-hoc prompt for applying and extending the note elsewhere. See
+      // docs/explore-prompts.md; generated only after the note is complete.
+      explorePrompt: z.string().min(80).max(2400).optional(),
       draft: z.boolean().default(false),
     })
     .superRefine((note, context) => {

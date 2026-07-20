@@ -463,6 +463,73 @@ async function runChecks(baseUrl) {
     );
   });
 
+  await check("explore-prompt rendering and Markdown negotiation", async () => {
+    const assurancePath =
+      "/notes/where-the-assurance-questions-are-already-answered/";
+    const html = await request(assurancePath);
+    assertIncludes(
+      html.body,
+      "<h2>Explore this note with AI</h2>",
+      "explore-prompt heading in HTML",
+    );
+    assertIncludes(
+      html.body,
+      "Use this note as a worked instantiation",
+      "explore-prompt text in HTML",
+    );
+    assertIncludes(
+      html.body,
+      'class="explore-prompt-copy"',
+      "explore-prompt copy button in HTML",
+    );
+    assertIncludes(
+      html.body,
+      "Copy prompt",
+      "explore-prompt copy label in HTML",
+    );
+
+    const markdown = await request(assurancePath, { accept: "text/markdown" });
+    assertContentType(markdown.response, "text/markdown");
+    assertIncludes(
+      markdown.body,
+      "## Explore this note with AI",
+      "explore-prompt heading in Markdown",
+    );
+    assertIncludes(
+      markdown.body,
+      "not a reconstruction of how the note was written",
+      "explore-prompt explanation in Markdown",
+    );
+    assertIncludes(
+      markdown.body,
+      "Use this note as a worked instantiation",
+      "explore-prompt text in Markdown",
+    );
+    assert(
+      !markdown.body.includes("Copy prompt"),
+      "Markdown must not leak the copy-button label",
+    );
+
+    const guide = await request(
+      "/notes/a-field-guide-to-assurance-managed-ai-development/",
+      { accept: "text/markdown" },
+    );
+    const explorePromptIndex = guide.body.indexOf(
+      "## Explore this note with AI",
+    );
+    const firstBodyHeadingIndex = guide.body.indexOf(
+      "## The shortest useful route",
+    );
+    assert(
+      explorePromptIndex > -1 && firstBodyHeadingIndex > -1,
+      "explore-prompt and body heading must both be present",
+    );
+    assert(
+      explorePromptIndex < firstBodyHeadingIndex,
+      "explore-prompt block must precede the table of contents and body",
+    );
+  });
+
   await check("Markdown GET and HEAD negotiation", async () => {
     const markdown = await request("/notes/schema-on-split/", {
       accept: "text/markdown",

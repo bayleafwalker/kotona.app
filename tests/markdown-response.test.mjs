@@ -64,6 +64,42 @@ test("Markdown projection uses main content and preserves tables and code", () =
   );
 });
 
+test("Markdown projection exposes a collapsed explore-prompt block and drops the copy button", () => {
+  const html = `
+    <main>
+      <h1>Example note</h1>
+      <details class="explore-prompt">
+        <summary>
+          <h2>Explore this note with AI</h2>
+          <span>Apply and challenge it in your own context.</span>
+        </summary>
+        <blockquote>
+          <p>A post-hoc prompt for applying and extending this note.</p>
+        </blockquote>
+        <pre data-language="text"><code>Use this note as a worked instantiation.</code></pre>
+        <div>
+          <button type="button" data-source-url="/notes/example/">Copy prompt</button>
+          <p></p>
+        </div>
+      </details>
+    </main>
+  `;
+
+  const markdown = htmlToMarkdown(html);
+
+  assert.match(markdown, /## Explore this note with AI/);
+  assert.match(markdown, /Apply and challenge it in your own context\./);
+  assert.match(
+    markdown,
+    /> A post-hoc prompt for applying and extending this note\./,
+  );
+  assert.match(
+    markdown,
+    /```text\nUse this note as a worked instantiation\.\n```/,
+  );
+  assert.doesNotMatch(markdown, /Copy prompt/);
+});
+
 test("Markdown projection preserves ordered and unordered list semantics", () => {
   const html = `
     <main>

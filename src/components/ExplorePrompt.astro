@@ -1,0 +1,68 @@
+---
+type Props = {
+  prompt: string;
+  sourceUrl: string;
+  kind?: "note" | "project";
+};
+
+const { prompt, sourceUrl, kind = "note" } = Astro.props;
+const label = `Explore this ${kind} with AI`;
+---
+
+<details class="explore-prompt">
+  <summary>
+    <h2>{label}</h2>
+    <span class="explore-prompt-hint"
+      >Apply and challenge it in your own context.</span
+    >
+  </summary>
+  <blockquote>
+    <p>
+      A post-hoc prompt for applying and extending this {kind}. It is not a
+      reconstruction of how the {kind} was written.
+    </p>
+  </blockquote>
+  <pre data-language="text"><code>{prompt}</code></pre>
+  <div class="explore-prompt-actions">
+    <button
+      type="button"
+      class="explore-prompt-copy"
+      data-source-url={sourceUrl}
+    >
+      Copy prompt
+    </button>
+    <p class="explore-prompt-status" role="status" aria-live="polite"></p>
+  </div>
+</details>
+
+<script>
+  function wireExplorePrompt(panel: Element) {
+    const button = panel.querySelector<HTMLButtonElement>(
+      ".explore-prompt-copy",
+    );
+    const code = panel.querySelector<HTMLElement>("pre code");
+    const status = panel.querySelector<HTMLElement>(".explore-prompt-status");
+    const sourceUrl = button?.dataset.sourceUrl;
+
+    if (!button || !code || !status || !sourceUrl) return;
+
+    button.addEventListener("click", async () => {
+      const promptText = code.textContent?.trim() ?? "";
+      const payload = `Source worked example:\n${sourceUrl}\n\n${promptText}`;
+
+      try {
+        await navigator.clipboard.writeText(payload);
+        status.textContent = "Copied.";
+      } catch {
+        status.textContent =
+          "Copy failed. Select the prompt text and copy it manually.";
+      }
+
+      window.setTimeout(() => {
+        status.textContent = "";
+      }, 4000);
+    });
+  }
+
+  document.querySelectorAll(".explore-prompt").forEach(wireExplorePrompt);
+</script>

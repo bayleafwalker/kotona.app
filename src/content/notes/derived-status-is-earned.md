@@ -4,7 +4,7 @@ status: exploration
 lifecycle: current
 area: software assurance
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-20
 projects:
   - sprintctl-and-kctl
 relates:
@@ -12,6 +12,8 @@ relates:
   - log-as-system
   - schema-on-split
   - compatibility-reports-should-be-a-little-rude
+  - where-the-assurance-questions-are-already-answered
+  - a-field-guide-to-assurance-managed-ai-development
 tags:
   - agents
   - software-architecture
@@ -21,6 +23,16 @@ summary: AI generation creates more disposable realizations, but an artifact bec
 ---
 
 Generation does not make an artifact disposable. Assurance does.
+
+> **Update, 2026-07-20.** The artifact-of-record/derived-realization split
+> held up on review, but the vocabulary was local where it didn't need to be.
+> "Derived status is earned" sits inside ordinary assurance-case practice:
+> a status is credible to the extent a claim is supported by applicable
+> evidence and a defensible argument, under stated assumptions, about an
+> identified configuration. See
+> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+> and
+> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
 
 AI can make it cheap to produce another implementation, query, migration,
 report, adapter, interface, or plan. That changes the economics of construction.

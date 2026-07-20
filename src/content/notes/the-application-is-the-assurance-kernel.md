@@ -4,7 +4,7 @@ status: exploration
 lifecycle: current
 area: agent architecture
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-20
 projects:
   - sprintctl-and-kctl
 relates:
@@ -12,6 +12,8 @@ relates:
   - the-missing-layer-is-binding-not-intelligence
   - derived-status-is-earned
   - the-person-of-record
+  - where-the-assurance-questions-are-already-answered
+  - a-field-guide-to-assurance-managed-ai-development
 tags:
   - agents
   - software-architecture
@@ -23,6 +25,18 @@ summary: As models improve, durable application value moves toward a stable kern
 The durable unit of AI operation is not the chatbot, copilot, or autonomous
 agent. It is the governed application in which a model participates without
 being allowed to improvise authority, state, or evidence.
+
+> **Update, 2026-07-20.** "Assurance kernel" overreaches as a name. The
+> established term is the
+> [security kernel](https://csrc.nist.gov/glossary/term/security_kernel): a
+> protected, verifiable part of the trusted computing base that mediates
+> access, kept deliberately small. Calling the whole application the kernel
+> makes the trusted part larger, not smaller. Read what follows as a search
+> for that boundary inside an application, not a new definition of a kernel.
+> See
+> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+> and
+> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
 
 Model capability changes the bottleneck. A weak model needs help completing the
 task. A strong model needs unambiguous context, authority, verification, and a

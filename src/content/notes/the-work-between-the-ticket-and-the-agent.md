@@ -4,13 +4,15 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-20
 projects:
   - sprintctl-and-kctl
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-coordinator-never-touches-the-repo
   - the-second-operator-is-the-test
+  - where-the-assurance-questions-are-already-answered
+  - a-field-guide-to-assurance-managed-ai-development
 tags:
   - agents
   - workflow
@@ -19,6 +21,18 @@ summary: Work-management systems can delegate and coding agents can execute, but
 ---
 
 No build intent. The analysis is the product.
+
+> **Update, 2026-07-20.** "Weakly occupied middle" should not be read as an
+> unclaimed conceptual layer. It overlaps requirements traceability, workflow
+> provenance, separation of duties, assurance evidence, and software-supply-chain
+> attestations — see [in-toto](https://in-toto.io/docs/getting-started/) and
+> [SLSA](https://slsa.dev/spec/v1.2/) for established, operational versions of
+> the same binding. A tracker-independent attempt record may still be useful
+> local tooling; usefulness is not evidence the industry lacks the concept.
+> See
+> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+> and
+> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
 
 Work-management systems are admitting agents. Coding-agent systems are taking
 over the branch-to-pull-request loop. Agent-native tools are growing their own

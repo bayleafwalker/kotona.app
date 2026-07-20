@@ -33,3 +33,17 @@ For technical notes, be implementation-facing and candid. For project pages,
 explain the operating model and what is currently true. Do not make the site
 sound like a product launch. It is a record of work and reasoning, not a
 conversion funnel.
+
+## Publication process
+
+1. Finish and review the note.
+2. Confirm lifecycle and evidence.
+3. Derive the transferable `explorePrompt` from the final note (see
+   `docs/explore-prompts.md`) -- never before the note is complete.
+4. Validate that the prompt produces a sibling rather than a summary or
+   clone.
+5. Publish.
+
+When reviewing a prompt, ask whether it carries the note's actual
+conclusion, names the material constraints that produced it, and asks the
+next agent to test where those constraints diverge from their own.

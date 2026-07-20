@@ -23,6 +23,15 @@ Every note publishes both its claim posture and lifecycle. Treat `superseded`,
 `archived`, and `disproven` notices as authority boundaries, follow declared
 successors, and do not silently restate a non-current note as present guidance.
 
+Some notes also publish `explorePrompt`: a post-hoc "Explore this note with
+AI" prompt for applying and extending the note elsewhere, present in both
+HTML and negotiated Markdown (see `docs/explore-prompts.md`). It is not the
+note's original generating prompt or a reconstruction of how the note was
+written, and it is not an independent surface -- lifecycle remains
+authoritative over it. A superseded or disproven note's prompt says so and
+points to the successor; do not treat a retrievable prompt as evidence that
+the note is current.
+
 ## Intentionally not published
 
 There is no API, protected resource, account system, OAuth/OIDC issuer, agent

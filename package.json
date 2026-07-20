@@ -17,6 +17,7 @@
     "cf-typegen": "wrangler types",
     "check": "astro check",
     "check:content-freshness": "node scripts/check-project-freshness.mjs",
+    "check:explore-prompts": "node scripts/check-explore-prompts.mjs",
     "check:links": "node scripts/check-external-links.mjs",
     "lint": "eslint .",
     "test": "node --test tests/*.test.mjs",
@@ -25,7 +26,7 @@
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "generate:og": "node scripts/generate-og-images.mjs",
-    "validate": "npm run format && npm run lint && npm test && npm run audit:dependencies && npm run check:content-freshness && npm run check && npm run build && npm run test:worker && npm run test:retrieval && npm run check:links",
+    "validate": "npm run format && npm run lint && npm test && npm run audit:dependencies && npm run check:content-freshness && npm run check:explore-prompts && npm run check && npm run build && npm run test:worker && npm run test:retrieval && npm run check:links",
     "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {

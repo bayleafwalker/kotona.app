@@ -45,6 +45,46 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
       reason: "OECD publication blocks automated link checks",
     },
   ],
+  [
+    "https://sebokwiki.org/wiki/Requirements_Engineering",
+    {
+      statuses: new Set([403]),
+      reason:
+        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
+    },
+  ],
+  [
+    "https://sebokwiki.org/wiki/System_Requirements_Definition",
+    {
+      statuses: new Set([403]),
+      reason:
+        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
+    },
+  ],
+  [
+    "https://sebokwiki.org/wiki/System_Verification",
+    {
+      statuses: new Set([403]),
+      reason:
+        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
+    },
+  ],
+  [
+    "https://sebokwiki.org/wiki/System_Validation",
+    {
+      statuses: new Set([403]),
+      reason:
+        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
+    },
+  ],
+  [
+    "https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29",
+    {
+      statuses: new Set([403]),
+      reason:
+        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
+    },
+  ],
 ]);
 
 function countCharacter(value, character) {

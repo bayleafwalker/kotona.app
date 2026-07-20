@@ -59,5 +59,16 @@
       "not a running platform or service replacement",
       "Next meaningful proof"
     ]
+  },
+  {
+    "id": "assurance-explore-prompt-with-conclusion",
+    "question": "Where the assurance questions behind AI-assisted software development are already answered by established engineering disciplines and the generator decision rule",
+    "expectedPath": "/notes/where-the-assurance-questions-are-already-answered/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "Explore this note with AI",
+      "generator decision rule",
+      "single-operator, small-project, repository-backed"
+    ]
   }
 ]

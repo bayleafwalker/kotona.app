@@ -22,6 +22,15 @@ draft: true
 tags:
   - replace-me
 summary: Replace with a one-line statement of what the note establishes.
+# Optional, and only once the note below is editorially complete. See
+# docs/explore-prompts.md for the contract; do not write this alongside the
+# note's first draft.
+# explorePrompt: >-
+#   Use this note as a worked instantiation, not an answer to repeat. State
+#   the transferable question, this note's material conclusion and the
+#   constraints that produced it, an instruction to apply the question to the
+#   reader's context and challenge the note where constraints diverge, and
+#   the useful output shape. 120-220 words.
 # Optional hero image; omit the whole block until the asset exists.
 # hero:
 #   src: /images/notes/note-slug/hero.webp

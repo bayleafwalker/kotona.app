@@ -322,7 +322,7 @@ export function htmlToMarkdown(html) {
 
   let markdown = main
     .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<(script|style|svg|template)\b[\s\S]*?<\/\1>/gi, "")
+    .replace(/<(script|style|svg|template|button)\b[\s\S]*?<\/\1>/gi, "")
     .replace(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/gi, (_, preAttributes, body) => {
       const codeMatch = body.match(/<code\b([^>]*)>([\s\S]*?)<\/code>/i);
       const codeAttributes = codeMatch?.[1] ?? "";

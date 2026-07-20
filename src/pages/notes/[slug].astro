@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
+import ExplorePrompt from "../../components/ExplorePrompt.astro";
 import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -81,6 +82,10 @@ const formattedLifecycleDate = entry.data.lifecycleChanged
   : null;
 const lifecycleLabel =
   entry.data.lifecycle.charAt(0).toUpperCase() + entry.data.lifecycle.slice(1);
+const canonicalNoteUrl = new URL(
+  `/notes/${entry.id}/`,
+  siteConfig.siteUrl,
+).toString();
 ---
 
 <BaseLayout
@@ -218,6 +223,16 @@ const lifecycleLabel =
               </ul>
             ) : null}
           </aside>
+        ) : null
+      }
+
+      {
+        entry.data.explorePrompt ? (
+          <ExplorePrompt
+            prompt={entry.data.explorePrompt}
+            sourceUrl={canonicalNoteUrl}
+            kind="note"
+          />
         ) : null
       }
 

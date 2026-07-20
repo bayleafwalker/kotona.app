@@ -4,13 +4,15 @@ status: guiding
 lifecycle: current
 area: agent workflow
 published: 2026-04-27
-lastRevised: 2026-07-13
+lastRevised: 2026-07-20
 projects:
   - sprintctl-and-kctl
 relates:
   - judge-agents-by-the-next-prompt
   - subprocess-not-service
   - the-coordinator-never-touches-the-repo
+  - where-the-assurance-questions-are-already-answered
+  - a-field-guide-to-assurance-managed-ai-development
 tags:
   - workflow
   - agents
@@ -26,6 +28,17 @@ The agent work happens. The problem is that the system forgets.
 > rule survived; some implementation details below record the smaller April
 > system that established it. The model assignments are likewise a dated
 > snapshot, not current routing guidance.
+
+> **Update, 2026-07-20.** "Missing layer" should be read narrowly: missing
+> from my own tooling, not from the field. Binding requirements, design,
+> evidence, and operation across a lifecycle is the subject of model-based
+> systems engineering and continuous assurance; see
+> [SEBoK: Model-Based Systems Engineering](https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29).
+> Test any proposed binding here against those established models before
+> reaching for "missing abstraction." See
+> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+> and
+> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
 
 ## The April model
 
