@@ -46,21 +46,68 @@ const label = `Explore this ${kind} with AI`;
 
     if (!button || !code || !status || !sourceUrl) return;
 
+    // Fallback for browsers/extensions/policies that block the async
+    // Clipboard API. Without this, a thrown writeText() left the OS
+    // clipboard untouched, so a paste right after a "failed" click silently
+    // surfaced whatever was copied there before (e.g. unrelated text from
+    // another app) instead of the prompt.
+    function copyWithExecCommand(text: string): boolean {
+      const scratch = document.createElement("textarea");
+      scratch.value = text;
+      scratch.setAttribute("readonly", "");
+      scratch.style.position = "fixed";
+      scratch.style.top = "-1000px";
+      scratch.style.opacity = "0";
+      document.body.appendChild(scratch);
+      scratch.select();
+
+      let copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch {
+        copied = false;
+      }
+
+      document.body.removeChild(scratch);
+      return copied;
+    }
+
+    function selectPromptText(target: HTMLElement) {
+      const range = document.createRange();
+      range.selectNodeContents(target);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+
     button.addEventListener("click", async () => {
       const promptText = code.textContent?.trim() ?? "";
       const payload = `Source worked example:\n${sourceUrl}\n\n${promptText}`;
+      let copied = false;
 
       try {
         await navigator.clipboard.writeText(payload);
-        status.textContent = "Copied.";
+        copied = true;
       } catch {
-        status.textContent =
-          "Copy failed. Select the prompt text and copy it manually.";
+        copied = copyWithExecCommand(payload);
       }
 
-      window.setTimeout(() => {
-        status.textContent = "";
-      }, 4000);
+      status.dataset.state = copied ? "success" : "error";
+
+      if (copied) {
+        status.textContent = "Copied.";
+        window.setTimeout(() => {
+          status.textContent = "";
+          delete status.dataset.state;
+        }, 4000);
+      } else {
+        // Leave the failure visible (and select the text as a manual
+        // fallback) instead of auto-clearing it after a few seconds, since
+        // an unnoticed failure reads as a silent success to the reader.
+        status.textContent =
+          "Copy failed. Prompt text is selected — press Ctrl/Cmd+C to copy it manually.";
+        selectPromptText(code);
+      }
     });
   }
 

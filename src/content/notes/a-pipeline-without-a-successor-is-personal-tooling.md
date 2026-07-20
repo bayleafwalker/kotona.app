@@ -19,7 +19,7 @@ tags:
   - succession
   - audit
 summary: A production-critical agent pipeline becomes an institutional capability only when a second person can reconstruct, operate, change, and recover it from recorded substrate and evidence.
-draft: true
+draft: false
 ---
 
 A production-critical agent pipeline is not institutionally owned unless a

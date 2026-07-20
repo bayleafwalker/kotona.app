@@ -19,7 +19,7 @@ tags:
   - verification
   - maintenance
 summary: AI weakens the old correlation between producing a plausible patch and understanding a project, so OSS contribution shifts toward evidence, verification, standing, and durable ownership.
-draft: true
+draft: false
 ---
 
 Open source may stop wanting code from strangers before it stops wanting

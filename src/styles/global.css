@@ -604,6 +604,11 @@ main {
   font-size: 0.82rem;
 }
 
+.explore-prompt-status[data-state="error"] {
+  color: var(--warm);
+  font-weight: 600;
+}
+
 .toc-list {
   display: grid;
   gap: 0.7rem;

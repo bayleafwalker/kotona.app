@@ -21,7 +21,7 @@ tags:
   - future-of-work
   - apprenticeship
 summary: Routine junior work once paid for useful production and professional formation at the same time; agent automation separates those goods and leaves succession needing an explicit operating model.
-draft: true
+draft: false
 ---
 
 Junior work used to buy two things at once. The work got done, and a future
