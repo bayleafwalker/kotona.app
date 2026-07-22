@@ -1,29 +1,39 @@
 ---
 title: A pipeline without a successor is personal tooling
+role: exploration
 status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:
   - the-junior-ladder-was-a-joint-product
   - the-second-operator-is-the-test
   - the-person-of-record
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
   - the-workshop-is-learning-my-accent
 tags:
   - agents
   - workflow
   - succession
   - audit
-summary: A production-critical agent pipeline becomes an institutional capability only when a second person can reconstruct, operate, change, and recover it from recorded substrate and evidence.
+summary: "Working model: a production-critical agent pipeline becomes an institutional capability only when a second person can reconstruct, operate, change, and recover it from recorded substrate and evidence."
 draft: false
 ---
 
-A production-critical agent pipeline is not institutionally owned unless a
-second person can assume it from recorded substrate and evidence.
+**Working model.** A production-critical agent pipeline is not institutionally
+owned unless a second person can assume it from recorded substrate and evidence.
+Here, _substrate_ means the actual repositories, source documents, claims,
+runtime observations, tools, and human judgments the pipeline depends on.
+
+This merge absorbs the concrete N=2 inventory from
+[_The second operator is the test_](/notes/the-second-operator-is-the-test/)
+and the formation argument from
+[_The junior ladder was a joint product_](/notes/the-junior-ladder-was-a-joint-product/).
+Those notes remain as superseded project-history records because their audited
+implementation details and original economic argument may still be useful.
 
 Versioned prompts and scripts are not enough. A working pipeline also contains
 the choice of sources, model-routing habits, manual interventions, remembered
@@ -110,6 +120,30 @@ owner.
 This gives a firm two outputs again: professional formation and reduced
 key-person risk. Neither depends on asking a junior to compete with the pipeline
 on routine throughput.
+
+This is a model of a local operating problem, not a claim that current labor
+market evidence has already established a universal collapse of junior roles.
+It predicts that formation becomes a separately funded activity wherever agents
+make routine production cheap; a counterexample would be an organization that
+keeps producing credible successors through ordinary delivery without giving
+them a real secondary ownership path.
+
+## The N=2 boundary found in the current tooling
+
+The original second-operator review was an audit of sprintctl and actionq at
+named July 2026 revisions. It found that a single human authority still joined
+five distinct facts: a claimant could certify completion; descriptive names
+stood in for authenticated principals; expiry history and fencing were
+incomplete; and repository identity also carried project authority. The
+implementation conclusion remains useful: assignment, claim, attempt,
+submission, and acceptance must be separate records before two independent
+people can be governed by the system rather than by convention.
+
+That inventory is evidence about one implementation, not proof that every
+agent workflow needs the same data model. The next test is a bounded succession
+drill with another operator. If that person can explain the controls, run and
+recover the system, and make a safe change without inventing missing authority,
+the model earns more confidence. If not, the missing substrate is the result.
 
 The secondary owner must receive real capability, not honorary membership in a
 document. A progression can be encoded through narrow grants and countersign

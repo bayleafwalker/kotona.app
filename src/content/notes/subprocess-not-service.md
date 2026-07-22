@@ -1,5 +1,6 @@
 ---
 title: Subprocess, not service
+role: operating
 status: guiding
 lifecycle: current
 area: agent workflow

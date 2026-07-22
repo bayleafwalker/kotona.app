@@ -1,5 +1,6 @@
 ---
 title: Why I publish explore prompts
+role: operating
 status: guiding
 lifecycle: current
 area: agent workflow

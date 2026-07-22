@@ -69,11 +69,16 @@ Frontmatter is schema-validated during `npm run check` and `npm run build`.
 Note `projects` and `relates` values are collection IDs and are validated as
 references during those checks.
 
-Every note declares both a claim posture (`guiding`, `prospective`,
-`exploration`, or `archival`) and a publication lifecycle (`current`,
+Every note declares a role (`operating`, `synthesis`, `exploration`, or
+`project-history`), a claim posture (`guiding`, `prospective`, `exploration`,
+or `archival`), and a publication lifecycle (`current`,
 `superseded`, `archived`, or `disproven`). Non-current notes require a dated
 reason. Superseded notes also require a successor reference, and project state
 that invalidated a note can be linked explicitly.
+
+Role selects the writing register and expected evidence; claim posture and
+lifecycle do not. See `docs/writing-style.md` for the four role-specific
+structures and `docs/templates/post-template.md` for the authoring contract.
 
 Every project declares a compact evidence record: current capability, concrete
 proof links, supported integrations, the strongest known limitation, and the
@@ -160,7 +165,7 @@ The revision is exposed in the footer, `/version.json`, `llms.txt`, and the
 `X-Kotona-Revision` response header.
 
 CI lives in `.github/workflows/ci.yml` and runs install, dependency audit,
-format check, lint, unit tests, project freshness and Astro checks, the
-production build, a local Worker integration smoke test, and an external-link
-check. The retrieval evaluation runs after the Worker build and requires no
-external model or network access.
+format check, lint, unit tests, project freshness, Astro content and role
+checks, the production build, a local Worker integration smoke test, and an
+external-link check. The retrieval evaluation runs after the Worker build and
+requires no external model or network access.

@@ -1,5 +1,6 @@
 ---
 title: The patch was open source's proof of work
+role: exploration
 status: exploration
 lifecycle: current
 area: open source

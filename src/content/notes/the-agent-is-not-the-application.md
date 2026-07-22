@@ -1,14 +1,14 @@
 ---
-title: The application is the assurance kernel
+title: The agent is not the application
+role: synthesis
 status: exploration
 lifecycle: current
 area: agent architecture
 published: 2026-07-19
-lastRevised: 2026-07-20
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:
-  - the-deployment-boundary-was-only-a-place
   - the-missing-layer-is-binding-not-intelligence
   - derived-status-is-earned
   - the-person-of-record
@@ -19,24 +19,21 @@ tags:
   - software-architecture
   - authorization
   - verification
-summary: As models improve, durable application value moves toward a stable kernel of authority, state, evidence, and verification surrounded by a larger shell of generated operation.
+summary: A model can be replaced only when the application retains authority, canonical state, evidence, verification, and recovery outside the model's control.
 ---
 
 The durable unit of AI operation is not the chatbot, copilot, or autonomous
 agent. It is the governed application in which a model participates without
 being allowed to improvise authority, state, or evidence.
 
-> **Update, 2026-07-20.** "Assurance kernel" overreaches as a name. The
-> established term is the
-> [security kernel](https://csrc.nist.gov/glossary/term/security_kernel): a
-> protected, verifiable part of the trusted computing base that mediates
-> access, kept deliberately small. Calling the whole application the kernel
-> makes the trusted part larger, not smaller. Read what follows as a search
-> for that boundary inside an application, not a new definition of a kernel.
-> See
-> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
-> and
-> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
+The application does not become a security kernel by doing this. A
+[security kernel](https://csrc.nist.gov/glossary/term/security_kernel) is the
+small, protected and verifiable part of a trusted computing base that mediates
+access. The design task is to keep that mediation boundary small, even when the
+application owns a much wider assurance process. See
+[Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+and [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/)
+for the established vocabulary behind this synthesis.
 
 Model capability changes the bottleneck. A weak model needs help completing the
 task. A strong model needs unambiguous context, authority, verification, and a
@@ -46,7 +43,7 @@ make those concerns cheaper. It makes their absence more consequential.
 The resulting application has two regions:
 
 ```text
-stable assurance kernel
+application-owned assurance process
   identity and authority
   contracts and state transitions
   canonical records
@@ -63,8 +60,8 @@ generative operational shell
   adapters and execution strategies
 ```
 
-The shell can change with the task, user, model, or environment. The kernel
-decides which changes count.
+The shell can change with the task, user, model, or environment. The small,
+enforced mediation boundary decides which changes count.
 
 This is a different boundary from putting an LLM inside an existing product.
 The familiar application still assumes a person will interpret the interface,

@@ -19,9 +19,12 @@ authentication surface that does not exist.
   their published `/notes/` equivalents. The requested articles are retained as
   archival notes rather than redirected to a generic index.
 
-Every note publishes both its claim posture and lifecycle. Treat `superseded`,
-`archived`, and `disproven` notices as authority boundaries, follow declared
-successors, and do not silently restate a non-current note as present guidance.
+Every note publishes a role, claim posture, and lifecycle. Role states whether
+the document is operating guidance, synthesis, an exploration, or project
+history; it is useful evidence about the register, not a ranking of truth.
+Treat `superseded`, `archived`, and `disproven` notices as authority boundaries,
+follow declared successors, and do not silently restate a non-current note as
+present guidance.
 
 Some notes also publish `explorePrompt`: a post-hoc "Explore this note with
 AI" prompt for applying and extending the note elsewhere, present in both

@@ -10,6 +10,10 @@ const homepageLinks = [
 ].join(", ");
 
 const legacyWritingPaths: Record<string, string> = {
+  "/notes/the-application-is-the-assurance-kernel":
+    "/notes/the-agent-is-not-the-application/",
+  "/notes/the-application-is-the-assurance-kernel/":
+    "/notes/the-agent-is-not-the-application/",
   "/writing": "/notes/",
   "/writing/": "/notes/",
   "/writing/the-boring-auth-boundary-was-right":

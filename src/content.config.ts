@@ -35,6 +35,15 @@ const notes = defineCollection({
       seoTitle: z.string().min(1).max(120).optional(),
       socialTitle: z.string().min(1).max(120).optional(),
       summary: z.string().max(280).optional(),
+      // Role selects the note's register and expected shape. `status` records
+      // claim posture; keeping them separate prevents an exploration from
+      // sounding like a current operating rule just because both are notes.
+      role: z.enum([
+        "operating",
+        "synthesis",
+        "exploration",
+        "project-history",
+      ]),
       status: z.enum(["guiding", "prospective", "exploration", "archival"]),
       lifecycle: z.enum(["current", "superseded", "archived", "disproven"]),
       lifecycleChanged: z.coerce.date().optional(),

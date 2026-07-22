@@ -1,5 +1,6 @@
 ---
 title: The person of record
+role: exploration
 status: exploration
 lifecycle: current
 area: organizational systems
@@ -9,7 +10,7 @@ projects:
   - sprintctl-and-kctl
 relates:
   - legibility-is-an-operating-property
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
   - derived-status-is-earned
   - the-second-operator-is-the-test
   - the-junior-ladder-was-a-joint-product

@@ -1,10 +1,17 @@
 ---
 title: The deployment boundary was only a place
+role: exploration
 status: exploration
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-07-22
+lifecycleReason: >-
+  Its action-envelope argument is now merged with the access-cell boundary in
+  one synthesis about authority, evidence, and reconciliation.
+supersededBy:
+  - authority-must-travel-with-the-action
 area: agent workflow
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:
@@ -12,7 +19,7 @@ relates:
   - log-as-system
   - the-devbox-is-an-access-cell
   - legibility-is-an-operating-property
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
 tags:
   - agents
   - workflow

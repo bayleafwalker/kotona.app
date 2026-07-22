@@ -1,5 +1,6 @@
 ---
 title: Compatibility reports should be a little rude
+role: project-history
 status: archival
 lifecycle: archived
 lifecycleChanged: 2026-04-08

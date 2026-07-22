@@ -1,5 +1,6 @@
 ---
 title: A field guide to assurance-managed AI development
+role: synthesis
 status: guiding
 lifecycle: current
 area: software assurance
@@ -9,7 +10,7 @@ projects:
   - sprintctl-and-kctl
 relates:
   - where-the-assurance-questions-are-already-answered
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
   - the-work-between-the-ticket-and-the-agent
   - derived-status-is-earned
 tags:
@@ -180,7 +181,7 @@ The honest summary of the two tiers: **the primitives have a study path; the com
 | Local phrase or note                                                                                    | Established neighbourhood                                                                        | Consequence                                                                                                     |
 | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
 | [Derived status is earned](/notes/derived-status-is-earned/)                                            | Assurance cases, confidence arguments, evidence validity, configuration identification           | Keep the evidence intuition; replace local status language with explicit claims and applicability where useful. |
-| [The application is the assurance kernel](/notes/the-application-is-the-assurance-kernel/)              | Reference monitors, trusted computing bases, authorization policy, runtime enforcement           | Narrow the trusted component. The application may own an assurance process without being a verifiable kernel.   |
+| [The agent is not the application](/notes/the-agent-is-not-the-application/)                            | Reference monitors, trusted computing bases, authorization policy, runtime enforcement           | Narrow the trusted component. The application may own an assurance process without being a verifiable kernel.   |
 | [The work between the ticket and the agent](/notes/the-work-between-the-ticket-and-the-agent/)          | Requirements traceability, workflow provenance, separation of duties, in-toto-style attestations | Treat a neutral attempt record as a local design option, not an unoccupied industry layer.                      |
 | [The missing layer is binding, not intelligence](/notes/the-missing-layer-is-binding-not-intelligence/) | Systems integration, digital thread, assurance cases, MBSE, configuration management             | Test the proposed binding against established lifecycle models before claiming a missing abstraction.           |
 

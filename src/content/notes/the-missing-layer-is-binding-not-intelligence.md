@@ -1,10 +1,18 @@
 ---
 title: The missing layer is binding, not intelligence
-status: guiding
-lifecycle: current
+role: project-history
+status: archival
+lifecycle: superseded
+lifecycleChanged: 2026-07-22
+lifecycleReason: >-
+  Preserved as the project-origin framing. The assurance synthesis maps its
+  useful concerns to established engineering disciplines and corrects the
+  claim that the layer was conceptually unclaimed.
+supersededBy:
+  - where-the-assurance-questions-are-already-answered
 area: agent workflow
 published: 2026-04-27
-lastRevised: 2026-07-20
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:

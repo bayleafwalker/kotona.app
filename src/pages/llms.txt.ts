@@ -54,7 +54,7 @@ export const GET: APIRoute = async ({ site }) => {
     "",
     ...notes.map(
       (entry) =>
-        `- [${entry.data.title}](${new URL(`/notes/${entry.id}/`, baseUrl)}) (${entry.data.lifecycle}; ${entry.data.status}): ${entry.data.summary ?? "System note."}`,
+        `- [${entry.data.title}](${new URL(`/notes/${entry.id}/`, baseUrl)}) (${entry.data.lifecycle}; ${entry.data.role}; ${entry.data.status}): ${entry.data.summary ?? "System note."}`,
     ),
   ].join("\n");
 

@@ -1,5 +1,6 @@
 ---
 title: Derived status is earned
+role: synthesis
 status: exploration
 lifecycle: current
 area: software assurance
@@ -8,7 +9,7 @@ lastRevised: 2026-07-20
 projects:
   - sprintctl-and-kctl
 relates:
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
   - log-as-system
   - schema-on-split
   - compatibility-reports-should-be-a-little-rude

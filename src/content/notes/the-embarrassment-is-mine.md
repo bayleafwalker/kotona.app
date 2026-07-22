@@ -1,5 +1,6 @@
 ---
 title: The paragraphs are cheap. The embarrassment is mine.
+role: exploration
 status: exploration
 lifecycle: current
 area: agent workflow

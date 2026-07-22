@@ -25,10 +25,9 @@ const visibleNotes = getVisibleEntries(notes);
     <p class="eyebrow">Notes</p>
     <h1 class="page-title">Project notes and system notes.</h1>
     <p class="page-copy">
-      Field notes, operating rules, incidents, reference designs, and bounded
-      explorations. Guiding notes are in current use; prospective notes describe
-      a direction; explorations test an idea; archival notes preserve useful
-      context without claiming to be current guidance.
+      Operating rules, synthesis, bounded explorations, and project history.
+      Role selects the note's register; claim posture says how strongly it is
+      held, and lifecycle says whether it remains current.
     </p>
   </section>
 
@@ -41,7 +40,7 @@ const visibleNotes = getVisibleEntries(notes);
               href={`/notes/${entry.id}/`}
               title={entry.data.title}
               summary={entry.data.summary}
-              context={`${entry.data.status} / ${entry.data.lifecycle} / ${entry.data.area}`}
+              context={`${entry.data.role} / ${entry.data.status} / ${entry.data.lifecycle} / ${entry.data.area}`}
               tags={entry.data.tags}
               date={entry.data.published}
               draft={entry.data.draft}

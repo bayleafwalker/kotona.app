@@ -123,6 +123,7 @@ const canonicalNoteUrl = new URL(
 
         <div class="entry-meta note-state" aria-label="Note state">
           <span class="pill pill-accent">{entry.data.status}</span>
+          <span class="pill">Role: {entry.data.role}</span>
           <span class="pill" data-lifecycle={entry.data.lifecycle}>
             Lifecycle: {entry.data.lifecycle}
           </span>

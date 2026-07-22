@@ -1,10 +1,17 @@
 ---
 title: The junior ladder was a joint product
+role: project-history
 status: exploration
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-07-22
+lifecycleReason: >-
+  Its formation argument now belongs with the succession drill and secondary
+  ownership model that make the argument operational.
+supersededBy:
+  - a-pipeline-without-a-successor-is-personal-tooling
 area: organizational systems
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:

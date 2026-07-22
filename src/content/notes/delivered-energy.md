@@ -1,5 +1,6 @@
 ---
 title: Delivered energy
+role: exploration
 status: exploration
 lifecycle: current
 area: energy systems

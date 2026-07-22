@@ -1,5 +1,6 @@
 ---
 title: Judge agents by the next prompt
+role: operating
 status: guiding
 lifecycle: current
 area: agent workflow

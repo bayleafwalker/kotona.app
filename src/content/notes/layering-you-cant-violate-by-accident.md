@@ -1,5 +1,6 @@
 ---
 title: Layering you can't violate by accident
+role: operating
 status: guiding
 lifecycle: current
 area: software architecture
