@@ -371,7 +371,7 @@ async function runChecks(baseUrl) {
     );
     assertIncludes(
       projectMarkdown.body,
-      "[ Source repository ](https://github.com/bayleafwalker/homelab-analytics)",
+      "[Source repository](https://github.com/bayleafwalker/homelab-analytics)",
       "Markdown proof link",
     );
 
@@ -717,7 +717,11 @@ async function runChecks(baseUrl) {
     assertEqual(llms.response.status, 200, "llms.txt status");
     assertContentType(llms.response, "text/markdown");
     assertIncludes(llms.body, "# kotona.app", "llms.txt heading");
-    assertIncludes(llms.body, "(archived; archival)", "llms.txt lifecycle");
+    assertIncludes(
+      llms.body,
+      "(archived; project-history; archival)",
+      "llms.txt lifecycle",
+    );
 
     const version = await request("/version.json");
     assertEqual(version.response.status, 200, "version endpoint status");
