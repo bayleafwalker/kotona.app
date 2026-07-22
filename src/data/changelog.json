@@ -1,5 +1,9 @@
 [
   {
+    "date": "2026-07-22",
+    "entry": "Site refactored around explicit note roles, lifecycle succession, and clearer discovery surfaces."
+  },
+  {
     "date": "2026-07-20",
     "entry": "About page rewritten to reflect the site's expanded scope, content lifecycles, and agent-assisted authorship."
   },
