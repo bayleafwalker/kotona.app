@@ -1,10 +1,11 @@
 ---
 title: The candidate produced somewhere else
+role: exploration
 status: exploration
 lifecycle: current
 area: career
 published: 2026-07-20
-lastRevised: 2026-07-20
+lastRevised: 2026-07-22
 projects: []
 relates:
   - where-the-cohort-comes-from
@@ -52,6 +53,21 @@ The observation I will stand behind is narrower than either. Look at how the req
 For most of the capabilities in these specs, such systems exist. Consultancies form commercial judgment. Banks and insurers with formal practices have been forming regulated engineers for two decades — model-risk teams, capital-engine developers, machine-readable reporting implementers. The market poaches from them, and that equilibrium mostly works.
 
 The newest slice of these specifications is different: building AI-era automation into regulatory reporting while keeping every produced number evidenceable under supervisory scrutiny. As a requirement it is perhaps three years old. No institution's deliberate output is people formed in it; everyone in the market is equally early. For that slice, the specs demand purchased formation for a capability nobody yet forms.
+
+## Who else could plausibly enter this role class?
+
+This is a falsifiable forecast, not a labor-market finding. Four pipelines look
+plausible. Formal-methods engineers can read the typed schemas and validation
+constraints but must acquire supervisory judgment. Regulatory experts who learn
+to build start with the harder-to-observe residue; the current bet is that their
+bad code fails more visibly than an engineer's bad regulatory judgment. Regtech
+vendors may become accidental finishing schools, while supervisor alumni could
+form a smaller stream inside the institution where evidence culture is native.
+
+The forecast earns or loses credibility against later hiring. If the eventual
+specialists mostly trace to one of these paths, that is evidence. If they trace
+to none, the premise that this is one coherent role class is wrong. The original
+four-path note remains as a superseded record of the forecast's first form.
 
 ## Position, dated
 

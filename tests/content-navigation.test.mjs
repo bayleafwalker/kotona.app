@@ -49,3 +49,12 @@ test("the note page always renders lifecycle before the explore prompt before th
     "explore prompt must be placed before the table of contents in the template",
   );
 });
+
+test("the note template exposes the declared role alongside claim posture", async () => {
+  const source = await readFile(
+    fileURLToPath(new URL("../src/pages/notes/[slug].astro", import.meta.url)),
+    "utf8",
+  );
+
+  assert.match(source, /Role: \{entry\.data\.role\}/);
+});

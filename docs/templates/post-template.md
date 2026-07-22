@@ -3,6 +3,12 @@ title: Replace with a concrete title
 # Optional: use only when the editorial title is unclear out of context.
 # seoTitle: A descriptive search-result title
 # socialTitle: A descriptive link-preview title
+# Role selects the prose register. See docs/writing-style.md.
+# operating: rule, scope, implementation, validation, failure/rollback
+# synthesis: question, existing material, mapping, correction, open edge
+# exploration: trigger, working model, failure case, evidence needed, confidence
+# project-history: what happened, expected result, observed result, fix, lesson
+role: exploration
 status: prospective
 # Publication standing is separate from status. Non-current notes also require
 # lifecycleChanged and lifecycleReason; superseded notes require supersededBy.
@@ -21,7 +27,7 @@ relates: []
 draft: true
 tags:
   - replace-me
-summary: Replace with a one-line statement of what the note establishes.
+summary: Replace with a concrete one-line statement of what the note establishes.
 # Optional, and only once the note below is editorially complete. See
 # docs/explore-prompts.md for the contract; do not write this alongside the
 # note's first draft.
@@ -40,7 +46,6 @@ summary: Replace with a one-line statement of what the note establishes.
 #   height: 900
 ---
 
-State the point or conclusion first.
-
-Then add only the evidence, trade-offs, and next action the point needs. See
-`docs/writing-style.md` before adding structure for its own sake.
+Use the shape selected by `role`. At first use, ground any local abstraction in
+one concrete sentence. See `docs/writing-style.md` before adding structure for
+its own sake.

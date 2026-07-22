@@ -1,5 +1,6 @@
 ---
 title: Where the assurance questions are already answered
+role: synthesis
 status: exploration
 lifecycle: current
 area: software assurance
@@ -9,7 +10,7 @@ projects:
   - sprintctl-and-kctl
 relates:
   - a-field-guide-to-assurance-managed-ai-development
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
   - the-work-between-the-ticket-and-the-agent
   - derived-status-is-earned
   - the-missing-layer-is-binding-not-intelligence

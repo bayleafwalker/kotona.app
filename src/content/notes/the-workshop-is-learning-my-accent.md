@@ -1,5 +1,6 @@
 ---
 title: The workshop is learning my accent
+role: exploration
 status: exploration
 lifecycle: current
 area: agent workflow

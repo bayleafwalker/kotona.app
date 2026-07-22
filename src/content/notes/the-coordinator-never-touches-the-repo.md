@@ -1,5 +1,6 @@
 ---
 title: The coordinator never touches the repo
+role: operating
 status: guiding
 lifecycle: current
 area: agent workflow

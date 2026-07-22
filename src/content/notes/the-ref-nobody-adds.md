@@ -1,5 +1,6 @@
 ---
 title: The ref nobody adds
+role: operating
 seoTitle: Why agent workflows ignore documentation references
 socialTitle: Agents cannot use documents they are never shown
 status: guiding

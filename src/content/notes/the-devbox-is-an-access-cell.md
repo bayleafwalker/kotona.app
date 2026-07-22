@@ -1,10 +1,17 @@
 ---
 title: The devbox is an access cell
+role: exploration
 status: prospective
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-07-22
+lifecycleReason: >-
+  Its access-cell boundary is now merged with the action-envelope model so
+  topology and authority are described together.
+supersededBy:
+  - authority-must-travel-with-the-action
 area: agent infrastructure
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:

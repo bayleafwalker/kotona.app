@@ -1,5 +1,6 @@
 ---
 title: The aftertaste of resolution
+role: operating
 status: guiding
 lifecycle: current
 area: agent workflow

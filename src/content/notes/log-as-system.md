@@ -1,5 +1,6 @@
 ---
 title: Log as system
+role: exploration
 status: prospective
 lifecycle: current
 area: data architecture

@@ -1,5 +1,6 @@
 ---
 title: The work between the ticket and the agent
+role: exploration
 status: exploration
 lifecycle: current
 area: agent workflow

@@ -1,5 +1,6 @@
 ---
 title: Size the spa to the river
+role: exploration
 seoTitle: A river-powered hydro spa retreat in Finland
 socialTitle: Size the spa to the river
 status: exploration

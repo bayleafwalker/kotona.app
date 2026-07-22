@@ -1,5 +1,6 @@
 ---
 title: Moving a live cluster to a new subnet
+role: project-history
 status: guiding
 lifecycle: current
 area: cluster operations

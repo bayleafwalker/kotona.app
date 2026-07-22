@@ -1,10 +1,17 @@
 ---
 title: The second operator is the test
+role: project-history
 status: exploration
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-07-22
+lifecycleReason: >-
+  Its audited N=2 inventory is now a section of the succession synthesis, where
+  it is paired with the operating drill and formation path it motivated.
+supersededBy:
+  - a-pipeline-without-a-successor-is-personal-tooling
 area: agent workflow
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:

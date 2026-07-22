@@ -1,5 +1,6 @@
 ---
 title: NFC tokens pointing at a manifest
+role: exploration
 status: prospective
 lifecycle: current
 area: hardware contracts

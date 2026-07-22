@@ -38,7 +38,7 @@ jobs:
       - name: Project freshness policy
         run: npm run check:content-freshness
 
-      - name: Type and content checks
+      - name: Type, content, and editorial-role checks
         run: npm run check
 
       - name: Build

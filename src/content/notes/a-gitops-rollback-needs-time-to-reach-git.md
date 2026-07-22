@@ -1,5 +1,6 @@
 ---
 title: A GitOps rollback needs time to reach Git
+role: project-history
 status: archival
 lifecycle: archived
 lifecycleChanged: 2026-04-08

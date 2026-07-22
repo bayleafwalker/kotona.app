@@ -1,10 +1,11 @@
 ---
 title: Legibility is an operating property
+role: synthesis
 status: exploration
 lifecycle: current
 area: organizational systems
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-07-22
 projects:
   - sprintctl-and-kctl
 relates:
@@ -18,11 +19,18 @@ tags:
   - organizational-design
   - audit
   - workflow
-summary: Agent-readiness depends less on whether work is digital than on whether intent, action, consequence, and correction remain joinable while the work is happening.
+summary: "Working model: agent-readiness depends less on whether work is digital than on whether intent, action, consequence, and correction remain joinable while the work is happening."
 ---
 
-An organization is not agent-ready because its manuals are searchable and its
-applications have APIs. It is agent-ready when the work can show its work.
+**Working model.** An organization is not agent-ready because its manuals are
+searchable and its applications have APIs. It is agent-ready when the work can
+show its work. Here, _legibility_ means that a concrete commitment, the
+authority for an action, the action itself, and the observed outcome can be
+joined through durable records rather than reconstructed from memory.
+
+This is a cross-functional model, not a maturity law. It is useful only where
+the records can change a real decision: approval, recovery, accountability, or
+the next action.
 
 Software engineering happens to be unusually close. Requirements are imperfect
 but nameable. Changes acquire revisions. Tests emit results. Reviews and

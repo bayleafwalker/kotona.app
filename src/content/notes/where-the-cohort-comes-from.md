@@ -1,10 +1,17 @@
 ---
 title: Where the cohort comes from
+role: exploration
 status: exploration
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-07-22
+lifecycleReason: >-
+  Its four-path cohort forecast is now a section of the dated career hypothesis
+  it was intended to test.
+supersededBy:
+  - the-candidate-produced-somewhere-else
 area: career
 published: 2026-07-20
-lastRevised: 2026-07-20
+lastRevised: 2026-07-22
 projects: []
 relates:
   - the-candidate-produced-somewhere-else

@@ -1,5 +1,6 @@
 ---
 title: A personal knowledge system that happens to render as a website
+role: synthesis
 status: exploration
 lifecycle: current
 area: agent workflow
@@ -9,7 +10,7 @@ projects: []
 relates:
   - why-i-publish-explore-prompts
   - derived-status-is-earned
-  - the-application-is-the-assurance-kernel
+  - the-agent-is-not-the-application
   - where-the-assurance-questions-are-already-answered
   - the-embarrassment-is-mine
 tags:
@@ -67,7 +68,7 @@ Two things here don't have an established name elsewhere.
 
 **`explorePrompt`.** Described in full in [Why I publish explore prompts](/notes/why-i-publish-explore-prompts/): a per-note prompt generated only after the note is editorially finished, validated against a sibling-not-clone standard, and bound to the note's lifecycle. Per-page agent instructions exist elsewhere in scattered forms; the post-hoc generation discipline and the lifecycle binding are local inventions, not an adopted spec.
 
-**The synthesis page, done by hand.** [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/) and [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/) already function as pages other notes defer to. [The application is the assurance kernel](/notes/the-application-is-the-assurance-kernel/) and [Derived status is earned](/notes/derived-status-is-earned/) both carry an inline update block that, in effect, tells a reader to treat those two pages as more current than the note they're reading. That's a canonical synthesis page. It's already working. It just doesn't have a name or a generation rule yet -- it's produced the same way the rest of this site's prose is, by noticing and writing it down.
+**The synthesis page, done by hand.** [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/) and [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/) already function as pages other notes defer to. [The agent is not the application](/notes/the-agent-is-not-the-application/) and [Derived status is earned](/notes/derived-status-is-earned/) now carry the corrected application-level framing. That's a canonical synthesis page. It's already working. It just doesn't have a name or a generation rule yet -- it's produced the same way the rest of this site's prose is, by noticing and writing it down.
 
 ## The connecting principle already published here
 
@@ -88,7 +89,7 @@ Two extensions are worth naming honestly as untested rather than as a roadmap.
 
 **Relational structure beyond a flat list.** The schema already contains one typed edge: `supersededBy`, distinct from the untyped `relates` array. A network diagram, if built, would render that existing structure -- not create new truth, the same argument as everywhere else in this note, applied to a UI. Giving `relates` a light type (extends, contradicts, alongside the schema's already-separate supersedes) is a small, contained schema change. A graph visualization on top of it is a much larger rendering commitment for inputs -- weight and type -- that aren't settled yet.
 
-The concrete risk isn't hypothetical here. [The application is the assurance kernel](/notes/the-application-is-the-assurance-kernel/) carries an update dated the day after it published, walking back its own central term once a later note repositioned it. A prescriptive layer built the same week would have routed a reader to the superseded framing for at least a day. A layer recomputed at build time from current lifecycle and relation data wouldn't have. That's the argument for weight as mostly derived and recomputed, with an editorial canonical flag as a rare override rather than the default mechanism -- and it's the same conclusion the "derived status" framing above predicts before you get there by a separate route.
+The concrete risk isn't hypothetical here. The former assurance-kernel framing needed a correction the day after publication once the trusted boundary was properly narrowed. A prescriptive layer built in that interval would have routed a reader to the wrong term. A layer recomputed at build time from current lifecycle and relation data would not. That's the argument for weight as mostly derived and recomputed, with an editorial canonical flag as a rare override rather than the default mechanism -- and it's the same conclusion the "derived status" framing above predicts before you get there by a separate route.
 
 ## What this isn't
 

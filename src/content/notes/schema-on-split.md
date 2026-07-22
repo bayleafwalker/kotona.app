@@ -1,5 +1,6 @@
 ---
 title: Schema on split
+role: operating
 status: guiding
 lifecycle: current
 area: data architecture

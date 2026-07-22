@@ -8,6 +8,7 @@ function entry(id, overrides = {}) {
     id,
     data: {
       title: id,
+      role: "exploration",
       status: "exploration",
       lifecycle: "current",
       relates: [],
@@ -62,6 +63,22 @@ test("counts a reference pointing at a note toward that note's weight", () => {
     ranked.indexOf(weightOf("pointed-to-by-two")) <
       ranked.indexOf(weightOf("pointed-to")),
     "a note referenced by two others should outrank one referenced by none",
+  );
+});
+
+test("does not count historical links toward current entry-point weight", () => {
+  const ranked = rankEntryPoints([
+    entry("historical-hub", {
+      lifecycle: "superseded",
+      relates: [{ id: "current-target" }],
+    }),
+    entry("current-target"),
+    entry("current-peer"),
+  ]);
+
+  assert.deepEqual(
+    ranked.map((item) => item.id),
+    ["current-peer", "current-target"],
   );
 });
 
