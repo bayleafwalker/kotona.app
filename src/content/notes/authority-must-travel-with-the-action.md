@@ -7,7 +7,7 @@ area: agent workflow
 published: 2026-07-22
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - legibility-is-an-operating-property
   - the-agent-is-not-the-application

@@ -7,7 +7,7 @@ area: agent workflow
 published: 2026-07-19
 lastRevised: 2026-07-19
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - judge-agents-by-the-next-prompt
   - the-missing-layer-is-binding-not-intelligence

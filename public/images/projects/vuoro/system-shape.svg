@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Vuoro state ownership and communication paths</title>
+  <desc id="desc">Local mode connects agents directly to owning command line tools. Served mode connects agents and cockpit through Vuoro client and service to pinned domain adapters. Remote mode connects domain tools to their shared PostgreSQL authorities. Machine-local effects stay with the worker.</desc>
+  <defs>
+    <style>
+      .bg{fill:#101716}.box{fill:#182321;stroke:#76a99f;stroke-width:2}.owner{fill:#1d2927;stroke:#d4aa62;stroke-width:2}.local{fill:#202725;stroke:#8c9692;stroke-width:2}.t{fill:#edf4f1;font:600 24px system-ui,sans-serif}.s{fill:#bdcac5;font:17px system-ui,sans-serif}.label{fill:#d4aa62;font:600 17px system-ui,sans-serif;letter-spacing:.08em}.line{stroke:#76a99f;stroke-width:3;fill:none;marker-end:url(#arrow)}.dash{stroke:#8c9692;stroke-width:3;stroke-dasharray:9 8;fill:none;marker-end:url(#arrow2)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" fill="#76a99f"/></marker>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" fill="#8c9692"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="680" rx="24"/>
+  <text class="label" x="54" y="55">COMMUNICATION PATHS</text>
+  <rect class="box" x="55" y="85" width="250" height="110" rx="14"/>
+  <text class="t" x="180" y="130" text-anchor="middle">Agent / cockpit</text>
+  <text class="s" x="180" y="163" text-anchor="middle">request and operator view</text>
+  <rect class="box" x="430" y="85" width="300" height="110" rx="14"/>
+  <text class="t" x="580" y="130" text-anchor="middle">Vuoro client + service</text>
+  <text class="s" x="580" y="163" text-anchor="middle">auth · catalog · compatibility</text>
+  <rect class="owner" x="850" y="85" width="295" height="110" rx="14"/>
+  <text class="t" x="997" y="130" text-anchor="middle">Pinned adapters</text>
+  <text class="s" x="997" y="163" text-anchor="middle">invoke the owning domain</text>
+  <path class="line" d="M305 140H430"/>
+  <text class="label" x="367" y="125" text-anchor="middle">SERVED</text>
+  <path class="line" d="M730 140H850"/>
+  <rect class="owner" x="430" y="290" width="715" height="135" rx="14"/>
+  <text class="t" x="787" y="338" text-anchor="middle">Domain authorities</text>
+  <text class="s" x="787" y="373" text-anchor="middle">sprintctl · actionq · kctl · auditctl</text>
+  <text class="s" x="787" y="402" text-anchor="middle">work · execution · knowledge · evidence</text>
+  <path class="line" d="M997 195V290"/>
+  <text class="label" x="1017" y="252">REMOTE</text>
+  <rect class="local" x="55" y="290" width="250" height="135" rx="14"/>
+  <text class="t" x="180" y="338" text-anchor="middle">Owning CLI</text>
+  <text class="s" x="180" y="373" text-anchor="middle">repo-local SQLite</text>
+  <text class="s" x="180" y="402" text-anchor="middle">and recovery artifacts</text>
+  <path class="dash" d="M180 195V290"/>
+  <text class="label" x="198" y="252">LOCAL</text>
+  <rect class="local" x="55" y="520" width="1090" height="105" rx="14"/>
+  <text class="t" x="600" y="563" text-anchor="middle">Bounded worker workspace</text>
+  <text class="s" x="600" y="596" text-anchor="middle">Git worktree and filesystem effects remain on the executing machine in every mode</text>
+  <path class="dash" d="M180 425V520"/>
+  <path class="dash" d="M787 425V520"/>
+</svg>

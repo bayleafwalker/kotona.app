@@ -8,5 +8,7 @@
 /writing/a-gitops-rollback-needs-time-to-reach-git/     /notes/a-gitops-rollback-needs-time-to-reach-git/      301
 /writing/compatibility-reports-should-be-a-little-rude  /notes/compatibility-reports-should-be-a-little-rude/  301
 /writing/compatibility-reports-should-be-a-little-rude/ /notes/compatibility-reports-should-be-a-little-rude/  301
+/projects/sprintctl-and-kctl  /projects/vuoro/ 301
+/projects/sprintctl-and-kctl/ /projects/vuoro/ 301
 /case-studies/:slug   /projects/:slug/ 301
 /case-studies/:slug/  /projects/:slug/ 301

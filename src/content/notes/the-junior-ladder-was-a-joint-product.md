@@ -13,7 +13,7 @@ area: organizational systems
 published: 2026-07-19
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-person-of-record
   - derived-status-is-earned

@@ -7,7 +7,7 @@ area: software assurance
 published: 2026-07-20
 lastRevised: 2026-07-20
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - a-field-guide-to-assurance-managed-ai-development
   - the-agent-is-not-the-application

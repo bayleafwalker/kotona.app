@@ -7,7 +7,7 @@ area: agent workflow
 published: 2026-07-19
 lastRevised: 2026-07-20
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-coordinator-never-touches-the-repo
@@ -43,7 +43,7 @@ between those systems: who authorized an attempt, what it owned, what survived
 a handoff, what evidence belongs to it, and who could declare the work complete.
 
 This survey starts from the implemented scope in
-[sprintctl and kctl](/projects/sprintctl-and-kctl/): one operator, several
+[Vuoro](/projects/vuoro/): one operator, several
 workers, schema-owned sprint state, proof-bearing claims, resumable handoffs, a
 separate execution queue, and a cockpit that composes read surfaces without
 becoming their write authority. The question is what that system would meet if
@@ -179,7 +179,7 @@ The external anchors are deliberately few and primary:
   [Gas Town](https://github.com/gastownhall/gastown) repositories, read
   directly, for their declared task-graph and workspace mechanisms
 - the [sprintctl repository](https://github.com/bayleafwalker/sprintctl) and the
-  [local project page](/projects/sprintctl-and-kctl/) for the implemented
+  [local project page](/projects/vuoro/) for the implemented
   single-operator comparison
 - [AgentOps.ai core concepts](https://docs.agentops.ai/v2/concepts/core-concepts)
   only to establish the observability category and disambiguate the name

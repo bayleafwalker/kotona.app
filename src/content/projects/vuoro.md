@@ -1,15 +1,14 @@
 ---
-title: Building Vuoro because agents kept editing the wrong line
+title: "Vuoro: governed work without a cockpit-shaped monolith"
 summary: >-
-  sprintctl and kctl began as schema-enforced sprint and knowledge tools. They
-  now sit beside actionq, actionq-dispatch, auditctl, and a live agent-cockpit,
-  under the Vuoro public label, with each tool owning one kind of operational
-  state.
+  A working family of sprint, queue, dispatch, knowledge, audit, and cockpit
+  tools is becoming one served composition layer without giving up explicit
+  state ownership or machine-local execution.
 published: 2026-04-09
-lastRevised: 2026-07-19
-lastVerified: 2026-07-19
+lastRevised: 2026-07-26
+lastVerified: 2026-07-26
 draft: false
-project: sprintctl-and-kctl
+project: vuoro
 kind: engineering
 status: Published and in active use
 featured: true
@@ -20,6 +19,7 @@ repoUrls:
   - https://github.com/bayleafwalker/actionq-dispatch
   - https://github.com/bayleafwalker/auditctl
   - https://github.com/bayleafwalker/agentops
+  - https://github.com/bayleafwalker/vuoro
 externalUrl: https://bayleafwalker.github.io/agentops/
 evidence:
   capability: >-
@@ -27,6 +27,8 @@ evidence:
     state through separate contracts, with local and shared operating modes.
   latest: Public multi-repository Vuoro toolchain with a live agent-cockpit
   proofLinks:
+    - label: Vuoro composition repository
+      href: https://github.com/bayleafwalker/vuoro
     - label: sprintctl source repository
       href: https://github.com/bayleafwalker/sprintctl
     - label: Interactive Vuoro system map
@@ -38,9 +40,7 @@ evidence:
   knownLimitation: >-
     kctl and auditctl have less operational mileage than sprintctl and the
     cockpit, while cross-repository version drift remains a recovery risk.
-  nextProof: >-
-    Exercise an end-to-end dispatch, failure, recovery, and audit path across
-    the owning CLIs without allowing the cockpit to bypass their contracts.
+  nextProof: Run the published failure-and-recovery walkthrough as one repeatable cross-tool acceptance test.
 tags:
   - agents
   - workflow
@@ -93,6 +93,25 @@ to follow the wider lifecycle across sprintctl, kctl, actionq, actionq-dispatch,
 auditctl, deployment, and agent-cockpit. It focuses on state ownership and the
 handoffs between tools rather than treating the cockpit as the system itself.
 
+## Architecture and communication paths
+
+![Vuoro state ownership and communication paths](/images/projects/vuoro/system-shape.svg)
+
+Three modes describe how a request travels, not three competing sources of
+truth. In **local mode**, an agent calls the owning CLI and keeps SQLite state,
+claim recovery material, Git worktrees, and filesystem effects on its machine.
+In **remote mode**, that same domain tool uses its shared PostgreSQL authority.
+In **served mode**, the transport-only Vuoro client talks to Vuoro service,
+which authenticates the caller, checks compatibility, and invokes a pinned
+adapter for the owning tool.
+
+The modes compose. A served request can reach a remote authority while the
+worker that receives it still performs bounded Git and filesystem work locally.
+The cockpit reads projections and submits dispatch through the documented API;
+it does not gain a raw write path into the domain databases. None of these
+arrows promises a distributed transaction. Receipts, append-only events,
+idempotency, and explicit recovery carry work across the boundaries.
+
 ## System shape
 
 sprintctl owns sprints, work items, dependencies, events, claims, and handoffs.
@@ -126,6 +145,31 @@ The rule across the repositories is simple: state ownership decides repository
 ownership. It is also the main defense against building a cockpit-shaped
 monolith.
 
+## One work item, including failure
+
+Here is the end-to-end property the system is designed to demonstrate:
+
+1. An operator creates a work item through sprintctl. Sprintctl records the
+   item and event history.
+2. An agent starts a claim. Its claim ID and secret token—not the actor name,
+   branch, or hostname—prove the current ownership incarnation.
+3. Dispatch submits an action through actionq. Actionq-dispatch creates a
+   bounded worktree, applies path and command policy, invokes one worker, and
+   runs its gates.
+4. If the worker fails or returns an invalid result, the result is recorded as
+   failed or rejected. It is not published and does not close the work item.
+5. The same owner can resume with its private recovery record. A new owner
+   needs an explicit handoff or recovery that rotates proof, so stale proof
+   cannot settle the item.
+6. Once a valid result clears independent verification, the owning CLI records
+   completion and releases the claim. Auditctl indexes portable evidence, and
+   the cockpit projects the sprint, claim, dispatch, and audit outcome.
+
+This is an acceptance walkthrough, not a claim that the six steps form one
+atomic transaction. The next proof is to automate it with injected failure,
+stale-proof rejection, recovery without duplicate settlement, and comparison
+of the audit and cockpit projections with the owning records.
+
 ## Current state
 
 The tools are public and used across active repositories. sprintctl supports
@@ -140,6 +184,13 @@ session and dispatch lifecycles, audit outcomes, and bounded cost or model
 headroom signals. Its dispatch surface forwards work through actionq.
 sprintctl state and workspace artifacts remain separate service contracts
 rather than tables the UI is free to rewrite.
+
+![Agent-cockpit sprint overview showing backlog, claims, and dispatch state](/images/projects/vuoro/cockpit-main.png)
+
+The screenshot is the current sprint overview: backlog and active work on the
+left, claim-aware work detail in the middle, and dispatch activity in the
+operator surface. It is a composed view of owning systems rather than a new
+state authority.
 
 This is a different system from the original pair of pipx-installed SQLite
 tools. Local-first operation is still the default for a small repository, but

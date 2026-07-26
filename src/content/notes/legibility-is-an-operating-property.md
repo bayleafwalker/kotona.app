@@ -7,7 +7,7 @@ area: organizational systems
 published: 2026-07-19
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-deployment-boundary-was-only-a-place
   - the-devbox-is-an-access-cell

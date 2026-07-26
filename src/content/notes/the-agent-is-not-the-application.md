@@ -7,7 +7,7 @@ area: agent architecture
 published: 2026-07-19
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - derived-status-is-earned

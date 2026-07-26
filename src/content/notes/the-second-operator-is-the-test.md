@@ -13,7 +13,7 @@ area: agent workflow
 published: 2026-07-19
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-work-between-the-ticket-and-the-agent
@@ -29,7 +29,7 @@ No second human operator, no coordination system. Only disciplined
 self-management.
 
 Within the
-[sprintctl and kctl project](/projects/sprintctl-and-kctl/), sprintctl owns work
+[Vuoro project](/projects/vuoro/), sprintctl owns work
 items, claims, dependencies, and handoffs; actionq owns queued machine actions
 and their execution lifecycle. Both can arbitrate concurrent worker sessions.
 That is not the same as arbitrating between people. Their current contracts

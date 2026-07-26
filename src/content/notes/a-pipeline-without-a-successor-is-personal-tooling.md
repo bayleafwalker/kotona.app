@@ -7,7 +7,7 @@ area: agent workflow
 published: 2026-07-19
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-junior-ladder-was-a-joint-product
   - the-second-operator-is-the-test

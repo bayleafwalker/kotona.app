@@ -14,7 +14,7 @@ area: agent workflow
 published: 2026-04-27
 lastRevised: 2026-07-22
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - judge-agents-by-the-next-prompt
   - subprocess-not-service

@@ -7,7 +7,7 @@ area: agent workflow
 published: 2026-07-13
 lastRevised: 2026-07-13
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-coordinator-never-touches-the-repo
   - the-missing-layer-is-binding-not-intelligence

@@ -15,7 +15,7 @@
   {
     "id": "structured-sprint-authority",
     "question": "Why did agents editing shared Markdown sprint files lead to schema-enforced sprint state, and which project now owns that authority?",
-    "expectedPath": "/projects/sprintctl-and-kctl/",
+    "expectedPath": "/projects/vuoro/",
     "maxRank": 1,
     "requiredPhrases": [
       "## Evidence",

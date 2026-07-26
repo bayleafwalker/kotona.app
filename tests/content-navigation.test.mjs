@@ -19,6 +19,18 @@ test("project navigation includes its public project label", () => {
   );
 });
 
+test("the former sprintctl-and-kctl project URL redirects to canonical Vuoro", async () => {
+  const redirects = await readFile(
+    fileURLToPath(new URL("../public/_redirects", import.meta.url)),
+    "utf8",
+  );
+
+  assert.match(
+    redirects,
+    /^\/projects\/sprintctl-and-kctl\/?\s+\/projects\/vuoro\/\s+301$/m,
+  );
+});
+
 test("generated social-card paths cannot escape their asset directory", () => {
   assert.equal(
     generatedOgImagePath("notes", "nested/example"),

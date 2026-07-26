@@ -7,7 +7,7 @@ area: software assurance
 published: 2026-07-19
 lastRevised: 2026-07-20
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - the-agent-is-not-the-application
   - log-as-system

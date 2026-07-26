@@ -7,7 +7,7 @@ area: open source
 published: 2026-07-19
 lastRevised: 2026-07-19
 projects:
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - derived-status-is-earned
   - the-junior-ladder-was-a-joint-product

@@ -8,7 +8,7 @@ published: 2026-06-10
 lastRevised: 2026-06-10
 projects:
   - household-operating-platform
-  - sprintctl-and-kctl
+  - vuoro
 relates:
   - subprocess-not-service
   - the-missing-layer-is-binding-not-intelligence
