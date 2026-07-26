@@ -93,6 +93,20 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
         "RTCA sits behind a Cloudflare bot challenge that blocks automated link checks",
     },
   ],
+  [
+    "https://www.iso.org/standard/68390.html",
+    {
+      statuses: new Set([403]),
+      reason: "ISO standard page blocks automated link checks",
+    },
+  ],
+  [
+    "https://www.iso.org/standard/81230.html",
+    {
+      statuses: new Set([403]),
+      reason: "ISO standard page blocks automated link checks",
+    },
+  ],
 ]);
 
 function countCharacter(value, character) {

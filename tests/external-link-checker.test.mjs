@@ -62,6 +62,22 @@ test("status policy is strict except for exact bot-blocked URLs", () => {
     ).ok,
     false,
   );
+  assert.deepEqual(
+    classifyStatus("https://www.iso.org/standard/68390.html", 403),
+    {
+      ok: true,
+      kind: "automation-blocked",
+      reason: "ISO standard page blocks automated link checks",
+    },
+  );
+  assert.equal(
+    classifyStatus("https://www.iso.org/standard/68390.html", 404).ok,
+    false,
+  );
+  assert.equal(
+    classifyStatus("https://www.iso.org/standard/other.html", 403).ok,
+    false,
+  );
 });
 
 test("source examples are skipped without suppressing ordinary GitHub links", () => {
