@@ -17,20 +17,20 @@ tags:
   - verification
   - reproducibility
   - creative-tooling
-summary: A 48-second generated loop stays out of Git because ~21 MiB of tracked receipts prove ~2.2 GiB of untracked media. The harder lessons were about gates — their scope, how a ratio gets gamed, and an aggregate that hid three subsystems repeating exactly.
+summary: A 48-second generated loop stays out of Git, and ~21 MiB of tracked source, manifests and receipts identify ~2.2 GiB of untracked media and verify any retained or reconstructed copy. That buys identity, not availability or reproducibility — the gates taught the rest.
 explorePrompt: >-
   Use this note as a worked instantiation, not a rule to adopt wholesale. The
   transferable question: when a large generated artifact cannot live in version
   control, what must the tracked files carry so authority over the artifact
   survives the exclusion? This instantiation is a generative video pipeline —
   48.000 s, 1152 frames, 960x412, seed 730021 — where about 21 MiB of source,
-  receipts and dispositions stand in for about 2.2 GiB of media. Its
-  conclusions: the receipt's per-artifact sha256 is what makes exclusion cost
-  nothing verifiable; regeneration from a seed is reconstruction to be
-  hash-checked, not an equivalent source; a gate must declare the artifact
+  receipts and dispositions identify about 2.2 GiB of untracked media. Its
+  conclusions: the receipt's per-artifact sha256 buys identity but not
+  availability or reproducibility; regeneration from a seed is reconstruction to
+  be hash-checked, not an equivalent source; a gate must declare the artifact
   class it applies to, since the continuity limit that qualifies a lossless
   master is meaningless against lossy delivery encodes; a ratio gate can be
-  passed by inflating its own denominator, so it needs an absolute quality
+  passed by inflating its own denominator, so it needs an independent quality
   measure beside it; and a whole-frame aggregate hid three subsystems repeating
   exactly. Apply the question to a large derived artifact you own — a trained
   model, a dataset snapshot, a built image. Name where your constraints diverge:
@@ -40,12 +40,12 @@ explorePrompt: >-
   artifact class each gate is valid for.
 ---
 
-The video is not in Git. The hashes that prove it are. The Wizard Valley
-World-Window repository tracks about 21 MiB across ~147 files — renderer source,
-scene and mask definitions, layer manifests, receipts, dispositions, provenance
-notes — and excludes about 2.2 GiB of video, frame sequences, source plates and
-review crops. Every receipt records the sha256 of every artifact it describes, so
-the tracked JSON proves the untracked bytes.
+The video is not in Git. The hashes that identify and verify it are. The Wizard
+Valley World-Window repository tracks about 21 MiB across ~147 files — renderer
+source, scene and mask definitions, layer manifests, receipts, dispositions,
+provenance notes — and excludes about 2.2 GiB of video, frame sequences, source
+plates and review crops. Every receipt records the sha256 of every artifact it
+describes, so the tracked files bind each named artifact to a digest.
 
 This is the concrete case behind an argument I made abstractly in
 [Derived status is earned](/notes/derived-status-is-earned/): generation does not
@@ -83,12 +83,28 @@ same commit that starts tracking media, never before.
 
 ## Integrity without Git
 
-Excluding media costs nothing verifiable, because the tracked files already
-assert the untracked bytes:
+Excluding media from Git does not surrender byte identity: the tracked files
+bind every named artifact to a digest. That does not provide retention or
+recovery.
 
 - `receipt.json` per build — every encode and review artifact, with sha256;
 - `master/frames.sha256` — a per-frame manifest, `sha256sum -c` compatible;
 - `render-report.json` — renderer outputs.
+
+Four properties are easy to run together and worth keeping apart:
+
+```text
+identity        per-artifact sha256
+availability    storage, backup and recovery policy
+reproducibility pinned source, inputs, toolchain and environment
+acceptance      scoped automated gates plus human promotion
+```
+
+For this unpromoted pipeline proof, byte identity is the claimed boundary.
+Availability is not claimed, because nothing has been promoted. Reproducibility
+is explicitly incomplete, for reasons the next section makes visible. A promoted
+delivery would need its own storage, backup and recovery policy. A digest can
+tell whether recovered bytes are the right bytes; it cannot recover them.
 
 Git LFS object IDs are themselves plain sha256, so the two schemes agree exactly.
 That was verified rather than assumed: during the aborted import, the layered
@@ -157,8 +173,8 @@ the wrap — step ratio 1.085 against plain CRF 20's 4.858 — but it degrades t
 rest of the loop, costs 115x the bitrate (88 MB against 764 KB), drops SSIM from
 0.992 to 0.948, and trips the keyframe census with 1152 internal IDRs. Part of
 how it "passed" continuity was making ordinary motion noisier. That is why every
-candidate also records SSIM and VMAF: a ratio gate needs an absolute measure
-beside it. Continuity ranking and quality ranking disagree in this data, and they
+candidate also records SSIM and VMAF: a self-normalising ratio gate needs an
+independent quality measure beside it. Continuity ranking and quality ranking disagree in this data, and they
 are different questions.
 
 A first attempt at that encode used `crf=14`, which is not a valid x265 zone
@@ -210,11 +226,15 @@ authority:            gates reject broken output within a declared
 ```
 
 The rule generalizes past video: an artifact can be excluded from version control
-exactly to the extent the tracked files can prove which bytes were meant. Both
-halves of the usual reproducibility story are weaker here than they sound —
-regeneration is reconstruction until it is hash-checked, and the environment lock
-is still empty — but the assertion survives, because a hash of a thing you no
-longer have is still a claim someone else can falsify.
+exactly to the extent the tracked files can say which bytes were meant. A digest
+preserves identity; storage preserves availability; a pinned environment supports
+reproducibility. This repository has strong identity evidence, no promoted
+artifact requiring durable availability, and an explicitly incomplete
+reproducibility claim, because the environment lock is empty.
+
+That is a narrower result than "the receipts prove the media," and it is the one
+the evidence supports. A hash of a thing you no longer have is a falsifiable
+identity claim, not a recovery plan.
 
 Wizard Valley stays a note rather than a project page. One pipeline proof with
 nothing promoted is not a continuing operated capability, and a project page is
