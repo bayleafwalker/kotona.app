@@ -5,10 +5,63 @@ import test from "node:test";
 
 import {
   checkUrl,
+  classifyNetworkFailure,
   classifyStatus,
   extractHttpUrls,
+  localNetworkPolicyEnabled,
+  sinkAddresses,
   skipReason,
 } from "../scripts/check-external-links.mjs";
+
+const BEACON = "https://static.cloudflareinsights.com/beacon.min.js";
+const BEACON_REASON =
+  "Cloudflare Web Analytics beacon intentionally blocked by declared local DNS policy";
+
+function dnsFailure(hostname = "static.cloudflareinsights.com") {
+  const error = new TypeError("fetch failed");
+  error.cause = Object.assign(new Error("getaddrinfo ENOTFOUND"), {
+    code: "ENOTFOUND",
+    hostname,
+  });
+  return error;
+}
+
+function sinkRefusal(address = "::") {
+  const error = new TypeError("fetch failed");
+  error.cause = Object.assign(new Error("connect ECONNREFUSED"), {
+    code: "ECONNREFUSED",
+    address,
+    hostname: "static.cloudflareinsights.com",
+  });
+  return error;
+}
+
+// Node reports a multi-address connect failure this way, which is the shape the
+// real sinkholed host produces.
+function aggregateRefusal(addresses) {
+  const error = new TypeError("fetch failed");
+  error.cause = Object.assign(
+    new AggregateError(
+      addresses.map((address) =>
+        Object.assign(new Error(`connect ECONNREFUSED ${address}:443`), {
+          code: "ECONNREFUSED",
+          address,
+          port: 443,
+        }),
+      ),
+    ),
+    { code: "ECONNREFUSED" },
+  );
+  return error;
+}
+
+function throwingFetch(error) {
+  return async () => {
+    throw error;
+  };
+}
+
+const withPolicy = { policyEnabled: true, sinks: sinkAddresses({}) };
 
 test("extracts and normalizes HTTP links from Markdown and Astro source", () => {
   const source = `
@@ -105,6 +158,163 @@ test("falls back from a rejected HEAD request to GET", async () => {
   assert.deepEqual(methods, ["HEAD", "GET"]);
   assert.equal(result.ok, true);
   assert.equal(result.method, "GET");
+});
+
+test("local network policy is off unless explicitly enabled", () => {
+  assert.equal(localNetworkPolicyEnabled({}), false);
+  assert.equal(
+    localNetworkPolicyEnabled({ LINK_CHECK_LOCAL_NETWORK_POLICY: "0" }),
+    false,
+  );
+  assert.equal(
+    localNetworkPolicyEnabled({ LINK_CHECK_LOCAL_NETWORK_POLICY: "1" }),
+    true,
+  );
+  assert.ok(sinkAddresses({}).has("::"));
+  assert.ok(
+    sinkAddresses({ LINK_CHECK_SINK_ADDRESSES: "192.0.2.1" }).has("192.0.2.1"),
+  );
+});
+
+test("intentional network blocks are exact-URL, policy-gated and sinkhole-shaped", () => {
+  const enotfound = { message: "fetch failed", code: "ENOTFOUND" };
+  const refusedBySink = {
+    message: "fetch failed",
+    code: "ECONNREFUSED",
+    address: "::",
+  };
+
+  assert.deepEqual(
+    classifyNetworkFailure(BEACON, [enotfound, enotfound], withPolicy),
+    { ok: true, kind: "intentional-network-block", reason: BEACON_REASON },
+  );
+  assert.deepEqual(
+    classifyNetworkFailure(BEACON, [refusedBySink, refusedBySink], withPolicy),
+    { ok: true, kind: "intentional-network-block", reason: BEACON_REASON },
+  );
+
+  // Policy disabled: the same failure is a failure.
+  assert.equal(
+    classifyNetworkFailure(BEACON, [enotfound, enotfound], {
+      policyEnabled: false,
+      sinks: sinkAddresses({}),
+    }),
+    null,
+  );
+
+  // A different URL never qualifies, however it failed.
+  assert.equal(
+    classifyNetworkFailure(
+      "https://static.cloudflareinsights.com/other.js",
+      [enotfound, enotfound],
+      withPolicy,
+    ),
+    null,
+  );
+
+  // A refusal from a real address is a broken link, not a sinkhole.
+  assert.equal(
+    classifyNetworkFailure(
+      BEACON,
+      [
+        { ...refusedBySink, address: "104.16.0.1" },
+        { ...refusedBySink, address: "104.16.0.1" },
+      ],
+      withPolicy,
+    ),
+    null,
+  );
+
+  // Timeouts and TLS errors carry no sinkhole-shaped code.
+  assert.equal(
+    classifyNetworkFailure(
+      BEACON,
+      [{ message: "request timed out" }, { message: "request timed out" }],
+      withPolicy,
+    ),
+    null,
+  );
+  assert.equal(
+    classifyNetworkFailure(
+      BEACON,
+      [
+        { message: "fetch failed", code: "CERT_HAS_EXPIRED" },
+        { message: "fetch failed", code: "CERT_HAS_EXPIRED" },
+      ],
+      withPolicy,
+    ),
+    null,
+  );
+
+  // A real HTTP answer on one attempt disqualifies the whole result.
+  assert.equal(
+    classifyNetworkFailure(BEACON, [undefined, enotfound], withPolicy),
+    null,
+  );
+});
+
+test("the beacon still fails on HTTP answers and succeeds when reachable", async () => {
+  const notFound = await checkUrl(BEACON, {
+    fetchImpl: async () => new Response(null, { status: 404 }),
+    timeoutMs: 100,
+    ...withPolicy,
+  });
+  assert.equal(notFound.ok, false);
+  assert.equal(notFound.reason, "HTTP 404");
+
+  const reachable = await checkUrl(BEACON, {
+    fetchImpl: async () => new Response(null, { status: 200 }),
+    timeoutMs: 100,
+    ...withPolicy,
+  });
+  assert.equal(reachable.ok, true);
+  assert.equal(reachable.kind, "reachable");
+});
+
+test("a sinkholed beacon warns under policy and fails without it", async () => {
+  for (const failure of [dnsFailure(), sinkRefusal()]) {
+    const warned = await checkUrl(BEACON, {
+      fetchImpl: throwingFetch(failure),
+      timeoutMs: 100,
+      ...withPolicy,
+    });
+    assert.equal(warned.ok, true);
+    assert.equal(warned.kind, "intentional-network-block");
+    assert.equal(warned.reason, BEACON_REASON);
+
+    const failed = await checkUrl(BEACON, {
+      fetchImpl: throwingFetch(failure),
+      timeoutMs: 100,
+      policyEnabled: false,
+      sinks: sinkAddresses({}),
+    });
+    assert.equal(failed.ok, false);
+    assert.equal(failed.kind, "failure");
+  }
+
+  // The real shape: every dialled address is a sink.
+  const aggregate = await checkUrl(BEACON, {
+    fetchImpl: throwingFetch(aggregateRefusal(["0.0.0.0", "::"])),
+    timeoutMs: 100,
+    ...withPolicy,
+  });
+  assert.equal(aggregate.kind, "intentional-network-block");
+
+  // One genuine address among them means the host really refused us.
+  const partiallyReal = await checkUrl(BEACON, {
+    fetchImpl: throwingFetch(aggregateRefusal(["0.0.0.0", "104.16.0.1"])),
+    timeoutMs: 100,
+    ...withPolicy,
+  });
+  assert.equal(partiallyReal.ok, false);
+
+  // The same DNS failure on an undeclared URL still fails.
+  const other = await checkUrl("https://example.test/asset.js", {
+    fetchImpl: throwingFetch(dnsFailure("example.test")),
+    timeoutMs: 100,
+    ...withPolicy,
+  });
+  assert.equal(other.ok, false);
 });
 
 test("reports a failed GET with both request attempts", async () => {

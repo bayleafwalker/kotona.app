@@ -109,6 +109,25 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
   ],
 ]);
 
+// A separate class from AUTOMATION_BLOCK_POLICIES. Those handle a remote server
+// answering with a specific status; these never reach an HTTP response at all,
+// because the local resolver deliberately blocks the host. The policy is off by
+// default, so CI runners keep checking these URLs normally.
+const NETWORK_BLOCK_POLICIES = new Map([
+  [
+    "https://static.cloudflareinsights.com/beacon.min.js",
+    {
+      reason:
+        "Cloudflare Web Analytics beacon intentionally blocked by declared local DNS policy",
+    },
+  ],
+]);
+
+// Addresses a DNS sinkhole answers with. A refusal from one of these is a
+// blocked host; a refusal from a real address is a broken link.
+const DEFAULT_SINK_ADDRESSES = new Set(["0.0.0.0", "::", "0:0:0:0:0:0:0:0"]);
+const SINK_REFUSAL_CODES = new Set(["ECONNREFUSED", "EHOSTUNREACH"]);
+
 function countCharacter(value, character) {
   return [...value].filter((item) => item === character).length;
 }
@@ -210,6 +229,80 @@ export function classifyStatus(urlValue, status) {
   return { ok: false, kind: "failure", reason: `HTTP ${status}` };
 }
 
+export function localNetworkPolicyEnabled(env = process.env) {
+  const value = env.LINK_CHECK_LOCAL_NETWORK_POLICY;
+  return value === "1" || value === "true";
+}
+
+export function sinkAddresses(env = process.env) {
+  const configured = (env.LINK_CHECK_SINK_ADDRESSES ?? "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  return new Set([...DEFAULT_SINK_ADDRESSES, ...configured]);
+}
+
+function isNetworkBlockShaped(detail, sinks) {
+  if (!detail?.code) {
+    return false;
+  }
+
+  if (detail.code === "ENOTFOUND") {
+    return true;
+  }
+
+  if (!SINK_REFUSAL_CODES.has(detail.code)) {
+    return false;
+  }
+
+  const addresses =
+    detail.addresses?.length > 0
+      ? detail.addresses
+      : [detail.address].filter(Boolean);
+
+  // Every address dialled must be a sink. One real address means the host
+  // resolved somewhere genuine and refused the connection.
+  return (
+    addresses.length > 0 && addresses.every((address) => sinks.has(address))
+  );
+}
+
+// Only an exact declared URL, only under an explicitly enabled local policy, and
+// only for a DNS/sinkhole-shaped failure. A 404, a TLS error, a timeout, or the
+// same failure on any other URL still fails.
+export function classifyNetworkFailure(urlValue, details, options = {}) {
+  const {
+    policyEnabled = localNetworkPolicyEnabled(),
+    sinks = sinkAddresses(),
+  } = options;
+
+  if (!policyEnabled) {
+    return null;
+  }
+
+  const policy = NETWORK_BLOCK_POLICIES.get(urlValue);
+
+  if (!policy) {
+    return null;
+  }
+
+  // Every attempt must have failed this way. A missing detail means that
+  // attempt reached a real HTTP answer, which disqualifies the result.
+  if (
+    details.length === 0 ||
+    !details.every((detail) => isNetworkBlockShaped(detail, sinks))
+  ) {
+    return null;
+  }
+
+  return {
+    ok: true,
+    kind: "intentional-network-block",
+    reason: policy.reason,
+  };
+}
+
 function isSourceFile(relativePath) {
   const normalized = relativePath.split(path.sep).join("/");
   return (
@@ -301,6 +394,36 @@ function errorMessage(error) {
   return String(error);
 }
 
+// fetch() flattens transport failures into "fetch failed"; the code, address and
+// hostname that distinguish a sinkholed host from a broken link live on the
+// cause. Keep them.
+function errorDetail(error) {
+  const detail = { message: errorMessage(error) };
+
+  if (!(error instanceof Error) || error.name === "AbortError") {
+    return detail;
+  }
+
+  const cause = error.cause;
+
+  if (cause && typeof cause === "object") {
+    detail.code = cause.code;
+    detail.address = cause.address;
+    detail.hostname = cause.hostname;
+
+    // Node reports a multi-address connect failure as an AggregateError whose
+    // sub-errors carry the addresses actually dialled. Those are the ones that
+    // say whether a sinkhole answered.
+    if (Array.isArray(cause.errors)) {
+      detail.addresses = cause.errors
+        .map((sub) => sub?.address)
+        .filter((address) => typeof address === "string");
+    }
+  }
+
+  return detail;
+}
+
 async function requestOnce(fetchImpl, url, method, timeoutMs) {
   const controller = new AbortController();
   const timeout = setTimeout(
@@ -328,7 +451,7 @@ async function requestOnce(fetchImpl, url, method, timeoutMs) {
       finalUrl: response.url || url,
     };
   } catch (error) {
-    return { error: errorMessage(error) };
+    return { error: errorMessage(error), detail: errorDetail(error) };
   } finally {
     clearTimeout(timeout);
   }
@@ -355,7 +478,12 @@ async function requestWithRetry(fetchImpl, url, method, timeoutMs) {
 
 export async function checkUrl(
   url,
-  { fetchImpl = fetch, timeoutMs = DEFAULT_TIMEOUT_MS } = {},
+  {
+    fetchImpl = fetch,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
+    policyEnabled = localNetworkPolicyEnabled(),
+    sinks = sinkAddresses(),
+  } = {},
 ) {
   const head = await requestWithRetry(fetchImpl, url, "HEAD", timeoutMs);
 
@@ -382,6 +510,21 @@ export async function checkUrl(
       method: "GET",
       ...get,
       ...classification,
+      attempts: { head, get },
+    };
+  }
+
+  const networkClassification = classifyNetworkFailure(
+    url,
+    [head.detail, get.detail],
+    { policyEnabled, sinks },
+  );
+
+  if (networkClassification) {
+    return {
+      url,
+      method: "GET",
+      ...networkClassification,
       attempts: { head, get },
     };
   }
@@ -469,7 +612,15 @@ Options:
   --root <path>          Repository root (default: current directory)
   --concurrency <count> Parallel requests (default: ${DEFAULT_CONCURRENCY})
   --timeout-ms <ms>     Per-request timeout (default: ${DEFAULT_TIMEOUT_MS})
-  --help                Show this help`);
+  --help                Show this help
+
+Environment:
+  LINK_CHECK_LOCAL_NETWORK_POLICY=1
+      Accept declared intentional local DNS blocks (see NETWORK_BLOCK_POLICIES)
+      when they fail in a sinkhole-shaped way. Off by default, so CI checks
+      those URLs normally.
+  LINK_CHECK_SINK_ADDRESSES=<addr,addr>
+      Extra sink addresses beyond ${[...DEFAULT_SINK_ADDRESSES].join(", ")}.`);
 }
 
 async function main() {
@@ -510,11 +661,20 @@ async function main() {
   const blocked = results.filter(
     ({ result }) => result.kind === "automation-blocked",
   );
+  const networkBlocked = results.filter(
+    ({ result }) => result.kind === "intentional-network-block",
+  );
   const failures = results.filter(({ result }) => !result.ok);
 
   for (const { link, result } of blocked) {
     console.warn(`WARN ${link.url}`);
     console.warn(`  ${result.reason} (HTTP ${result.status})`);
+    console.warn(`  ${link.references.join(", ")}`);
+  }
+
+  for (const { link, result } of networkBlocked) {
+    console.warn(`WARN ${link.url}`);
+    console.warn(`  ${result.reason}`);
     console.warn(`  ${link.references.join(", ")}`);
   }
 
@@ -536,9 +696,10 @@ async function main() {
     console.log(`SKIP ${link.url} (${link.reason})`);
   }
 
-  const reachable = results.length - blocked.length - failures.length;
+  const reachable =
+    results.length - blocked.length - networkBlocked.length - failures.length;
   console.log(
-    `External link result: ${reachable} reachable, ${blocked.length} explicitly bot-blocked, ${failures.length} failed.`,
+    `External link result: ${reachable} reachable, ${blocked.length} explicitly bot-blocked, ${networkBlocked.length} blocked by declared local network policy, ${failures.length} failed.`,
   );
 
   if (failures.length > 0) {

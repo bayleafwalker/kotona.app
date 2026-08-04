@@ -24,6 +24,13 @@ Content frontmatter, collection references, freshness, build output, Worker
 behavior, and external links are all part of that check. Run `npm run
 cf-typegen` only after intentional Worker binding changes.
 
+On a network that sinkholes the Cloudflare Web Analytics beacon, set
+`LINK_CHECK_LOCAL_NETWORK_POLICY=1` so `check:links` reports that one declared
+URL as an intentional block rather than a failure. The policy is off by default,
+it covers only exactly declared URLs, and it accepts only DNS/sinkhole-shaped
+failures — CI keeps checking the beacon normally. Add `LINK_CHECK_SINK_ADDRESSES`
+if the local resolver answers with something other than `0.0.0.0` or `::`.
+
 `wrangler.jsonc` is the deployment source of truth. Do not deploy with Wrangler,
 change Cloudflare bindings or custom domains, or expose tokens, internal paths,
 or operational secrets without separate deployment authority.
