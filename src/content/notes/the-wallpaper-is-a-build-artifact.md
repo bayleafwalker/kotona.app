@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: creative tooling
 published: 2026-08-03
-lastRevised: 2026-08-03
+lastRevised: 2026-08-04
 projects: []
 relates:
   - derived-status-is-earned
@@ -62,15 +62,15 @@ of this note.
 
 Two independent reasons, either sufficient alone.
 
-**LFS is disabled server-side.** `LFS_START_SERVER` is never set in the
-`appservice` GitOps tree, so the Forgejo instance does not register the LFS
-routes. Verified 2026-08-03: the batch endpoint returns 404 even with a valid
-token and correct `application/vnd.git-lfs+json` negotiation, while the REST API
-returns 200 and `git ls-remote` succeeds. Both the HTTPS and SSH failures trace
-to that single cause.
+**LFS is disabled server-side.** The self-hosted Git service never starts its
+LFS backend, so the LFS routes are not registered at all. Verified 2026-08-03:
+the batch endpoint returns 404 even with a valid token and correct
+`application/vnd.git-lfs+json` negotiation, while the REST API returns 200 and
+`git ls-remote` succeeds. Both the HTTPS and SSH failures trace to that single
+cause.
 
-**Even enabled, this media would not belong there.** The backing store is a
-20 GiB Longhorn PVC shared with Forgejo's own repository data. One build is
+**Even enabled, this media would not belong there.** The backing volume is
+sized for repository data and shared with it, in tens of gigabytes. One build is
 ~1.9 GiB; projected 3840x1648 masters reach 136-204 GiB.
 
 The first attempt taught the sharper lesson. An LFS filter rule against a server
