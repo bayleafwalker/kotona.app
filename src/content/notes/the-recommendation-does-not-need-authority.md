@@ -1,5 +1,6 @@
 ---
 title: "The recommendation does not need authority"
+role: exploration
 status: exploration
 lifecycle: current
 area: organizational-systems
@@ -13,11 +14,7 @@ tags:
   - architecture
   - decision-making
   - organizational-design
-summary: >-
-  A large share of senior enterprise work consists of constructing and maintaining
-  defensible conclusions from incomplete evidence inside an already bounded
-  strategic field. AI does not need authority over the decision to automate much
-  of the coherence that makes the decision possible.
+summary: A large share of senior enterprise work consists of constructing and maintaining defensible conclusions from incomplete evidence inside an already bounded strategic field. AI does not need authority over the decision to automate the coherence that makes it possible.
 explorePrompt: >-
   Examine the argument that high-level enterprise work has a larger automation
   surface than its current use of AI suggests. The central claim is not that AI
