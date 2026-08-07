@@ -53,5 +53,9 @@
   "overrides": {
     "sharp": "$sharp",
     "undici": "7.29.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20260730.1": true
   }
 }
