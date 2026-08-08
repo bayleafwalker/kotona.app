@@ -20,145 +20,109 @@ tags:
   - software-architecture
   - verification
   - provenance
-summary: AI generation creates more disposable realizations, but an artifact becomes derived only when assurance can move from its exact implementation to a durable generation and verification contract.
+summary: Continuing assurance can move away from an exact generated output only when retained inputs and independent checks can produce another acceptable result; retention remains a separate decision.
 ---
 
-Generation does not make an artifact disposable. Assurance does.
+Suppose an agent writes two things: a query for a one-off internal analysis and
+a migration that changes customer records. Both took seconds to generate. That
+does not give them the same assurance or retention requirements.
 
-> **Update, 2026-07-20.** The artifact-of-record/derived-realization split
-> held up on review, but the vocabulary was local where it didn't need to be.
-> Deriving status only from reproducible evidence sits inside ordinary assurance-case practice:
-> a status is credible to the extent a claim is supported by applicable
-> evidence and a defensible argument, under stated assumptions, about an
-> identified configuration. See
-> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
-> and
-> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
+I can treat the query as derived if I retain its inputs and can check that a
+replacement answers the same question. I may still keep the exact query for
+audit or debugging. The migration is different: its exact text, toolchain,
+approvals, logs, and resulting data state may be needed to explain what changed
+or reverse it. Generation cost says almost nothing about which case I am in.
 
-AI can make it cheap to produce another implementation, query, migration,
-report, adapter, interface, or plan. That changes the economics of construction.
-It does not answer whether the exact thing produced must remain the
-authoritative object for analysis, dispute, or reconstruction.
+> **Update, 2026-07-20.** Review confirmed the distinction but corrected its
+> framing: the local terms below sit inside ordinary assurance-case practice,
+> not a new assurance method. A claim is credible only for an identified
+> configuration, under stated assumptions, with evidence that actually supports
+> it. [Where the assurance questions are already
+> answered](/notes/where-the-assurance-questions-are-already-answered/) and [A
+> field guide to assurance-managed AI
+> development](/notes/a-field-guide-to-assurance-managed-ai-development/) map
+> the established material.
 
-There are two assurance postures.
+## When the exact output remains part of the record
 
-## Artifacts of record
+Some checks need the object that will run. Static analysis, type checking,
+model checking, interface compatibility, and adversarial review all inspect
+properties that a successful execution log cannot establish. A log can show
+what happened once; it cannot show what an unexercised code path would have
+done.
 
-For an artifact of record, assurance attaches to one immutable realization.
-The organization needs to know exactly what ran, which analyses applied to it,
-what it could have done under other inputs, and whether the reviewed object is
-the object that took effect.
-
-This is the posture for artifacts whose required properties must hold before or
-independently of operation. Static analysis, type systems, model checking,
-concurrency analysis, interface compatibility, and adversarial review need an
-actual artifact. An event log can show what happened once. It cannot establish
-the counterfactual behavior of code paths that were not exercised.
-
-The object of record is rarely source code alone. It is a bound execution
-capsule:
+In that case, retaining source alone may still be insufficient. The reviewed
+object is closer to this:
 
 ```text
-source and generated outputs
+source and generated files
   + compiler and toolchain
-  + dependencies
+  + pinned dependencies
   + configuration and policy
   + environment assumptions
   + build provenance
   + executable digest
 ```
 
-If dependencies float or deployment transforms the output, analysis of the
-source may not be analysis of what ran. The contractual layer does not replace
-the artifact. It binds the artifact tightly enough that its proofs, failures,
-and approvals refer to the same object.
+If dependencies float or deployment transforms the build, the code that was
+reviewed may differ from the code that ran. I use _artifact of record_ for an
+output whose exact identity has to remain bound to its evidence in this way.
 
-Agent generation makes this posture stronger. Human authorship used to provide
-a weak accountability story: somebody wrote the code and was presumed to
-understand it. Generated code removes even that presumption. The artifact and
-its evidence chain become the available common ground.
+Generated code often strengthens the need for that binding. With human-written
+code, teams sometimes assume the author can later explain it. That was never a
+particularly strong control, and an agent gives us even less reason to rely on
+it.
 
-## Derived realizations
+## When the process can carry the claim
 
-For a derived realization, assurance attaches mainly to a durable generation
-and acceptance process. The specific output is one adequate member of an
-allowed set:
+Other outputs are acceptable members of a set. A dashboard view, temporary
+adapter, internal report, or exploratory query may differ each time without
+changing what the user relies on. I use _derived realization_ for that case.
 
-```text
-contract
-  + authoritative substrate state
-  + generation procedure
-  + independent acceptance procedure
-  -> acceptable realization
-```
+Calling an output derived requires two practical demonstrations.
 
-The realization is not worthless. It is evidence that the contract could be
-satisfied at a particular time. But it does not have to remain the source of
-authority after use. A current generator may produce a different adequate
-query, temporary adapter, internal analysis, situational workflow, or user
-interface when the need returns.
+First, the system must retain enough to make another acceptable output: the
+contract, semantic inputs, interfaces, constraints, dependencies, and relevant
+environment assumptions. Exact replay may be neither possible nor useful with
+a stochastic generator. The useful test is whether an approved generator can
+still produce an output inside the allowed range.
 
-This posture requires two kinds of closure.
+Second, something other than the generator must decide whether the result is
+acceptable. Depending on the consequence, that may be a schema check, test,
+invariant, simulation, static analysis, canary, independent review, or human
+judgment. If the only acceptance signal is that the agent says the result looks
+right, the old output remains the only inspectable statement of behaviour.
 
-**Generative closure** means retaining enough governing information to produce
-another acceptable realization: the contract, semantic inputs, interfaces,
-constraints, dependencies, and environment assumptions. Exact replay is not
-always possible or useful when the generator is stochastic. The relevant claim
-may be semantic reproducibility: a currently approved generator can still
-produce an output inside the declared acceptance envelope.
+The formal labels for these two conditions are _generative closure_ and
+_verification closure_. The conditions matter more than the labels.
 
-**Verification closure** means deciding acceptability independently of the
-generator's confidence. Tests, invariants, schema checks, property-based
-evaluation, simulation, static analysis, canaries, independent review, or
-human judgment must reject unacceptable realizations with strength
-proportionate to their consequences.
+## Use determines the classification
 
-Without verification closure, regeneration is just repeated suggestion. The
-artifact remains the only inspectable statement of behavior and has not earned
-derived status.
+The same code can move between the two categories. A parser may be treated as a
+derived convenience inside an exploratory notebook and as part of the record
+inside a payment protocol. A report may be replaceable while it is a draft and
+fixed once it is filed. A generated client becomes harder to regenerate freely
+when another system compiles against its exact interface.
 
-## Classification follows reliance
+Before treating an output as derived, ask:
 
-These postures are not intrinsic properties of code. They depend on use.
+- Could its exact behaviour become the subject of a dispute?
+- Do important properties require inspection of this exact object?
+- What is the blast radius, and can a bad result be reversed?
+- Does another system depend on its exact interface or behaviour?
+- Would an investigation need the original object to reconstruct events?
 
-A parser can be a derived convenience inside an exploratory analysis and an
-artifact of record inside a payment protocol. A migration script becomes part
-of the record after it changes regulated data. A generated client becomes
-load-bearing when another system compiles against its exact interface. A report
-that was disposable during drafting becomes a record when filed or used to
-make an adjudicable decision.
+The consumer's answer matters. A producer may consider an output reproducible
+while a downstream team has built controls around that exact version. In that
+case the producer's convenience does not remove the consumer's retention and
+change-control needs.
 
-The main classification pressures are:
+Retention is separate from derived status. A derived output may still need to
+be kept for audit, debugging, cost analysis, or historical reconstruction. The
+narrower claim is that the contract and acceptance process carry the continuing
+assurance claim; the old text does not automatically do so.
 
-- whether exact behavior could become the subject of a dispute
-- whether important properties are visible only through artifact analysis
-- the blast radius and reversibility of a bad realization
-- whether consumers rely on exact behavior or interface stability
-- whether historical reconstruction requires the original object
-
-This makes classification relational. A producer may regard an output as
-regenerable while a consumer has built an assurance boundary around it. The
-reliance edge outranks the producer's convenience. Consumers need a way to
-promote an upstream realization into their record boundary and impose the
-corresponding pinning, evidence, and retention obligations.
-
-Promotion can also run the other way. Better specifications, verified
-generators, stronger type systems, semantic comparison, and independent
-acceptance can move assurance from individual outputs to the process that
-produces them. Generation capability makes derived realizations cheaper.
-Verification capability determines whether they are permitted.
-
-Retention is a separate decision. A realization can be non-authoritative and
-still require retention for audit, debugging, cost analysis, or evidence. The
-claim is not that derived outputs should be deleted. It is that change control
-and assurance attach to their contract rather than automatically to their exact
-text.
-
-This is the central risk of AI-generated software: not merely producing bad
-code, but silently applying derived-artifact discipline where exact behavior
-was part of the record. Cheap generation creates pressure to call everything
-reproducible. The contract layer's first duty is to know when that claim is
-false.
-
-Generation improvements reduce the cost of producing artifacts. Verification
-improvements determine which artifacts no longer need to remain authoritative.
+AI makes replacement cheap enough to tempt us into calling every output
+reproducible. The safe default is more demanding: move continuing assurance
+away from the exact output only after the generation inputs and independent
+checks have shown they can carry the same claim. Decide retention separately.

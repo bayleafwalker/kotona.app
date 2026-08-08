@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: organizational systems
 published: 2026-07-19
-lastRevised: 2026-07-22
+lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:
@@ -19,96 +19,99 @@ tags:
   - organizational-design
   - audit
   - workflow
-summary: "Working model: agent-readiness depends less on whether work is digital than on whether intent, action, consequence, and correction remain joinable while the work is happening."
+summary: Agent-ready work keeps the reason, permission, attempted action, observed result, and correction connected while the work happens instead of reconstructing them later.
 ---
 
-**Working model.** An organization is not agent-ready because its manuals are
-searchable and its applications have APIs. It is agent-ready when the work can
-show its work. Here, _legibility_ means that a concrete commitment, the
-authority for an action, the action itself, and the observed outcome can be
-joined through durable records rather than reconstructed from memory.
+A reporting calendar says a filing is complete. That does not tell me which
+data was submitted, which rule version applied, who approved an adjustment,
+whether the portal accepted the file, or what happened after a later correction.
+Those facts may exist, but often in separate systems and in people's memory.
 
-This is a cross-functional model, not a maturity law. It is useful only where
-the records can change a real decision: approval, recovery, accountability, or
-the next action.
-
-Software engineering happens to be unusually close. Requirements are imperfect
-but nameable. Changes acquire revisions. Tests emit results. Reviews and
-deployments leave durable records. The execution is not fully legible, but
-intent, action, and consequence can often be joined without asking the engineer
-to reconstruct the day from memory.
-
-Other functions are described as less ready because their work is
-"unstructured." That diagnosis is too vague. A legal matter has structure. A
-sales process has stages. Support has queues and runbooks. Regulatory reporting
-has more schemas and calendars than most software projects could tolerate.
-What they often lack is an operational record at the moment of action. Their
-systems contain claims about work, entered before or after the work, while the
-work itself happens elsewhere.
-
-A CRM says a conversation occurred. It usually does not contain the customer
-commitment as a governed event tied to the policy, authority, and evidence that
-made it valid. A contract repository says an agreement was executed. It rarely
-operates the obligations that begin after signature. A reporting calendar says
-a filing is complete. It may not bind the submitted artifact to the exact data,
-rules, adjustments, approvals, and portal receipt that produced it.
-
-The useful test is not whether a function has four recognizable planes. Almost
-every function can be made to fit knowledge, work, execution, and runtime if the
-labels are stretched far enough. The useful test is whether four facts can be
-joined:
+I use _legibility_ for the ability to join five facts while the work is still
+operational:
 
 ```text
 intent:       why should anything happen?
-authority:    who or what was allowed to act?
-action:       what was actually attempted?
-consequence:  what durable condition now holds?
+permission:   who or what may act?
+action:       what was attempted?
+result:       what condition was later observed?
+correction:   what changed when expectation and observation differed?
 ```
 
-Correction is the fifth fact. When observation and expectation disagree, can
-the organization show which claim changed, who accepted the correction, and
-which downstream commitments must be reconsidered?
+The records matter only if they can change a decision: whether to approve,
+recover, assign responsibility, or act next. This is a working cross-functional
+model, not a maturity score.
 
-This produces a more useful cross-functional map than a maturity score.
+A correction record should name the claim that changed, who accepted the
+correction, and which downstream commitments now need review. Recording only
+that "a correction happened" leaves the important part to memory again.
 
-In regulatory reporting, the runtime is the filed report and the obligations it
-creates. Legibility comes from binding rules, governed source data, adjustments,
-approvals, the submitted artifact, and the regulator's receipt. In legal work,
-the runtime is the active agreement: deadlines arrive, conditions become true,
-and rights are exercised or lost. Legibility requires those consequences to
-remain connected to the negotiated text and authorized decision. In support,
-the runtime is the customer and service state being changed during diagnosis.
-Closing the case is evidence of neither recovery nor a correct intervention. In
-sales, the runtime includes promises the organization is now expected to keep,
-not merely a stage named `closed-won`.
+## Digital work can still be hard to reconstruct
 
-Agents can improve this because instrumented action can produce its record as a
-side effect. An agent using a governed tool can attach the work reference,
-context revision, capability, target, result, and receipt while acting. The
-record no longer depends entirely on a person remembering to summarize a call
-or update a tracker later.
+Software engineering is relatively close to this model. A requirement names an
+intent, a commit records a change, CI records checks, a deployment records an
+attempt, and monitoring can show an effect. These records are incomplete, but
+an operator can often join them without asking the engineer to reconstruct the
+day from memory.
 
-But an agent does not make work legible merely by doing it. An agent driving an
-unobserved browser, calling an opaque service, or summarizing its own actions in
-free text can reproduce the same fiction faster. A transcript is not a semantic
-event stream. Exhaustive tool traces can be equally useless if they cannot
-answer which commitment authorized the action or which business consequence it
-changed.
+Calling other work "unstructured" does not explain much. Legal matters have
+structure. Sales processes have stages. Support teams have queues and runbooks.
+Regulatory reporting has schemas and calendars. The gap is often that their
+systems record descriptions before or after the work while the consequential
+action happens somewhere else.
 
-Legibility also has a political cost. Recording every action can become
-surveillance without producing accountability. The distinction is purpose and
-structure: collect the minimum evidence needed to establish authority,
-causality, consequence, and repair; do not treat human attention, keystrokes, or
-model monologue as organizational truth. A strong system makes decisions and
-effects inspectable. It does not make people continuously observable.
+A CRM may record that a conversation occurred without recording the promise
+the customer now expects the organization to keep. A contract repository stores
+the signed agreement but may not operate its deadlines and conditions. A
+support system can close a ticket without showing that the service recovered or
+that the intervention was correct.
 
-This suggests a narrower route to agent adoption. Do not begin by asking which
-department can receive a chatbot. Find a consequence the organization already
-cares about, then make the path from intent to that consequence durable. Give
-the agent authority only inside that path. If the path cannot distinguish a
-proposal from an accepted commitment or an attempted action from an achieved
-effect, autonomy will only accelerate ambiguity.
+## Record the consequence, not just the activity
 
-The agent-ready organization is not the one with the most automated work. It is
-the one that can tell, without retrospective storytelling, why an action was
-allowed and what changed because of it.
+Each function has a different result worth joining to the work:
+
+- For regulatory reporting, it is the submitted file, portal receipt, and
+  obligations created by the filing.
+- For legal work, it is the active agreement and the deadlines, conditions,
+  rights, and duties that follow from it.
+- For support, it is the customer and service state after the intervention.
+- For sales, it includes promises the organization must now fulfil, not only a
+  stage named `closed-won`.
+
+This is where agents can help. A governed tool can record the work item, source
+revision, permission, target, request, immediate response, and later observed
+state as part of acting. The record no longer depends entirely on someone
+summarizing a call or updating a tracker afterwards.
+
+An agent can also make the problem worse. Driving an unobserved browser,
+calling an opaque service, or summarizing its own actions in free text produces
+activity without a reliable account of the result. Exhaustive traces are not
+automatically better. Ten thousand tool events are of little use if none shows
+which commitment permitted the change or whether the target actually accepted
+it.
+
+## Legibility is not continuous observation
+
+Recording work has a political cost. Collecting every keystroke, screen view,
+or model thought can become surveillance while doing little for recovery or
+accountability.
+
+The safer constraint is to collect the minimum evidence needed to connect a
+decision to its permission, attempted action, observed consequence, and repair.
+That may require a target receipt and a later state check. It usually does not
+require continuous observation of the person operating the system.
+
+## Start with one consequence
+
+For agent adoption, I would begin with a result the organization already cares
+about: a corrected customer state, accepted filing, restored service, or
+fulfilled contractual obligation. Then work backwards.
+
+Can the system identify the decision that authorized the action? Can it tell a
+proposal from an accepted commitment? Can it distinguish a timed-out request
+from a rejected request and from a committed change? Can it show which later
+observation confirmed or contradicted the expected result?
+
+Only after that path is durable would I give an agent permission to operate
+inside it. If the path cannot answer those questions for a person, adding an
+agent will mostly make the missing joins harder to notice.

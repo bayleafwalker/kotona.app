@@ -49,7 +49,8 @@ supports that state.
 ## Open edges
 
 Describe what is unfinished, still being decided, or intentionally left out.
-Name the next verification or bounded implementation slice where relevant.
+Name the next verification or implementation step when one is justified. If
+the honest next step is to observe longer or leave the question open, say that.
 
 Use Notes for argument-heavy notes, reference designs, and narrower technical
 ideas that do not need a stable project page.

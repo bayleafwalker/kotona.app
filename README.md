@@ -63,7 +63,8 @@ To add a note:
 
 1. Create a Markdown file in `src/content/notes/`.
 2. Fill in the frontmatter.
-3. Keep the structure terse and diagram-heavy where useful.
+3. Write from the concrete problem outward, using diagrams only when they make
+   a relationship easier to understand.
 
 Frontmatter is schema-validated during `npm run check` and `npm run build`.
 Note `projects` and `relates` values are collection IDs and are validated as

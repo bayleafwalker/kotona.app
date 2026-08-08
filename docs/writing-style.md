@@ -5,12 +5,33 @@ register; do not use the same polished thesis-essay form for every kind of
 knowledge. `status` says how strongly the note is claimed, while `lifecycle`
 says whether it remains current. They are separate from role.
 
-Use a direct, analytical, purpose-led voice. Start with the person, system,
-event, decision, or failed check that gives the reader something concrete to
-hold. Introduce abstractions when they clarify that case; do not make every
-paragraph carry a reusable principle. Prefer concrete claims over ceremonial
-openings, generic praise, and corporate padding. A concise note is better than
-a complete-looking note that says nothing.
+Use operationally grounded analytical prose. Write as a practitioner reasoning
+from a real system, decision, experiment, or failure. Start with the person,
+system, event, decision, or failed check that gives the reader something
+concrete to hold. State material assumptions and starting conditions plainly.
+When two concepts need separating, show what the distinction changes in a
+test, decision, implementation, storage choice, publication choice, or recovery
+path.
+
+Prefer named actors and active verbs. Say that CI rejects a release, an owner
+accepts an exception, or a database stores a record. Use terms such as
+authority, state, evidence, boundary, capability, and artifact when the concept
+itself matters, not because they belong to the site's vocabulary. Preserve
+details that establish contact with reality: dates, commands, counts, awkward
+exceptions, failed assumptions, and recovery behaviour.
+
+Allow variation in cadence and confidence. First person is appropriate when
+the evidence comes from personal operation, judgment, or uncertainty. Keep a
+personal motive when it materially changed the decision. One strong sentence
+may carry a section; the surrounding sentences should explain it rather than
+compete with it. Dry humour is welcome when it punctures false grandeur or
+clarifies a contradiction.
+
+Extract reusable guidance only after the case supports it. Preserve
+counterexamples, inconvenient residuals, and questions the evidence has not
+settled. Prefer concrete claims over ceremonial openings, generic praise, and
+corporate padding. A concise note is better than a complete-looking note that
+says nothing.
 
 ## Roles and registers
 
@@ -22,9 +43,9 @@ Avoid a conceptual lead-in when the useful reader action is already known.
 
 ### Synthesis
 
-Use to map a question across observations or established material. Be formal
-and corrective: question, existing disciplines or evidence, local mapping,
-corrections, open edge, and a practical study or implementation path. Do not
+Use to map a question across observations or established material. Be
+corrective without becoming impersonal: question, relevant cases or evidence,
+useful distinction, corrections, open edge, and practical consequence. Do not
 claim novelty where the work is established elsewhere.
 
 ### Exploration
@@ -54,6 +75,14 @@ record.
   next action is often better than an aphorism.
 - Once a paragraph makes a distinction, remove the next sentence if it only
   restates it more elegantly.
+- Keep a distinction only when it changes what gets tested, who decides, where
+  something is stored, whether publication is appropriate, whether rollback is
+  possible, or which option should be chosen.
+- Preserve qualifiers such as _probably_, _only if_, and _not yet_ when they
+  carry real uncertainty. Do not polish a conditional claim into impersonal
+  certainty.
+- Prefer an ordinary explanation over an "X is not Y; it is Z" construction
+  unless the contrast genuinely corrects the reader's model.
 
 ## General structure
 
@@ -62,6 +91,9 @@ record.
   owner, database, test, command, or service when that is clearer.
 - Make material assumptions explicit, then proceed. Do not turn minor ambiguity
   into a clarification ritual.
+- A useful default rhythm is observation, assumption, correction, mechanism,
+  consequence, and limit. Use only the moves the note needs, and do not turn
+  this sequence into another mandatory outline.
 - Present at most four credible options. Recommend one when the evidence is
   sufficient, including its cost and failure case.
 - End in the form the role needs: an operating note may need a validation or
@@ -88,6 +120,32 @@ Before publishing, ask:
   deliberate bluntness?
 - Has a contrast or polished principle earned its place, rather than carrying
   the paragraph by default?
+- Does a paragraph contain several conceptual nouns but no concrete referent?
+- Has a local observation been promoted into a universal rule without enough
+  evidence?
+- Is a coined term introduced before the experience or mechanism it names?
+- Do several sentences or section endings sound as though they are auditioning
+  to be quoted?
+
+## Editing instruction
+
+Edit toward the author's practitioner voice. Treat raw reasoning as the
+primary source and published notes as secondary calibration, not as prose to
+imitate. Preserve stated assumptions, conditional reasoning, concrete actors
+and states, personal motive, counterexamples, useful uncertainty, and dry
+deflation. Do not rewrite unaffected passages merely to make the voice
+uniform.
+
+Revise passages that accumulate abstract nouns without a concrete referent,
+turn a local observation into a law, introduce a term before its case, restate
+the preceding sentence more elegantly, or make every paragraph end like a
+maxim. Treat words such as _authority_, _artifact_, _capability_, _surface_,
+_bounded_, _load-bearing_, _explicit_, _defensible_, and _tractable_ as precise
+tools, not house decorations. Prefer actor and verb: "CI blocks the release,"
+"the domain owner accepts the exception," or "the old pod remains ready."
+
+Use at most one deliberately aphoristic sentence per section. This is a
+ceiling, not a quota.
 
 ## Calibration notes
 
@@ -116,6 +174,21 @@ to copy sentence by sentence.
 - **Project history:**
   [`the-candidate-passed-the-upgrade-did-not.md`](../src/content/notes/the-candidate-passed-the-upgrade-did-not.md)
   lets chronology, timings, and the failed transition carry the lesson.
+- **Project history:**
+  [`moving-a-live-cluster-to-a-new-subnet.md`](../src/content/notes/moving-a-live-cluster-to-a-new-subnet.md)
+  keeps the topology, ordering constraint, and awkward exception in view
+  without inflating the work.
+- **Exploration:**
+  [`the-workshop-is-learning-my-accent.md`](../src/content/notes/the-workshop-is-learning-my-accent.md)
+  retains first person, motive, ambivalence, and humour without forcing the
+  tension into a verdict.
+- **Exploration:**
+  [`the-aftertaste-of-resolution.md`](../src/content/notes/the-aftertaste-of-resolution.md)
+  earns a coined term through a recognizable experience and concrete examples.
+
+[`the-embarrassment-is-mine.md`](../src/content/notes/the-embarrassment-is-mine.md)
+contains useful self-critique and strong individual lines, but it is also a
+caution against copying the site's most abstract register as a default voice.
 
 Do not revise an older note merely to make it resemble these examples. Apply
 the current guide when its claim, evidence, lifecycle, or practical advice is

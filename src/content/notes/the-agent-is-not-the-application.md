@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent architecture
 published: 2026-07-19
-lastRevised: 2026-07-22
+lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:
@@ -19,148 +19,122 @@ tags:
   - software-architecture
   - authorization
   - verification
-summary: A model can be replaced only when the application retains authority, canonical state, evidence, verification, and recovery outside the model's control.
+summary: A durable agent application keeps permissions, records, checks, and recovery outside the model, so changing models does not also replace the system's memory or rules.
 ---
 
-The durable unit of AI operation is not the chatbot, copilot, or autonomous
-agent. It is the governed application in which a model participates without
-being allowed to improvise authority, state, or evidence.
+Consider an agent asked to repair a failed customer import. It reads the ticket,
+finds a runbook, queries the import state, proposes a correction, runs a tool,
+and says the repair succeeded.
 
-The application does not become a security kernel by doing this. A
-[security kernel](https://csrc.nist.gov/glossary/term/security_kernel) is the
-small, protected and verifiable part of a trusted computing base that mediates
-access. The design task is to keep that mediation boundary small, even when the
-application owns a much wider assurance process. See
-[Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
-and [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/)
-for the established vocabulary behind this synthesis.
+The model may have planned the work well, but the application still has to
+answer the questions that make the repair usable. Which runbook revision
+applied? Was this account in scope? Who allowed the data change? Did the target
+commit it before the tool timed out? Which check established that the import is
+now correct? What can an operator undo?
 
-Model capability changes the bottleneck. A weak model needs help completing the
-task. A strong model needs unambiguous context, authority, verification, and a
-recoverable way to affect the world. Intelligence becoming cheaper does not
-make those concerns cheaper. It makes their absence more consequential.
+If those answers live only in the conversation, changing the model also changes
+the system's memory, interpretation, and evidence. A durable application keeps
+them elsewhere.
 
-The resulting application has two regions:
+## What the application must retain
+
+The model can propose plans, queries, reports, explanations, adapters, and
+execution strategies. The application should own the parts that must survive a
+new prompt, session, or model:
 
 ```text
-application-owned assurance process
-  identity and authority
-  contracts and state transitions
-  canonical records
-  capability enforcement
-  evidence and verification
+application records and controls
+  identities and permissions
+  work state and approved transitions
+  current source revisions
+  checks and their results
+  target receipts
   reconciliation and recovery
             |
             v
-generative operational shell
-  interfaces and views
-  plans and queries
-  situational code
-  reports and explanations
-  adapters and execution strategies
+replaceable model work
+  plans, queries, explanations
+  situational code and interfaces
+  execution choices inside the granted scope
 ```
 
-The shell can change with the task, user, model, or environment. The small,
-enforced mediation boundary decides which changes count.
+This application is not itself a security kernel. A [security
+kernel](https://csrc.nist.gov/glossary/term/security_kernel) is the small,
+protected, verifiable part of a trusted computing base that mediates access.
+The application owns a wider workflow; the mechanism that enforces access
+should remain much smaller. [Where the assurance questions are already
+answered](/notes/where-the-assurance-questions-are-already-answered/) and [A
+field guide to assurance-managed AI
+development](/notes/a-field-guide-to-assurance-managed-ai-development/) cover
+the established disciplines behind this design.
 
-This is a different boundary from putting an LLM inside an existing product.
-The familiar application still assumes a person will interpret the interface,
-carry context between screens, decide which button is appropriate, and notice
-whether the result made sense. An agent-operable application has to make those
-joins explicit because the operator can no longer supply them invisibly.
+## Give the model applicable context, not merely related text
 
-## Retrieval becomes context compilation
-
-Ordinary retrieval finds related material. Governed operation needs an exact
-context projection.
-
-The application has to resolve which source is authoritative, which revision
-applies, which claims are ratified, what superseded them, which parts constrain
-this work, and which uncertainties remain unresolved. It should produce a
-task-bound packet and record what the actor actually received.
+Search can find several runbooks. The application has to decide which one
+currently governs this import, whether a later decision superseded it, and
+which unresolved exception applies to this customer. It should then record the
+exact material the agent received.
 
 ```text
-organizational sources
-  -> resolve identity and authority
-  -> select applicable revisions
-  -> evaluate policy and scope
-  -> compile a context packet
-  -> bind packet to attempt
+sources and revisions
+  -> select what applies to this work
+  -> add identity, policy, and scope
+  -> produce a task-specific context packet
+  -> bind that packet to the attempt
 ```
 
-This is closer to compilation than search. The output is not a bag of plausible
-passages. It is a projection with declared inputs and a validity boundary.
+I call this context compilation because selection and applicability matter as
+much as similarity. A longer context window can carry more text, but it cannot
+decide which text has standing or whether it is stale.
 
-Longer context windows do not weaken this requirement. They make it easier to
-carry more material while leaving authority, applicability, and staleness just
-as unresolved. More context is not the same thing as governed context.
+## Give tools narrow permission
 
-## Tool calls become capability use
+A tool schema explains how to call `repair_import`. It does not explain why
+this agent may repair this account now.
 
-A tool definition explains how to call an operation. A capability explains why
-this actor may call it now.
+Broad credentials plus an instruction to behave sensibly leave policy inside
+the prompt. A stronger design gives the attempt a short-lived permission bound
+to the operator or service identity, work item, action, target, constraints,
+and expiry. The target checks that permission and returns its own receipt.
 
-Broad credentials plus a prompt to behave sensibly are an implementation
-shortcut, not an agent security model. The kernel should issue short-lived
-authority bound to a principal, work reference, action, target, constraints,
-and expiry. The target verifies that authority and returns a receipt tied to the
-effect it observed.
+This still leaves the model freedom to choose a method inside the granted
+scope. Better reasoning can improve that choice without quietly widening what
+the session is allowed to change.
 
-The agent can remain flexible about how it reaches an outcome while structurally
-unable to cross selected boundaries. Better reasoning then improves operation
-inside the envelope rather than increasing the amount of policy entrusted to a
-prompt.
+## Keep organizational memory out of the conversation
 
-## Memory becomes projection, not personality
+Tickets, approved decisions, document revisions, attempts, target effects, and
+later corrections belong in systems with explicit retention rules. A session
+can read a projection of those records and propose additions. It should not be
+the only place they exist.
 
-An organization's memory should not live in a model vendor's conversation
-history. Claims, observations, work state, document revisions, capabilities,
-artifacts, consequences, and reconciliation results belong in systems with
-their own retention and authority rules.
+This is easy to test: start a later session with a different model. Can it
+reconstruct what was authorized, attempted, observed, and left unresolved
+without imitating the previous model's recollection? If not, the application
+does not yet own its continuity.
 
-The agent receives projections of that state and contributes observations or
-proposed transitions. A later session can use a different model without asking
-it to imitate the previous model's private recollection. Replaceability is not
-merely a procurement benefit. It is evidence that the application owns its own
-continuity.
+## Evaluate the work outside the answer
 
-## Evaluation moves outside the answer
+A fluent completion is useful, but it does not establish that the repair
+worked. The application needs checks that can answer:
 
-Answer quality remains useful, but process assurance becomes the application
-evaluation:
+- Did the agent receive the current runbook and relevant exception?
+- Was the attempted change permitted for this account?
+- What did the target report, and what state was later observed?
+- Did an independent check establish the required result?
+- Can an operator reconstruct or reverse the decision and effect?
 
-- Was the right work selected under the right policy?
-- Did the actor receive current and sufficient governing context?
-- Was the attempted transition authorized?
-- Did independent checks establish the required properties?
-- What consequence actually occurred?
-- Can the decision and effect be reconstructed or reversed?
-- Did later evidence invalidate an earlier assumption?
+The model can help collect this evidence. It should not be the only witness for
+its own action.
 
-Improving the model helps with some of these questions. It cannot answer all of
-them on its own without becoming witness, defendant, and judge for the same
-action.
+Chat remains a good interface for ambiguity. Routine operation may instead
+appear as a proposed change, exception queue, simulation, or familiar domain
+screen. The useful product boundary is not whether the interface looks like a
+chatbot. It is whether permissions, records, verification, and recovery remain
+intact when the model is replaced.
 
-The interface changes accordingly. Chat remains useful for ambiguity and
-conversation, but much of the mature operator surface will be an exception
-queue, proposed change, evidence graph, simulation, work portfolio, or ordinary
-domain screen backed by agents. Most people will manage desired outcomes and
-material exceptions. The application will manage model selection and routine
-execution according to policy.
-
-None of this makes produced code or other exact artifacts irrelevant. Where
-assurance depends on what would happen under unobserved inputs, concurrency, or
-adversarial conditions, the artifact remains the inspectable object of record.
-The generative shell expands only where assurance can attach to the generation
-and verification process instead. That boundary is the subject of
-[Derive status only from reproducible evidence](/notes/derived-status-is-earned/).
-
-The product implication follows. A thin model wrapper retains little that
-survives replacing the model. A durable application owns authoritative context,
-state semantics, authority, integrations, evaluation history, and evidence of
-real outcomes. Models remain important, but model choice becomes one scheduling
-decision inside a larger operating contract.
-
-The agent is not the application. The application is the structure that lets a
-replaceable agent act without making authority, memory, or truth replaceable
-with it.
+Exact generated artifacts still matter when tests or analysis depend on their
+precise behaviour. [Derive status only from reproducible
+evidence](/notes/derived-status-is-earned/) describes when the process can
+carry the continuing claim and when the generated object must remain part of
+the record.

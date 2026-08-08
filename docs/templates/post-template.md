@@ -46,6 +46,10 @@ summary: Replace with a concrete one-line statement of what the note establishes
 #   height: 900
 ---
 
-Use the shape selected by `role`. At first use, ground any local abstraction in
-one concrete sentence. See `docs/writing-style.md` before adding structure for
-its own sake.
+Use the shape selected by `role`. Begin with the concrete system, decision,
+observation, or failure, and state any starting assumption that changes the
+reasoning. At first use, ground a local abstraction in a person, component,
+state, action, or consequence. Preserve material uncertainty and personal
+motive. Let the ending be a result, remaining limit, next action, or open
+question when that fits better than a reusable principle. See
+`docs/writing-style.md` before adding structure for its own sake.
