@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-07-20
-lastRevised: 2026-07-20
+lastRevised: 2026-08-08
 projects: []
 relates:
   - why-i-publish-explore-prompts
@@ -26,19 +26,19 @@ explorePrompt: >-
   become regenerated projections of a smaller authoritative corpus, and how
   do you tell the difference? This note's instantiation: a single-operator
   site treats each note's body, front matter, and declared relations as the
-  artifact of record, and treats its rendered pages, feed, llms.txt, and
-  per-note prompts as derived realizations regenerated from that corpus,
-  using the same record/derived-realization distinction the site already
-  applies to code. Apply the question to your own publishing or
+  public artifact of record only after private evidence and session history
+  have been extracted into candidate knowledge and passed a publishability
+  review; rendered pages, feeds, llms.txt, and per-note prompts are then
+  regenerated from that corpus. Apply the question to your own publishing or
   documentation surface -- team wiki, product docs, changelog, internal
   knowledge base -- and identify which of your currently hand-maintained
   artifacts (summaries, indexes, prompts, metadata) could instead be
   generated on demand, what would have to become more structured in your
-  source material first, and where computed weighting would need real
-  cross-linking density before it means anything. Distinguish established
-  practice from this note's own synthesis and from its still-untested
-  proposals before adopting any of it, and finish with which artifact you'd
-  convert first and how you'd verify the regenerated version is acceptable.
+  source material first, what must remain private even after sanitization, and
+  where computed weighting would need real cross-linking density before it
+  means anything. Distinguish established practice from this note's own
+  synthesis and untested proposals, then finish with which artifact you'd
+  convert first and how you'd verify both publishability and regeneration.
 draft: false
 ---
 
@@ -78,6 +78,35 @@ This site has already made the general argument for why derived artifacts should
 - **Derived realizations:** the rendered page, the RSS entry, the `llms.txt` line, the `explorePrompt`, any future synthesis page or graph view.
 
 Generative closure means enough survives in a note's front matter and body to regenerate any of those views acceptably. Verification closure means a human, or a documented check like the `explorePrompt` sibling test, can tell whether a regenerated view is acceptable without re-deriving it from scratch by eye every time.
+
+## Authority begins after the publication boundary
+
+The artifact of record is authoritative for this public site, not for every
+piece of knowledge that might inform it. Private evidence and session history
+need a separate path into the corpus:
+
+```text
+private evidence and session history
+        ↓ extraction
+candidate knowledge
+        ↓ publishability review
+public authoritative corpus
+        ↓ generation
+pages, feeds, prompts, indexes
+```
+
+Sanitization is not the same as publishability. Names and numbers can be
+removed while the combination of domain, mechanism, timing, and personal
+attribution remains recognizable. Extraction asks whether the material
+contains a durable claim. Publishability review asks a different question:
+whether that claim can safely become part of the public authoritative corpus
+without exposing the context that made it legible.
+
+That distinction can require cutting a candidate rather than repeatedly
+sanding it down. The mapping-document draft was the correct thing to leave out:
+removing more identifiers would not have changed the recognizability of its
+combined professional context, and removing that context would have removed
+the evidence that made the note worth publishing.
 
 The risk this framework exists to catch is the one it names elsewhere: something drifting into being hand-edited instead of regenerated -- an RSS description tuned by hand that stops matching the note, an `llms.txt` line left stale after a lifecycle change. This site avoids both today because they're already generated at request or build time from the notes collection. It hasn't yet had to answer the question for anything more structured than a list.
 

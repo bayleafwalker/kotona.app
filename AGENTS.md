@@ -7,6 +7,16 @@ in `src/content/projects/` and `src/content/notes/`; site metadata and external
 links live in `src/site.ts`. Keep project context compressed, factual, and safe
 for publication.
 
+The repository itself is public. Treat every tracked file, branch, commit, and
+draft pull request as published regardless of Astro's `draft` flag. Material
+that is safe for private GitHub custody but outside the publication boundary
+belongs in the private `kotona-notes-private` repository. Employer-specific,
+personal, source-restricted, operationally sensitive, or otherwise
+information-private material belongs in the private Forgejo or Obsidian tier.
+Do not create cross-tier paths, submodules, symlinks, build dependencies, or
+automatic promotion. Promotion requires a separate publishability review and
+an explicit copy into this repository.
+
 Every note must declare a content `role` in frontmatter. Role selects the
 register (`operating`, `synthesis`, `exploration`, or `project-history`); it is
 separate from claim posture and lifecycle. Read `docs/writing-style.md` and use

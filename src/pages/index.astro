@@ -8,8 +8,14 @@ import {
   sortByDateAndTitle,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
-import { rankEntryPoints } from "../lib/knowledge-graph.js";
 import { siteConfig } from "../site";
+
+const startHereOrder = [
+  "the-coordinator-never-touches-the-repo",
+  "a-field-guide-to-assurance-managed-ai-development",
+  "moving-a-live-cluster-to-a-new-subnet",
+  "schema-on-split",
+];
 
 const projectEntries = sortByLastVerifiedAndTitle(
   await getCollection("projects"),
@@ -26,7 +32,10 @@ const notes = sortByDateAndTitle(
   })),
 );
 const visibleNotes = getVisibleEntries(notes);
-const startHereNotes = rankEntryPoints(visibleNotes).slice(0, 4);
+const visibleNotesById = new Map(visibleNotes.map((note) => [note.id, note]));
+const startHereNotes = startHereOrder
+  .map((id) => visibleNotesById.get(id))
+  .filter((note) => note !== undefined);
 const startHereIds = new Set(startHereNotes.map((entry) => entry.id));
 const recentNotes = visibleNotes
   .filter((note) => !startHereIds.has(note.id))
@@ -49,8 +58,8 @@ const recentNotes = visibleNotes
       <h2>Start here</h2>
     </div>
     <p class="page-copy">
-      Ranked by how densely a note connects to the rest of the corpus, not by
-      publish date.
+      Four editorial entry points across agent workflow, assurance, operations,
+      and systems design.
     </p>
 
     {

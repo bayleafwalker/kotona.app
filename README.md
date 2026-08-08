@@ -97,11 +97,32 @@ deliberately ignored because the content metadata is their source of truth.
 Published project pages must also keep `lastVerified` current. The freshness
 check enforces date chronology and a maximum verification age of 90 days.
 
+## Publication boundary
+
+This GitHub repository is public. Only material already cleared for publication
+belongs here; treat `git push` as publication even when a file is excluded from
+Astro's production output. Branches, commit history, and draft pull requests are
+public repository surfaces.
+
+Non-public editorial or work material that is safe for private GitHub custody
+belongs in the separate private `kotona-notes-private` repository. Employer-
+specific, personal, source-restricted, operationally sensitive, or otherwise
+information-private material belongs in the private Forgejo or Obsidian tier.
+The public site must not depend on either tier through paths, submodules,
+symlinks, build inputs, or generated references.
+
+Promotion from a private tier is an explicit editorial copy after a separate
+publishability review. There is no automatic synchronization, and a private
+note marked as a possible public candidate is not authorized for publication.
+Sanitization alone does not establish publishability.
+
 Draft behavior:
 
 - drafts render in development
 - direct draft URLs return 404 in production
 - drafts are excluded from production indexes, RSS, `llms.txt`, and the sitemap
+- drafts are still visible in public Git history and must already be safe to
+  publish
 
 ## Information architecture
 

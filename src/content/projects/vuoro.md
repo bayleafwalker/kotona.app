@@ -5,8 +5,8 @@ summary: >-
   tools is becoming one served composition layer without giving up explicit
   state ownership or machine-local execution.
 published: 2026-04-09
-lastRevised: 2026-07-26
-lastVerified: 2026-07-26
+lastRevised: 2026-08-08
+lastVerified: 2026-08-08
 draft: false
 project: vuoro
 kind: engineering
@@ -25,7 +25,11 @@ evidence:
   capability: >-
     Public tools own sprint, knowledge, queue, dispatch, audit, and cockpit
     state through separate contracts, with local and shared operating modes.
-  latest: Public multi-repository Vuoro toolchain with a live agent-cockpit
+  latest: >-
+    Served composition through v0.1.35 binds component and schema
+    compatibility to migration admissibility: four capability gates passed,
+    production preflight rejected an unsafe schema-5 rollout, and the
+    maintenance bridge was staged without claiming the schema had migrated.
   proofLinks:
     - label: Vuoro composition repository
       href: https://github.com/bayleafwalker/vuoro
@@ -40,7 +44,9 @@ evidence:
   knownLimitation: >-
     kctl and auditctl have less operational mileage than sprintctl and the
     cockpit, while cross-repository version drift remains a recovery risk.
-  nextProof: Run the published failure-and-recovery walkthrough as one repeatable cross-tool acceptance test.
+  nextProof: >-
+    Complete the live schema transition and retain recovery evidence showing
+    that the version-bound composition can advance or restore safely.
 tags:
   - agents
   - workflow
@@ -166,9 +172,9 @@ Here is the end-to-end property the system is designed to demonstrate:
    the cockpit projects the sprint, claim, dispatch, and audit outcome.
 
 This is an acceptance walkthrough, not a claim that the six steps form one
-atomic transaction. The next proof is to automate it with injected failure,
-stale-proof rejection, recovery without duplicate settlement, and comparison
-of the audit and cockpit projections with the owning records.
+atomic transaction. The next proof is the completed live schema transition,
+including recovery evidence that the version-bound composition can advance or
+restore without bypassing its compatibility gates.
 
 ## Current state
 
@@ -196,6 +202,12 @@ This is a different system from the original pair of pipx-installed SQLite
 tools. Local-first operation is still the default for a small repository, but
 PostgreSQL and agent-cockpit now provide a shared view when work crosses hosts
 or needs an operator surface.
+
+By 8 August, served composition had reached v0.1.35 with component and schema
+compatibility made explicit. Four capability gates passed, while production
+preflight correctly rejected an unsafe schema-5 rollout. The maintenance
+bridge was staged to make the transition admissible without representing the
+production schema as already migrated.
 
 ## Open edges
 

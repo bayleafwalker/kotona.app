@@ -101,10 +101,24 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
     },
   ],
   [
+    "https://www.iso.org/standard/74393.html",
+    {
+      statuses: new Set([403]),
+      reason: "ISO standard page blocks automated link checks",
+    },
+  ],
+  [
     "https://www.iso.org/standard/81230.html",
     {
       statuses: new Set([403]),
       reason: "ISO standard page blocks automated link checks",
+    },
+  ],
+  [
+    "https://sms.onlinelibrary.wiley.com/toc/10970266/1997/18/7",
+    {
+      statuses: new Set([403]),
+      reason: "Wiley journal page blocks automated link checks",
     },
   ],
 ]);

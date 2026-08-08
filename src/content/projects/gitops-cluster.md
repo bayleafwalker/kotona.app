@@ -112,3 +112,9 @@ The upgrade found another useful edge: an automation controller with stale
 version pins can try to undo a manual upgrade. Future runs now need both the
 backup gate and agreement between Git, live plans, and the selected target
 before the first node changes.
+
+Git owns desired state, but not every stateful surface involved in realizing
+it. UEFI variables, boot entries, storage-client databases, and other
+host-local records can survive reconciliation and invalidate an otherwise
+correct rollout. Their health belongs in maintenance preflight and recovery
+procedures.

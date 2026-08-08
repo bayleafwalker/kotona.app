@@ -86,13 +86,22 @@ conversion funnel.
 
 ## Publication process
 
-1. Finish and review the note.
-2. Declare the role, then confirm claim posture, lifecycle, and evidence.
-3. Derive the transferable `explorePrompt` from the final note (see
+1. Select the storage tier before committing. Public-repository history is a
+   publication surface; `draft: true` changes rendering, not visibility.
+2. Finish and review the note.
+3. Declare the role, then confirm claim posture, lifecycle, evidence, and
+   publishability. Sanitization is not sufficient when the remaining domain,
+   mechanism, timing, and attribution are still recognizable.
+4. Derive the transferable `explorePrompt` from the final note (see
    `docs/explore-prompts.md`) -- never before the note is complete.
-4. Validate that the prompt produces a sibling rather than a summary or
+5. Validate that the prompt produces a sibling rather than a summary or
    clone.
-5. Publish.
+6. Publish.
+
+Use the private `kotona-notes-private` repository for non-public editorial work
+that is safe for GitHub custody. Use the private Forgejo or Obsidian tier for
+information-private material. Promotion is a separately reviewed copy, never an
+automatic synchronization from either private tier.
 
 When reviewing a prompt, ask whether it carries the note's actual
 conclusion, names the material constraints that produced it, and asks the
