@@ -3,7 +3,11 @@ import { getCollection } from "astro:content";
 
 import EntryCard from "../../components/EntryCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+import {
+  getVisibleEntries,
+  humanizeLabel,
+  sortByDateAndTitle,
+} from "../../lib/content";
 
 const notes = sortByDateAndTitle(
   (await getCollection("notes")).map((entry) => ({
@@ -15,19 +19,41 @@ const notes = sortByDateAndTitle(
   })),
 );
 const visibleNotes = getVisibleEntries(notes);
+const noteContext = (entry: (typeof visibleNotes)[number]) =>
+  [
+    humanizeLabel(entry.data.role),
+    entry.data.status === entry.data.role
+      ? null
+      : humanizeLabel(entry.data.status),
+    humanizeLabel(entry.data.lifecycle),
+    humanizeLabel(entry.data.area),
+  ]
+    .filter(Boolean)
+    .join(" · ");
 ---
 
 <BaseLayout
   title="Notes"
-  description="Project notes and system notes in reverse chronological order."
+  description="Operating rules, connected explanations, open questions, and project records in reverse chronological order."
 >
   <section class="page-intro">
     <p class="eyebrow">Notes</p>
-    <h1 class="page-title">Project notes and system notes.</h1>
+    <h1 class="page-title">What I want to find the next time.</h1>
     <p class="page-copy">
-      Operating rules, synthesis, bounded explorations, and project history.
-      Role selects the note's register; claim posture says how strongly it is
-      held, and lifecycle says whether it remains current.
+      These notes begin with work I expect to encounter again: a migration that
+      failed in an unexpected place, a rule that keeps an agent inside its
+      permissions, a design choice worth testing, or a question that is not
+      settled yet.
+    </p>
+    <p class="page-copy">
+      Some are instructions I use now. Some connect several sources or projects.
+      Some are explorations, and some preserve the exact sequence of an
+      incident. The labels under each note tell you which kind you are reading,
+      how firmly I hold it, and whether it is still current.
+    </p>
+    <p class="page-copy">
+      <a href="/notes/">Chronological</a> · <a href="/explore/">Explore map</a> ·
+      <a href="/tags/">Tags</a>
     </p>
   </section>
 
@@ -40,7 +66,7 @@ const visibleNotes = getVisibleEntries(notes);
               href={`/notes/${entry.id}/`}
               title={entry.data.title}
               summary={entry.data.summary}
-              context={`${entry.data.role} / ${entry.data.status} / ${entry.data.lifecycle} / ${entry.data.area}`}
+              context={noteContext(entry)}
               tags={entry.data.tags}
               date={entry.data.published}
               draft={entry.data.draft}

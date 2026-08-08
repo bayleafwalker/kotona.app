@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content";
+
+import KnowledgeMap from "../components/KnowledgeMap.astro";
+import { knowledgeClusters } from "../data/knowledge-clusters";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { buildKnowledgeGraph } from "../lib/knowledge-map";
+
+export const prerender = true;
+
+const entries = [
+  ...(await getCollection("notes")),
+  ...(await getCollection("projects")),
+];
+const graph = buildKnowledgeGraph(entries, knowledgeClusters);
+---
+
+<BaseLayout
+  title="Explore"
+  description="Explore published notes and projects through a curated map of explicit relationships and editorial clusters."
+>
+  <section class="page-intro explore-intro">
+    <p class="eyebrow">Explore</p>
+    <h1 class="page-title">Topics and relationships.</h1>
+    <p class="page-copy">
+      A curated atlas of published notes and projects. Clusters organize the
+      corpus; lines show only relationships explicitly declared in the content.
+    </p>
+  </section>
+  <section class="page-section">
+    <KnowledgeMap graph={graph} />
+  </section>
+</BaseLayout>

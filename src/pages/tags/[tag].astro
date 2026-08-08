@@ -1,6 +1,7 @@
 ---
 import EntryCard from "../../components/EntryCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { humanizeLabel } from "../../lib/content";
 import { getTagRecords, type TagRecord } from "../../lib/tags";
 
 export const prerender = true;
@@ -78,7 +79,7 @@ const entryCount = tag.notes.length + tag.projects.length;
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
-              context={`${entry.data.status} / ${entry.data.lifecycle} / ${entry.data.area}`}
+              context={`${humanizeLabel(entry.data.status)} · ${humanizeLabel(entry.data.lifecycle)} · ${humanizeLabel(entry.data.area)}`}
               tags={entry.data.tags}
               date={entry.data.published}
             />

@@ -200,6 +200,30 @@ async function loadPublicCorpus(baseUrl) {
     `Expected at least 20 public documents, found ${paths.length}`,
   );
 
+  const graphResponse = await globalThis.fetch(
+    new URL("/knowledge.json", baseUrl),
+  );
+  assert(
+    graphResponse.ok,
+    `knowledge.json returned HTTP ${graphResponse.status}`,
+  );
+  const graph = await graphResponse.json();
+  const graphPaths = new Set(graph.nodes.map((node) => node.href));
+  assert(
+    graphPaths.size === graph.nodes.length,
+    "knowledge.json contains duplicate node paths",
+  );
+  for (const documentPath of paths) {
+    assert(
+      graphPaths.has(documentPath),
+      `knowledge.json omitted public document ${documentPath}`,
+    );
+  }
+  assert(
+    graphPaths.size === paths.length,
+    `knowledge.json and llms.txt disagree: ${graphPaths.size} graph nodes, ${paths.length} documents`,
+  );
+
   return Promise.all(
     paths.map(async (documentPath) => {
       const response = await globalThis.fetch(new URL(documentPath, baseUrl), {

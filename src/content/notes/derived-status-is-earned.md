@@ -1,11 +1,11 @@
 ---
-title: Derived status is earned
+title: Derive status only from reproducible evidence
 role: synthesis
 status: exploration
 lifecycle: current
 area: software assurance
 published: 2026-07-19
-lastRevised: 2026-07-20
+lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:
@@ -27,7 +27,7 @@ Generation does not make an artifact disposable. Assurance does.
 
 > **Update, 2026-07-20.** The artifact-of-record/derived-realization split
 > held up on review, but the vocabulary was local where it didn't need to be.
-> "Derived status is earned" sits inside ordinary assurance-case practice:
+> Deriving status only from reproducible evidence sits inside ordinary assurance-case practice:
 > a status is credible to the extent a claim is supported by applicable
 > evidence and a defensible argument, under stated assumptions, about an
 > identified configuration. See

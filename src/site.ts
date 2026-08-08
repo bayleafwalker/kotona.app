@@ -6,9 +6,9 @@ export const siteConfig = {
   defaultOgImage: "/og-default.png",
   defaultOgImageAlt: "kotona.app — systems, decisions, and failure modes",
   home: {
-    heading: "Operated projects and reusable system notes",
+    heading: "Notes from systems that have to keep working",
     summary:
-      "Field notes on data platforms, declarative infrastructure, contract-first systems, and agent-assisted engineering.",
+      "I write about data platforms, small infrastructure, software boundaries, and using agents in real work. Most entries begin with a system, decision, or failure and then ask what should survive the next change.",
   },
   profile: {
     name: "Juha Huotari",
@@ -26,6 +26,7 @@ export const siteConfig = {
 
 export const siteNavigation = [
   { href: "/", label: "Home" },
+  { href: "/explore/", label: "Explore" },
   { href: "/projects/", label: "Projects" },
   { href: "/notes/", label: "Notes" },
   { href: "/about/", label: "About" },

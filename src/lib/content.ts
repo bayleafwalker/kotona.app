@@ -49,3 +49,8 @@ export function formatDate(date: Date) {
     day: "numeric",
   }).format(date);
 }
+
+export function humanizeLabel(value: string) {
+  const label = value.replaceAll("-", " ");
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}

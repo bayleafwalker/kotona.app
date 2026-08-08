@@ -8,6 +8,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   formatDate,
   getVisibleEntries,
+  humanizeLabel,
   sortByDateAndTitle,
 } from "../../lib/content";
 import { generatedOgImagePath } from "../../lib/og-images.js";
@@ -122,15 +123,19 @@ const canonicalNoteUrl = new URL(
         }
 
         <div class="entry-meta note-state" aria-label="Note state">
-          <span class="pill pill-accent">{entry.data.status}</span>
-          <span class="pill">Role: {entry.data.role}</span>
+          <span class="pill pill-accent">
+            Claim posture: {humanizeLabel(entry.data.status)}
+          </span>
+          {" "}
+          <span class="pill">Format: {humanizeLabel(entry.data.role)}</span>
+          {" "}
           <span class="pill" data-lifecycle={entry.data.lifecycle}>
-            Lifecycle: {entry.data.lifecycle}
+            Lifecycle: {humanizeLabel(entry.data.lifecycle)}
           </span>
         </div>
 
         <p class="content-context">
-          {entry.data.area} / Published {formattedPublishedDate}{
+          {humanizeLabel(entry.data.area)} / Published {formattedPublishedDate}{
             wasRevised ? ` / Revised ${formattedRevisedDate}` : ""
           }
         </p>

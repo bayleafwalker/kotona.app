@@ -52,6 +52,17 @@ function assertIncludes(value, expected, label) {
   );
 }
 
+function normalizedText(html) {
+  return html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function assertContentType(response, expected) {
   const actual = response.headers.get("content-type") ?? "";
   assert(
@@ -333,6 +344,17 @@ async function runChecks(baseUrl) {
 
   await check("evidence, metadata titles, and content structure", async () => {
     const project = await request("/projects/household-operating-platform/");
+    assertEqual(
+      [...project.body.matchAll(/<h1\b/gi)].length,
+      1,
+      "project H1 count",
+    );
+    assert(
+      /Verified [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(
+        normalizedText(project.body),
+      ),
+      "project metadata does not contain whitespace after Verified",
+    );
     assertIncludes(project.body, 'id="evidence-title"', "project evidence");
     assertIncludes(
       project.body,
@@ -395,6 +417,7 @@ async function runChecks(baseUrl) {
     );
 
     const note = await request("/notes/the-ref-nobody-adds/");
+    assertEqual([...note.body.matchAll(/<h1\b/gi)].length, 1, "note H1 count");
     assertIncludes(
       note.body,
       "<title>Why agent workflows ignore documentation references | kotona.app</title>",
@@ -406,7 +429,12 @@ async function runChecks(baseUrl) {
       'content="Agents cannot use documents they are never shown | kotona.app"',
       "social title",
     );
-    assertIncludes(note.body, "Lifecycle: current", "current note lifecycle");
+    assertIncludes(note.body, "Lifecycle: Current", "current note lifecycle");
+    assertIncludes(
+      normalizedText(note.body),
+      "Claim posture: Guiding Format: Operating Lifecycle: Current",
+      "note state label spacing",
+    );
     assertIncludes(
       note.body,
       'content="https://kotona.app/og/generated/notes-the-ref-nobody-adds.png"',
@@ -436,7 +464,7 @@ async function runChecks(baseUrl) {
     );
     assertIncludes(
       archivedNote.body,
-      "Lifecycle: archived",
+      "Lifecycle: Archived",
       "archived note lifecycle",
     );
     assertIncludes(
@@ -446,6 +474,11 @@ async function runChecks(baseUrl) {
     );
 
     const about = await request("/about/");
+    assertIncludes(
+      normalizedText(about.body),
+      "see The workshop is learning my accent",
+      "About editorial link spacing",
+    );
     const aboutTypes = structuredDataFromHtml(about.body)["@graph"].map(
       (item) => item["@type"],
     );
@@ -460,6 +493,33 @@ async function runChecks(baseUrl) {
       home.body,
       'href="/notes/the-workshop-is-learning-my-accent/"',
       "editorial model link",
+    );
+
+    const explore = await request("/explore/");
+    assertEqual(explore.response.status, 200, "explore status");
+    assertIncludes(explore.body, "Grouped index", "explore grouped fallback");
+    assertIncludes(explore.body, "knowledge-map", "explore SVG map");
+    assert(
+      !explore.body.includes(
+        "a-mapping-document-becomes-engineering-when-it-can-fail",
+      ),
+      "explore page contains a draft node",
+    );
+
+    const knowledge = await request("/knowledge.json");
+    assertContentType(knowledge.response, "application/json");
+    const graph = JSON.parse(knowledge.body);
+    assertEqual(graph.version, 1, "knowledge graph version");
+    assertEqual(
+      new Set(graph.nodes.map((node) => node.id)).size,
+      graph.nodes.length,
+      "knowledge node uniqueness",
+    );
+    assert(
+      graph.nodes.every(
+        (node) => Number.isInteger(node.x) && Number.isInteger(node.y),
+      ),
+      "knowledge graph contains non-deterministic coordinates",
     );
   });
 

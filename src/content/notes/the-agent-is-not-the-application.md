@@ -153,7 +153,7 @@ assurance depends on what would happen under unobserved inputs, concurrency, or
 adversarial conditions, the artifact remains the inspectable object of record.
 The generative shell expands only where assurance can attach to the generation
 and verification process instead. That boundary is the subject of
-[Derived status is earned](/notes/derived-status-is-earned/).
+[Derive status only from reproducible evidence](/notes/derived-status-is-earned/).
 
 The product implication follows. A thin model wrapper retains little that
 survives replacing the model. A durable application owns authoritative context,

@@ -1,0 +1,306 @@
+---
+import type { KnowledgeGraph } from "../lib/knowledge-map";
+
+type Props = { graph: KnowledgeGraph };
+const { graph } = Astro.props;
+const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));
+const clusterNodes = graph.clusters.map((cluster) => ({
+  ...cluster,
+  current: graph.nodes.filter(
+    (node) => node.cluster === cluster.id && node.lifecycle === "current",
+  ),
+  historical: graph.nodes.filter(
+    (node) => node.cluster === cluster.id && node.lifecycle !== "current",
+  ),
+}));
+---
+
+<section class="knowledge-explorer" data-knowledge-explorer>
+  <form class="knowledge-controls" aria-label="Filter the knowledge atlas">
+    <label class="knowledge-search">
+      <span>Search titles, summaries, and tags</span>
+      <input type="search" name="knowledge-search" autocomplete="off" />
+    </label>
+    <fieldset>
+      <legend>Show</legend>
+      <label
+        ><input type="checkbox" name="type" value="note" checked /> Notes</label
+      >
+      <label
+        ><input type="checkbox" name="type" value="project" checked /> Projects</label
+      >
+      <label><input type="checkbox" name="history" /> Historical notes</label>
+    </fieldset>
+    <p class="knowledge-result-count" aria-live="polite"></p>
+  </form>
+
+  <div class="knowledge-map-frame" aria-label="Visual knowledge map">
+    <svg
+      class="knowledge-map"
+      viewBox="0 0 1000 620"
+      role="img"
+      aria-labelledby="knowledge-map-title knowledge-map-desc"
+    >
+      <title id="knowledge-map-title">
+        Knowledge atlas for published notes and projects
+      </title>
+      <desc id="knowledge-map-desc"
+        >Six editorial clusters connected only by explicitly published
+        relationships. The grouped index following the map contains the same
+        entries.</desc
+      >
+      <defs>
+        <marker
+          id="knowledge-arrow"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="5"
+          markerHeight="5"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z"></path>
+        </marker>
+      </defs>
+      {
+        graph.clusters.map((cluster) => {
+          const clusterConfig = graph.nodes.filter(
+            (node) => node.cluster === cluster.id,
+          );
+          const x =
+            clusterConfig.reduce((sum, node) => sum + node.x, 0) /
+            clusterConfig.length;
+          const y =
+            clusterConfig.reduce((sum, node) => sum + node.y, 0) /
+            clusterConfig.length;
+          return (
+            <text
+              class="knowledge-cluster-label"
+              x={x}
+              y={Math.max(20, y - 95)}
+              text-anchor="middle"
+            >
+              {cluster.label}
+            </text>
+          );
+        })
+      }
+      <g class="knowledge-edges" aria-hidden="true">
+        {
+          graph.edges.map((edge) => {
+            const source = nodesById.get(edge.source);
+            const target = nodesById.get(edge.target);
+            if (!source || !target) return null;
+            const historical =
+              source.lifecycle !== "current" || target.lifecycle !== "current";
+            return (
+              <line
+                x1={source.x}
+                y1={source.y}
+                x2={target.x}
+                y2={target.y}
+                class:list={{
+                  "knowledge-edge": true,
+                  "is-historical": historical,
+                }}
+                data-source={source.id}
+                data-target={target.id}
+                data-edge-type={edge.type}
+                marker-end={edge.directed ? "url(#knowledge-arrow)" : undefined}
+              />
+            );
+          })
+        }
+      </g>
+      <g class="knowledge-nodes">
+        {
+          graph.nodes.map((node) => (
+            <a
+              href={node.href}
+              class:list={{
+                "knowledge-node": true,
+                "is-project": node.type === "project",
+                "is-anchor": node.anchor,
+                "is-historical": node.lifecycle !== "current",
+              }}
+              data-node-id={node.id}
+              data-node-type={node.type}
+              data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
+            >
+              <title>
+                {node.title}. {node.summary}{" "}
+                {node.role ? `Role: ${node.role}.` : ""} Lifecycle:{" "}
+                {node.lifecycle}.
+              </title>
+              {node.type === "project" ? (
+                <rect
+                  x={node.x - 8}
+                  y={node.y - 8}
+                  width="16"
+                  height="16"
+                  rx="3"
+                />
+              ) : (
+                <circle cx={node.x} cy={node.y} r={node.anchor ? 8 : 6} />
+              )}
+              {node.anchor ? (
+                <text x={node.x + 12} y={node.y + 4}>
+                  {node.title}
+                </text>
+              ) : null}
+            </a>
+          ))
+        }
+      </g>
+    </svg>
+  </div>
+
+  <div class="knowledge-index" aria-labelledby="knowledge-index-title">
+    <div class="section-heading">
+      <h2 id="knowledge-index-title">Grouped index</h2>
+      <a href="/notes/">Chronological notes</a>
+    </div>
+    <p class="page-copy">
+      The index is the complete text alternative to the map and remains useful
+      without JavaScript.
+    </p>
+    <div class="knowledge-clusters">
+      {
+        clusterNodes.map((cluster) => (
+          <section class="knowledge-cluster" data-cluster={cluster.id}>
+            <h3>{cluster.label}</h3>
+            <p>{cluster.summary}</p>
+            <ul>
+              {cluster.current.map((node) => (
+                <li
+                  data-index-id={node.id}
+                  data-node-type={node.type}
+                  data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
+                >
+                  <a href={node.href}>{node.title}</a>
+                  <span>{node.type === "project" ? "Project" : node.area}</span>
+                  {node.summary ? <p>{node.summary}</p> : null}
+                </li>
+              ))}
+            </ul>
+            {cluster.historical.length > 0 ? (
+              <details class="knowledge-history">
+                <summary>
+                  Historical notes ({cluster.historical.length})
+                </summary>
+                <ul>
+                  {cluster.historical.map((node) => (
+                    <li
+                      data-index-id={node.id}
+                      data-node-type={node.type}
+                      data-historical
+                      data-search={`${node.title} ${node.summary} ${node.tags.join(" ")}`.toLowerCase()}
+                    >
+                      <a href={node.href}>{node.title}</a>
+                      <span>{node.lifecycle}</span>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : null}
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const explorer = document.querySelector("[data-knowledge-explorer]");
+  if (explorer instanceof HTMLElement) {
+    const search = explorer.querySelector('input[name="knowledge-search"]');
+    const typeInputs = [...explorer.querySelectorAll('input[name="type"]')];
+    const historyInput = explorer.querySelector('input[name="history"]');
+    const nodes = [...explorer.querySelectorAll("[data-node-id]")];
+    const items = [...explorer.querySelectorAll("[data-index-id]")];
+    const edges = [...explorer.querySelectorAll("[data-source][data-target]")];
+    const count = explorer.querySelector(".knowledge-result-count");
+
+    const refresh = () => {
+      const query =
+        search instanceof HTMLInputElement
+          ? search.value.trim().toLowerCase()
+          : "";
+      const types = new Set(
+        typeInputs
+          .filter((input) => input instanceof HTMLInputElement && input.checked)
+          .map((input) =>
+            input instanceof HTMLInputElement ? input.value : "",
+          ),
+      );
+      const showHistory =
+        historyInput instanceof HTMLInputElement && historyInput.checked;
+      explorer.classList.toggle("is-showing-history", showHistory);
+      explorer.querySelectorAll(".knowledge-history").forEach((details) => {
+        if (details instanceof HTMLDetailsElement) details.open = showHistory;
+      });
+      const visible = new Set();
+      for (const node of nodes) {
+        if (!(node instanceof SVGElement)) continue;
+        const match =
+          types.has(node.dataset.nodeType ?? "") &&
+          (!query || node.dataset.search?.includes(query)) &&
+          (showHistory || !node.classList.contains("is-historical"));
+        node.classList.toggle("is-filtered", !match);
+        if (match && node.dataset.nodeId) visible.add(node.dataset.nodeId);
+      }
+      for (const item of items) {
+        if (!(item instanceof HTMLElement)) continue;
+        const match = visible.has(item.dataset.indexId ?? "");
+        item.hidden = !match;
+      }
+      for (const edge of edges) {
+        if (!(edge instanceof SVGElement)) continue;
+        edge.classList.toggle(
+          "is-filtered",
+          !visible.has(edge.dataset.source ?? "") ||
+            !visible.has(edge.dataset.target ?? ""),
+        );
+      }
+      if (count) count.textContent = `${visible.size} published entries shown`;
+    };
+
+    explorer.addEventListener("input", refresh);
+    for (const node of nodes) {
+      const emphasizeNeighbours = () => {
+        const id = node instanceof SVGElement ? node.dataset.nodeId : undefined;
+        const neighbours = new Set([id]);
+        for (const edge of edges) {
+          if (!(edge instanceof SVGElement) || !id) continue;
+          if (edge.dataset.source === id) neighbours.add(edge.dataset.target);
+          if (edge.dataset.target === id) neighbours.add(edge.dataset.source);
+        }
+        nodes.forEach((candidate) =>
+          candidate.classList.toggle(
+            "is-unrelated",
+            candidate instanceof SVGElement &&
+              !neighbours.has(candidate.dataset.nodeId),
+          ),
+        );
+        edges.forEach((edge) =>
+          edge.classList.toggle(
+            "is-related",
+            edge instanceof SVGElement &&
+              (edge.dataset.source === id || edge.dataset.target === id),
+          ),
+        );
+      };
+      const clearNeighbours = () => {
+        nodes.forEach((candidate) =>
+          candidate.classList.remove("is-unrelated"),
+        );
+        edges.forEach((edge) => edge.classList.remove("is-related"));
+      };
+      node.addEventListener("focus", emphasizeNeighbours);
+      node.addEventListener("blur", clearNeighbours);
+      node.addEventListener("mouseenter", emphasizeNeighbours);
+      node.addEventListener("mouseleave", clearNeighbours);
+    }
+    refresh();
+  }
+</script>

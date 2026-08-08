@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 
-import { getPublishedEntries } from "./content";
+import { getPublishedEntries, humanizeLabel } from "./content";
 import { projectTags, tagSlug } from "./tag-slug.js";
 
 export type TagRecord = {
@@ -21,7 +21,12 @@ export async function getTagRecords() {
 
     if (existing) return existing;
 
-    const record: TagRecord = { label, slug, notes: [], projects: [] };
+    const record: TagRecord = {
+      label: humanizeLabel(label),
+      slug,
+      notes: [],
+      projects: [],
+    };
     records.set(slug, record);
     return record;
   };
