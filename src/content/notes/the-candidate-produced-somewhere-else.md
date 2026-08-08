@@ -10,6 +10,8 @@ projects: []
 relates:
   - where-the-cohort-comes-from
   - the-junior-ladder-was-a-joint-product
+  - the-person-of-record
+  - a-field-guide-to-assurance-managed-ai-development
 tags:
   - career
   - labor-market
