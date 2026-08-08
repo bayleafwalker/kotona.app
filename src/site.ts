@@ -2,7 +2,7 @@ export const siteConfig = {
   siteUrl: "https://kotona.app",
   title: "kotona.app",
   description:
-    "Operated projects and reusable system notes on declarative infrastructure, data platforms, agent workflows, and contract-first systems.",
+    "Field notes from systems that have to keep working: data platforms, small infrastructure, software boundaries, and agent-assisted engineering.",
   defaultOgImage: "/og-default.png",
   defaultOgImageAlt: "kotona.app — systems, decisions, and failure modes",
   home: {

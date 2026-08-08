@@ -1,5 +1,9 @@
 [
   {
+    "date": "2026-08-08",
+    "entry": "Added the Explore knowledge atlas and public graph endpoint; revised the editorial guide and core notes toward operationally grounded prose."
+  },
+  {
     "date": "2026-07-22",
     "entry": "Site refactored around explicit note roles, lifecycle succession, and clearer discovery surfaces."
   },

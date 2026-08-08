@@ -28,17 +28,18 @@ explorePrompt: >-
   site treats each note's body, front matter, and declared relations as the
   public artifact of record only after private evidence and session history
   have been extracted into candidate knowledge and passed a publishability
-  review; rendered pages, feeds, llms.txt, and per-note prompts are then
-  regenerated from that corpus. Apply the question to your own publishing or
-  documentation surface -- team wiki, product docs, changelog, internal
-  knowledge base -- and identify which of your currently hand-maintained
-  artifacts (summaries, indexes, prompts, metadata) could instead be
-  generated on demand, what would have to become more structured in your
-  source material first, what must remain private even after sanitization, and
-  where computed weighting would need real cross-linking density before it
-  means anything. Distinguish established practice from this note's own
-  synthesis and untested proposals, then finish with which artifact you'd
-  convert first and how you'd verify both publishability and regeneration.
+  review; rendered pages, feeds, llms.txt, per-note prompts, and a knowledge
+  atlas are then regenerated from that corpus. Apply the question to your own
+  publishing or documentation surface -- team wiki, product docs, changelog,
+  internal knowledge base -- and identify which hand-maintained artifacts
+  (summaries, indexes, prompts, metadata) could become generated projections,
+  what would have to become more structured in the source first, and what must
+  remain private even after sanitization. If you add relational discovery,
+  state what its clusters and edges are allowed to claim, how lifecycle changes
+  propagate, and how you will detect drift between the source corpus and its
+  projections. Distinguish established practice from local synthesis and
+  untested proposals, then finish with which artifact you would convert first
+  and how you would verify publishability, regeneration, and reader utility.
 draft: false
 ---
 
@@ -46,9 +47,11 @@ This site is not a set of pages I maintain. It's a small corpus of notes, front 
 
 That's a narrower claim than "AI-native blogging," or any other name for a category of website. It isn't about a genre of site. It's about which object is authoritative and which objects are downstream of it -- and once agents became a real fraction of the readership, the honest answer stopped being obviously "the HTML page."
 
+**Update, 2026-08-08.** The site now publishes a [knowledge atlas](/explore/) and a generated [`knowledge.json`](/knowledge.json) graph endpoint. The atlas does not use link degree to decide which notes are authoritative, and it does not infer relationships from shared tags. Six reviewed clusters organise the corpus; graph lines come only from relations already declared in content. That implementation answers the concern in the original version of this note by narrowing what the visualisation claims, not by pretending the original graph was already mature.
+
 ## Chronology is a rendering choice, not a structural fact
 
-The notes index reads reverse-chronologically because that's what a blog template does, not because publication date is the axis that matters most. The corpus's actual structure is `relates`, `supersededBy`, `lifecycle`, `tags`, `area`, and revision history -- none of which are chronological. A note published a year ago that three later notes build on is structurally more central than one published yesterday that nothing points to yet. Recency and importance are different axes. Conflating them is a limitation of the presentation layer, not of the material underneath it.
+The notes index reads reverse-chronologically because that view answers “what changed recently,” not because publication date is the axis that matters most. The atlas now supplies a thematic and relational view beside it. The corpus's actual structure is `relates`, `supersededBy`, project membership, invalidation, `lifecycle`, `tags`, `area`, and revision history. A note published a year ago may still be the useful entry point for a current question. Recency, editorial placement, and relation count remain different axes; the atlas does not collapse them into one ranking.
 
 ## What's already established practice -- and this site already does it
 
@@ -75,7 +78,7 @@ Two things here don't have an established name elsewhere.
 This site has already made the general argument for why derived artifacts should stay derived, about code rather than prose, in [Derive status only from reproducible evidence](/notes/derived-status-is-earned/): an artifact earns the right to be non-authoritative only when there's a durable generation process and an independent way to check the result: otherwise it has to remain the thing assurance attaches to. The same split applies directly here.
 
 - **Artifact of record:** a note's body, its front matter, its declared relations, its lifecycle state.
-- **Derived realizations:** the rendered page, the RSS entry, the `llms.txt` line, the `explorePrompt`, any future synthesis page or graph view.
+- **Derived realizations:** the rendered page, the RSS entry, the `llms.txt` line, the `explorePrompt`, the atlas, and the `knowledge.json` graph.
 
 Generative closure means enough survives in a note's front matter and body to regenerate any of those views acceptably. Verification closure means a human, or a documented check like the `explorePrompt` sibling test, can tell whether a regenerated view is acceptable without re-deriving it from scratch by eye every time.
 
@@ -108,22 +111,26 @@ removing more identifiers would not have changed the recognizability of its
 combined professional context, and removing that context would have removed
 the evidence that made the note worth publishing.
 
-The risk this framework exists to catch is the one it names elsewhere: something drifting into being hand-edited instead of regenerated -- an RSS description tuned by hand that stops matching the note, an `llms.txt` line left stale after a lifecycle change. This site avoids both today because they're already generated at request or build time from the notes collection. It hasn't yet had to answer the question for anything more structured than a list.
+The risk this framework exists to catch is the one it names elsewhere: something drifting into being hand-edited instead of regenerated -- an RSS description tuned by hand that stops matching the note, an `llms.txt` line left stale after a lifecycle change, or a graph that retains a draft entry or stale lifecycle state. The site now builds all of those from the collections. Tests require the graph and the public corpus discovered through `llms.txt` to contain the same documents, and lifecycle state is carried into the graph rather than maintained in a second list.
 
-## Where it's still speculative
+## What the atlas changed
 
-Two extensions are worth naming honestly as untested rather than as a roadmap.
+The first version of this note treated prescriptive entry points and graph rendering as future choices. The implementation took a narrower path than either proposal implied.
 
-**A prescriptive entry point.** An `explorePrompt` says "start here, extend this" for one note. Nothing says it for the corpus as a whole -- a visitor gets chronology. A prescriptive layer would compute or declare which notes matter most and route a reader, human or agent, to those first. There are two ways to weight that: editorial (mark notes canonical by hand) or computed (link degree across `relates` and `supersededBy`). Computed weight is only meaningful if cross-linking is actually dense; several notes on this site currently have short or empty `relates` lists, which would make a degree-based ranking mostly noise today. The honest starting point is checking whether the graph is dense enough for degree to mean anything before writing the ranking algorithm.
+The home page keeps four reviewed starting points. The atlas groups every published note and project into six reviewed editorial clusters. Neither surface treats link degree as authority. That preserves the earlier objection: sparse cross-linking cannot quietly turn a count into an editorial judgment.
 
-**Relational structure beyond a flat list.** The schema already contains one typed edge: `supersededBy`, distinct from the untyped `relates` array. A network diagram, if built, would render that existing structure -- not create new truth, the same argument as everywhere else in this note, applied to a UI. Giving `relates` a light type (extends, contradicts, alongside the schema's already-separate supersedes) is a small, contained schema change. A graph visualization on top of it is a much larger rendering commitment for inputs -- weight and type -- that aren't settled yet.
+The graph renders only existing relations: `relates`, project membership, succession, and project invalidation. Shared tags can place an entry in a reviewed cluster, but they cannot create a line between two entries. Historical notes are hidden by default and remain available as an explicit layer. The grouped textual index carries the same corpus when the visual map is unavailable or unhelpful.
 
-The concrete risk isn't hypothetical here. The former assurance-kernel framing needed a correction the day after publication once the trusted boundary was properly narrowed. A prescriptive layer built in that interval would have routed a reader to the wrong term. A layer recomputed at build time from current lifecycle and relation data would not. That's the argument for weight as mostly derived and recomputed, with an editorial canonical flag as a rare override rather than the default mechanism -- and it's the same conclusion the "derived status" framing above predicts before you get there by a separate route.
+The former assurance-kernel framing remains the useful failure case. It needed correction the day after publication once the trusted boundary was narrowed. Because the atlas is rebuilt from current lifecycle and relation data, the old framing can move out of the default view without a separate map edit. That is the practical reason the graph belongs downstream of the corpus.
+
+## What remains untested
+
+The atlas is published, but that does not prove it helps readers. I do not yet know whether people use it to find material they would miss in the chronological index, whether the six clusters remain stable as the corpus grows, or whether a new relation type will eventually justify its schema and visual cost. Those are usage and maintenance questions, not reasons to infer more structure now.
 
 ## What this isn't
 
 This isn't a claim that graph-based discovery is where personal technical publishing is heading -- no adoption evidence supports that the way it supports Markdown negotiation or `llms.txt`. It isn't an industry maturity model either; a progression from chronological to machine-readable to structurally-exposed is a device for organizing this note's own argument, not an observed grading scale other sites are placed on. And it isn't a plan to make the home page the point -- the point stays whatever a note argues; discovery surfaces exist to get a reader or an agent to the right note faster, not to become content themselves.
 
-## The next decision
+## The next check
 
-The sequence that actually follows from the argument above: name and formalize the synthesis-page pattern that's already working informally before building anything new; give `relates` an optional type if a second typed edge turns out to earn its schema change; and leave the network diagram and word cloud until there's enough `relates` density for either computed weight or a graph rendering to say something a flat list doesn't already say. Building the visualization first would mean rendering a graph that doesn't exist yet.
+The next check is whether the clusters keep making editorial sense as notes are added and whether readers use the atlas in practice. Any additional relation type should name a distinction that changes navigation or lifecycle handling and should earn the cost of a schema change, renderer rule, legend entry, and test. Until then, the graph should continue to say only what the corpus already declares.

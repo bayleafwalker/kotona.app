@@ -79,6 +79,49 @@ test("rejects references to missing or draft public nodes", () => {
   );
 });
 
+test("rejects a draft project used as a published note invalidator", () => {
+  assert.throws(
+    () =>
+      buildKnowledgeGraph(
+        [
+          note("invalidated-note", {
+            invalidatedByProjects: [{ id: "draft-project" }],
+          }),
+          {
+            id: "draft-project",
+            collection: "projects",
+            data: { title: "Draft project", tags: [], draft: true },
+          },
+        ],
+        clusters,
+      ),
+    /missing or draft node: draft-project -> invalidated-note/,
+  );
+});
+
+test("rejects configured clusters without published nodes", () => {
+  assert.throws(
+    () =>
+      buildKnowledgeGraph(
+        [note("current-note")],
+        [
+          ...clusters,
+          {
+            id: "empty",
+            label: "Empty",
+            summary: "This cluster has no published entries.",
+            areas: ["empty"],
+            strongTags: [],
+            anchors: [],
+            overrides: [],
+            region: { x: 200, y: 200 },
+          },
+        ],
+      ),
+    /cluster contains no published nodes: empty/,
+  );
+});
+
 test("emits lifecycle and project edges with their declared direction", () => {
   const graph = buildKnowledgeGraph(
     [

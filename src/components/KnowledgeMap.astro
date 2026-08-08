@@ -38,7 +38,6 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     <svg
       class="knowledge-map"
       viewBox="0 0 1000 620"
-      role="img"
       aria-labelledby="knowledge-map-title knowledge-map-desc"
     >
       <title id="knowledge-map-title">
@@ -117,6 +116,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           graph.nodes.map((node) => (
             <a
               href={node.href}
+              aria-label={`${node.title}. ${node.type === "project" ? "Project" : "Note"}. ${node.summary}`}
               class:list={{
                 "knowledge-node": true,
                 "is-project": node.type === "project",
@@ -154,6 +154,22 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       </g>
     </svg>
   </div>
+
+  <ul class="knowledge-legend" aria-label="Knowledge map legend">
+    <li><span class="legend-note" aria-hidden="true"></span>Note</li>
+    <li><span class="legend-project" aria-hidden="true"></span>Project</li>
+    <li>
+      <span class="legend-relation" aria-hidden="true"></span>Declared relation
+      or project membership
+    </li>
+    <li>
+      <span class="legend-succession" aria-hidden="true"></span>Succession or
+      invalidation
+    </li>
+    <li>
+      <span class="legend-historical" aria-hidden="true"></span>Historical
+    </li>
+  </ul>
 
   <div class="knowledge-index" aria-labelledby="knowledge-index-title">
     <div class="section-heading">

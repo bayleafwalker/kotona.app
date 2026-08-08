@@ -127,6 +127,10 @@ export function buildKnowledgeGraph(
         return left.data.title.localeCompare(right.data.title);
       },
     );
+    if (entriesInCluster.length === 0)
+      throw new Error(
+        `Knowledge cluster contains no published nodes: ${cluster.id}`,
+      );
     entriesInCluster.forEach((entry, index) => {
       const point = coordinates(index, entriesInCluster.length, cluster.region);
       nodes.push({
@@ -154,7 +158,7 @@ export function buildKnowledgeGraph(
     type: KnowledgeEdgeType,
     directed: boolean,
   ) => {
-    if (!byId.has(target))
+    if (!byId.has(source) || !byId.has(target))
       throw new Error(
         `Published edge points to missing or draft node: ${source} -> ${target}`,
       );

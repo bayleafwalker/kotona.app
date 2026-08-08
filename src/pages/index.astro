@@ -5,6 +5,7 @@ import EntryCard from "../components/EntryCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   getVisibleEntries,
+  humanizeLabel,
   sortByDateAndTitle,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
@@ -74,7 +75,7 @@ const recentNotes = visibleNotes
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
-              context={`${entry.data.role} / ${entry.data.area}`}
+              context={`${humanizeLabel(entry.data.role)} · ${humanizeLabel(entry.data.area)}`}
               tags={entry.data.tags}
               date={entry.data.published}
               draft={entry.data.draft}
