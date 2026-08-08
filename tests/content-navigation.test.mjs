@@ -62,11 +62,15 @@ test("the note page always renders lifecycle before the explore prompt before th
   );
 });
 
-test("the note template exposes the declared role alongside claim posture", async () => {
+test("the note template labels format and claim posture explicitly", async () => {
   const source = await readFile(
     fileURLToPath(new URL("../src/pages/notes/[slug].astro", import.meta.url)),
     "utf8",
   );
 
-  assert.match(source, /Role: \{entry\.data\.role\}/);
+  assert.match(
+    source,
+    /Claim posture: \{humanizeLabel\(entry\.data\.status\)\}/,
+  );
+  assert.match(source, /Format: \{humanizeLabel\(entry\.data\.role\)\}/);
 });

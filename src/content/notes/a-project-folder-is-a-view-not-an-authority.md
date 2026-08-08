@@ -1,11 +1,11 @@
 ---
-title: A project folder is a view, not an authority
+title: Treat project folders as views over authoritative state
 role: operating
 status: guiding
 lifecycle: current
 area: agent workflow
 published: 2026-08-06
-lastRevised: 2026-08-06
+lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:

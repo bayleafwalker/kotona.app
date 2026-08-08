@@ -1,11 +1,11 @@
 ---
-title: The node remembers what Git does not
+title: Account for node-local state in GitOps recovery
 role: project-history
 status: guiding
 lifecycle: current
 area: GitOps operations
 published: 2026-08-06
-lastRevised: 2026-08-06
+lastRevised: 2026-08-08
 projects:
   - gitops-cluster
 relates:

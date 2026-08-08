@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: software assurance
 published: 2026-07-20
-lastRevised: 2026-07-20
+lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:
@@ -18,7 +18,7 @@ tags:
   - agents
   - software-engineering
   - references
-summary: A maintained reading map in two tiers -- established sources for intent, assurance arguments, verification, authority, provenance, runtime evidence, and resilience, then a short dated watch list for the composition question that is still open.
+summary: A reading map for building AI systems that can show what they were asked to do, what they did, why a result should be trusted, and how failures are contained. It starts with established assurance practice and ends with a dated watch list of open work.
 explorePrompt: >-
   Build or update a field guide for assurance-managed AI development in my
   context: [describe the domain, system, risk, team, and tools]. Use this note
@@ -38,162 +38,230 @@ explorePrompt: >-
   settled method.
 ---
 
-This is a study guide for the questions behind my recent agent-workflow notes. It is not a claim that those questions form a new field. They already belong to software and systems assurance, requirements engineering, formal methods, tool qualification, secure development, supply-chain security, runtime verification, and resilience engineering.
+A coding agent receives a task, edits a repository, runs tests, and reports that
+the work is complete. To decide whether that result can be used, I need answers
+to several older engineering questions:
 
-The list is organized by the question a resource helps answer. It prefers standards, research programmes, primary project documentation, and industrial reports over summaries of them. A resource belongs here when it provides a better vocabulary, method, or worked system than I could produce from first principles.
+- What was the system supposed to do?
+- Which claim do the tests or reviews support?
+- Did the approved inputs and tool produce this exact output?
+- Which permissions applied to the action?
+- What happens when a check misses a defect?
 
-It has two tiers, and the difference matters more than the entries. Most of the map is settled material with a study path. The last section is not: it is a short, dated watch list of streams where the composition question is currently being worked out in public, and it is thin on purpose.
+Those questions do not form a new discipline called agent assurance. They
+belong to requirements engineering, assurance cases, formal methods, tool
+qualification, secure development, supply-chain security, runtime verification,
+and resilience engineering.
+
+This guide is organized by the question each field helps answer. For every
+source, it also states what the source does not establish. That second part is
+important: provenance can prove where an image came from without proving the
+image is correct, and a passing test can verify a requirement without showing
+that the requirement was the right one.
 
 ## The shortest useful route
 
-For a first pass, I would read these in order:
+For a first pass, read in this order:
 
-1. [SEBoK: Requirements Engineering](https://sebokwiki.org/wiki/Requirements_Engineering), followed by [System Verification](https://sebokwiki.org/wiki/System_Verification) and [System Validation](https://sebokwiki.org/wiki/System_Validation).
-2. [SEI: Assurance Cases Overview](https://www.sei.cmu.edu/library/assurance-cases-overview/) and its [assurance-case resource collection](https://www.sei.cmu.edu/library/resources-for-assurance-cases/).
-3. [SEI: Formal Arguments for Large-Scale Assurance](https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/) for evolving systems and re-assurance.
-4. [RTCA DO-330](https://www.rtca.org/products/do-330/) and [ISO 26262-8](https://www.iso.org/standard/68390.html) on tool qualification, with [CompCert](https://compcert.org/) as the limit case.
-5. [NIST SP 800-218: Secure Software Development Framework](https://csrc.nist.gov/pubs/sp/800/218/final).
-6. [in-toto](https://in-toto.io/docs/getting-started/) and the [SLSA 1.2 specification](https://slsa.dev/spec/v1.2/).
-7. [NIST SP 800-160 Volume 2: Developing Cyber-Resilient Systems](https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final).
-8. [Microsoft Research: Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/) and [Agentic AI Software Engineers: Programming with Trust](https://arxiv.org/abs/2502.13767).
+1. [SEBoK: Requirements Engineering](https://sebokwiki.org/wiki/Requirements_Engineering),
+   [System Verification](https://sebokwiki.org/wiki/System_Verification), and
+   [System Validation](https://sebokwiki.org/wiki/System_Validation).
+2. The SEI introductions to [assurance
+   cases](https://www.sei.cmu.edu/library/assurance-cases-overview/) and
+   [assurance-case resources](https://www.sei.cmu.edu/library/resources-for-assurance-cases/).
+3. [Formal Arguments for Large-Scale
+   Assurance](https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/)
+   for systems that keep changing.
+4. [RTCA DO-330](https://www.rtca.org/products/do-330/) and
+   [ISO 26262-8](https://www.iso.org/standard/68390.html) for the choice between
+   trusting a tool and checking its output.
+5. [NIST SP 800-218](https://csrc.nist.gov/pubs/sp/800/218/final) for secure
+   development across the lifecycle.
+6. [in-toto](https://in-toto.io/docs/getting-started/) and
+   [SLSA 1.2](https://slsa.dev/spec/v1.2/) for recording how an artifact was
+   produced.
+7. [NIST SP 800-160 Volume
+   2](https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final) for recovery when
+   prevention is incomplete.
+8. [Trusted AI-assisted
+   Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)
+   and [Programming with Trust](https://arxiv.org/abs/2502.13767) for current
+   work that connects those methods to coding agents.
 
-That sequence moves from intent, through argument and evidence, into tool qualification, lifecycle controls, provenance, operation, and finally the AI-specific application.
+The sequence starts with intent and ends with agents. Starting with agent tools
+makes familiar engineering controls look newer and stranger than they are.
 
-## What is the system supposed to do?
+## What should the system do?
 
-| Resource                                                                                                                                 | Use it for                                                                                                                                      | It does not replace                                                                |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [SEBoK: Requirements Engineering](https://sebokwiki.org/wiki/Requirements_Engineering)                                                   | The full requirements process: elicitation, analysis, definition, management, and the relationship between stakeholder and system requirements. | Domain judgment or agreement among stakeholders.                                   |
-| [SEBoK: System Requirements Definition](https://sebokwiki.org/wiki/System_Requirements_Definition)                                       | Writing requirements that are necessary, traceable, feasible, and verifiable; planning verification while requirements are created.             | Proof that the selected requirements express the right business or social outcome. |
-| [SEBoK: System Verification](https://sebokwiki.org/wiki/System_Verification)                                                             | Distinguishing conformance to a specified requirement from general confidence that something looks correct.                                     | Validation of the intended use.                                                    |
-| [SEBoK: System Validation](https://sebokwiki.org/wiki/System_Validation)                                                                 | Establishing that the integrated system satisfies stakeholder needs in its intended operational environment.                                    | Verification of every lower-level implementation element.                          |
-| [Microsoft Research: Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/) | Current work on turning natural-language intent into specifications, postconditions, tests, and verification-aware interactions.                | Human responsibility for deciding whether a formalized intent is the intended one. |
+Requirements engineering separates what stakeholders need from the properties
+the system must satisfy. It also distinguishes verification—did we build the
+specified thing?—from validation—does the integrated system serve its intended
+use in its real environment?
 
-This is the first correction to an agent-centric view. A prompt is not a requirements process, and a passing test suite is not validation.
+| Source                                                                                                                               | Use it for                                                                                                   | It does not decide                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| [SEBoK: Requirements Engineering](https://sebokwiki.org/wiki/Requirements_Engineering)                                               | Eliciting, analysing, defining, and maintaining requirements.                                                | Which stakeholder objective should win.                             |
+| [SEBoK: System Requirements Definition](https://sebokwiki.org/wiki/System_Requirements_Definition)                                   | Writing necessary, feasible, traceable, and verifiable requirements.                                         | Whether the selected outcome is socially or commercially right.     |
+| [SEBoK: Verification](https://sebokwiki.org/wiki/System_Verification) and [Validation](https://sebokwiki.org/wiki/System_Validation) | Separating conformance from fitness for intended use.                                                        | The other half of that distinction.                                 |
+| [Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)                 | Research on turning natural-language intent into specifications, tests, and verification-aware interactions. | Whether the formalized intent is the intent people actually wanted. |
 
-## Why should a claim about the system be believed?
+A prompt is not a requirements process. A passing test suite is not, by itself,
+validation.
 
-| Resource                                                                                                                                                         | Use it for                                                                                                                                                             | It does not replace                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| [SEI: Assurance Cases Overview](https://www.sei.cmu.edu/library/assurance-cases-overview/)                                                                       | The core structure of claim, argument, evidence, assumptions, and reviewable confidence.                                                                               | The engineering work that produces credible evidence.                                                                        |
-| [SEI: Resources for Assurance Cases](https://www.sei.cmu.edu/library/resources-for-assurance-cases/)                                                             | A starting library covering security cases, confidence, evidence, and practical construction.                                                                          | A domain-specific safety or security standard.                                                                               |
-| [GSN Community Standard](https://scsc.uk/gsn)                                                                                                                    | The graphical notation practitioners actually write assurance-case arguments in: goals, strategies, solutions, assumptions, and their support relationships.           | The reasoning itself; a well-drawn diagram of a weak argument is still weak.                                                 |
-| [OMG: Structured Assurance Case Metamodel](https://www.omg.org/spec/SACM/2.2/About-SACM)                                                                         | A standard representation for auditable claims, arguments, evidence, terminology, and artifact relationships; the interchange metamodel underneath notations like GSN. | A convincing assurance argument merely because the data is structured.                                                       |
-| [SEI: Formal Arguments for Large-Scale Assurance](https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/) | Current work on maintaining and evaluating formal assurance arguments for evolving systems, including runtime evidence.                                                | Evidence that lifecycle assurance lacks established solutions; the research target is faster and more scalable re-assurance. |
+## Why should a claim be believed?
 
-This is the established home for the intuition behind "derived status is earned." Evidence is not a badge attached to an object. It supports a particular claim, under stated assumptions, about an identified system configuration.
+An assurance case connects a specific claim to an argument and supporting
+evidence. It also exposes assumptions and context. This is a better model than
+attaching a generic confidence badge to a build.
 
-## How can designs and implementations be checked?
+| Source                                                                                                                                                           | Use it for                                                           | It does not provide                                          |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [SEI: Assurance Cases Overview](https://www.sei.cmu.edu/library/assurance-cases-overview/)                                                                       | The basic claim–argument–evidence structure.                         | The engineering work that produces good evidence.            |
+| [GSN Community Standard](https://scsc.uk/gsn)                                                                                                                    | A notation for goals, strategies, evidence, and assumptions.         | Sound reasoning merely because the diagram is neat.          |
+| [OMG SACM](https://www.omg.org/spec/SACM/2.2/About-SACM)                                                                                                         | A structured interchange model for claims, arguments, and artifacts. | A convincing argument merely because it is machine-readable. |
+| [SEI: Formal Arguments for Large-Scale Assurance](https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/) | Maintaining assurance arguments as systems and evidence change.      | Proof that reassessment is already cheap or automatic.       |
 
-| Resource                                                                                                                                                                                | Use it for                                                                                                                                     | It does not replace                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [TLA+](https://lamport.azurewebsites.net/tla/tla.html) and [Specifying Systems](https://lamport.azurewebsites.net/tla/book.html)                                                        | Precise models of stateful, concurrent, and distributed designs; model checking safety and liveness properties before implementation.          | Implementation-level proof or a correct specification.                                 |
-| [Dafny](https://dafny.org/)                                                                                                                                                             | Executable programs with specifications, preconditions, postconditions, invariants, and static verification.                                   | Validation that the specification captures the intended behaviour.                     |
-| [How Amazon Web Services uses formal methods](https://www.amazon.science/publications/how-amazon-web-services-uses-formal-methods)                                                      | An industrial account of using formal specification to find design defects in distributed systems.                                             | A claim that every system warrants the same verification cost.                         |
-| [Cedar](https://docs.cedarpolicy.com/) and its [verification-guided development account](https://aws.amazon.com/about-aws/whats-new/2023/05/cedar-open-source-language-access-control/) | A concrete example of separating authorization policy from application code and validating a production implementation against a formal model. | Complete application assurance; it addresses authorization decisions.                  |
-| [Runtime Verification community](https://runtime-verification.github.io/)                                                                                                               | Specification-based monitoring and analysis during testing or operation, including combinations of static and dynamic techniques.              | Proof over executions that were not observed unless the monitor enforces the property. |
+This is where the local phrase “derive status only from reproducible evidence”
+belongs. The evidence supports a named claim about an identified configuration;
+it is not a permanent property of the file that happened to pass.
 
-Formal methods are not one tool or one level of effort. A small TLA+ model for a dangerous state transition and a fully verified implementation are both formal work, but they buy different claims.
+## How can the design or implementation be checked?
 
-## When can the producer be trusted instead of the output?
+Different methods support different claims:
 
-Safety-critical engineering answered this before coding agents existed. Either qualify a development tool to a level commensurate with the errors it can inject, or verify its output. There is no third option, which is exactly why it is the direct answer to trusting generated code without reading every line.
+| Source                                                                                                                           | Useful claim                                                                                   | Limit                                                              |
+| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| [TLA+](https://lamport.azurewebsites.net/tla/tla.html) and [Specifying Systems](https://lamport.azurewebsites.net/tla/book.html) | A model of a concurrent or distributed design satisfies checked safety or liveness properties. | The implementation may differ, and the specification may be wrong. |
+| [Dafny](https://dafny.org/)                                                                                                      | Code satisfies stated preconditions, postconditions, and invariants.                           | The stated properties may omit the real requirement.               |
+| [AWS use of formal methods](https://www.amazon.science/publications/how-amazon-web-services-uses-formal-methods)                 | Formal specification can find design defects in production-scale distributed systems.          | Every system needs the same level of formal work.                  |
+| [Cedar](https://docs.cedarpolicy.com/)                                                                                           | Authorization policy can be separated, analysed, and checked against a formal model.           | Assurance of the whole application.                                |
+| [Runtime Verification](https://runtime-verification.github.io/)                                                                  | A running system can be monitored against a specification.                                     | Claims about unobserved paths unless the monitor enforces them.    |
 
-| Resource                                                                                         | Use it for                                                                                                                                              | It does not replace                                                                    |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [RTCA DO-330: Software Tool Qualification Considerations](https://www.rtca.org/products/do-330/) | The airborne-systems tool-qualification model: qualifying a tool to a level set by the errors it could introduce, otherwise verifying its output.       | Output verification, when a tool cannot be qualified.                                  |
-| [ISO 26262-8: Supporting processes](https://www.iso.org/standard/68390.html)                     | The automotive equivalent -- "confidence in the use of software tools" -- for development and verification tools.                                       | Domain-specific safety judgment about a given tool.                                    |
-| [CompCert](https://compcert.org/)                                                                | The limit case: a C compiler whose generator is formally verified, so trust rests on a proof about the producer rather than on re-checking each output. | Validation that the specification the compiler is trusted against is the intended one. |
+A small TLA+ model of a dangerous state transition and a verified program are
+both formal work. They answer different questions and cost different amounts.
 
-A language model cannot presently be qualified under these regimes: non-deterministic, unbounded in the errors it can inject, and opaque to the analysis qualification requires. That is not a gap in the framework. The framework's own logic selects the other branch and requires the output to be verified.
+## Can the producer be trusted instead of every output?
 
-## How is assurance integrated into ordinary development?
+Safety-critical engineering already has a direct answer. A development tool is
+qualified to a level appropriate to the errors it can introduce, or its output
+is verified.
 
-| Resource                                                                                                        | Use it for                                                                                                                                              | It does not replace                                                                       |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| [NIST SP 800-218: Secure Software Development Framework](https://csrc.nist.gov/pubs/sp/800/218/final)           | A lifecycle-wide set of secure development practices that can be integrated into existing SDLC models.                                                  | Organization-specific implementation, evidence, and risk decisions.                       |
-| [SEBoK: Model-Based Systems Engineering](https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29) | Maintaining formalized relationships among requirements, architecture, analysis, verification, validation, and assurance.                               | Useful models automatically; the model still needs a purpose and disciplined maintenance. |
-| [AI for the SDLC](https://code.mil/AI4SDLC/)                                                                    | Current guidance for placing AI into governed software workflows, including autonomy levels, trust boundaries, human-AI teaming, and workflow controls. | A universal commercial architecture or proof that a selected agent is safe.               |
-| [GitHub Spec Kit](https://github.github.com/spec-kit/)                                                          | A practical, open-source, specification-driven harness that separates specification, planning, tasks, and implementation for coding agents.             | Assurance cases, independent verification, provenance guarantees, or formal correctness.  |
+| Source                                                 | Use it for                                                                     | Limit                                                                 |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| [RTCA DO-330](https://www.rtca.org/products/do-330/)   | Tool qualification in airborne systems.                                        | It does not remove output checking when the tool cannot be qualified. |
+| [ISO 26262-8](https://www.iso.org/standard/68390.html) | Confidence in software tools used for automotive development and verification. | Domain-specific judgment is still required.                           |
+| [CompCert](https://compcert.org/)                      | The limit case: a compiler backed by a formal correctness proof.               | The source program and specification can still be wrong.              |
 
-The relevant question is not whether a lifecycle method uses the word "agent." It is whether its controls still hold when the implementation actor is an agent.
+A general language model is non-deterministic, can inject many classes of error,
+and is opaque to the analysis these regimes expect. Under this framework, that
+selects output verification. It does not justify trusting generated code because
+the model is widely used or because the output looks conventional.
 
-## Who produced this artifact, from what, and under whose authority?
+## How does this fit ordinary development?
 
-| Resource                                            | Use it for                                                                                                                         | It does not replace                                                         |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| [in-toto](https://in-toto.io/docs/getting-started/) | Defining authorized supply-chain steps and functionaries, then recording signed metadata about materials, products, and execution. | Requirements traceability or semantic correctness of the produced software. |
-| [SLSA 1.2](https://slsa.dev/spec/v1.2/)             | Incremental source and build integrity guarantees, attestation formats, and verifiable provenance.                                 | Trust in the source content itself.                                         |
-| [Sigstore](https://docs.sigstore.dev/)              | Signing and verifying artifacts and attestations with identity-bound certificates and transparency logs.                           | A policy deciding which identities, workflows, or claims should be trusted. |
+| Source                                                                                                          | Use it for                                                                                          | It does not provide                                            |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [NIST Secure Software Development Framework](https://csrc.nist.gov/pubs/sp/800/218/final)                       | Secure practices integrated through an existing development lifecycle.                              | Local implementation or risk decisions.                        |
+| [SEBoK: Model-Based Systems Engineering](https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29) | Maintaining relationships among requirements, architecture, analysis, verification, and validation. | Useful models without a maintenance discipline.                |
+| [AI for the SDLC](https://code.mil/AI4SDLC/)                                                                    | Current guidance on autonomy levels, workflow controls, and human–AI teaming.                       | A universal architecture or proof that a chosen agent is safe. |
+| [GitHub Spec Kit](https://github.github.com/spec-kit/)                                                          | A concrete separation of specification, planning, tasks, and implementation.                        | Independent evidence that the implementation is correct.       |
 
-These resources are the closest operational neighbours to attempt records, evidence receipts, and artifact lineage. They show why provenance is more than logging, but also why provenance alone does not establish that the result was wanted or correct.
+The test is simple: do the lifecycle controls still work when an agent performs
+the implementation step? Renaming the lifecycle “agentic” does not strengthen
+it.
 
-## How should authority be constrained?
+## Who produced this result?
 
-The classical term worth learning is the [reference monitor and security-kernel model](https://csrc.nist.gov/glossary/term/security_kernel). The trusted mechanism must mediate relevant access, resist modification, and be small enough to verify. That is a stricter and more useful boundary than calling an entire application an assurance kernel.
+| Source                                              | Use it for                                                                                 | It does not establish                                            |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| [in-toto](https://in-toto.io/docs/getting-started/) | Authorized supply-chain steps, actors, materials, products, and signed execution metadata. | That the requested software was semantically correct.            |
+| [SLSA 1.2](https://slsa.dev/spec/v1.2/)             | Incremental source and build integrity guarantees and verifiable provenance.               | That the source itself should be trusted.                        |
+| [Sigstore](https://docs.sigstore.dev/)              | Identity-bound signing and transparent verification of artifacts and attestations.         | A policy deciding which identities and workflows are acceptable. |
 
-[Cedar](https://docs.cedarpolicy.com/) is a practical example for authorization policy: principals, actions, resources, and context are evaluated by a dedicated policy engine rather than scattered through application code. The broader lesson is not that Cedar is required. It is that authority should be explicit, analyzable, and enforced by a component that does not depend on the agent voluntarily respecting prose.
+These methods make attempt records and artifact lineage stronger than ordinary
+logs. They still cannot prove that the result was wanted.
 
-## What happens when prevention is incomplete?
+## Who may act, and what happens after failure?
 
-| Resource                                                                                   | Use it for                                                                                                           | It does not replace                                                       |
-| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [NIST SP 800-160 Volume 2](https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final)              | Engineering systems to anticipate, withstand, recover from, and adapt to adverse conditions and compromise.          | Prevention, or a guarantee that recovery procedures work without testing. |
-| [Google SRE books](https://sre.google/books/)                                              | Operational confidence through testing, monitoring, gradual rollout, error budgets, incident response, and rollback. | Formal proof or domain-specific safety assurance.                         |
-| [Google SRE: Safe configuration change](https://sre.google/workbook/configuration-design/) | Concrete guidance on gradual deployment, automatic stop conditions, hermetic change, and rollback.                   | A safe underlying state transition merely because deployment is gradual.  |
+The [reference monitor and security-kernel
+model](https://csrc.nist.gov/glossary/term/security_kernel) says the trusted
+mechanism should mediate relevant access, resist modification, and be small
+enough to inspect. [Cedar](https://docs.cedarpolicy.com/) provides one practical
+example: principals, actions, resources, and context are evaluated by a policy
+engine rather than left to an agent to interpret from prose.
 
-Recovery is not an apology attached after correctness. It is one of the established ways systems remain dependable when the available assurance is necessarily incomplete.
+Prevention will remain incomplete. Recovery therefore belongs in the design:
 
-## What is specifically useful for AI-assisted software development?
+| Source                                                                                     | Use it for                                                                                 | It does not replace                                                   |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| [NIST SP 800-160 Volume 2](https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final)              | Designing systems to anticipate, withstand, recover from, and adapt to adverse conditions. | Prevention or tested recovery procedures.                             |
+| [Google SRE books](https://sre.google/books/)                                              | Monitoring, gradual rollout, incident response, error budgets, and rollback.               | Formal proof or domain-specific safety assurance.                     |
+| [Google SRE: Safe configuration change](https://sre.google/workbook/configuration-design/) | Gradual deployment, stop conditions, hermetic change, and rollback.                        | A safe underlying state transition merely because rollout is gradual. |
 
-| Resource                                                                                                                                            | Use it for                                                                                                                          | Boundary                                                                                       |
-| --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| [Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)                                | Research connecting LLMs with specifications, programming languages, testing, analysis, and verification.                           | A research programme, not an off-the-shelf assurance platform.                                 |
-| [Agentic AI Software Engineers: Programming with Trust](https://arxiv.org/abs/2502.13767)                                                           | A concise argument for combining coding agents with existing analysis and verification tools rather than trusting generation alone. | An agenda and synthesis, not a complete implementation method.                                 |
-| [AI for the SDLC: AI workflow design and governance](https://code.mil/AI4SDLC/plays/ai_sdlc_workflows-play/)                                        | Task-level autonomy, workflow governance, personas, synchronous and asynchronous execution, and human oversight.                    | Context-specific guidance that still requires local policy and implementation.                 |
-| [GitHub Spec Kit](https://github.github.com/spec-kit/)                                                                                              | A concrete way to make intent, planning, and tasks durable inputs to an agent workflow.                                             | Structured prompts are not independent evidence that the implementation is correct.            |
-| [DARPA AI Cyber Challenge results](https://www.darpa.mil/news/2025/aixcc-results)                                                                   | Evidence that autonomous systems can combine AI with program analysis to find and patch vulnerabilities at substantial scale.       | End-to-end software assurance, requirements validation, or general business-logic correctness. |
-| [Martin Kleppmann: Prediction: AI will make formal verification go mainstream](https://martin.kleppmann.com/2025/12/08/ai-formal-verification.html) | An accessible argument for pairing cheap code generation with machine-checked specifications and proofs.                            | Evidence that formalization itself is cheap or that the specification is right.                |
+An agent should not be able to grant itself a permission, redefine a failed
+check, or hide the information needed to undo its action.
 
-The AI-specific material is useful after the assurance vocabulary, not before it. Otherwise ordinary requirements, verification, provenance, and operational controls are easily mistaken for new agent concepts.
+## AI-specific work worth following
 
-None of these resources yet answer the composition question: how to assemble these controls into a proportionate, AI-integrated process, with oversight calibrated to risk and human review placed where it earns its cost. That is a recognized, crowded, open problem -- not a gap this map closes by citation. The map's job is to supply the established primitives it is composed from.
+The established material above supplies the vocabulary and methods. Current AI
+work asks how to combine them without making every change prohibitively
+expensive.
 
-## Where the composition is being worked out
+Useful starting points include:
 
-Everything above is a study path: mature methods, primary sources, decades of use. This section is not that. It is a watch list, and it is deliberately dated, because the composition question has no textbook, no curriculum, and no settled reference a newcomer can study. What it has is four active streams, all of them under three years old, most of them still being written.
+- [Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)
+  and [Programming with Trust](https://arxiv.org/abs/2502.13767), which connect
+  agents with specification, testing, analysis, and verification;
+- [AI for the SDLC workflow
+  guidance](https://code.mil/AI4SDLC/plays/ai_sdlc_workflows-play/), which works
+  through task autonomy and oversight;
+- [DARPA AI Cyber Challenge
+  results](https://www.darpa.mil/news/2025/aixcc-results), which demonstrate
+  automated analysis and patching at substantial scale;
+- [METR's developer
+  RCT](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/),
+  which found experienced developers slower with AI assistance while they
+  believed they were faster;
+- [DORA's State of AI-assisted Software
+  Development](https://dora.dev/research/2025/dora-report/) and
+  [AI Capabilities Model](https://dora.dev/research/ai/ai-capabilities-model/),
+  which examine AI in delivery processes rather than as an isolated tool; and
+- the public [Exploring Gen
+  AI](https://martinfowler.com/articles/exploring-gen-ai.html) series, including
+  work on human intervention, internal quality, spec-driven development,
+  [harness
+  engineering](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering-memo.html),
+  and [context
+  engineering](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html).
 
-| Stream                                                                                                                                                                                                                                                                               | Why follow it                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Boundary                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Exploring Gen AI](https://martinfowler.com/articles/exploring-gen-ai.html) (Thoughtworks, on martinfowler.com)                                                                                                                                                                      | The closest thing to the composition question worked in public by named practitioners. [Humans and Agents in Software Engineering Loops](https://martinfowler.com/articles/exploring-gen-ai/humans-and-agents.html) (March 2026) is directly about where humans intervene and steer; [Assessing internal quality while coding with an agent](https://martinfowler.com/articles/exploring-gen-ai/ccmenu-quality.html) (January 2026) and [Understanding Spec-Driven Development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html) (October 2025) are worked comparisons rather than positions. [Birgitta Böckeler](https://birgitta.info/) maintains the running state-of-play. | A consultancy essay series. Practitioner reports with the sample size that implies, not measurement.                                                          |
-| [DORA: State of AI-assisted Software Development](https://dora.dev/research/2025/dora-report/) and the [AI Capabilities Model](https://dora.dev/research/ai/ai-capabilities-model/)                                                                                                  | The only large-N annual measurement of AI-integrated delivery _processes_ rather than tools. Its core finding is process-level: AI amplifies, magnifying the strengths of high-performing organizations and the dysfunctions of struggling ones, and raising throughput at the cost of stability where the foundation is weak.                                                                                                                                                                                                                                                                                                                                                                     | Google-published; discount accordingly. Survey-based, so it measures perception and correlation, not causal process design.                                   |
-| [AI for the SDLC](https://code.mil/AI4SDLC/) -- follow [the repository](https://github.com/Code-dot-mil/AI4SDLC), not the site                                                                                                                                                       | The most credible non-vendor process guidance in existence, and the repository is where the still-unwritten plays get drafted before they appear.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Half-written by construction: the governance play and the calibrated-trust material are still placeholders. A defence-context playbook, not a general method. |
-| The trusted-AI-software-engineering agenda -- [Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/), [Programming with Trust](https://arxiv.org/abs/2502.13767), and the SEI's AI-augmented software engineering work | The verification-integration side of the same question: which established analysis attaches where in an agent workflow.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | A research agenda. It proposes couplings; it does not report the operating cost of a composed process.                                                        |
+This section is a dated watch list, not a curriculum. Research programmes,
+practitioner reports, government guidance, and vendor-sponsored surveys carry
+different kinds of evidence. None yet supplies a settled, proportionate method
+for composing all the controls above.
 
-Two single measurements sit alongside these rather than inside them. [METR's developer RCT](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) is the sharpest available measurement of the review bottleneck -- experienced developers were slower with AI assistance while believing they were faster -- and the [DARPA AI Cyber Challenge results](https://www.darpa.mil/news/2025/aixcc-results) are the sharpest available demonstration of what automated analysis plus generation can do unattended.
+## How this changes the local vocabulary
 
-One piece of vocabulary is worth taking from this tier: [harness engineering](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering-memo.html) (February 2026), the work of building the constraints, context, and checks an agent runs inside, alongside its sibling [context engineering](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html). It names the thing my agent-workflow notes keep circling, and its date is the point: the composition layer did not have a widely used name until a few months ago. That is not evidence of an unclaimed conceptual layer -- the primitives it composes are all in the sections above -- but it does explain why the layer felt unnamed. It was.
-
-The honest summary of the two tiers: **the primitives have a study path; the composition has a watch list.**
-
-## Mapping these resources back to local notes
-
-| Local phrase or note                                                                                    | Established neighbourhood                                                                        | Consequence                                                                                                     |
-| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| [Derived status is earned](/notes/derived-status-is-earned/)                                            | Assurance cases, confidence arguments, evidence validity, configuration identification           | Keep the evidence intuition; replace local status language with explicit claims and applicability where useful. |
-| [The agent is not the application](/notes/the-agent-is-not-the-application/)                            | Reference monitors, trusted computing bases, authorization policy, runtime enforcement           | Narrow the trusted component. The application may own an assurance process without being a verifiable kernel.   |
-| [The work between the ticket and the agent](/notes/the-work-between-the-ticket-and-the-agent/)          | Requirements traceability, workflow provenance, separation of duties, in-toto-style attestations | Treat a neutral attempt record as a local design option, not an unoccupied industry layer.                      |
-| [The missing layer is binding, not intelligence](/notes/the-missing-layer-is-binding-not-intelligence/) | Systems integration, digital thread, assurance cases, MBSE, configuration management             | Test the proposed binding against established lifecycle models before claiming a missing abstraction.           |
+| Local note                                                                                              | Established neighbourhood                                                | Correction to keep                                                            |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| [Derive status only from reproducible evidence](/notes/derived-status-is-earned/)                       | Assurance cases and configuration identification                         | Attach evidence to a claim and configuration, not a generic status.           |
+| [The agent is not the application](/notes/the-agent-is-not-the-application/)                            | Reference monitors and trusted computing bases                           | Keep the trusted mechanism smaller than the whole application.                |
+| [The work between the ticket and the agent](/notes/the-work-between-the-ticket-and-the-agent/)          | Requirements traceability, provenance, and separation of duties          | Treat a neutral attempt record as one implementation choice, not a new field. |
+| [The missing layer is binding, not intelligence](/notes/the-missing-layer-is-binding-not-intelligence/) | Systems integration, assurance cases, MBSE, and configuration management | Test the proposed bindings against established lifecycle methods.             |
 
 ## Maintenance rule
 
-New entries should answer four questions:
+Add a resource only when the entry can answer four questions:
 
-1. What engineering question does this resource answer?
-2. What claim can its method support?
-3. What does it explicitly not solve?
-4. Is it a primary source, a standard, an industrial report, a research result, or an accessible interpretation?
+1. Which engineering question does it help answer?
+2. Which claim can its method support?
+3. What does it leave unsolved?
+4. What kind of source is it: standard, primary documentation, research result,
+   industrial report, or interpretation?
 
-The note should not promote a problem to "unsolved" because the method is expensive, unfamiliar, or poorly adopted. It should also not promote a tool to "assurance" because it produces more structured output than a chat session.
+Do not call a problem unsolved merely because the established method is
+expensive or poorly adopted. Do not call a structured agent workflow assurance
+merely because it produces more files than a chat session.
 
-The purpose is smaller: keep a reliable route back to the fields that already know what these questions are called.
+The purpose of this guide is modest: provide a reliable route from an agent
+workflow problem to the engineering fields that already know how to name and
+test it.

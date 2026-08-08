@@ -82,6 +82,22 @@ test("does not count historical links toward current entry-point weight", () => 
   );
 });
 
+test("does not count a current link to a historical or draft target", () => {
+  const ranked = rankEntryPoints([
+    entry("current-source", {
+      relates: [{ id: "historical-target" }, { id: "draft-target" }],
+    }),
+    entry("current-peer"),
+    entry("historical-target", { lifecycle: "archived" }),
+    entry("draft-target", { draft: true }),
+  ]);
+
+  assert.deepEqual(
+    ranked.map((item) => item.id),
+    ["current-peer", "current-source"],
+  );
+});
+
 test("falls back to title order when status and weight tie", () => {
   const ranked = rankEntryPoints([entry("zebra"), entry("apple")]);
   assert.deepEqual(

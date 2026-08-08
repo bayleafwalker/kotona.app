@@ -38,6 +38,12 @@ jobs:
       - name: Project freshness policy
         run: npm run check:content-freshness
 
+      - name: Generated content shape
+        run: npm run check:content-shape
+
+      - name: Explore-prompt corpus checks
+        run: npm run check:explore-prompts
+
       - name: Type, content, and editorial-role checks
         run: npm run check
 

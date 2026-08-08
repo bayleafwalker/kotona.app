@@ -5,9 +5,12 @@ register; do not use the same polished thesis-essay form for every kind of
 knowledge. `status` says how strongly the note is claimed, while `lifecycle`
 says whether it remains current. They are separate from role.
 
-Use a direct, analytical, purpose-led voice. Prefer concrete claims over
-ceremonial openings, generic praise, and corporate padding. A concise note is
-better than a complete-looking note that says nothing.
+Use a direct, analytical, purpose-led voice. Start with the person, system,
+event, decision, or failed check that gives the reader something concrete to
+hold. Introduce abstractions when they clarify that case; do not make every
+paragraph carry a reusable principle. Prefer concrete claims over ceremonial
+openings, generic praise, and corporate padding. A concise note is better than
+a complete-looking note that says nothing.
 
 ## Roles and registers
 
@@ -54,20 +57,25 @@ record.
 
 ## General structure
 
-- Describe systems through responsibilities, boundaries, artifacts, states,
-  interfaces, phases, and failure modes.
+- Use responsibilities, boundaries, artifacts, states, interfaces, phases, and
+  failure modes as review lenses, not required surface vocabulary. Name the
+  owner, database, test, command, or service when that is clearer.
 - Make material assumptions explicit, then proceed. Do not turn minor ambiguity
   into a clarification ritual.
 - Present at most four credible options. Recommend one when the evidence is
   sufficient, including its cost and failure case.
-- End with a bounded implementation slice, verification, rollback path, or the
-  next decision.
+- End in the form the role needs: an operating note may need a validation or
+  rollback path; a synthesis may end with the implication; an exploration may
+  leave an open question; project history may end with the fact that changed the
+  decision. Stop when the argument is complete.
 
 ## Editorial checks
 
 Before publishing, ask:
 
 - Does the opening state the actual point?
+- Does it introduce a concrete object, actor, event, or example before relying
+  on a cluster of abstract nouns?
 - Does the opening and structure match the declared role?
 - For an exploration, is the working model visibly provisional and testable?
 - For an operating note, can a reader identify scope, validation, and failure
@@ -78,6 +86,46 @@ Before publishing, ask:
 - Is there evidence for current-state claims?
 - Have rough dictation, ambiguity, and filler been removed without sanding off
   deliberate bluntness?
+- Has a contrast or polished principle earned its place, rather than carrying
+  the paragraph by default?
+
+## Calibration notes
+
+Before drafting or substantially revising a note, read the closest example
+below. These are positive examples of the site's intended range, not structures
+to copy sentence by sentence.
+
+- **Operating:**
+  [`the-coordinator-never-touches-the-repo.md`](../src/content/notes/the-coordinator-never-touches-the-repo.md)
+  grounds a strict rule in an actual dispatch workflow.
+- **Operating:**
+  [`the-target-state-is-not-the-plan.md`](../src/content/notes/the-target-state-is-not-the-plan.md)
+  shows how a broad planning rule can alternate between plain explanation,
+  examples, tables, and checks.
+- **Synthesis:**
+  [`a-reference-architecture-is-a-hypothesis-library.md`](../src/content/notes/a-reference-architecture-is-a-hypothesis-library.md)
+  introduces an abstract architecture argument through a familiar misuse and
+  then earns its vocabulary.
+- **Synthesis:**
+  [`a-field-guide-to-assurance-managed-ai-development.md`](../src/content/notes/a-field-guide-to-assurance-managed-ai-development.md)
+  organizes dense source material around questions a practitioner can ask.
+- **Exploration:**
+  [`the-recommendation-does-not-need-authority.md`](../src/content/notes/the-recommendation-does-not-need-authority.md)
+  starts with recognizable enterprise work before testing a larger automation
+  claim.
+- **Project history:**
+  [`the-candidate-passed-the-upgrade-did-not.md`](../src/content/notes/the-candidate-passed-the-upgrade-did-not.md)
+  lets chronology, timings, and the failed transition carry the lesson.
+
+Do not revise an older note merely to make it resemble these examples. Apply
+the current guide when its claim, evidence, lifecycle, or practical advice is
+substantively touched; otherwise preserve the public record.
+
+When adding notes to the knowledge map, review the title, summary, and opening
+together. Read the title and summary without local context, as they will appear
+in a map node, search result, feed, or agent retrieval result. If they do not
+name the subject and useful consequence, correct them as part of that
+substantive map pass while keeping the existing slug stable where possible.
 
 For technical notes, be implementation-facing and candid. For project pages,
 explain the operating model and what is currently true. Do not make the site

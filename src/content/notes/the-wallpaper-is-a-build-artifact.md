@@ -48,7 +48,7 @@ plates and review crops. Every receipt records the sha256 of every artifact it
 describes, so the tracked files bind each named artifact to a digest.
 
 This is the concrete case behind an argument I made abstractly in
-[Derived status is earned](/notes/derived-status-is-earned/): generation does not
+[Derive status only from reproducible evidence](/notes/derived-status-is-earned/): generation does not
 make an artifact disposable, assurance does. The build in question is
 `v3b-pipeline-001` — 48.000 seconds, 1152 frames, 960x412 at 24 fps, seed
 `730021`, four motion systems, rendered from `scene-v3b-48s.json`. Authoring

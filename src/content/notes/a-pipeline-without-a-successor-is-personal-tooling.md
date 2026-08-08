@@ -1,11 +1,11 @@
 ---
-title: A pipeline without a successor is personal tooling
+title: Design internal pipelines for succession, not just operation
 role: exploration
 status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-07-19
-lastRevised: 2026-07-22
+lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:

@@ -1,5 +1,6 @@
 ---
 import { tagSlug } from "../lib/tag-slug.js";
+import { humanizeLabel } from "../lib/content";
 
 type Props = {
   tags: string[];
@@ -15,7 +16,7 @@ const uniqueTags = [...new Set(tags)];
     <ul class="tag-list" aria-label={label}>
       {uniqueTags.map((tag) => (
         <li>
-          <a href={`/tags/${tagSlug(tag)}/`}>{tag}</a>
+          <a href={`/tags/${tagSlug(tag)}/`}>{humanizeLabel(tag)}</a>
         </li>
       ))}
     </ul>

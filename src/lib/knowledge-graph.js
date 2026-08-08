@@ -27,8 +27,9 @@
 export function rankEntryPoints(entries) {
   const neighborIds = new Map();
   const currentEntries = entries.filter(
-    (entry) => entry.data.lifecycle === "current",
+    (entry) => !entry.data.draft && entry.data.lifecycle === "current",
   );
+  const eligibleIds = new Set(currentEntries.map((entry) => entry.id));
 
   const neighborsFor = (id) => {
     let set = neighborIds.get(id);
@@ -41,6 +42,7 @@ export function rankEntryPoints(entries) {
 
   for (const entry of currentEntries) {
     for (const related of entry.data.relates) {
+      if (!eligibleIds.has(related.id)) continue;
       neighborsFor(entry.id).add(related.id);
       neighborsFor(related.id).add(entry.id);
     }

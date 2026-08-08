@@ -33,6 +33,8 @@ export const GET: APIRoute = async ({ site }) => {
     "## Site map",
     "",
     `- [Home](${new URL("/", baseUrl)})`,
+    `- [Explore](${new URL("/explore/", baseUrl)})`,
+    `- [Knowledge graph data](${new URL("/knowledge.json", baseUrl)})`,
     `- [Projects](${new URL("/projects/", baseUrl)})`,
     `- [Notes](${new URL("/notes/", baseUrl)})`,
     `- [Tags](${new URL("/tags/", baseUrl)})`,

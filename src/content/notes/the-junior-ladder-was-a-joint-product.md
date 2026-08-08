@@ -121,7 +121,7 @@ restoring the joint-product economics that automation removed from routine
 output.
 
 The companion note
-[A pipeline without a successor is personal tooling](/notes/a-pipeline-without-a-successor-is-personal-tooling/)
+[Design internal pipelines for succession, not just operation](/notes/a-pipeline-without-a-successor-is-personal-tooling/)
 defines the recorded substrate and drill needed to make that claim testable.
 
 ## Reconciliation is the remaining apprenticeship seat
