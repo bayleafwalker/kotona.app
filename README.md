@@ -43,7 +43,6 @@ npm run check
 npm run build
 npm run test:worker
 npm run test:retrieval
-npm run check:links
 ```
 
 Or run the combined validation flow:
@@ -51,6 +50,22 @@ Or run the combined validation flow:
 ```bash
 npm run validate
 ```
+
+Live external-link fetching is intentionally separate from publication CI. A
+weekly and manually dispatched `external links` workflow reports third-party
+link health without blocking a valid build or deployment. Run it locally when
+investigating that report or changing cited sources:
+
+```bash
+npm run check:links
+```
+
+Timeouts, DNS failures, `403`/`429`, and `5xx` responses are warnings. Confirm a
+definitive `404` or `410` in a second scheduled or manual run before changing a
+citation.
+
+On a network that sinkholes the Cloudflare Web Analytics beacon, use
+`LINK_CHECK_LOCAL_NETWORK_POLICY=1 npm run check:links`.
 
 ## Content authoring
 

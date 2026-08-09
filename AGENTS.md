@@ -30,16 +30,27 @@ Use Node 24 and validate ordinary changes with:
 npm run validate
 ```
 
-Content frontmatter, collection references, freshness, build output, Worker
-behavior, and external links are all part of that check. Run `npm run
-cf-typegen` only after intentional Worker binding changes.
+Content frontmatter, collection references, freshness, build output, and Worker
+behavior are all part of that check. Run `npm run cf-typegen` only after
+intentional Worker binding changes.
+
+External reachability is a weekly and manually dispatched maintenance signal,
+not a publication or deployment invariant. The `external links` workflow runs
+`npm run check:links`; run the same command locally when investigating its
+report or substantially changing cited sources. Remote timeouts, bot policy,
+`403`/`429`, and `5xx` responses are warnings rather than proof of link rot.
+Treat one definitive `404` or `410` as an observation; change or remove a
+citation only after the same result is confirmed on a second scheduled or
+manual run. None of these remote results may block an otherwise valid site
+revision.
 
 On a network that sinkholes the Cloudflare Web Analytics beacon, set
 `LINK_CHECK_LOCAL_NETWORK_POLICY=1` so `check:links` reports that one declared
-URL as an intentional block rather than a failure. The policy is off by default,
-it covers only exactly declared URLs, and it accepts only DNS/sinkhole-shaped
-failures — CI keeps checking the beacon normally. Add `LINK_CHECK_SINK_ADDRESSES`
-if the local resolver answers with something other than `0.0.0.0` or `::`.
+URL as an intentional block rather than a generic transport warning. The policy
+is off by default, it covers only exactly declared URLs, and it accepts only
+DNS/sinkhole-shaped failures. The scheduled workflow keeps checking the beacon
+normally. Add `LINK_CHECK_SINK_ADDRESSES` if the local resolver answers with
+something other than `0.0.0.0` or `::`.
 
 `wrangler.jsonc` is the deployment source of truth. Do not deploy with Wrangler,
 change Cloudflare bindings or custom domains, or expose tokens, internal paths,

@@ -16,6 +16,8 @@ import {
 const scriptPath = fileURLToPath(
   new URL("../scripts/check-explore-prompts.mjs", import.meta.url),
 );
+const subprocessEnv = { ...process.env };
+delete subprocessEnv.NODE_TEST_CONTEXT;
 
 function note(id, overrides = {}) {
   return { id, filePath: `${id}.md`, draft: false, data: { ...overrides } };
@@ -111,6 +113,7 @@ test("CLI passes on a fixture corpus with no duplicates and reports coverage", a
 
   const result = spawnSync(process.execPath, [scriptPath, "--root", root], {
     encoding: "utf8",
+    env: subprocessEnv,
   });
 
   assert.equal(result.status, 0, result.stderr);
@@ -137,6 +140,7 @@ test("CLI fails when two notes publish the same prompt text", async (t) => {
 
   const result = spawnSync(process.execPath, [scriptPath, "--root", root], {
     encoding: "utf8",
+    env: subprocessEnv,
   });
 
   assert.equal(result.status, 1);

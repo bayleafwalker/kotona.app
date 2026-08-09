@@ -87,10 +87,17 @@ test("extracts and normalizes HTTP links from Markdown and Astro source", () => 
   ]);
 });
 
-test("status policy is strict except for exact bot-blocked URLs", () => {
+test("status policy fails definitive misses and warns on remote policy or outages", () => {
   assert.equal(classifyStatus("https://example.test/", 204).ok, true);
   assert.equal(classifyStatus("https://example.test/", 301).ok, true);
-  assert.equal(classifyStatus("https://example.test/", 403).ok, false);
+  assert.deepEqual(classifyStatus("https://example.test/", 403), {
+    ok: true,
+    kind: "remote-warning",
+    reason: "Transient or policy-shaped HTTP 403",
+  });
+  assert.equal(classifyStatus("https://example.test/", 404).ok, false);
+  assert.equal(classifyStatus("https://example.test/", 410).ok, false);
+  assert.equal(classifyStatus("https://example.test/", 503).ok, true);
   assert.deepEqual(
     classifyStatus("https://www.linkedin.com/in/juhahuotari/", 999),
     {
@@ -116,7 +123,7 @@ test("status policy is strict except for exact bot-blocked URLs", () => {
   );
   assert.equal(
     classifyStatus("https://www.oecd.org/en/publications/another.html", 403).ok,
-    false,
+    true,
   );
   assert.equal(
     classifyStatus(
@@ -139,7 +146,7 @@ test("status policy is strict except for exact bot-blocked URLs", () => {
   );
   assert.equal(
     classifyStatus("https://www.iso.org/standard/other.html", 403).ok,
-    false,
+    true,
   );
 });
 
@@ -157,6 +164,25 @@ test("falls back from a rejected HEAD request to GET", async () => {
     methods.push(options.method);
     return new Response(null, {
       status: options.method === "HEAD" ? 405 : 200,
+    });
+  };
+
+  const result = await checkUrl("https://example.test/resource", {
+    fetchImpl,
+    timeoutMs: 100,
+  });
+
+  assert.deepEqual(methods, ["HEAD", "GET"]);
+  assert.equal(result.ok, true);
+  assert.equal(result.method, "GET");
+});
+
+test("falls back from a warning-shaped HEAD response to GET", async () => {
+  const methods = [];
+  const fetchImpl = async (_url, options) => {
+    methods.push(options.method);
+    return new Response(null, {
+      status: options.method === "HEAD" ? 403 : 200,
     });
   };
 
@@ -236,7 +262,8 @@ test("accepts repeated timeouts only for exact SEBoK policy URLs", async () => {
     retryDelayMs: 1,
     timeoutMs: 100,
   });
-  assert.equal(unrelated.ok, false);
+  assert.equal(unrelated.ok, true);
+  assert.equal(unrelated.kind, "remote-warning");
   assert.equal(unrelated.reason, "request timed out");
 });
 
@@ -262,7 +289,8 @@ test("accepts exact SEI runner blocks without masking broken SEI links", async (
     retryDelayMs: 1,
     timeoutMs: 100,
   });
-  assert.equal(unrelated.ok, false);
+  assert.equal(unrelated.ok, true);
+  assert.equal(unrelated.kind, "remote-warning");
   assert.equal(unrelated.reason, "fetch failed");
 });
 
@@ -377,7 +405,7 @@ test("the beacon still fails on HTTP answers and succeeds when reachable", async
   assert.equal(reachable.kind, "reachable");
 });
 
-test("a sinkholed beacon warns under policy and fails without it", async () => {
+test("a sinkholed beacon has a specific warning under policy", async () => {
   for (const failure of [dnsFailure(), sinkRefusal()]) {
     const warned = await checkUrl(BEACON, {
       fetchImpl: throwingFetch(failure),
@@ -388,14 +416,14 @@ test("a sinkholed beacon warns under policy and fails without it", async () => {
     assert.equal(warned.kind, "intentional-network-block");
     assert.equal(warned.reason, BEACON_REASON);
 
-    const failed = await checkUrl(BEACON, {
+    const genericWarning = await checkUrl(BEACON, {
       fetchImpl: throwingFetch(failure),
       timeoutMs: 100,
       policyEnabled: false,
       sinks: sinkAddresses({}),
     });
-    assert.equal(failed.ok, false);
-    assert.equal(failed.kind, "failure");
+    assert.equal(genericWarning.ok, true);
+    assert.equal(genericWarning.kind, "remote-warning");
   }
 
   // The real shape: every dialled address is a sink.
@@ -412,15 +440,17 @@ test("a sinkholed beacon warns under policy and fails without it", async () => {
     timeoutMs: 100,
     ...withPolicy,
   });
-  assert.equal(partiallyReal.ok, false);
+  assert.equal(partiallyReal.ok, true);
+  assert.equal(partiallyReal.kind, "remote-warning");
 
-  // The same DNS failure on an undeclared URL still fails.
+  // The same DNS failure on an undeclared URL remains a generic warning.
   const other = await checkUrl("https://example.test/asset.js", {
     fetchImpl: throwingFetch(dnsFailure("example.test")),
     timeoutMs: 100,
     ...withPolicy,
   });
-  assert.equal(other.ok, false);
+  assert.equal(other.ok, true);
+  assert.equal(other.kind, "remote-warning");
 });
 
 test("reports a failed GET with both request attempts", async () => {

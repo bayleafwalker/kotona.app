@@ -24,6 +24,7 @@ const SKIPPED_DIRECTORIES = new Set([
   "temp",
 ]);
 const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
+const REMOTE_WARNING_STATUSES = new Set([403, 408, 425, 429]);
 const SEBOK_AUTOMATION_BLOCK_POLICY = {
   statuses: new Set([403]),
   networkErrors: new Set(["request timed out"]),
@@ -243,6 +244,14 @@ export function classifyStatus(urlValue, status) {
 
   if (policy?.statuses.has(status)) {
     return { ok: true, kind: "automation-blocked", reason: policy.reason };
+  }
+
+  if (REMOTE_WARNING_STATUSES.has(status) || (status >= 500 && status < 600)) {
+    return {
+      ok: true,
+      kind: "remote-warning",
+      reason: `Transient or policy-shaped HTTP ${status}`,
+    };
   }
 
   return { ok: false, kind: "failure", reason: `HTTP ${status}` };
@@ -540,7 +549,7 @@ export async function checkUrl(
   if (head.status !== undefined) {
     const classification = classifyStatus(url, head.status);
 
-    if (classification.ok) {
+    if (classification.ok && classification.kind !== "remote-warning") {
       return {
         url,
         method: "HEAD",
@@ -602,8 +611,8 @@ export async function checkUrl(
   return {
     url,
     method: "GET",
-    ok: false,
-    kind: "failure",
+    ok: true,
+    kind: "remote-warning",
     reason: get.error ?? head.error ?? "request failed",
     attempts: { head, get },
   };
@@ -753,6 +762,9 @@ async function main() {
   const networkBlocked = results.filter(
     ({ result }) => result.kind === "intentional-network-block",
   );
+  const remoteWarnings = results.filter(
+    ({ result }) => result.kind === "remote-warning",
+  );
   const failures = results.filter(({ result }) => !result.ok);
 
   for (const { link, result } of blocked) {
@@ -766,6 +778,20 @@ async function main() {
   for (const { link, result } of networkBlocked) {
     console.warn(`WARN ${link.url}`);
     console.warn(`  ${result.reason}`);
+    console.warn(`  ${link.references.join(", ")}`);
+  }
+
+  for (const { link, result } of remoteWarnings) {
+    console.warn(`WARN ${link.url}`);
+    console.warn(`  ${result.reason}`);
+
+    for (const detail of [
+      formatAttempt("HEAD", result.attempts.head),
+      formatAttempt("GET", result.attempts.get),
+    ].filter(Boolean)) {
+      console.warn(`  ${detail}`);
+    }
+
     console.warn(`  ${link.references.join(", ")}`);
   }
 
@@ -788,9 +814,13 @@ async function main() {
   }
 
   const reachable =
-    results.length - blocked.length - networkBlocked.length - failures.length;
+    results.length -
+    blocked.length -
+    networkBlocked.length -
+    remoteWarnings.length -
+    failures.length;
   console.log(
-    `External link result: ${reachable} reachable, ${blocked.length} explicitly bot-blocked, ${networkBlocked.length} blocked by declared local network policy, ${failures.length} failed.`,
+    `External link result: ${reachable} reachable, ${blocked.length} explicitly bot-blocked, ${networkBlocked.length} blocked by declared local network policy, ${remoteWarnings.length} transient or policy warnings, ${failures.length} failed.`,
   );
 
   if (failures.length > 0) {

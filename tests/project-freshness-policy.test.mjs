@@ -16,6 +16,8 @@ import {
 const scriptPath = fileURLToPath(
   new URL("../scripts/check-project-freshness.mjs", import.meta.url),
 );
+const subprocessEnv = { ...process.env };
+delete subprocessEnv.NODE_TEST_CONTEXT;
 
 function projectFrontmatter({
   published = "2026-04-01",
@@ -130,7 +132,7 @@ test("CLI --as-of deterministically controls the freshness decision", async (t) 
   const fresh = spawnSync(
     process.execPath,
     [scriptPath, "--projects-dir", directory, "--as-of", "2026-07-13"],
-    { encoding: "utf8" },
+    { encoding: "utf8", env: subprocessEnv },
   );
   assert.equal(fresh.status, 0, fresh.stderr);
   assert.match(fresh.stdout, /passed: 2 files as of 2026-07-13/);
@@ -138,7 +140,7 @@ test("CLI --as-of deterministically controls the freshness decision", async (t) 
   const stale = spawnSync(
     process.execPath,
     [scriptPath, "--projects-dir", directory, "--as-of", "2026-07-14"],
-    { encoding: "utf8" },
+    { encoding: "utf8", env: subprocessEnv },
   );
   assert.equal(stale.status, 1, stale.stderr);
   assert.match(stale.stderr, /91 days old/);
