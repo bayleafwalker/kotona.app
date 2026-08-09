@@ -364,6 +364,11 @@ test("progressively expands pointer hover from a title into a transient preview"
     /showDetail[\s\S]*?clearHoverState\(\)[\s\S]*?selectedNodeId = id/,
     "click selection must replace transient hover state immediately",
   );
+  assert.doesNotMatch(
+    knowledgeMapSource,
+    /<title>\s*\{node\.title\}/,
+    "nodes use the custom delayed title and must not also trigger a native SVG tooltip",
+  );
 });
 
 test("keeps an expanded preview reachable while the pointer travels from its node", () => {

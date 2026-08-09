@@ -240,11 +240,6 @@ const clusterNodes = graph.clusters.map((cluster) => ({
                 aria-expanded="false"
                 data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
               >
-                <title>
-                  {node.title}. {node.summary}{" "}
-                  {node.role ? `Role: ${node.role}.` : ""} Lifecycle:{" "}
-                  {node.lifecycle}.
-                </title>
                 {node.type === "project" ? (
                   <rect
                     x={node.x - 8}
