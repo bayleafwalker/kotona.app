@@ -8,6 +8,8 @@ import { pathToFileURL } from "node:url";
 
 const DEFAULT_CONCURRENCY = 6;
 const DEFAULT_TIMEOUT_MS = 12_000;
+const DEFAULT_RETRY_DELAY_MS = 250;
+const MAX_REQUEST_ATTEMPTS = 3;
 const USER_AGENT =
   "kotona.app-link-checker/1.0 (+https://kotona.app/; read-only CI check)";
 
@@ -22,6 +24,12 @@ const SKIPPED_DIRECTORIES = new Set([
   "temp",
 ]);
 const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
+const SEBOK_AUTOMATION_BLOCK_POLICY = {
+  statuses: new Set([403]),
+  networkErrors: new Set(["request timed out"]),
+  reason:
+    "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
+};
 
 // These are explicit source examples, not remotely verifiable site links.
 const EXAMPLE_URLS = new Map([
@@ -47,43 +55,23 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
   ],
   [
     "https://sebokwiki.org/wiki/Requirements_Engineering",
-    {
-      statuses: new Set([403]),
-      reason:
-        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
-    },
+    SEBOK_AUTOMATION_BLOCK_POLICY,
   ],
   [
     "https://sebokwiki.org/wiki/System_Requirements_Definition",
-    {
-      statuses: new Set([403]),
-      reason:
-        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
-    },
+    SEBOK_AUTOMATION_BLOCK_POLICY,
   ],
   [
     "https://sebokwiki.org/wiki/System_Verification",
-    {
-      statuses: new Set([403]),
-      reason:
-        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
-    },
+    SEBOK_AUTOMATION_BLOCK_POLICY,
   ],
   [
     "https://sebokwiki.org/wiki/System_Validation",
-    {
-      statuses: new Set([403]),
-      reason:
-        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
-    },
+    SEBOK_AUTOMATION_BLOCK_POLICY,
   ],
   [
     "https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29",
-    {
-      statuses: new Set([403]),
-      reason:
-        "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
-    },
+    SEBOK_AUTOMATION_BLOCK_POLICY,
   ],
   [
     "https://www.rtca.org/products/do-330/",
@@ -241,6 +229,22 @@ export function classifyStatus(urlValue, status) {
   }
 
   return { ok: false, kind: "failure", reason: `HTTP ${status}` };
+}
+
+export function classifyAutomationFailure(urlValue, details) {
+  const policy = AUTOMATION_BLOCK_POLICIES.get(urlValue);
+
+  if (
+    !policy?.networkErrors ||
+    details.length === 0 ||
+    !details.every(
+      (detail) => detail?.message && policy.networkErrors.has(detail.message),
+    )
+  ) {
+    return null;
+  }
+
+  return { ok: true, kind: "automation-blocked", reason: policy.reason };
 }
 
 export function localNetworkPolicyEnabled(env = process.env) {
@@ -471,20 +475,28 @@ async function requestOnce(fetchImpl, url, method, timeoutMs) {
   }
 }
 
-async function requestWithRetry(fetchImpl, url, method, timeoutMs) {
+async function requestWithRetry(
+  fetchImpl,
+  url,
+  method,
+  timeoutMs,
+  retryDelayMs,
+) {
   let result;
 
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < MAX_REQUEST_ATTEMPTS; attempt += 1) {
     result = await requestOnce(fetchImpl, url, method, timeoutMs);
     const retryable =
       Boolean(result.error) ||
       (result.status !== undefined && RETRYABLE_STATUSES.has(result.status));
 
-    if (!retryable || attempt === 1) {
+    if (!retryable || attempt === MAX_REQUEST_ATTEMPTS - 1) {
       return result;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    await new Promise((resolve) =>
+      setTimeout(resolve, retryDelayMs * 2 ** attempt),
+    );
   }
 
   return result;
@@ -495,11 +507,18 @@ export async function checkUrl(
   {
     fetchImpl = fetch,
     timeoutMs = DEFAULT_TIMEOUT_MS,
+    retryDelayMs = DEFAULT_RETRY_DELAY_MS,
     policyEnabled = localNetworkPolicyEnabled(),
     sinks = sinkAddresses(),
   } = {},
 ) {
-  const head = await requestWithRetry(fetchImpl, url, "HEAD", timeoutMs);
+  const head = await requestWithRetry(
+    fetchImpl,
+    url,
+    "HEAD",
+    timeoutMs,
+    retryDelayMs,
+  );
 
   if (head.status !== undefined) {
     const classification = classifyStatus(url, head.status);
@@ -515,7 +534,13 @@ export async function checkUrl(
     }
   }
 
-  const get = await requestWithRetry(fetchImpl, url, "GET", timeoutMs);
+  const get = await requestWithRetry(
+    fetchImpl,
+    url,
+    "GET",
+    timeoutMs,
+    retryDelayMs,
+  );
 
   if (get.status !== undefined) {
     const classification = classifyStatus(url, get.status);
@@ -528,11 +553,25 @@ export async function checkUrl(
     };
   }
 
-  const networkClassification = classifyNetworkFailure(
+  const failureDetails = [head.detail, get.detail];
+  const automationClassification = classifyAutomationFailure(
     url,
-    [head.detail, get.detail],
-    { policyEnabled, sinks },
+    failureDetails,
   );
+
+  if (automationClassification) {
+    return {
+      url,
+      method: "GET",
+      ...automationClassification,
+      attempts: { head, get },
+    };
+  }
+
+  const networkClassification = classifyNetworkFailure(url, failureDetails, {
+    policyEnabled,
+    sinks,
+  });
 
   if (networkClassification) {
     return {
@@ -553,19 +592,37 @@ export async function checkUrl(
   };
 }
 
-async function mapWithConcurrency(values, concurrency, operation) {
+export async function mapWithConcurrency(
+  values,
+  concurrency,
+  operation,
+  groupBy = (_value, index) => index,
+) {
   const results = new Array(values.length);
-  let nextIndex = 0;
+  const groups = new Map();
+
+  values.forEach((value, index) => {
+    const key = groupBy(value, index);
+    const group = groups.get(key) ?? [];
+    group.push({ value, index });
+    groups.set(key, group);
+  });
+
+  const workGroups = [...groups.values()];
+  let nextGroup = 0;
 
   async function worker() {
-    while (nextIndex < values.length) {
-      const index = nextIndex;
-      nextIndex += 1;
-      results[index] = await operation(values[index], index);
+    while (nextGroup < workGroups.length) {
+      const groupIndex = nextGroup;
+      nextGroup += 1;
+
+      for (const { value, index } of workGroups[groupIndex]) {
+        results[index] = await operation(value, index);
+      }
     }
   }
 
-  const workerCount = Math.min(concurrency, values.length);
+  const workerCount = Math.min(concurrency, workGroups.length);
   await Promise.all(Array.from({ length: workerCount }, () => worker()));
   return results;
 }
@@ -670,6 +727,7 @@ async function main() {
       link,
       result: await checkUrl(link.url, { timeoutMs: options.timeoutMs }),
     }),
+    (link) => new URL(link.url).hostname,
   );
 
   const blocked = results.filter(
@@ -682,7 +740,9 @@ async function main() {
 
   for (const { link, result } of blocked) {
     console.warn(`WARN ${link.url}`);
-    console.warn(`  ${result.reason} (HTTP ${result.status})`);
+    const status =
+      result.status === undefined ? "" : ` (HTTP ${result.status})`;
+    console.warn(`  ${result.reason}${status}`);
     console.warn(`  ${link.references.join(", ")}`);
   }
 

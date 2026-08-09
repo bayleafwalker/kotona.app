@@ -1,7 +1,8 @@
-/* global Response */
+/* global DOMException, Response */
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import { setTimeout as delay } from "node:timers/promises";
 
 import {
   checkUrl,
@@ -9,11 +10,14 @@ import {
   classifyStatus,
   extractHttpUrls,
   localNetworkPolicyEnabled,
+  mapWithConcurrency,
   sinkAddresses,
   skipReason,
 } from "../scripts/check-external-links.mjs";
 
 const BEACON = "https://static.cloudflareinsights.com/beacon.min.js";
+const SEBOK_MBSE =
+  "https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29";
 const BEACON_REASON =
   "Cloudflare Web Analytics beacon intentionally blocked by declared local DNS policy";
 
@@ -61,7 +65,11 @@ function throwingFetch(error) {
   };
 }
 
-const withPolicy = { policyEnabled: true, sinks: sinkAddresses({}) };
+const withPolicy = {
+  policyEnabled: true,
+  retryDelayMs: 1,
+  sinks: sinkAddresses({}),
+};
 
 test("extracts and normalizes HTTP links from Markdown and Astro source", () => {
   const source = `
@@ -158,6 +166,76 @@ test("falls back from a rejected HEAD request to GET", async () => {
   assert.deepEqual(methods, ["HEAD", "GET"]);
   assert.equal(result.ok, true);
   assert.equal(result.method, "GET");
+});
+
+test("retries a transient transport failure three times with backoff", async () => {
+  let calls = 0;
+  const result = await checkUrl("https://example.test/transient", {
+    fetchImpl: async () => {
+      calls += 1;
+      if (calls < 3) throw new TypeError("fetch failed");
+      return new Response(null, { status: 204 });
+    },
+    retryDelayMs: 1,
+    timeoutMs: 100,
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.method, "HEAD");
+  assert.equal(calls, 3);
+});
+
+test("serializes checks for the same host while checking other hosts concurrently", async () => {
+  const activeHosts = new Set();
+  let overlappingHost = false;
+  let active = 0;
+  let peakActive = 0;
+  const values = [
+    { id: 1, host: "one.test" },
+    { id: 2, host: "one.test" },
+    { id: 3, host: "two.test" },
+  ];
+
+  const results = await mapWithConcurrency(
+    values,
+    3,
+    async (value) => {
+      if (activeHosts.has(value.host)) overlappingHost = true;
+      activeHosts.add(value.host);
+      active += 1;
+      peakActive = Math.max(peakActive, active);
+      await delay(5);
+      active -= 1;
+      activeHosts.delete(value.host);
+      return value.id * 2;
+    },
+    (value) => value.host,
+  );
+
+  assert.deepEqual(results, [2, 4, 6]);
+  assert.equal(overlappingHost, false);
+  assert.equal(peakActive, 2);
+});
+
+test("accepts repeated timeouts only for exact SEBoK policy URLs", async () => {
+  const timedOut = throwingFetch(
+    new DOMException("Request timed out", "AbortError"),
+  );
+  const sebok = await checkUrl(SEBOK_MBSE, {
+    fetchImpl: timedOut,
+    retryDelayMs: 1,
+    timeoutMs: 100,
+  });
+  assert.equal(sebok.ok, true);
+  assert.equal(sebok.kind, "automation-blocked");
+
+  const unrelated = await checkUrl("https://example.test/timed-out", {
+    fetchImpl: timedOut,
+    retryDelayMs: 1,
+    timeoutMs: 100,
+  });
+  assert.equal(unrelated.ok, false);
+  assert.equal(unrelated.reason, "request timed out");
 });
 
 test("local network policy is off unless explicitly enabled", () => {
