@@ -4,6 +4,30 @@ import type { KnowledgeGraph } from "../lib/knowledge-map";
 type Props = { graph: KnowledgeGraph };
 const { graph } = Astro.props;
 const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));
+const clusterCentres = new Map<string, { x: number; y: number }>(
+  graph.clusters.map((cluster) => {
+    const nodes = graph.nodes.filter((node) => node.cluster === cluster.id);
+    return [
+      cluster.id,
+      {
+        x: nodes.reduce((sum, node) => sum + node.x, 0) / nodes.length,
+        y: nodes.reduce((sum, node) => sum + node.y, 0) / nodes.length,
+      },
+    ] as const;
+  }),
+);
+const projectMapLabels: Record<string, string> = {
+  vuoro: "Vuoro",
+  "contract-first-box": "Box",
+  "gitops-cluster": "Appservice",
+  "household-operating-platform": "Homelab Analytics",
+};
+const clusterLabelYOverrides: Record<string, number> = {
+  // Keep this heading clear of the northern-most agent-system node. The other
+  // territories retain their calculated labels because their node rings leave
+  // the same space naturally.
+  "agents-assurance": 12, // labelY coordinate
+};
 const labelLines = (label: string, maxLength = 28) => {
   const words = label.split(" ");
   const lines: string[] = [];
@@ -21,12 +45,22 @@ const labelLines = (label: string, maxLength = 28) => {
   return lines.slice(0, 3);
 };
 const nodeLabel = (node: (typeof graph.nodes)[number]) => {
-  const lines = labelLines(node.title, 27);
-  const goesLeft = node.x > 750;
+  const cluster = clusterCentres.get(node.cluster);
+  const label =
+    node.type === "project"
+      ? (projectMapLabels[node.id] ?? node.title)
+      : node.title;
+  const lines = labelLines(label, node.type === "project" ? 20 : 30);
+  const deltaX = node.x - (cluster?.x ?? 500);
+  const deltaY = node.y - (cluster?.y ?? 310);
+  const goesLeft = Math.abs(deltaX) >= Math.abs(deltaY) && deltaX < 0;
+  const goesRight = Math.abs(deltaX) >= Math.abs(deltaY) && deltaX >= 0;
+  const goesUp = !goesLeft && !goesRight && deltaY < 0;
   return {
     lines,
-    x: node.x + (goesLeft ? -12 : 12),
-    anchor: goesLeft ? "end" : "start",
+    x: node.x + (goesLeft ? -12 : goesRight ? 12 : 0),
+    y: node.y + (goesUp ? -12 : 18),
+    anchor: goesLeft ? "end" : goesRight ? "start" : "middle",
   };
 };
 const edgeCoordinates = (
@@ -81,194 +115,206 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     <p class="knowledge-result-count" aria-live="polite"></p>
   </form>
 
-  <div class="knowledge-map-frame" aria-label="Visual knowledge map">
-    <svg
-      class="knowledge-map"
-      viewBox="0 0 1000 620"
-      aria-labelledby="knowledge-map-title knowledge-map-desc"
-    >
-      <title id="knowledge-map-title">
-        Knowledge atlas for published notes and projects
-      </title>
-      <desc id="knowledge-map-desc"
-        >Six editorial clusters connected only by explicitly published
-        relationships. The grouped index following the map contains the same
-        entries.</desc
+  <div class="knowledge-map-stage">
+    <div class="knowledge-map-frame" aria-label="Visual knowledge map">
+      <svg
+        class="knowledge-map"
+        viewBox="0 0 1000 620"
+        aria-labelledby="knowledge-map-title knowledge-map-desc"
       >
-      <defs>
-        <marker
-          id="knowledge-arrow"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="5"
-          markerHeight="5"
-          orient="auto-start-reverse"
+        <title id="knowledge-map-title">
+          Knowledge atlas for published notes and projects
+        </title>
+        <desc id="knowledge-map-desc"
+          >Six editorial clusters connected only by explicitly published
+          relationships. The grouped index following the map contains the same
+          entries.</desc
         >
-          <path d="M 0 0 L 10 5 L 0 10 z"></path>
-        </marker>
-      </defs>
-      {
-        graph.clusters.map((cluster) => {
-          const clusterConfig = graph.nodes.filter(
-            (node) => node.cluster === cluster.id,
-          );
-          const x =
-            clusterConfig.reduce((sum, node) => sum + node.x, 0) /
-            clusterConfig.length;
-          const y =
-            clusterConfig.reduce((sum, node) => sum + node.y, 0) /
-            clusterConfig.length;
-          const lines = labelLines(cluster.label, 31);
-          const labelY = Math.max(20, y - 95);
-          return (
-            <g
-              class="knowledge-cluster-control"
-              role="button"
-              tabindex="0"
-              aria-label={`Highlight ${cluster.label}`}
-              aria-pressed="false"
-              data-cluster-id={cluster.id}
-            >
-              <text
-                class="knowledge-cluster-label"
-                x={x}
-                y={labelY}
-                text-anchor="middle"
-              >
-                {lines.map((line, index) => (
-                  <tspan x={x} dy={index === 0 ? 0 : 15}>
-                    {line}
-                  </tspan>
-                ))}
-              </text>
-            </g>
-          );
-        })
-      }
-      <g class="knowledge-edges" aria-hidden="true">
+        <defs>
+          <marker
+            id="knowledge-arrow"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="5"
+            markerHeight="5"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z"></path>
+          </marker>
+        </defs>
         {
-          graph.edges.map((edge) => {
-            const source = nodesById.get(edge.source);
-            const target = nodesById.get(edge.target);
-            if (!source || !target) return null;
-            const historical =
-              source.lifecycle !== "current" || target.lifecycle !== "current";
-            const line = edgeCoordinates(source, target, edge.directed);
+          graph.clusters.map((cluster) => {
+            const clusterConfig = graph.nodes.filter(
+              (node) => node.cluster === cluster.id,
+            );
+            const x =
+              clusterConfig.reduce((sum, node) => sum + node.x, 0) /
+              clusterConfig.length;
+            const y =
+              clusterConfig.reduce((sum, node) => sum + node.y, 0) /
+              clusterConfig.length;
+            const lines = labelLines(cluster.label, 31);
+            const labelY =
+              clusterLabelYOverrides[cluster.id] ?? Math.max(20, y - 95);
             return (
-              <line
-                x1={line.x1}
-                y1={line.y1}
-                x2={line.x2}
-                y2={line.y2}
-                class:list={{
-                  "knowledge-edge": true,
-                  "is-historical": historical,
-                }}
-                data-source={source.id}
-                data-target={target.id}
-                data-source-cluster={source.cluster}
-                data-target-cluster={target.cluster}
-                data-edge-type={edge.type}
-                marker-end={edge.directed ? "url(#knowledge-arrow)" : undefined}
-              />
+              <g
+                class="knowledge-cluster-control"
+                role="button"
+                tabindex="0"
+                aria-label={`Highlight ${cluster.label}`}
+                aria-pressed="false"
+                data-cluster-id={cluster.id}
+              >
+                <text
+                  class="knowledge-cluster-label"
+                  x={x}
+                  y={labelY}
+                  text-anchor="middle"
+                >
+                  {lines.map((line, index) => (
+                    <tspan x={x} dy={index === 0 ? 0 : 15}>
+                      {line}
+                    </tspan>
+                  ))}
+                </text>
+              </g>
             );
           })
         }
-      </g>
-      <g class="knowledge-nodes">
-        {
-          graph.nodes.map((node) => (
-            <a
-              href={node.href}
-              aria-label={`${node.title}. ${node.type === "project" ? "Project" : "Note"}. ${node.summary}`}
-              class:list={{
-                "knowledge-node": true,
-                "is-project": node.type === "project",
-                "is-anchor": node.anchor,
-                "is-historical": node.lifecycle !== "current",
-              }}
-              data-node-id={node.id}
-              data-node-type={node.type}
-              data-cluster={node.cluster}
-              data-title={node.title}
-              data-summary={node.summary}
-              data-area={node.type === "project" ? "Project" : node.area}
-              data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
-            >
-              <title>
-                {node.title}. {node.summary}{" "}
-                {node.role ? `Role: ${node.role}.` : ""} Lifecycle:{" "}
-                {node.lifecycle}.
-              </title>
-              {node.type === "project" ? (
-                <rect
-                  x={node.x - 8}
-                  y={node.y - 8}
-                  width="16"
-                  height="16"
-                  rx="3"
+        <g class="knowledge-edges" aria-hidden="true">
+          {
+            graph.edges.map((edge) => {
+              const source = nodesById.get(edge.source);
+              const target = nodesById.get(edge.target);
+              if (!source || !target) return null;
+              const historical =
+                source.lifecycle !== "current" ||
+                target.lifecycle !== "current";
+              const succession =
+                edge.type === "superseded-by" ||
+                edge.type === "invalidated-by-project";
+              const line = edgeCoordinates(source, target, succession);
+              return (
+                <line
+                  x1={line.x1}
+                  y1={line.y1}
+                  x2={line.x2}
+                  y2={line.y2}
+                  class:list={{
+                    "knowledge-edge": true,
+                    "is-historical": historical,
+                    "is-cross-territory": source.cluster !== target.cluster,
+                  }}
+                  data-source={source.id}
+                  data-target={target.id}
+                  data-source-cluster={source.cluster}
+                  data-target-cluster={target.cluster}
+                  data-edge-type={edge.type}
+                  marker-end={succession ? "url(#knowledge-arrow)" : undefined}
                 />
-              ) : (
-                <circle cx={node.x} cy={node.y} r={node.anchor ? 8 : 6} />
-              )}
-              {(() => {
-                const label = nodeLabel(node);
-                return (
-                  <text
-                    class:list={{
-                      "knowledge-node-label": true,
-                      "is-persistent": node.anchor || node.type === "project",
-                    }}
-                    x={label.x}
-                    y={node.y - (label.lines.length - 1) * 6 + 4}
-                    text-anchor={label.anchor}
-                  >
-                    {label.lines.map((line, index) => (
-                      <tspan x={label.x} dy={index === 0 ? 0 : 12}>
-                        {line}
-                      </tspan>
-                    ))}
-                  </text>
-                );
-              })()}
-            </a>
-          ))
-        }
-      </g>
-    </svg>
+              );
+            })
+          }
+        </g>
+        <g class="knowledge-nodes">
+          {
+            graph.nodes.map((node) => (
+              <a
+                href={node.href}
+                aria-label={`${node.title}. ${node.type === "project" ? "Project" : "Note"}. ${node.summary}`}
+                class:list={{
+                  "knowledge-node": true,
+                  "is-project": node.type === "project",
+                  "is-anchor": node.anchor,
+                  "is-historical": node.lifecycle !== "current",
+                }}
+                data-node-id={node.id}
+                data-node-type={node.type}
+                data-cluster={node.cluster}
+                data-title={node.title}
+                data-summary={node.summary}
+                data-area={node.type === "project" ? "Project" : node.area}
+                data-node-x={node.x}
+                aria-controls="knowledge-detail"
+                aria-expanded="false"
+                data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
+              >
+                <title>
+                  {node.title}. {node.summary}{" "}
+                  {node.role ? `Role: ${node.role}.` : ""} Lifecycle:{" "}
+                  {node.lifecycle}.
+                </title>
+                {node.type === "project" ? (
+                  <rect
+                    x={node.x - 8}
+                    y={node.y - 8}
+                    width="16"
+                    height="16"
+                    rx="3"
+                  />
+                ) : (
+                  <circle cx={node.x} cy={node.y} r={node.anchor ? 8 : 6} />
+                )}
+                {(() => {
+                  const label = nodeLabel(node);
+                  return (
+                    <text
+                      class:list={{
+                        "knowledge-node-label": true,
+                        "is-persistent": node.type === "project",
+                      }}
+                      x={label.x}
+                      y={label.y - (label.lines.length - 1) * 6}
+                      text-anchor={label.anchor}
+                    >
+                      {label.lines.map((line, index) => (
+                        <tspan x={label.x} dy={index === 0 ? 0 : 12}>
+                          {line}
+                        </tspan>
+                      ))}
+                    </text>
+                  );
+                })()}
+              </a>
+            ))
+          }
+        </g>
+      </svg>
+    </div>
+    <aside
+      id="knowledge-detail"
+      class="knowledge-detail"
+      data-knowledge-detail
+      hidden
+      role="region"
+      aria-labelledby="knowledge-detail-title"
+    >
+      <p class="knowledge-detail-kicker" data-detail-kind></p>
+      <h2 id="knowledge-detail-title" data-detail-title tabindex="-1"></h2>
+      <p data-detail-summary></p>
+      <div class="knowledge-detail-related" data-detail-superseded hidden>
+        <h3>Superseded by</h3>
+        <ul data-detail-superseded-list></ul>
+      </div>
+      <div class="knowledge-detail-related" data-detail-invalidated hidden>
+        <h3>Invalidated by project</h3>
+        <ul data-detail-invalidated-list></ul>
+      </div>
+      <div class="knowledge-detail-related" data-detail-related hidden>
+        <h3>Related</h3>
+        <ul data-detail-related-list></ul>
+      </div>
+      <a data-detail-link>Open note →</a>
+      <button type="button" class="knowledge-detail-close" data-detail-close>
+        Close
+      </button>
+    </aside>
   </div>
 
   <p class="knowledge-map-hint">
-    Hover or focus to identify · click to inspect
+    Hover to identify, pause to preview · click to keep the inspector open
   </p>
-  <aside
-    class="knowledge-detail"
-    data-knowledge-detail
-    hidden
-    aria-live="polite"
-  >
-    <p class="knowledge-detail-kicker" data-detail-kind></p>
-    <h2 data-detail-title></h2>
-    <p data-detail-summary></p>
-    <div class="knowledge-detail-related" data-detail-superseded hidden>
-      <h3>Superseded by</h3>
-      <ul data-detail-superseded-list></ul>
-    </div>
-    <div class="knowledge-detail-related" data-detail-invalidated hidden>
-      <h3>Invalidated by project</h3>
-      <ul data-detail-invalidated-list></ul>
-    </div>
-    <div class="knowledge-detail-related" data-detail-related hidden>
-      <h3>Related</h3>
-      <ul data-detail-related-list></ul>
-    </div>
-    <a data-detail-link>Open note →</a>
-    <button type="button" class="knowledge-detail-close" data-detail-close>
-      Close
-    </button>
-  </aside>
-
   <ul class="knowledge-legend" aria-label="Knowledge map legend">
     <li><span class="legend-note" aria-hidden="true"></span>Note</li>
     <li><span class="legend-project" aria-hidden="true"></span>Project</li>
@@ -350,6 +396,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     const items = [...explorer.querySelectorAll("[data-index-id]")];
     const edges = [...explorer.querySelectorAll("[data-source][data-target]")];
     const clusterControls = [...explorer.querySelectorAll("[data-cluster-id]")];
+    const map = explorer.querySelector(".knowledge-map");
     const count = explorer.querySelector(".knowledge-result-count");
     const detail = explorer.querySelector("[data-knowledge-detail]");
     const detailKind = explorer.querySelector("[data-detail-kind]");
@@ -374,18 +421,35 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     let selectedNodeId: string | undefined;
     let selectedClusterId: string | undefined;
     let selectionOrigin: SVGElement | undefined;
+    let selectionWasKeyboard = false;
+    let hoveredNode: SVGElement | undefined;
+    let hoverPreviewNodeId: string | undefined;
+    let hoverTitleTimer: number | undefined;
+    let hoverPreviewTimer: number | undefined;
+    let hoverCloseTimer: number | undefined;
+    let hoverCorridor: { from: DOMRect; to: DOMRect } | undefined;
+    const hoverTitleDelay = 200;
+    const hoverPreviewDelay = 2000;
+    const hoverExitGrace = 300;
 
     const clearEmphasis = () => {
-      nodes.forEach(
-        (node) =>
-          node instanceof SVGElement &&
-          node.classList.remove("is-unrelated", "is-selected", "is-active"),
-      );
+      explorer.classList.remove("is-identifying", "is-identifying-node");
+      nodes.forEach((node) => {
+        if (!(node instanceof SVGElement)) return;
+        node.classList.remove(
+          "is-unrelated",
+          "is-selected",
+          "is-active",
+          "is-label-visible",
+        );
+        node.setAttribute("aria-expanded", "false");
+      });
       edges.forEach((edge) =>
         edge.classList.remove(
           "is-related",
           "is-crossing",
           "is-succession-related",
+          "is-unrelated",
         ),
       );
       clusterControls.forEach((control) => {
@@ -395,6 +459,8 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     };
 
     const emphasizeNode = (id: string, pinned = false) => {
+      explorer.classList.toggle("is-identifying", !pinned);
+      explorer.classList.toggle("is-identifying-node", !pinned);
       const neighbours = new Set([id]);
       for (const edge of edges) {
         if (!(edge instanceof SVGElement)) continue;
@@ -415,12 +481,21 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           "is-active",
           Boolean(candidateId && neighbours.has(candidateId)),
         );
+        candidate.classList.toggle(
+          "is-label-visible",
+          !pinned && candidateId === id,
+        );
+        candidate.setAttribute(
+          "aria-expanded",
+          String(pinned && candidateId === id),
+        );
       });
       edges.forEach((edge) => {
         if (!(edge instanceof SVGElement)) return;
         const related =
           edge.dataset.source === id || edge.dataset.target === id;
         edge.classList.toggle("is-related", related);
+        edge.classList.toggle("is-unrelated", !related);
         edge.classList.toggle(
           "is-succession-related",
           related &&
@@ -449,15 +524,48 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       });
     };
 
-    const showDetail = (node: SVGElement) => {
+    const clearHoverTimers = () => {
+      if (hoverTitleTimer !== undefined) window.clearTimeout(hoverTitleTimer);
+      if (hoverPreviewTimer !== undefined)
+        window.clearTimeout(hoverPreviewTimer);
+      if (hoverCloseTimer !== undefined) window.clearTimeout(hoverCloseTimer);
+      hoverTitleTimer = undefined;
+      hoverPreviewTimer = undefined;
+      hoverCloseTimer = undefined;
+    };
+
+    const clearHoverState = () => {
+      clearHoverTimers();
+      hoveredNode = undefined;
+      hoverCorridor = undefined;
+      if (hoverPreviewNodeId && detail instanceof HTMLElement) {
+        detail.hidden = true;
+        detail.classList.remove("is-hover-preview");
+      }
+      hoverPreviewNodeId = undefined;
+      if (!selectedNodeId && !selectedClusterId) clearEmphasis();
+    };
+
+    const closeDetail = (restoreFocus = false) => {
+      clearHoverState();
+      const origin = selectionOrigin;
+      const restore = restoreFocus && selectionWasKeyboard;
+      selectedNodeId = undefined;
+      selectionOrigin = undefined;
+      if (detail instanceof HTMLElement) detail.hidden = true;
+      clearEmphasis();
+      if (restore) origin?.focus();
+      selectionWasKeyboard = false;
+    };
+
+    const renderDetail = (node: SVGElement) => {
       if (!(detail instanceof HTMLElement)) return;
       const id = node.dataset.nodeId;
       if (!id) return;
-      selectedNodeId = id;
-      selectedClusterId = undefined;
-      selectionOrigin = node;
-      clearEmphasis();
-      emphasizeNode(id, true);
+      detail.classList.toggle(
+        "is-right-drawer",
+        Number(node.dataset.nodeX ?? "500") < 500,
+      );
       if (detailKind) detailKind.textContent = node.dataset.area ?? "Note";
       if (detailTitle) detailTitle.textContent = node.dataset.title ?? "";
       if (detailSummary) detailSummary.textContent = node.dataset.summary ?? "";
@@ -492,8 +600,126 @@ const clusterNodes = graph.clusters.map((cluster) => ({
         detailRelated.hidden = relatedIds.size === 0;
       }
       detail.hidden = false;
-      if (detailLink instanceof HTMLAnchorElement) detailLink.focus();
     };
+
+    const showHoverDetail = (node: SVGElement) => {
+      if (selectedNodeId || selectedClusterId || hoveredNode !== node) return;
+      const id = node.dataset.nodeId;
+      if (!id || !(detail instanceof HTMLElement)) return;
+      hoverPreviewNodeId = id;
+      clearEmphasis();
+      emphasizeNode(id);
+      detail.classList.add("is-hover-preview");
+      renderDetail(node);
+      hoverCorridor = {
+        from: node.getBoundingClientRect(),
+        to: detail.getBoundingClientRect(),
+      };
+    };
+
+    const showDetail = (node: SVGElement, keyboard = false) => {
+      const id = node.dataset.nodeId;
+      if (!id) return;
+      if (selectedNodeId === id) {
+        closeDetail(keyboard);
+        return;
+      }
+      clearHoverState();
+      selectedNodeId = id;
+      selectedClusterId = undefined;
+      selectionOrigin = keyboard ? node : undefined;
+      selectionWasKeyboard = keyboard;
+      clearEmphasis();
+      emphasizeNode(id, true);
+      node.setAttribute("aria-expanded", "true");
+      if (detail instanceof HTMLElement)
+        detail.classList.remove("is-hover-preview");
+      renderDetail(node);
+      if (keyboard && detailTitle instanceof HTMLElement)
+        requestAnimationFrame(() => detailTitle.focus());
+    };
+
+    const beginNodeHover = (node: SVGElement) => {
+      if (selectedNodeId || selectedClusterId) return;
+      clearHoverState();
+      hoveredNode = node;
+      hoverTitleTimer = window.setTimeout(() => {
+        hoverTitleTimer = undefined;
+        if (hoveredNode === node && node.dataset.nodeId)
+          emphasizeNode(node.dataset.nodeId);
+      }, hoverTitleDelay);
+      hoverPreviewTimer = window.setTimeout(() => {
+        hoverPreviewTimer = undefined;
+        showHoverDetail(node);
+      }, hoverPreviewDelay);
+    };
+
+    const endNodeHover = (node: SVGElement) => {
+      if (hoveredNode !== node || selectedNodeId || selectedClusterId) return;
+      if (hoverTitleTimer !== undefined) window.clearTimeout(hoverTitleTimer);
+      if (hoverPreviewTimer !== undefined)
+        window.clearTimeout(hoverPreviewTimer);
+      hoverTitleTimer = undefined;
+      hoverPreviewTimer = undefined;
+      if (!hoverPreviewNodeId) {
+        clearHoverState();
+        return;
+      }
+      hoverCloseTimer = window.setTimeout(clearHoverState, hoverExitGrace);
+    };
+
+    const isPointerInHoverCorridor = (event: PointerEvent) => {
+      if (
+        !(hoveredNode instanceof SVGElement) ||
+        !(detail instanceof HTMLElement)
+      )
+        return false;
+      const from = hoveredNode.getBoundingClientRect();
+      const to = detail.getBoundingClientRect();
+      hoverCorridor = { from, to };
+      const { from: corridorStart, to: corridorEnd } = hoverCorridor;
+      const { clientX: x, clientY: y } = event;
+      if (
+        x >= corridorEnd.left &&
+        x <= corridorEnd.right &&
+        y >= corridorEnd.top &&
+        y <= corridorEnd.bottom
+      )
+        return true;
+      const fromX = corridorStart.left + corridorStart.width / 2;
+      const fromY = corridorStart.top + corridorStart.height / 2;
+      if (Math.hypot(x - fromX, y - fromY) <= 16) return true;
+
+      // Bridge to the whole drawer-facing edge, rather than a single nearest
+      // point: people naturally move diagonally toward a useful part of a
+      // long preview.
+      const corridorPadding = 36;
+      const drawerIsToTheRight = corridorEnd.left > fromX;
+      const drawerEdgeX = drawerIsToTheRight
+        ? corridorEnd.left - corridorPadding
+        : corridorEnd.right + corridorPadding;
+      const edgeTop = corridorEnd.top - corridorPadding;
+      const edgeBottom = corridorEnd.bottom + corridorPadding;
+      const progress = (x - fromX) / (drawerEdgeX - fromX);
+      if (progress < 0 || progress > 1) return false;
+      const upperY = fromY + (edgeTop - fromY) * progress;
+      const lowerY = fromY + (edgeBottom - fromY) * progress;
+      return y >= Math.min(upperY, lowerY) && y <= Math.max(upperY, lowerY);
+    };
+
+    document.addEventListener("pointermove", (event) => {
+      if (!hoverPreviewNodeId || selectedNodeId || selectedClusterId) return;
+      if (isPointerInHoverCorridor(event)) {
+        if (hoverCloseTimer !== undefined) {
+          window.clearTimeout(hoverCloseTimer);
+          hoverCloseTimer = undefined;
+        }
+        return;
+      }
+      if (hoverCloseTimer === undefined) {
+        hoverCloseTimer = window.setTimeout(clearHoverState, hoverExitGrace);
+      }
+    });
 
     const refresh = () => {
       const query =
@@ -537,10 +763,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
         );
       }
       if (selectedNodeId && !visible.has(selectedNodeId)) {
-        selectedNodeId = undefined;
-        selectionOrigin = undefined;
-        if (detail instanceof HTMLElement) detail.hidden = true;
-        clearEmphasis();
+        closeDetail();
       }
       if (count) count.textContent = `${visible.size} published entries shown`;
     };
@@ -557,16 +780,17 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       };
       node.addEventListener("focus", identify);
       node.addEventListener("blur", clearIdentify);
-      node.addEventListener("mouseenter", identify);
-      node.addEventListener("mouseleave", clearIdentify);
+      node.addEventListener("mouseenter", () => beginNodeHover(node));
+      node.addEventListener("mouseleave", () => endNodeHover(node));
       node.addEventListener("click", (event) => {
         event.preventDefault();
+        event.stopPropagation();
         showDetail(node);
       });
       node.addEventListener("keydown", (event) => {
         if (event.key === " " || event.key === "Enter") {
           event.preventDefault();
-          showDetail(node);
+          showDetail(node, true);
         }
       });
     }
@@ -575,6 +799,8 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       const clusterId = control.dataset.clusterId;
       if (!clusterId) continue;
       const emphasizeCluster = (pinned = false) => {
+        explorer.classList.add("is-identifying");
+        explorer.classList.remove("is-identifying-node");
         nodes.forEach((node) => {
           if (!(node instanceof SVGElement)) return;
           const matches = node.dataset.cluster === clusterId;
@@ -588,12 +814,16 @@ const clusterNodes = graph.clusters.map((cluster) => ({
             (edge.dataset.targetCluster === clusterId);
           edge.classList.toggle("is-crossing", crossing);
           edge.classList.toggle("is-related", pinned && crossing);
+          edge.classList.toggle("is-unrelated", !crossing);
         });
         control.classList.toggle("is-selected", pinned);
         control.setAttribute("aria-pressed", String(pinned));
       };
       control.addEventListener("mouseenter", () => {
-        if (!selectedNodeId && !selectedClusterId) emphasizeCluster();
+        if (!selectedNodeId && !selectedClusterId) {
+          clearHoverState();
+          emphasizeCluster();
+        }
       });
       control.addEventListener("mouseleave", () => {
         if (!selectedNodeId && !selectedClusterId) clearEmphasis();
@@ -609,14 +839,16 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           selectedClusterId = undefined;
           clearEmphasis();
         } else {
-          selectedNodeId = undefined;
+          closeDetail();
           selectedClusterId = clusterId;
-          if (detail instanceof HTMLElement) detail.hidden = true;
           clearEmphasis();
           emphasizeCluster(true);
         }
       };
-      control.addEventListener("click", toggleCluster);
+      control.addEventListener("click", (event) => {
+        event.stopPropagation();
+        toggleCluster();
+      });
       control.addEventListener("keydown", (event) => {
         if (event.key === " " || event.key === "Enter") {
           event.preventDefault();
@@ -626,14 +858,53 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     }
     if (detailClose instanceof HTMLButtonElement) {
       detailClose.addEventListener("click", () => {
-        const origin = selectionOrigin;
-        selectedNodeId = undefined;
-        selectionOrigin = undefined;
-        if (detail instanceof HTMLElement) detail.hidden = true;
-        clearEmphasis();
-        origin?.focus();
+        closeDetail(true);
       });
     }
+    if (detail instanceof HTMLElement) {
+      detail.addEventListener("mouseenter", () => {
+        if (!hoverPreviewNodeId || hoverCloseTimer === undefined) return;
+        window.clearTimeout(hoverCloseTimer);
+        hoverCloseTimer = undefined;
+      });
+      detail.addEventListener("mouseleave", () => {
+        if (!hoverPreviewNodeId) return;
+        if (hoverCloseTimer !== undefined) window.clearTimeout(hoverCloseTimer);
+        hoverCloseTimer = window.setTimeout(clearHoverState, hoverExitGrace);
+      });
+    }
+    if (map instanceof SVGElement) {
+      map.addEventListener("click", (event) => {
+        const target = event.target;
+        if (
+          target instanceof Element &&
+          target.closest(".knowledge-node, .knowledge-cluster-control")
+        )
+          return;
+        if (event.target === map) {
+          if (selectedNodeId) closeDetail();
+          else if (hoverPreviewNodeId) clearHoverState();
+          else if (selectedClusterId) {
+            selectedClusterId = undefined;
+            clearEmphasis();
+          }
+        }
+      });
+    }
+    explorer.addEventListener("keydown", (event) => {
+      if (
+        event.key !== "Escape" ||
+        (!selectedNodeId && !selectedClusterId && !hoverPreviewNodeId)
+      )
+        return;
+      event.preventDefault();
+      if (selectedNodeId) closeDetail(true);
+      else if (hoverPreviewNodeId) clearHoverState();
+      else {
+        selectedClusterId = undefined;
+        clearEmphasis();
+      }
+    });
     refresh();
   }
 </script>

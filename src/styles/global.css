@@ -419,8 +419,12 @@ main {
   font-size: 0.82rem;
 }
 
-.knowledge-map-frame {
+.knowledge-map-stage {
+  position: relative;
   margin-top: 1rem;
+}
+
+.knowledge-map-frame {
   overflow-x: auto;
   border: 1px solid var(--line);
   background:
@@ -435,8 +439,8 @@ main {
 
 .knowledge-map {
   display: block;
-  width: 100%;
-  min-width: 52rem;
+  width: 62.5rem;
+  min-width: 62.5rem;
   height: auto;
 }
 
@@ -520,6 +524,11 @@ main {
 
 .knowledge-cluster-control {
   cursor: pointer;
+  pointer-events: all;
+}
+
+.knowledge-explorer.is-identifying-node .knowledge-cluster-label {
+  opacity: 0;
 }
 
 .knowledge-cluster-control:hover .knowledge-cluster-label,
@@ -532,6 +541,7 @@ main {
 .knowledge-edge {
   stroke: rgba(49, 88, 76, 0.18);
   stroke-width: 1.2;
+  opacity: 0.48;
   transition:
     opacity 120ms ease,
     stroke 120ms ease;
@@ -541,6 +551,10 @@ main {
 .knowledge-edge[data-edge-type="invalidated-by-project"] {
   stroke: rgba(122, 91, 70, 0.45);
   stroke-dasharray: 4 3;
+}
+
+.knowledge-edge.is-cross-territory {
+  opacity: 0.15;
 }
 
 #knowledge-arrow path {
@@ -580,10 +594,14 @@ main {
 }
 
 .knowledge-node-label.is-persistent,
-.knowledge-node.is-active .knowledge-node-label,
-.knowledge-node:hover .knowledge-node-label,
-.knowledge-node:focus-visible .knowledge-node-label {
+.knowledge-node.is-label-visible .knowledge-node-label {
   display: inline;
+}
+
+.knowledge-explorer.is-identifying
+  .knowledge-node:not(.is-label-visible)
+  .knowledge-node-label.is-persistent {
+  display: none;
 }
 
 .knowledge-node:hover circle,
@@ -615,6 +633,7 @@ main {
 .knowledge-edge.is-related {
   stroke: var(--accent);
   stroke-width: 2.5;
+  opacity: 1;
 }
 
 .knowledge-edge.is-succession-related {
@@ -626,6 +645,11 @@ main {
 .knowledge-edge.is-crossing:not(.is-related) {
   stroke: color-mix(in srgb, var(--accent) 68%, var(--warm));
   stroke-width: 2;
+  opacity: 0.9;
+}
+
+.knowledge-edge.is-unrelated {
+  opacity: 0.12;
 }
 
 .knowledge-node.is-selected circle,
@@ -642,11 +666,27 @@ main {
 }
 
 .knowledge-detail {
-  position: relative;
-  margin-top: 0.8rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  width: min(24rem, 40%);
+  max-height: calc(100% - 2rem);
+  overflow: auto;
   padding: 1rem;
+  border: 1px solid var(--line-strong);
   border-left: 3px solid var(--accent);
   background: var(--bg-strong);
+  box-shadow: 0 0.75rem 1.75rem rgb(0 0 0 / 0.18);
+}
+
+.knowledge-detail.is-right-drawer {
+  right: 1rem;
+  left: auto;
+}
+
+.knowledge-detail.is-hover-preview .knowledge-detail-close {
+  display: none;
 }
 
 .knowledge-detail[hidden] {
@@ -1224,6 +1264,15 @@ main {
   .site-footer-inner {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .knowledge-map-stage {
+    display: none;
+  }
+
+  .knowledge-legend,
+  .knowledge-map-hint {
+    display: none;
   }
 }
 
