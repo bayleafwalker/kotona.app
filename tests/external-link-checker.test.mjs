@@ -18,6 +18,8 @@ import {
 const BEACON = "https://static.cloudflareinsights.com/beacon.min.js";
 const SEBOK_MBSE =
   "https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29";
+const SEI_ASSURANCE_CASES =
+  "https://www.sei.cmu.edu/library/assurance-cases-overview/";
 const BEACON_REASON =
   "Cloudflare Web Analytics beacon intentionally blocked by declared local DNS policy";
 
@@ -236,6 +238,32 @@ test("accepts repeated timeouts only for exact SEBoK policy URLs", async () => {
   });
   assert.equal(unrelated.ok, false);
   assert.equal(unrelated.reason, "request timed out");
+});
+
+test("accepts exact SEI runner blocks without masking broken SEI links", async () => {
+  const blocked = await checkUrl(SEI_ASSURANCE_CASES, {
+    fetchImpl: throwingFetch(new TypeError("fetch failed")),
+    retryDelayMs: 1,
+    timeoutMs: 100,
+  });
+  assert.equal(blocked.ok, true);
+  assert.equal(blocked.kind, "automation-blocked");
+
+  const missing = await checkUrl(SEI_ASSURANCE_CASES, {
+    fetchImpl: async () => new Response(null, { status: 404 }),
+    retryDelayMs: 1,
+    timeoutMs: 100,
+  });
+  assert.equal(missing.ok, false);
+  assert.equal(missing.reason, "HTTP 404");
+
+  const unrelated = await checkUrl("https://www.sei.cmu.edu/other/", {
+    fetchImpl: throwingFetch(new TypeError("fetch failed")),
+    retryDelayMs: 1,
+    timeoutMs: 100,
+  });
+  assert.equal(unrelated.ok, false);
+  assert.equal(unrelated.reason, "fetch failed");
 });
 
 test("local network policy is off unless explicitly enabled", () => {

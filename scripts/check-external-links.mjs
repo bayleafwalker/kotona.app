@@ -30,6 +30,11 @@ const SEBOK_AUTOMATION_BLOCK_POLICY = {
   reason:
     "SEBoK sits behind a Cloudflare bot challenge that blocks automated link checks",
 };
+const SEI_AUTOMATION_BLOCK_POLICY = {
+  statuses: new Set([403]),
+  networkErrors: new Set(["fetch failed", "request timed out"]),
+  reason: "SEI pages drop automated link checks from GitHub-hosted runners",
+};
 
 // These are explicit source examples, not remotely verifiable site links.
 const EXAMPLE_URLS = new Map([
@@ -108,6 +113,18 @@ const AUTOMATION_BLOCK_POLICIES = new Map([
       statuses: new Set([403]),
       reason: "Wiley journal page blocks automated link checks",
     },
+  ],
+  [
+    "https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/",
+    SEI_AUTOMATION_BLOCK_POLICY,
+  ],
+  [
+    "https://www.sei.cmu.edu/library/assurance-cases-overview/",
+    SEI_AUTOMATION_BLOCK_POLICY,
+  ],
+  [
+    "https://www.sei.cmu.edu/library/resources-for-assurance-cases/",
+    SEI_AUTOMATION_BLOCK_POLICY,
   ],
 ]);
 
