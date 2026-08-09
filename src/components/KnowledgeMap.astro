@@ -4,6 +4,53 @@ import type { KnowledgeGraph } from "../lib/knowledge-map";
 type Props = { graph: KnowledgeGraph };
 const { graph } = Astro.props;
 const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));
+const labelLines = (label: string, maxLength = 28) => {
+  const words = label.split(" ");
+  const lines: string[] = [];
+  let line = "";
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (line && next.length > maxLength) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 3);
+};
+const nodeLabel = (node: (typeof graph.nodes)[number]) => {
+  const lines = labelLines(node.title, 27);
+  const goesLeft = node.x > 750;
+  return {
+    lines,
+    x: node.x + (goesLeft ? -12 : 12),
+    anchor: goesLeft ? "end" : "start",
+  };
+};
+const edgeCoordinates = (
+  source: (typeof graph.nodes)[number],
+  target: (typeof graph.nodes)[number],
+  directed: boolean,
+) => {
+  if (!directed)
+    return { x1: source.x, y1: source.y, x2: target.x, y2: target.y };
+  const deltaX = target.x - source.x;
+  const deltaY = target.y - source.y;
+  const distance = Math.hypot(deltaX, deltaY);
+  if (distance === 0)
+    return { x1: source.x, y1: source.y, x2: target.x, y2: target.y };
+  const sourceInset = source.type === "project" ? 10 : 8;
+  // Leave space for both the target's shape and the arrow marker tip.
+  const targetInset = target.type === "project" ? 14 : 12;
+  return {
+    x1: source.x + (deltaX / distance) * sourceInset,
+    y1: source.y + (deltaY / distance) * sourceInset,
+    x2: target.x - (deltaX / distance) * targetInset,
+    y2: target.y - (deltaY / distance) * targetInset,
+  };
+};
 const clusterNodes = graph.clusters.map((cluster) => ({
   ...cluster,
   current: graph.nodes.filter(
@@ -72,15 +119,30 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           const y =
             clusterConfig.reduce((sum, node) => sum + node.y, 0) /
             clusterConfig.length;
+          const lines = labelLines(cluster.label, 31);
+          const labelY = Math.max(20, y - 95);
           return (
-            <text
-              class="knowledge-cluster-label"
-              x={x}
-              y={Math.max(20, y - 95)}
-              text-anchor="middle"
+            <g
+              class="knowledge-cluster-control"
+              role="button"
+              tabindex="0"
+              aria-label={`Highlight ${cluster.label}`}
+              aria-pressed="false"
+              data-cluster-id={cluster.id}
             >
-              {cluster.label}
-            </text>
+              <text
+                class="knowledge-cluster-label"
+                x={x}
+                y={labelY}
+                text-anchor="middle"
+              >
+                {lines.map((line, index) => (
+                  <tspan x={x} dy={index === 0 ? 0 : 15}>
+                    {line}
+                  </tspan>
+                ))}
+              </text>
+            </g>
           );
         })
       }
@@ -92,18 +154,21 @@ const clusterNodes = graph.clusters.map((cluster) => ({
             if (!source || !target) return null;
             const historical =
               source.lifecycle !== "current" || target.lifecycle !== "current";
+            const line = edgeCoordinates(source, target, edge.directed);
             return (
               <line
-                x1={source.x}
-                y1={source.y}
-                x2={target.x}
-                y2={target.y}
+                x1={line.x1}
+                y1={line.y1}
+                x2={line.x2}
+                y2={line.y2}
                 class:list={{
                   "knowledge-edge": true,
                   "is-historical": historical,
                 }}
                 data-source={source.id}
                 data-target={target.id}
+                data-source-cluster={source.cluster}
+                data-target-cluster={target.cluster}
                 data-edge-type={edge.type}
                 marker-end={edge.directed ? "url(#knowledge-arrow)" : undefined}
               />
@@ -125,6 +190,10 @@ const clusterNodes = graph.clusters.map((cluster) => ({
               }}
               data-node-id={node.id}
               data-node-type={node.type}
+              data-cluster={node.cluster}
+              data-title={node.title}
+              data-summary={node.summary}
+              data-area={node.type === "project" ? "Project" : node.area}
               data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
             >
               <title>
@@ -143,17 +212,62 @@ const clusterNodes = graph.clusters.map((cluster) => ({
               ) : (
                 <circle cx={node.x} cy={node.y} r={node.anchor ? 8 : 6} />
               )}
-              {node.anchor ? (
-                <text x={node.x + 12} y={node.y + 4}>
-                  {node.title}
-                </text>
-              ) : null}
+              {(() => {
+                const label = nodeLabel(node);
+                return (
+                  <text
+                    class:list={{
+                      "knowledge-node-label": true,
+                      "is-persistent": node.anchor || node.type === "project",
+                    }}
+                    x={label.x}
+                    y={node.y - (label.lines.length - 1) * 6 + 4}
+                    text-anchor={label.anchor}
+                  >
+                    {label.lines.map((line, index) => (
+                      <tspan x={label.x} dy={index === 0 ? 0 : 12}>
+                        {line}
+                      </tspan>
+                    ))}
+                  </text>
+                );
+              })()}
             </a>
           ))
         }
       </g>
     </svg>
   </div>
+
+  <p class="knowledge-map-hint">
+    Hover or focus to identify · click to inspect
+  </p>
+  <aside
+    class="knowledge-detail"
+    data-knowledge-detail
+    hidden
+    aria-live="polite"
+  >
+    <p class="knowledge-detail-kicker" data-detail-kind></p>
+    <h2 data-detail-title></h2>
+    <p data-detail-summary></p>
+    <div class="knowledge-detail-related" data-detail-superseded hidden>
+      <h3>Superseded by</h3>
+      <ul data-detail-superseded-list></ul>
+    </div>
+    <div class="knowledge-detail-related" data-detail-invalidated hidden>
+      <h3>Invalidated by project</h3>
+      <ul data-detail-invalidated-list></ul>
+    </div>
+    <div class="knowledge-detail-related" data-detail-related hidden>
+      <h3>Related</h3>
+      <ul data-detail-related-list></ul>
+    </div>
+    <a data-detail-link>Open note →</a>
+    <button type="button" class="knowledge-detail-close" data-detail-close>
+      Close
+    </button>
+  </aside>
 
   <ul class="knowledge-legend" aria-label="Knowledge map legend">
     <li><span class="legend-note" aria-hidden="true"></span>Note</li>
@@ -235,7 +349,151 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     const nodes = [...explorer.querySelectorAll("[data-node-id]")];
     const items = [...explorer.querySelectorAll("[data-index-id]")];
     const edges = [...explorer.querySelectorAll("[data-source][data-target]")];
+    const clusterControls = [...explorer.querySelectorAll("[data-cluster-id]")];
     const count = explorer.querySelector(".knowledge-result-count");
+    const detail = explorer.querySelector("[data-knowledge-detail]");
+    const detailKind = explorer.querySelector("[data-detail-kind]");
+    const detailTitle = explorer.querySelector("[data-detail-title]");
+    const detailSummary = explorer.querySelector("[data-detail-summary]");
+    const detailSuperseded = explorer.querySelector("[data-detail-superseded]");
+    const detailSupersededList = explorer.querySelector(
+      "[data-detail-superseded-list]",
+    );
+    const detailInvalidated = explorer.querySelector(
+      "[data-detail-invalidated]",
+    );
+    const detailInvalidatedList = explorer.querySelector(
+      "[data-detail-invalidated-list]",
+    );
+    const detailRelated = explorer.querySelector("[data-detail-related]");
+    const detailRelatedList = explorer.querySelector(
+      "[data-detail-related-list]",
+    );
+    const detailLink = explorer.querySelector("[data-detail-link]");
+    const detailClose = explorer.querySelector("[data-detail-close]");
+    let selectedNodeId: string | undefined;
+    let selectedClusterId: string | undefined;
+    let selectionOrigin: SVGElement | undefined;
+
+    const clearEmphasis = () => {
+      nodes.forEach(
+        (node) =>
+          node instanceof SVGElement &&
+          node.classList.remove("is-unrelated", "is-selected", "is-active"),
+      );
+      edges.forEach((edge) =>
+        edge.classList.remove(
+          "is-related",
+          "is-crossing",
+          "is-succession-related",
+        ),
+      );
+      clusterControls.forEach((control) => {
+        control.classList.remove("is-selected");
+        control.setAttribute("aria-pressed", "false");
+      });
+    };
+
+    const emphasizeNode = (id: string, pinned = false) => {
+      const neighbours = new Set([id]);
+      for (const edge of edges) {
+        if (!(edge instanceof SVGElement)) continue;
+        if (edge.dataset.source === id && edge.dataset.target)
+          neighbours.add(edge.dataset.target);
+        if (edge.dataset.target === id && edge.dataset.source)
+          neighbours.add(edge.dataset.source);
+      }
+      nodes.forEach((candidate) => {
+        if (!(candidate instanceof SVGElement)) return;
+        const candidateId = candidate.dataset.nodeId;
+        candidate.classList.toggle(
+          "is-unrelated",
+          !candidateId || !neighbours.has(candidateId),
+        );
+        candidate.classList.toggle("is-selected", pinned && candidateId === id);
+        candidate.classList.toggle(
+          "is-active",
+          Boolean(candidateId && neighbours.has(candidateId)),
+        );
+      });
+      edges.forEach((edge) => {
+        if (!(edge instanceof SVGElement)) return;
+        const related =
+          edge.dataset.source === id || edge.dataset.target === id;
+        edge.classList.toggle("is-related", related);
+        edge.classList.toggle(
+          "is-succession-related",
+          related &&
+            (edge.dataset.edgeType === "superseded-by" ||
+              edge.dataset.edgeType === "invalidated-by-project"),
+        );
+      });
+    };
+
+    const fillDetailList = (list: Element | null, ids: Set<string>) => {
+      if (!(list instanceof HTMLUListElement)) return;
+      list.replaceChildren();
+      ids.forEach((relatedId) => {
+        const related = nodes.find(
+          (candidate) =>
+            candidate instanceof SVGElement &&
+            candidate.dataset.nodeId === relatedId,
+        );
+        if (!(related instanceof SVGElement)) return;
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = related.getAttribute("href") ?? "#";
+        link.textContent = related.dataset.title ?? relatedId;
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+    };
+
+    const showDetail = (node: SVGElement) => {
+      if (!(detail instanceof HTMLElement)) return;
+      const id = node.dataset.nodeId;
+      if (!id) return;
+      selectedNodeId = id;
+      selectedClusterId = undefined;
+      selectionOrigin = node;
+      clearEmphasis();
+      emphasizeNode(id, true);
+      if (detailKind) detailKind.textContent = node.dataset.area ?? "Note";
+      if (detailTitle) detailTitle.textContent = node.dataset.title ?? "";
+      if (detailSummary) detailSummary.textContent = node.dataset.summary ?? "";
+      if (detailLink instanceof HTMLAnchorElement) {
+        detailLink.href = node.getAttribute("href") ?? "#";
+        detailLink.textContent = `Open ${node.dataset.nodeType === "project" ? "project" : "note"} →`;
+      }
+      if (detailRelated instanceof HTMLElement) {
+        const relatedIds = new Set<string>();
+        const supersedingIds = new Set<string>();
+        const invalidatingIds = new Set<string>();
+        edges.forEach((edge) => {
+          if (!(edge instanceof SVGElement)) return;
+          if (edge.dataset.source === id && edge.dataset.target) {
+            if (edge.dataset.edgeType === "superseded-by")
+              supersedingIds.add(edge.dataset.target);
+            else relatedIds.add(edge.dataset.target);
+          }
+          if (edge.dataset.target === id && edge.dataset.source) {
+            if (edge.dataset.edgeType === "invalidated-by-project")
+              invalidatingIds.add(edge.dataset.source);
+            else relatedIds.add(edge.dataset.source);
+          }
+        });
+        fillDetailList(detailSupersededList, supersedingIds);
+        fillDetailList(detailInvalidatedList, invalidatingIds);
+        fillDetailList(detailRelatedList, relatedIds);
+        if (detailSuperseded instanceof HTMLElement)
+          detailSuperseded.hidden = supersedingIds.size === 0;
+        if (detailInvalidated instanceof HTMLElement)
+          detailInvalidated.hidden = invalidatingIds.size === 0;
+        detailRelated.hidden = relatedIds.size === 0;
+      }
+      detail.hidden = false;
+      if (detailLink instanceof HTMLAnchorElement) detailLink.focus();
+    };
 
     const refresh = () => {
       const query =
@@ -278,44 +536,103 @@ const clusterNodes = graph.clusters.map((cluster) => ({
             !visible.has(edge.dataset.target ?? ""),
         );
       }
+      if (selectedNodeId && !visible.has(selectedNodeId)) {
+        selectedNodeId = undefined;
+        selectionOrigin = undefined;
+        if (detail instanceof HTMLElement) detail.hidden = true;
+        clearEmphasis();
+      }
       if (count) count.textContent = `${visible.size} published entries shown`;
     };
 
     explorer.addEventListener("input", refresh);
     for (const node of nodes) {
-      const emphasizeNeighbours = () => {
-        const id = node instanceof SVGElement ? node.dataset.nodeId : undefined;
-        const neighbours = new Set([id]);
-        for (const edge of edges) {
-          if (!(edge instanceof SVGElement) || !id) continue;
-          if (edge.dataset.source === id) neighbours.add(edge.dataset.target);
-          if (edge.dataset.target === id) neighbours.add(edge.dataset.source);
+      if (!(node instanceof SVGElement)) continue;
+      const identify = () => {
+        if (!selectedNodeId && !selectedClusterId && node.dataset.nodeId)
+          emphasizeNode(node.dataset.nodeId);
+      };
+      const clearIdentify = () => {
+        if (!selectedNodeId && !selectedClusterId) clearEmphasis();
+      };
+      node.addEventListener("focus", identify);
+      node.addEventListener("blur", clearIdentify);
+      node.addEventListener("mouseenter", identify);
+      node.addEventListener("mouseleave", clearIdentify);
+      node.addEventListener("click", (event) => {
+        event.preventDefault();
+        showDetail(node);
+      });
+      node.addEventListener("keydown", (event) => {
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault();
+          showDetail(node);
         }
-        nodes.forEach((candidate) =>
-          candidate.classList.toggle(
-            "is-unrelated",
-            candidate instanceof SVGElement &&
-              !neighbours.has(candidate.dataset.nodeId),
-          ),
-        );
-        edges.forEach((edge) =>
-          edge.classList.toggle(
-            "is-related",
-            edge instanceof SVGElement &&
-              (edge.dataset.source === id || edge.dataset.target === id),
-          ),
-        );
+      });
+    }
+    for (const control of clusterControls) {
+      if (!(control instanceof SVGElement)) continue;
+      const clusterId = control.dataset.clusterId;
+      if (!clusterId) continue;
+      const emphasizeCluster = (pinned = false) => {
+        nodes.forEach((node) => {
+          if (!(node instanceof SVGElement)) return;
+          const matches = node.dataset.cluster === clusterId;
+          node.classList.toggle("is-unrelated", !matches);
+          node.classList.toggle("is-active", matches);
+        });
+        edges.forEach((edge) => {
+          if (!(edge instanceof SVGElement)) return;
+          const crossing =
+            (edge.dataset.sourceCluster === clusterId) !==
+            (edge.dataset.targetCluster === clusterId);
+          edge.classList.toggle("is-crossing", crossing);
+          edge.classList.toggle("is-related", pinned && crossing);
+        });
+        control.classList.toggle("is-selected", pinned);
+        control.setAttribute("aria-pressed", String(pinned));
       };
-      const clearNeighbours = () => {
-        nodes.forEach((candidate) =>
-          candidate.classList.remove("is-unrelated"),
-        );
-        edges.forEach((edge) => edge.classList.remove("is-related"));
+      control.addEventListener("mouseenter", () => {
+        if (!selectedNodeId && !selectedClusterId) emphasizeCluster();
+      });
+      control.addEventListener("mouseleave", () => {
+        if (!selectedNodeId && !selectedClusterId) clearEmphasis();
+      });
+      control.addEventListener("focus", () => {
+        if (!selectedNodeId && !selectedClusterId) emphasizeCluster();
+      });
+      control.addEventListener("blur", () => {
+        if (!selectedNodeId && !selectedClusterId) clearEmphasis();
+      });
+      const toggleCluster = () => {
+        if (selectedClusterId === clusterId) {
+          selectedClusterId = undefined;
+          clearEmphasis();
+        } else {
+          selectedNodeId = undefined;
+          selectedClusterId = clusterId;
+          if (detail instanceof HTMLElement) detail.hidden = true;
+          clearEmphasis();
+          emphasizeCluster(true);
+        }
       };
-      node.addEventListener("focus", emphasizeNeighbours);
-      node.addEventListener("blur", clearNeighbours);
-      node.addEventListener("mouseenter", emphasizeNeighbours);
-      node.addEventListener("mouseleave", clearNeighbours);
+      control.addEventListener("click", toggleCluster);
+      control.addEventListener("keydown", (event) => {
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault();
+          toggleCluster();
+        }
+      });
+    }
+    if (detailClose instanceof HTMLButtonElement) {
+      detailClose.addEventListener("click", () => {
+        const origin = selectionOrigin;
+        selectedNodeId = undefined;
+        selectionOrigin = undefined;
+        if (detail instanceof HTMLElement) detail.hidden = true;
+        clearEmphasis();
+        origin?.focus();
+      });
     }
     refresh();
   }
