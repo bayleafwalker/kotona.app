@@ -366,8 +366,13 @@ test("progressively expands pointer hover from a title into a transient preview"
   );
   assert.doesNotMatch(
     knowledgeMapSource,
-    /<title>\s*\{node\.title\}/,
-    "nodes use the custom delayed title and must not also trigger a native SVG tooltip",
+    /<title(?:\s|>)/,
+    "the map uses ARIA naming and must not trigger native SVG tooltips",
+  );
+  assert.match(
+    knowledgeMapSource,
+    /<svg[\s\S]{0,180}?aria-label="Knowledge atlas for published notes and projects"[\s\S]{0,120}?aria-describedby="knowledge-map-desc"/,
+    "removing native tooltips must preserve an accessible map name and description",
   );
 });
 
