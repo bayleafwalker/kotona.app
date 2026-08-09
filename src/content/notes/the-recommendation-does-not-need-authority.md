@@ -3,7 +3,7 @@ title: "The recommendation does not need authority"
 role: exploration
 status: exploration
 lifecycle: current
-area: organizational-systems
+area: organizational systems
 published: 2026-08-08
 lastRevised: 2026-08-08
 projects: []

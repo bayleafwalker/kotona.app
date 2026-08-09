@@ -5,6 +5,19 @@ register; do not use the same polished thesis-essay form for every kind of
 knowledge. `status` says how strongly the note is claimed, while `lifecycle`
 says whether it remains current. They are separate from role.
 
+## Metadata: area and tags
+
+`area` is the controlled, reader-facing primary kind of work or reasoning a
+note demonstrates. It is not the note's editorial domain, a technology label,
+or a bag of topics. Choose the single area that best helps a reader understand
+the note's primary work; use `tags` for narrower technologies, contexts,
+subjects, and secondary concerns. The permitted values live in
+`src/data/knowledge-areas.ts`; add one only when it names a stable distinction
+that more than one note can use.
+
+The atlas derives spatial domain placement from its reviewed cluster rules.
+Do not change an `area` merely to move a note on the map.
+
 Use operationally grounded analytical prose. Write as a practitioner reasoning
 from a real system, decision, experiment, or failure. Start with the person,
 system, event, decision, or failed check that gives the reader something

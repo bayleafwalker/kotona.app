@@ -86,28 +86,23 @@ export const knowledgeClusters: KnowledgeCluster[] = [
   },
   {
     id: "organizational-practice",
-    label: "Organizational systems and decision practice",
+    label: "Work, institutions, and accountability",
     summary:
-      "Responsibility, careers, coordination, and decisions inside institutions and communities.",
-    areas: [
-      "career",
-      "open source",
-      "organizational systems",
-      "organizational-systems",
-    ],
+      "How institutions form expertise, recognize contribution, allocate responsibility, and make decisions as work changes.",
+    areas: ["career", "open source", "organizational systems"],
     strongTags: [
       "accountability",
       "career",
       "decision-making",
       "organizational-design",
     ],
-    anchors: ["the-person-of-record", "legibility-is-an-operating-property"],
+    anchors: ["the-person-of-record", "the-candidate-produced-somewhere-else"],
     overrides: [],
     region: { x: 250, y: 465 },
   },
   {
     id: "physical-systems",
-    label: "Physical systems, energy, and built environment",
+    label: "Physical systems, energy, and place",
     summary:
       "Energy, hardware, and household systems tested against physical and operational limits.",
     areas: ["energy systems", "hardware contracts"],
@@ -118,18 +113,20 @@ export const knowledgeClusters: KnowledgeCluster[] = [
   },
   {
     id: "knowledge-editorial",
-    label: "Knowledge systems and editorial practice",
+    label: "Knowledge systems and creative practice",
     summary:
-      "Publishing, authorship, creative tooling, and knowledge made durable enough to retrieve.",
+      "Writing, publishing, media-making, and the systems used to create, preserve, verify, and retrieve their artifacts.",
     areas: ["creative tooling"],
     strongTags: ["authorship", "creative-tooling", "documentation", "writing"],
     anchors: [
       "a-personal-knowledge-system-that-happens-to-render-as-a-website",
-      "why-i-publish-explore-prompts",
+      "the-wallpaper-is-a-build-artifact",
     ],
     overrides: [
       "a-personal-knowledge-system-that-happens-to-render-as-a-website",
       "why-i-publish-explore-prompts",
+      "the-workshop-is-learning-my-accent",
+      "the-embarrassment-is-mine",
     ],
     region: { x: 840, y: 465 },
   },

@@ -2,6 +2,7 @@ import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
+import { knowledgeAreas } from "./data/knowledge-areas";
 import { noteLifecycleIssues } from "./lib/note-lifecycle.js";
 
 const sharedProjectSchema = {
@@ -50,7 +51,9 @@ const notes = defineCollection({
       lifecycleReason: z.string().min(1).optional(),
       supersededBy: z.array(reference("notes")).default([]),
       invalidatedByProjects: z.array(reference("projects")).default([]),
-      area: z.string().min(1),
+      // A controlled, reader-facing primary area of work or reasoning. It is
+      // distinct from editorial domain placement and from narrower tags.
+      area: z.enum(knowledgeAreas),
       published: z.coerce.date(),
       lastRevised: z.coerce.date(),
       projects: z.array(reference("projects")).default([]),

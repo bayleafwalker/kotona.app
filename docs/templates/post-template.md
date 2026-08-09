@@ -19,6 +19,9 @@ lifecycle: current
 #   - successor-note-id
 # invalidatedByProjects:
 #   - project-id
+# Primary kind of work or reasoning; choose a value from
+# src/data/knowledge-areas.ts. It is distinct from atlas domain placement and
+# from narrower tags.
 area: replace-with-area
 published: 2026-07-13
 lastRevised: 2026-07-13
