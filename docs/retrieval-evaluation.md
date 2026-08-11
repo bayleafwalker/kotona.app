@@ -25,3 +25,10 @@ This is a baseline, not a claim that lexical retrieval represents an agent. It
 is deliberately local and deterministic so it runs behind the development
 firewall and in CI. Model-assisted evaluations can be added later as a separate,
 recorded strategy without weakening this floor.
+
+The accepted next iteration keeps that public, deterministic floor and adds a
+retrieval-oriented reference index, lifecycle-aware shared ranking, and
+acceptable top-k cases for vague intent. Exact rank remains appropriate for
+precise authority questions. The architecture and ordered test changes are in
+[`docs/architecture/reference-discovery.md`](architecture/reference-discovery.md)
+and [`docs/plans/reference-discovery.md`](plans/reference-discovery.md).

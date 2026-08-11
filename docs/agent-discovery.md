@@ -4,6 +4,12 @@ kotona.app is a public, read-only publication site. Agent discovery should make
 that material easier to find and consume; it should not manufacture an API or
 authentication surface that does not exist.
 
+The accepted next direction is the static reference protocol in
+[`docs/architecture/reference-discovery.md`](architecture/reference-discovery.md).
+Its ordered backlog lives in
+[`docs/plans/reference-discovery.md`](plans/reference-discovery.md). The list
+below describes the currently published behavior until those slices land.
+
 ## Published from this repository
 
 - Homepage `Link` headers advertise the skills index, `llms.txt`, and RSS.
@@ -27,13 +33,17 @@ follow declared successors, and do not silently restate a non-current note as
 present guidance.
 
 Some notes also publish `explorePrompt`: a post-hoc "Explore this note with
-AI" prompt for applying and extending the note elsewhere, present in both
-HTML and negotiated Markdown (see `docs/explore-prompts.md`). It is not the
+AI" prompt for applying and extending the note elsewhere, currently present in
+both HTML and negotiated Markdown (see `docs/explore-prompts.md`). It is not the
 note's original generating prompt or a reconstruction of how the note was
 written, and it is not an independent surface -- lifecycle remains
 authoritative over it. A superseded or disproven note's prompt says so and
 points to the successor; do not treat a retrievable prompt as evidence that
 the note is current.
+
+The accepted architecture changes that contract: default reference Markdown
+will exclude the prompt, while a deliberately selected plain-text route will
+preserve it with source and lifecycle context.
 
 ## Intentionally not published
 

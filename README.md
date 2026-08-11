@@ -167,6 +167,12 @@ current authority, historical context, and absent evidence remain retrievable.
 Its cases and operating limits are documented in
 `docs/retrieval-evaluation.md`.
 
+The accepted machine-first reference-discovery direction is maintained in
+`docs/architecture/reference-discovery.md`; its independently reversible
+delivery backlog is `docs/plans/reference-discovery.md`. These documents are
+plans until their slices land, so the route list above continues to describe
+current behavior.
+
 ## Deployment
 
 This repo deploys to Cloudflare Workers using the Astro Cloudflare adapter and
