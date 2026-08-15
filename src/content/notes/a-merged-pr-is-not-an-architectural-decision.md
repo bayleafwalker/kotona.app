@@ -14,7 +14,25 @@ relates:
   - the-recommendation-does-not-need-authority
   - the-work-between-the-ticket-and-the-agent
   - judge-agents-by-the-next-prompt
-draft: true
+explorePrompt: >-
+  Use this note as one worked instantiation, not a rule to copy. The
+  transferable question: when an automated worker asks a human to decide
+  something mid-implementation, what authority should that answer carry
+  afterwards, and which later work is it entitled to bind? The note concludes
+  that merging a change is a policy decision about a repository rather than a
+  design decision about a system; that change acceptability, system coherence,
+  and composed behaviour are three distinct reviews that answer different
+  questions and cannot substitute for one another; and that a decision
+  exercised inside the cheapest of them must not be recorded as a constraint
+  binding the others. Its constraints are a single operator, agents holding far
+  more situational context than the approver, and a merge gate kept deliberately
+  casual because a repository delta is cheap to revert. Apply the question to
+  your own setting. Name where your constraints diverge -- regulated change
+  control, many reviewers, changes whose consequences cannot be reverted -- and
+  say which conclusions stop holding there. Produce a routing rule for your
+  change stream, a provenance rule stating what each review's decisions may
+  bind, and the observation that would show either rule is wrong.
+draft: false
 tags:
   - agents
   - code-review
