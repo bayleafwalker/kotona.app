@@ -21,7 +21,7 @@ tags:
   - decision-making
   - provenance
   - workflow
-summary: An agent asks for a design decision mid-implementation, the operator answers at pull-request depth, and the answer gets filed as architecture. The fix is not a better escalation prompt but keeping the three review surfaces from borrowing each other's authority.
+summary: An agent asks for a design decision mid-implementation, the operator answers at pull-request depth, and the answer gets filed as architecture. The fix is not a better escalation prompt but keeping three separate reviews from borrowing each other's authority.
 ---
 
 An agent has been inside an implementation for an hour. It has read the schema,
@@ -57,20 +57,20 @@ policy is roughly: casual review passes, tests are aligned and pass, no
 outstanding notices block it. Sometimes a pull request passes that does not meet
 even these.
 
-That gate can be cheap because of one property: any action taken in a single
-pull request can be reversed in a single pull request. Nothing about the gate
-requires proof of ultimate provenance, and demanding one would not make the
-merge safer. It would make it slower and produce a paper record that looks like
-authority.
+That gate can be cheap because of one property: the repository delta of a pull
+request is cheap to reverse. Whatever a single pull request did to the tree, a
+single pull request can undo. Nothing about the gate requires proof of ultimate
+provenance, and demanding one would not make the merge safer. It would make it
+slower and produce a paper record that looks like authority.
 
 This is why "agents produce more code, so review harder" is the wrong response.
 It strengthens the surface that was never carrying the weight.
 
 ## The exception is consequence, not code
 
-Reversibility is a property of the code in a diff and not always of what the
-diff caused. A pull request that adds a column, ships, and acquires three
-consumers is a clean `git revert` and a dirty system state. [Derive status only
+The delta is cheap to reverse. Its consequences may not be. A pull request that
+adds a column, ships, and acquires three consumers is a clean `git revert` and a
+dirty system state. [Derive status only
 from reproducible evidence](/notes/derived-status-is-earned/) makes the same
 split between a throwaway query and a migration that changes customer records:
 generation cost says almost nothing about which case you are in, and neither
@@ -83,14 +83,19 @@ regulatory meaning attached.
 
 Those need routing out of the casual gate, not reviewing harder inside it. A
 stricter review at the same surface still produces a decision stamped with
-pull-request authority. The useful mechanism is a classifier on the change
-stream that says _this one is not a merge question_, and then handles it
-somewhere else.
+pull-request authority. The useful mechanism is a filter on the change stream
+that says _this one is not a merge question_, and then hands it somewhere else.
+The filter is not itself a review. It only decides which review a change
+belongs to.
 
-## The third surface has no trigger
+## The second review has no merge event
 
 The review nobody schedules asks whether the system we now have still resembles
-the system we intend to have. Product intent, architecture, public interfaces,
+the system we intend to have. It has no natural transaction boundary: nothing
+arrives, nothing is pending, nothing blocks. That is not the same as being
+unschedulable. A release milestone, a large schema addition, measured growth in
+the dependency graph or simply a date can all trigger it. What it cannot have is
+a merge event, which is why it does not happen by itself. Product intent, architecture, public interfaces,
 domain and data models, code structure, runtime behaviour — do those still
 describe approximately the same thing?
 
@@ -128,11 +133,47 @@ the architecture document is stale. Sometimes a duplicate exists because two
 domains genuinely need independent implementations. Sometimes the architecture
 was followed exactly and the architecture is now the problem.
 
+## A pull request is not the product either
+
+Architectural coherence is not the last surface. A system can be internally
+tidy and still behave badly as the thing someone uses.
+
+Retries are the clearest case I have. The frontend retries. The API retries.
+The queue redelivers. The worker times out. Reconciliation runs. The user
+presses submit again. Every one of those implementations can be correct against
+its own specification, tested, reviewed and architecturally where it belongs.
+The interesting behaviour exists only in the interaction, and no single pull
+request contains it.
+
+The same is true of most of what makes a system pleasant or unpleasant to
+operate: latency, recovery after a partial failure, resource consumption,
+observability, upgrade behaviour, how many operations a common workflow
+actually takes, and plain feel. Those are properties of the composed thing.
+Asking a diff about them is a category error.
+
+This is where heavy change-level assurance becomes quietly misleading. The
+measurable layer — coverage, lint, security findings, review comments resolved
+— responds well to effort, and agents can make it spectacular. Every pull
+request can carry exhaustive tests, three independent reviews and a clean scan.
+None of that is evidence about the composed behaviour, because none of it was
+ever measuring that. A project can have excellent change review, defensible
+architecture and a product that is slow and awkward to use, and nothing in the
+pipeline will say so.
+
+So the third review exercises the actual thing: realistic workflows, combined
+failures rather than isolated ones, performance under something resembling real
+load, and the product surface as a user meets it. It is the one review that
+cannot be done by reading the repository.
+
 ## The provenance rule
 
-If the three surfaces are separated, one rule follows directly: a decision made
-inside the pull-request surface cannot be recorded as a constraint binding the
-system surface.
+Three reviews, then: whether the change is acceptable, whether the system still
+coheres, and whether the composed thing works well. They answer different
+questions and they are not substitutable — a project can score well on the first
+and badly on the other two, which is the ordinary case rather than a pathology.
+
+One rule follows from keeping them separate: a decision made inside the
+pull-request review cannot be recorded as a constraint binding the other two.
 
 Concretely, when an agent asks me something mid-implementation and I answer,
 that answer is a delegated implementation choice with an audit trail. It is not
@@ -142,8 +183,9 @@ operator unblocking work, not an operator setting direction.
 
 This is the same shape as [authority must travel with the
 action](/notes/authority-must-travel-with-the-action/). The authority attached
-to a decision has to match the surface where it was actually exercised, not the
-surface where it later turns out to be useful.
+to a decision has to match the review where it was actually exercised, not the
+review where it later turns out to be useful. Authority should not silently
+increase as a decision travels from implementation into history.
 
 ## What this does not fix
 
@@ -168,8 +210,8 @@ of any process that claims to have closed it.
 
 ## Where the model may fail
 
-The confident half of this note is the separation of surfaces. The uncertain
-half is whether the routing classifier works. Detecting which changes carry
+The confident half of this note is the separation of the three reviews. The
+uncertain half is whether the routing filter works. Detecting which changes carry
 non-revertible semantics is itself a judgment, and an agent applying it will
 have both false negatives — a schema change that looked internal — and false
 positives that push routine work into the expensive path until the path stops
