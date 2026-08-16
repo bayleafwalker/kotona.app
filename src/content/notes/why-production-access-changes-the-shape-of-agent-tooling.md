@@ -4,8 +4,8 @@ role: synthesis
 status: exploration
 lifecycle: current
 area: agent infrastructure
-published: 2026-08-09
-lastRevised: 2026-08-09
+published: 2026-08-16
+lastRevised: 2026-08-16
 projects:
   - vuoro
 relates:
@@ -13,7 +13,8 @@ relates:
   - authority-must-travel-with-the-action
   - legibility-is-an-operating-property
   - a-field-guide-to-assurance-managed-ai-development
-draft: true
+  - a-platform-capability-does-not-exist-all-at-once
+draft: false
 tags:
   - agents
   - harness-engineering
@@ -84,6 +85,20 @@ A general coding harness already has much of the required interaction loop. It
 can inspect repositories, run commands, retain working state, revise a plan,
 request approval, and return intermediate findings. The missing part is a
 stronger binding between that loop and the operational environment.
+
+That interaction loop is also getting stronger on its own. Current harnesses
+can increasingly write a bounded program that calls several eligible tools,
+loops and branches, filters and aggregates their intermediate results, and
+runs independent calls in parallel — without putting every raw result in front
+of the model between operations. Anthropic's programmatic tool calling and
+OpenAI's Responses API equivalent both do this inside the platform now, not as
+something a surrounding wrapper has to build. That does not remove the need
+for a binding; it moves the "general harness" baseline forward and narrows
+what a domain-specific wrapper still has to contribute. [A platform capability
+does not exist all at
+once](/notes/a-platform-capability-does-not-exist-all-at-once/) works through
+one case where that shift arrived late enough to invalidate a wrapper's
+original reason for existing.
 
 The binding should help the operator too. The agent ought to retrieve a slice
 of an earlier observation instead of silently rerunning a volatile command. A
@@ -234,7 +249,7 @@ harnesses remain replaceable execution engines.
 
 This is a governed execution substrate, not a promise of universal autonomy.
 
-## `outctl` is one interface, not the architecture
+## PTC owns the hot path; evidence may still survive outside it
 
 `outctl` began with the output problem that triggered this note. Operational
 commands can produce far more text than an agent should place in working
@@ -243,7 +258,7 @@ the result may remove the relevant line. Summarizing it immediately adds an
 interpretation before the investigation has begun. Running the command again
 later observes a different moment.
 
-Its proposed contract is deliberately smaller:
+Its proposed contract was deliberately smaller:
 
 ```text
 execute once
@@ -253,14 +268,31 @@ execute once
 -> preserve provenance
 ```
 
-The mechanism gives the agent a stable observation and gives the operator the
-underlying evidence. It does not know what a healthy cluster looks like. A
-cluster-specific profile or lens still has to decide which observations
-matter, how they relate, and when the evidence supports a conclusion.
+Native programmatic tool calling has since become the preferred boundary for
+that hot-path work. A bounded program in the harness can loop, branch, call
+tools in parallel, filter and aggregate intermediate results, and suppress
+irrelevant output before anything reaches the model — without another wrapper
+sitting in front of the command. [A platform capability does not exist all at
+once](/notes/a-platform-capability-does-not-exist-all-at-once/) traces how that
+capability arrived and why an external wrapper stops being the only way to
+keep large intermediate results out of context once it is available and
+enabled.
 
-That separation keeps the generic interface honest. Capture, projection,
-retrieval, and provenance can serve other command-heavy work. Kubernetes
-knowledge stays where it can be tested as Kubernetes knowledge.
+That does not settle the surrounding questions this note is actually about.
+The runner or application still owns credentials, target scope, permissions,
+approvals, and execution receipts; moving the loop into code does not turn the
+model into the authorization layer. A separate capability may still be useful
+for durable addressed observations — evidence that survives past the request
+that produced it, can be retrieved deterministically after a session is
+compacted or cleared, and remains inspectable for policy and provenance. PTC
+does not own that by itself, and `outctl` has not yet earned ownership of it
+either; the residual case has to be won against a simpler runner or tracing
+capability, not assumed.
+
+This note's main conclusion is unaffected: the reusable unit is a general
+execution substrate plus a versioned binding of informational, procedural,
+operational, and authority context for one run. PTC makes the substrate
+stronger at one interface. It does not remove the binding.
 
 ## The next test is a complete run
 
@@ -280,7 +312,28 @@ The first useful evaluation is therefore not an output-token contest. A
 cluster-health profile should be run across more than one general harness and
 scored for routing, conclusion quality, evidence reuse, context exposure,
 termination behaviour, cost, and audit completeness. The comparison is valid
-only if the task, authority, workspace, and completion contract remain fixed.
+only if the task, authority, workspace, and completion contract remain fixed —
+and execution topology now has to be an explicit, recorded variable rather
+than an assumed constant:
+
+```text
+same task
+same domain binding
+same authority
+same completion contract
+
+but record:
+- native PTC available?
+- PTC actually selected for this run?
+- which tools were eligible for it?
+- how much intermediate evidence reached the model versus stayed in the
+  bounded program?
+- what happens to that evidence once the request or session ends?
+```
+
+A direct-tool-call harness and a PTC-capable harness are not the same
+execution topology, and treating them as interchangeable would silently
+confound the result.
 
 The working conclusion is narrower than “build agents differently.” Production
 work needs a stochastic reasoner inside an auditable operating envelope. The

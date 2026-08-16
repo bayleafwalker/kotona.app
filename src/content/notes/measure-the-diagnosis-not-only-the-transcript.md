@@ -2,12 +2,21 @@
 title: Measure the diagnosis, not only the transcript
 seoTitle: Evaluating bounded-output tooling for coding agents
 socialTitle: What an 84% output reduction did not prove
-role: synthesis
-status: exploration
-lifecycle: current
+role: project-history
+status: archival
+lifecycle: superseded
+lifecycleChanged: 2026-08-16
+lifecycleReason: >-
+  Native programmatic tool calling now owns the ephemeral orchestration and
+  context-filtering boundary that this note treated as an external-tool product
+  opportunity. The direct-call measurements and evaluation lessons remain
+  valid, but the recommendation to continue Outctl as a general context layer
+  is no longer current.
+supersededBy:
+  - a-platform-capability-does-not-exist-all-at-once
 area: model evaluation
 published: 2026-08-09
-lastRevised: 2026-08-09
+lastRevised: 2026-08-16
 projects:
   - vuoro
 relates:
@@ -16,6 +25,7 @@ relates:
   - the-agent-is-not-the-application
   - authority-must-travel-with-the-action
   - derived-status-is-earned
+  - a-platform-capability-does-not-exist-all-at-once
 draft: false
 tags:
   - agents
@@ -47,6 +57,12 @@ explorePrompt: >-
   measures, and a real-use pilot. Include primary outcomes, invalidity
   conditions, and the strongest claim the evidence could honestly support.
 ---
+
+> **Update, 16 August 2026.** The output-reduction measurements and evaluation
+> findings below remain valid for the direct-tool topology tested. The
+> recommendation that Outctl continue as a general context-management layer is
+> superseded by native programmatic tool calling. This note is retained as the
+> experiment record.
 
 Outctl did what it was built to do. In clean comparisons, it reduced the
 Kubernetes command output shown to a coding agent by about 84%. The reduction
