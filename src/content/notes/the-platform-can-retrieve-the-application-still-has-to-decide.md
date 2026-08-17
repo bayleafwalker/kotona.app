@@ -16,7 +16,7 @@ relates:
   - judge-agents-by-the-next-prompt
   - the-agent-is-not-the-application
   - authority-must-travel-with-the-action
-draft: true
+draft: false
 tags:
   - agents
   - evaluation

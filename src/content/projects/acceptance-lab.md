@@ -3,7 +3,7 @@ title: Acceptance Lab
 published: 2026-08-17
 lastRevised: 2026-08-17
 lastVerified: 2026-08-17
-draft: true
+draft: false
 project: acceptance-lab
 kind: engineering
 status: Runnable local prototype; deterministic fixtures only
