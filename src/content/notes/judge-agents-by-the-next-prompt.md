@@ -2,10 +2,20 @@
 title: Judge agents by the next prompt
 role: operating
 status: guiding
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-08-17
+lifecycleReason: >-
+  The correction/extension/authorization heuristic is preserved as an
+  operator metric for visible supervision debt. It is not sufficient
+  evidence of understanding: a weak assent can be filed as durable intent, a
+  self-report can be plausible without being introspective, and several
+  failure shapes never surface as a next-turn correction at all. See The
+  next prompt was only the visible error.
+supersededBy:
+  - the-next-prompt-was-only-the-visible-error
 area: agent workflow
 published: 2026-07-13
-lastRevised: 2026-07-13
+lastRevised: 2026-08-17
 projects:
   - vuoro
 relates:
@@ -18,6 +28,15 @@ tags:
   - workflow
 summary: New agents carry more work from intent to evidence, but that changes rather than removes the supervision problem. The next prompt reveals whether the result needs repair or is ready to extend.
 ---
+
+> **Update, August 2026.** The correction/extension/authorization distinction
+> below survives as an operator metric for visible supervision debt — cheap,
+> real, and still worth running on every session. It is not sufficient
+> evidence that an agent understood the work: a clean authorization can still
+> get filed as durable intent, and a fluent self-report can pass this test
+> without being evidence of anything. See [The next prompt was only the
+> visible error](/notes/the-next-prompt-was-only-the-visible-error/) for the
+> broader observation model this note's rule now sits inside.
 
 The best evidence that an agent understood the work is the next thing I have to tell it.
 
