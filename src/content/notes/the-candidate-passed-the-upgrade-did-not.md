@@ -6,7 +6,7 @@ lifecycle: current
 area: release engineering
 published: 2026-08-03
 lastRevised: 2026-08-08
-draft: true
+draft: false
 projects:
   - vuoro
 relates:
@@ -21,6 +21,25 @@ tags:
   - contracts
   - operations
 summary: A release candidate passed every gate and failed on contact with production six minutes later. The gates proved compatibility with the target database state; nothing had proved the transition from the state actually running.
+explorePrompt: >-
+  Use this note as one worked instantiation, not a rule to copy. The
+  transferable question: when a release qualification suite passes every
+  gate and the release still fails on contact with production, what class of
+  claim did the suite never make? This instantiation concludes that
+  compatibility-with-destination and admissibility-of-the-transition-from-
+  the-actual-current-state are separate claims, that disposable-database
+  fixtures silently encode an assumed starting schema version instead of the
+  one production is actually running, and that the fix is a state-transition
+  contract (S0 through R0) where the untested edge -- not the destination --
+  is where fixtures must be built. Its constraints are a system with staged,
+  numbered schema migrations, a runtime that fails closed rather than
+  discovering mismatch mid-transaction, and a cheap image-only rollback
+  because no persistent state had changed yet. Apply the question to your
+  own release pipeline. Name where your constraints diverge -- unversioned
+  schemas, migrations that run automatically rather than being staged
+  separately, rollbacks that are not cheap -- and say which parts of this
+  method still transfer. Produce the state-transition diagram for your own
+  release edges and name which arrow currently has no test.
 ---
 
 At 22:36 UTC on 2026-08-02, I pinned Vuoro `v0.1.33` into both
@@ -116,11 +135,12 @@ undoing the schema change.
 The original tests proved the candidate worked at the destination. They never
 proved it could leave the state production was actually in.
 
-## Still open
+## Still open (as of 2026-08-08)
 
-The bridge staging and cutover are not complete. The failing permission test has
-specified the required grant, but that grant has not yet been applied to the
-live ledgers. The transition has been proved state by state in disposable
-databases; it has not yet been walked end to end in production.
+The maintenance bridge is staged, but the cutover is not complete. The failing
+permission test has specified the required grant, but that grant has not yet
+been applied to the live ledgers. The transition has been proved state by
+state in disposable databases; it has not yet been walked end to end in
+production.
 
 That unfinished walk is the next release gate.
