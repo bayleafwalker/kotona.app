@@ -14,6 +14,7 @@ relates:
   - authority-must-travel-with-the-action
   - the-agent-is-not-the-application
   - the-recommendation-does-not-need-authority
+  - the-hotspots-survived
 draft: false
 terms:
   - term: Vuoro

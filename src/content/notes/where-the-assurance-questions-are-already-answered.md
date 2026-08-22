@@ -14,6 +14,7 @@ relates:
   - the-work-between-the-ticket-and-the-agent
   - derived-status-is-earned
   - the-missing-layer-is-binding-not-intelligence
+  - the-hotspots-survived
 tags:
   - assurance
   - agents

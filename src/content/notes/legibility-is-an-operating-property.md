@@ -15,6 +15,7 @@ relates:
   - the-work-between-the-ticket-and-the-agent
   - compatibility-reports-should-be-a-little-rude
   - the-person-of-record
+  - the-hotspots-survived
 tags:
   - agents
   - organizational-design

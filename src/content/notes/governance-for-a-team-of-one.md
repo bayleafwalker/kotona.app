@@ -15,6 +15,7 @@ relates:
   - derived-status-is-earned
   - the-person-of-record
   - the-human-is-in-the-slow-loop
+  - the-hotspots-survived
 draft: false
 terms:
   - term: sprintctl
