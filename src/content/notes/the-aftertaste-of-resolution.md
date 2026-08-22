@@ -16,6 +16,24 @@ summary:
   Conversational refinement produces the feeling of having thought clearly,
   which is not the same thing as having thought clearly. The fix was not
   discipline. It was writing the stop rule into the counterpart.
+explorePrompt: >-
+  Use this note as a worked instantiation, not a rule to copy. The transferable
+  question: when a process reliably produces the feeling of having finished, how
+  do you build a stop rule that fires at the moment your own judgment is least
+  trustworthy? The worked case is long LLM sessions, where every turn is locally
+  an improvement and the session ends feeling resolved -- a state
+  indistinguishable from having thought clearly, and one that stops the topic
+  attracting attention again. The conclusion splits by stakes: for cheap ideas,
+  feeling finished is the correct terminal state; for load-bearing work the
+  session must not be the last thing that happens to the idea, and something
+  with friction has to follow. The fix was placement rather than discipline -- a
+  standing instruction to the counterpart to name the drift and stop, because
+  the operator is the compromised component exactly when the rule is needed.
+  Apply the question to a loop you run. Name the felt end-state, what could call
+  it, and where the instruction has to live to be reachable at that moment. Say
+  where your constraints differ: no persistent counterpart, several
+  participants, or an ending imposed from outside. Produce the rule and the
+  channel it arrives through, and name the failures it cannot catch.
 ---
 
 Long LLM sessions have a characteristic failure mode. Each turn refines the

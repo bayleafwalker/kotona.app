@@ -31,6 +31,26 @@ summary:
   actionq-dispatcher runs agent work as subprocesses inside a per-invocation
   coordinator. The rejected alternative was a long-running agent service, and
   the rejection is most of the design.
+explorePrompt: >-
+  Use this note as a worked instantiation, not a design to copy. The
+  transferable question: for autonomous work in your environment, what should
+  the unit of execution be, and which properties does a resident process
+  accumulate that a per-invocation one cannot? The worked case runs agent work
+  as a subprocess inside a coordinator invoked once per action: it wakes, claims
+  one action, creates a worktree, takes a claim, renders the prompt, invokes the
+  worker under a per-action-type ACL, runs post-flight gates, transitions state,
+  and exits, leaving no process behind. A resident agent service was rejected on
+  security posture rather than capability, because it accumulates standing
+  credentials, broad reach, and state that exists nowhere reviewable. The
+  coordinator is deliberately deterministic, with no model in the loop;
+  authority to merge or send stays with the operator. Failure handling falls out
+  of the shape: a crashed subprocess is a failed queue entry with its events
+  attached, and recovery is to claim it again. Apply the question to autonomous
+  work you run. Name what your long-lived component holds that would disappear
+  if its lifetime were one unit of work, and what genuinely needs to persist.
+  Say where your constraints diverge -- work that cannot be bounded, startup
+  cost that dominates, state that must survive. Produce the execution unit you
+  would choose and what it costs you.
 ---
 
 An earlier post argued that the missing layer in solo agent work is binding, not

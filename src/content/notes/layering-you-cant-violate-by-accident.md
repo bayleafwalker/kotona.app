@@ -21,6 +21,25 @@ tags:
 summary:
   homelab-analytics enforces its layer boundaries with pytest. A documented
   architecture is a request; a tested one is a constraint.
+explorePrompt: >-
+  Use this note as a worked instantiation, not a rule to copy. The transferable
+  question: which architectural constraints in your system survive being edited
+  by an actor with no memory of why they exist, and what would it take to move
+  the rest into that category? The worked case is a modular monolith whose
+  packages are sorted into strata by rate of change, with the layer boundaries
+  enforced as ordinary tests that fail the build when an import crosses in the
+  wrong direction. The stated motivation is agentic editing: a wrong-direction
+  import is the classic plausible change -- it works, it is local, and it is
+  exactly how a layered codebase rots into a connected one -- and a contract
+  test is the reviewer that never decides the violation is fine this once. A
+  documented architecture is a request; a tested one is a constraint. Apply the
+  question to a codebase you maintain. List the boundaries you currently rely on
+  people absorbing from directory names or review habit, and say which could be
+  expressed as a mechanical check today. Name where your constraints differ -- a
+  language without inspectable imports, boundaries that are semantic rather than
+  structural, a team that would experience the check as an obstacle. Produce the
+  checks you would add and the ones you concluded cannot be mechanised, with the
+  reason.
 ---
 
 homelab-analytics is a modular monolith — FastAPI, a worker, a Next.js frontend,

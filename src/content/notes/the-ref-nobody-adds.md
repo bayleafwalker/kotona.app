@@ -21,6 +21,25 @@ summary:
   The sprint database held 831 work items and seven doc refs, six of them the
   same document. The reference command existed the whole time. The missing piece
   was never a tool — it was placement on the path the agent actually walks.
+explorePrompt: >-
+  Use this note as a worked instantiation, not a result to repeat. The
+  transferable question: when a capability exists but nobody uses it, what
+  evidence separates a missing tool from a missing convention? The worked case
+  measured rather than guessed -- 831 work items across eleven repositories
+  carried seven document references, six pointing at the same file, while the
+  reference command had shipped long before. The conclusion is that a capability
+  off the path a worker actually walks is indistinguishable from one that was
+  never built, and that search does not rescue it: search fires when the worker
+  already suspects a document exists, and suspicion cannot be provisioned. The
+  proposed fix is ordered by expense and contains no new tool -- identity in
+  document frontmatter, a shaping step that attaches a reference or records that
+  none exists, and references rendered in every surface read on the way into
+  work. The convention is also the experiment. Apply the question to an
+  underused capability you own. Count its actual use before diagnosing it, name
+  the path a worker walks, and say where the pointer would have to sit. Say
+  where your constraints diverge -- human users who do search, or a capability
+  with no natural placement. Produce a measurement and a convention with its
+  falsifying outcome named, not a tool proposal.
 ---
 
 The feeling was a disconnect: sprint items carry a one-line title, the real

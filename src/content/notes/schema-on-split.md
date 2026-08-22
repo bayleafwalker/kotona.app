@@ -22,6 +22,25 @@ tags:
 summary:
   "A pipeline rule: land raw, split deterministically, enrich point-in-time,
   then shape for consumers."
+explorePrompt: >-
+  Use this note as a worked rule, not a naming scheme to adopt. The transferable
+  question: in a data pipeline, which transformations can be replayed from their
+  inputs alone, and where does the boundary between those and the rest actually
+  fall? The worked answer draws the line at purity. A split may read the raw
+  payload, the parser code, and mapping tables bundled with that code; anything
+  reading current time, a catalog, a geocoder, an FX service, or mutable
+  reference data is enrichment, not splitting. The operational test is direct:
+  if the same input bytes and the same splitter version stop producing the same
+  output later, it was enrichment all along, and hiding it in the normalization
+  layer is where replay stories rot. Enriched output can only be reproduced if
+  its sources were captured as content-addressed snapshots or, more weakly,
+  version strings. Apply the question to a pipeline you own. Find every
+  transform in your normalization layer, mark the ones that read external state,
+  and say what it would cost to move them or to snapshot their sources. Say
+  where your constraints diverge -- current-state recomputation is the desired
+  behaviour, no replay or audit pressure exists, or the split is only type
+  coercion. Produce a classification of your existing transforms with the
+  lineage each would need, not a layer-renaming plan.
 ---
 
 ## Rule
