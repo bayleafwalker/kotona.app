@@ -17,6 +17,19 @@ function entry(id, overrides = {}) {
   };
 }
 
+test("excludes every non-current lifecycle state, disproven included", () => {
+  const ranked = rankEntryPoints([
+    entry("superseded-note", { lifecycle: "superseded" }),
+    entry("archived-note", { lifecycle: "archived" }),
+    entry("disproven-note", { lifecycle: "disproven" }),
+    entry("current-note"),
+  ]);
+  assert.deepEqual(
+    ranked.map((candidate) => candidate.id ?? candidate),
+    ["current-note"],
+  );
+});
+
 test("excludes non-current notes entirely", () => {
   const ranked = rankEntryPoints([
     entry("archived-note", { lifecycle: "archived" }),

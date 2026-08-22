@@ -392,9 +392,9 @@ That is what the lifecycle metadata is for:
   its claim.
 
 [Measure the diagnosis, not only the transcript](/notes/measure-the-diagnosis-not-only-the-transcript/)
-should become superseded. Its mechanism and evaluation findings remain valid;
-its recommendation that Outctl continue as the context-management product is no
-longer current.
+has been marked disproven: its mechanism and evaluation findings stand, but its
+product recommendation -- that Outctl continue as the context-management layer
+-- did not survive the evidence.
 
 [Why production access changes the shape of agent tooling](/notes/why-production-access-changes-the-shape-of-agent-tooling/)
 should remain current after revision. Its real subject is the binding between a

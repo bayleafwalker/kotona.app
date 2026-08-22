@@ -4,19 +4,22 @@ seoTitle: Evaluating bounded-output tooling for coding agents
 socialTitle: What an 84% output reduction did not prove
 role: project-history
 status: archival
-lifecycle: superseded
+lifecycle: disproven
 lifecycleChanged: 2026-08-16
 lifecycleReason: >-
-  Native programmatic tool calling now owns the ephemeral orchestration and
-  context-filtering boundary that this note treated as an external-tool product
-  opportunity. The direct-call measurements and evaluation lessons remain valid,
-  but the recommendation to continue Outctl as a general context layer is no
-  longer current.
+  The note's headline claim -- that Outctl had earned continuation as a general
+  context-management layer -- failed against evidence. Native programmatic tool
+  calling now owns the ephemeral orchestration and context-filtering boundary
+  that this note treated as an external-tool product opportunity, so the
+  recommendation is not merely out of date; the case for it did not hold. The
+  direct-call measurements and the four-part evaluation model -- mechanism,
+  quality, economics, authority -- remain valid. See A platform capability does
+  not exist all at once.
 supersededBy:
   - a-platform-capability-does-not-exist-all-at-once
 area: model evaluation
 published: 2026-08-09
-lastRevised: 2026-08-16
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
@@ -38,10 +41,14 @@ summary: >-
   and diagnostic quality remained unresolved. The useful result was a four-part
   evaluation model: mechanism, quality, economics, and authority.
 explorePrompt: >-
-  Use this note as a worked instantiation, not a result to repeat. The
-  transferable question is how to evaluate a tool that changes what an agent can
-  see or retrieve without confusing mechanism success with task efficacy. In the
-  worked case, bounded command projections reduced model-visible Kubernetes
+  This note is disproven: its recommendation that Outctl continue as a general
+  context-management layer failed against evidence, and native programmatic tool
+  calling now owns that boundary. The current guidance is in "A platform
+  capability does not exist all at once". What survives is the evaluation
+  method, so use this note as a worked instantiation, not a result to repeat.
+  The transferable question is how to evaluate a tool that changes what an agent
+  can see or retrieve without confusing mechanism success with task efficacy. In
+  the worked case, bounded command projections reduced model-visible Kubernetes
   output by about 84%, but the harness could not establish equal diagnostic
   quality or stable session savings because the quality oracle was too coarse,
   cache effects changed sign across pairs, and shell-level guards did not prove
@@ -58,11 +65,13 @@ explorePrompt: >-
   claim the evidence could honestly support.
 ---
 
-> **Update, 16 August 2026.** The output-reduction measurements and evaluation
-> findings below remain valid for the direct-tool topology tested. The
-> recommendation that Outctl continue as a general context-management layer is
-> superseded by native programmatic tool calling. This note is retained as the
-> experiment record.
+> **Update, 16 August 2026 -- disproven.** The output-reduction measurements and
+> evaluation findings below remain valid for the direct-tool topology tested.
+> The note's own recommendation -- that Outctl had earned continuation as a
+> general context-management layer -- did not survive native programmatic tool
+> calling, which now owns that boundary. See
+> [A platform capability does not exist all at once](/notes/a-platform-capability-does-not-exist-all-at-once/).
+> This note is retained as the experiment record.
 
 Outctl did what it was built to do. In clean comparisons, it reduced the
 Kubernetes command output shown to a coding agent by about 84%. The reduction
