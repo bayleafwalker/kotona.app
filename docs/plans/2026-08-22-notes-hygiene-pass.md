@@ -333,3 +333,36 @@ validated by rubric review rather than isolated clean-context execution, which
 `docs/explore-prompts.md` permits with disclosure. Thirty is enough that a
 sibling check on two or three — one current, one superseded — is cheap insurance
 before they are treated as settled.
+
+**Spot-check result, 2026-08-22.** Three prompts were run in isolated
+clean-context sessions (Sonnet, no tools, prompt text plus a sibling scenario
+only; the note itself was never supplied). Graded by a session that had read the
+notes but not written the prompts.
+
+| Note                                             | Scenario                                                                  | Result                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------ | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `judge-agents-by-the-next-prompt` (superseded)   | Finance lead reviewing two human analysts monthly                         | Pass. Led with the lifecycle disclosure, did not act on the routing table, produced a gap list; three of its five blind spots match the successor note, two are new (per-worker decomposition, supervisor drift).                                                                                         |
+| `the-node-remembers-what-git-does-not` (current) | Proxmox fleet with Ceph and ZFS stores the host does not own              | Pass. Mapped every store to the four dispositions, matched two cases to the note's incidents, and diverged on externally-authoritative stores with a reason. ZFS feature flags are a sharper instance of the note's rollback thesis than either incident in the note — worth citing on a future revision. |
+| `the-wallpaper-is-a-build-artifact` (current)    | Nondeterministically trained 7B model with a legal data-deletion deadline | Pass. Per-conclusion verdicts; explicitly rejected "regeneration is reconstruction" under nondeterminism and said why. Produced a receipt schema and a gate table with artifact class per gate.                                                                                                           |
+
+No prompt produced a summary or clone.
+
+**Coverage caveat.** Only `judge-agents-by-the-next-prompt` came from this
+pass's batch of 30. `the-node-remembers-what-git-does-not` and
+`the-wallpaper-is-a-build-artifact` already carried prompts at the plan commit
+and predate the hygiene pass — both appear on the plan's step-6 priority list,
+which was wrong about which notes were missing prompts, and that is the likely
+route by which they were sampled. So this tests 1 of the 30 rubric-reviewed
+prompts plus 2 written under the older process. It is evidence that the rubric
+route can produce a sibling-valid prompt, not that the batch is settled. 29
+remain unexecuted.
+
+**Two by-products worth acting on**, both candidates for a note revision rather
+than a prompt change:
+
+- ZFS feature flags — one-directional state written by the new version — are a
+  cleaner instance of the rollback thesis than either incident in
+  `the-node-remembers-what-git-does-not`.
+- "Regeneration is reconstruction" does not hold under nondeterministic
+  production. That is a real scope limit on `the-wallpaper-is-a-build-artifact`
+  which the note does not state.
