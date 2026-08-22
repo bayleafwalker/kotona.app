@@ -5,12 +5,15 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-07-22
-lastRevised: 2026-07-22
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
   - legibility-is-an-operating-property
   - the-agent-is-not-the-application
+  - the-person-of-record
+  - a-project-folder-is-a-view-not-an-authority
+  - why-production-access-changes-the-shape-of-agent-tooling
   - the-work-between-the-ticket-and-the-agent
   - the-deployment-boundary-was-only-a-place
   - the-devbox-is-an-access-cell
@@ -81,9 +84,11 @@ links the work, actor, authorization, request, target, and immediate result.
 Reconciliation is the after-boundary: it determines whether the consequence
 actually holds and what must happen if it does not.
 
-This is a synthesis of the earlier deployment-boundary and devbox notes. It is
-not a new assurance primitive. The surrounding vocabulary belongs to established
-access control, provenance, workflow assurance, and reference-monitor practice;
+This is a synthesis of the earlier deployment-boundary and devbox notes, and the
+canonical statement of the envelope on this site: other notes link here rather
+than restating it. It is not a new assurance primitive. The surrounding
+vocabulary belongs to established access control, provenance, workflow
+assurance, and reference-monitor practice;
 [_Where the assurance questions are already answered_](/notes/where-the-assurance-questions-are-already-answered/)
 maps the larger field.
 
