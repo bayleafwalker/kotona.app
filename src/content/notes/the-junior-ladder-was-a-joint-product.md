@@ -37,6 +37,27 @@ summary:
   at the same time; agent automation separates those goods and leaves succession
   needing an explicit operating model.
 draft: false
+explorePrompt: >-
+  This note is superseded by "Design internal pipelines for succession, not just
+  operation", which carries its formation argument into an operational model;
+  read that first. This note remains the project-history record of the economic
+  argument. The transferable question: when a category of work was quietly
+  paying for two things at once, what happens to the second one after the work
+  is automated? The worked case is routine junior production, which allocated
+  work efficiently and formed practitioners in the same transaction. Once agents
+  absorb the routine output, formation stops being a free side effect and
+  becomes something that has to be purchased deliberately, with a predictable
+  funding problem: the firm pays while the worker keeps a portable benefit and
+  may leave. Regulated professions have residencies and licensure to impose it;
+  open professions have fewer mechanisms against free-riding. The narrower
+  incentive that survives is continuity -- a team depending on a person-bound
+  pipeline needs a second operator before it needs an industry apprenticeship
+  scheme, so pairing a developing worker with reconciliation and replacement
+  work makes formation into resilience rather than charity. It also warns that a
+  small residency can preserve capability while narrowing access. Apply the
+  question to a joint product in your own field. Name the second good, who now
+  pays for it, and what you would buy instead. Then read the successor and say
+  which part becomes operational.
 ---
 
 Junior work used to buy two things at once. The work got done, and a future

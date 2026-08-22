@@ -30,6 +30,26 @@ summary:
   New agents carry more work from intent to evidence, but that changes rather
   than removes the supervision problem. The next prompt reveals whether the
   result needs repair or is ready to extend.
+explorePrompt: >-
+  This note is superseded by "The next prompt was only the visible error", which
+  owns the current guidance; the routing table inside it is a July 2026 snapshot
+  and is not maintained. What survives is the heuristic as an operator metric
+  for visible supervision debt -- cheap, real, and not sufficient evidence that
+  an agent understood the work, since a weak assent can be filed as durable
+  intent and several failure shapes never surface as a next-turn correction at
+  all. Read the successor before acting on any of this. The transferable
+  question the note still poses well: when you supervise a worker whose output
+  looks finished, what does your own next message reveal about what actually
+  happened? Its answer classifies that message as a correction (unfinished
+  reasoning handed back to you), an extension (the result is usable and the new
+  prompt adds work), or an authorization (the work reached a boundary where the
+  remaining decision is yours). It also keeps the authority chain deliberately
+  uneven -- an agent proposes the rule, checkers and tests verify what they were
+  given, a human decides whether the rule was worth adopting -- and adds a scope
+  ceiling so a sound observation does not become an unauthorized programme.
+  Apply the question to work you supervise, then read the successor and say
+  which failures your version of this metric cannot see. Produce the gap, not a
+  scoring rubric.
 ---
 
 > **Update, August 2026.** The correction/extension/authorization distinction

@@ -91,6 +91,15 @@ declared successor or historical use -- never hand an agent old guidance without
 disclosing that first. That is also why the page always places the lifecycle
 notice before the "Explore with AI" block.
 
+## Enforcement
+
+`scripts/check-explore-prompts.mjs` enforces the structural rules only: every
+published note carries a prompt, prompts run 80-2400 characters, and no two
+notes publish the same text. The editorial contract above is not machine-checked
+and will not be. The coverage rule was deferred while the corpus predated the
+feature; the backfill completed on 2026-08-22 and the rule is now on, so a new
+published note without a prompt fails CI. Drafts are exempt.
+
 ## Maintenance after revision
 
 A semantic revision to the note requires prompt review. Cosmetic edits do not.

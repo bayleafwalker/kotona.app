@@ -39,6 +39,26 @@ summary:
   sprintctl and actionq enforce useful execution discipline, but five current
   invariants rely on one operator remaining the only source of identity,
   authority, and audit judgment.
+explorePrompt: >-
+  This note is superseded by "Design internal pipelines for succession, not just
+  operation", which absorbs its inventory into a succession model with the
+  operating drill it motivated; read that first. This note remains the
+  project-history record of the audited findings. The transferable question:
+  which of your system's invariants quietly depend on one person being the only
+  source of identity, authority, and audit judgment? The worked case audited two
+  coordination tools against specific commits and found five such invariants,
+  then made a small conceptual repair: assignment names the accountable party, a
+  claim grants temporary execution rights, an attempt records one session and
+  its artifacts, a submission presents that attempt for judgment, and acceptance
+  is the authorized decision that the item is complete -- and none of those
+  implies the next. The note is careful about its own standing: the inventory is
+  verified against named revisions, while the consequences and the five-part
+  resolution are analysis rather than implemented state. Its conclusion is that
+  coordination infrastructure without a second operator is design theatre, and
+  the correct output was the analysis rather than a build. Apply the question to
+  a system you operate alone. Audit it against a specific revision, list what
+  collapses if a second principal appears, and say which of the five your model
+  conflates. Then read the successor for what to do about it.
 ---
 
 No second human operator, no coordination system. Only disciplined

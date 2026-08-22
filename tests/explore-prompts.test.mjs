@@ -23,11 +23,16 @@ function note(id, overrides = {}) {
   return { id, filePath: `${id}.md`, draft: false, data: { ...overrides } };
 }
 
-test("notes without explorePrompt are not flagged", () => {
+test("published notes without explorePrompt are flagged", () => {
+  const issues = explorePromptIssues([
+    note("a"),
+    note("b", { explorePrompt: undefined }),
+  ]);
   assert.deepEqual(
-    explorePromptIssues([note("a"), note("b", { explorePrompt: undefined })]),
-    [],
+    issues.map((issue) => issue.split(":")[0]),
+    ["a", "b"],
   );
+  assert.match(issues.join("\n"), /require an explorePrompt/);
 });
 
 test("rejects a prompt shorter than the minimum length", () => {
@@ -101,10 +106,14 @@ test("CLI passes on a fixture corpus with no duplicates and reports coverage", a
     "utf8",
   );
   await writeFile(
-    path.join(notesDir, "without-prompt.md"),
-    noteFrontmatter({ id: "without-prompt" }),
+    path.join(notesDir, "also-with-prompt.md"),
+    noteFrontmatter({
+      id: "also-with-prompt",
+      explorePrompt: "y".repeat(MIN_PROMPT_LENGTH),
+    }),
     "utf8",
   );
+  // Drafts are exempt: they are filtered out before the coverage rule runs.
   await writeFile(
     path.join(notesDir, "draft.md"),
     noteFrontmatter({ id: "draft", draft: true }),
@@ -117,7 +126,28 @@ test("CLI passes on a fixture corpus with no duplicates and reports coverage", a
   });
 
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /passed: 1\/2 published notes/);
+  assert.match(result.stdout, /passed: 2\/2 published notes/);
+});
+
+test("CLI fails when a published note carries no prompt", async (t) => {
+  const root = await mkdtemp(path.join(tmpdir(), "kotona-explore-prompts-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+
+  const notesDir = path.join(root, "src/content/notes");
+  await mkdir(notesDir, { recursive: true });
+  await writeFile(
+    path.join(notesDir, "without-prompt.md"),
+    noteFrontmatter({ id: "without-prompt" }),
+    "utf8",
+  );
+
+  const result = spawnSync(process.execPath, [scriptPath, "--root", root], {
+    encoding: "utf8",
+    env: subprocessEnv,
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /without-prompt: published notes require/);
 });
 
 test("CLI fails when two notes publish the same prompt text", async (t) => {

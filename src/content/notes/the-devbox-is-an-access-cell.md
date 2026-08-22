@@ -28,6 +28,28 @@ summary:
   A devbox can bind identity, tools, network reach, and session evidence, but it
   should remain a replaceable access cell rather than becoming the
   organizational authority.
+explorePrompt: >-
+  This note is superseded by "Authority must travel with the action", which
+  merges its boundary with the action-envelope model so topology and authority
+  are described together; read that first. This note remains the origin record
+  for the topology half. The transferable question: what should the environment
+  a session runs in be allowed to decide? The worked answer keeps it small. An
+  access cell -- devbox, workstation, CI runner, ephemeral task environment --
+  binds identity, offers approved tools, mediates network reach, and emits
+  session evidence, and must not become the owner of policy or of what the
+  organization authorized. The shape of the cell is a separate trade with its
+  own security model: centralized cells make mediation and evidence easy but
+  concentrate failure, individual cells reduce shared fate but complicate drift
+  and secret distribution, ephemeral cells reduce residue but cost continuity.
+  None may change the meaning of an authorization. The model is deliberately not
+  Git-shaped: a cell exposing asset tooling can still carry stable identifiers,
+  content hashes, tool revisions, capability receipts, and validation results,
+  and an external system needs a narrow adapter rather than absorption. The
+  design keeps one inconvenience on purpose -- a reachable tool may still refuse
+  the operator, which is proof that the wall and the law are different
+  mechanisms. Apply the question to an environment you provision. Name what it
+  currently decides that it should not. Then read the successor and say what
+  changes.
 ---
 
 The devbox is a good entrance to an operating environment and a bad foundation

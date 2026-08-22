@@ -20,6 +20,26 @@ summary:
 tags:
   - auth
   - architecture
+explorePrompt: >-
+  This note is archived: it is a historical architecture decision, and the
+  household platform project page is authoritative for the current integration
+  boundary. Read it as a case, not as guidance. The transferable question: when
+  an application accumulates enough authentication surface to become an
+  accidental identity product, where should the line be drawn instead? The
+  worked decision keeps identity proof upstream, keeps authorization local, and
+  demotes local username-and-password login from a permanent parallel mode to an
+  explicit, temporary, internal-only, auditable break-glass path. Human and
+  automated access end up under the same permission model rather than one policy
+  system for people and a slightly feral second one for machines. The costs are
+  stated: shared deployments get less comfortable and the system takes a harder
+  dependency on an upstream identity provider, both preferable to carrying an
+  accidental identity subsystem forever because it was handy during bootstrap.
+  The residue it flags is compatibility environment aliases, which tend to
+  outlive their intent. Apply the question to a system where auth grew by
+  accretion. Name what proves identity, what decides permission, and what your
+  break-glass path actually is. Say where your constraints diverge -- no
+  upstream provider, offline operation, regulatory separation. Produce the
+  boundary and the deprecation you would have to finish.
 ---
 
 There is a stage in many internal tools where authentication and authorization

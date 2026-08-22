@@ -25,6 +25,26 @@ terms:
 tags:
   - contracts
   - release-engineering
+explorePrompt: >-
+  This note is archived: it is historical contract-governance evidence, and the
+  household platform project page is authoritative for the current capability
+  and its limitations. Read it as a case, not as guidance. The transferable
+  question: what does a compatibility checker have to be willing to complain
+  about before its silence means anything? The worked case moved a checker from
+  polite to conservative -- treating tightened request-body requiredness as
+  breaking, traversing composition keywords instead of treating them as opaque,
+  and extending publication compatibility to semantic metadata and renderer
+  drift rather than only column presence. It also separates classes of failure
+  so one cannot hide another: a stale export is not the same thing as a
+  legitimate breaking change, and both deserve different attention. The stated
+  limit is that conservative classification does not make the release decision;
+  it raises the cost of pretending a change is safer than it is, so the tool is
+  not replacing judgment but making weak judgment harder to hide. The note names
+  its own missing evidence: no specific release the reports have actually
+  blocked. Apply the question to a contract check you rely on. List what it
+  currently declines to call breaking and what a false green would cost. Say
+  where your constraints diverge, and produce the cases you would make it rude
+  about, plus the evidence you would collect to show it changed a decision.
 ---
 
 There is a stage in contract tooling where everything looks mature because JSON

@@ -20,6 +20,25 @@ summary:
 tags:
   - operations
   - gitops
+explorePrompt: >-
+  This note is archived: it is a historical incident record, and the GitOps
+  cluster project page is authoritative for current backup, recovery, and
+  upgrade state. Read it as a case, not as guidance. The transferable question:
+  when a reconciliation loop restores declared state automatically, how do you
+  make an emergency fix without either fighting the loop or leaving a temporary
+  lie in place of the declaration? The worked incident rolled back a
+  crashlooping workload live, and the interesting part was needing to suspend
+  reconciliation long enough for the fix to become the desired state rather than
+  be reverted. Its lessons are narrow on purpose: a live rollback is reasonable
+  when it is clearly part of a path back to the declaration; a suspended
+  reconciliation is short-term containment, not a new home; and sidecars can
+  make a failure shape less obvious by letting a pod look more alive than the
+  application is. It also names its own gap -- the record says which revision
+  regressed, not what inside it caused the crash. Apply the question to a
+  reconciling system you operate. Name your containment step, its expiry, and
+  who is responsible for closing the loop back to the declaration. Say where
+  your constraints diverge, and produce the procedure plus the fact your
+  incident record would still be missing.
 ---
 
 The immediate problem was simple enough. A workload started crashlooping after a

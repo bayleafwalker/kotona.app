@@ -34,6 +34,27 @@ summary:
   Agents can bypass the physical handoff between execution and runtime, so
   authorization, evidence, and reconciliation have to attach to each
   consequential action instead.
+explorePrompt: >-
+  This note is superseded by "Authority must travel with the action", which
+  merges its argument with the access-cell boundary and owns the current
+  guidance; read that first. This note remains the origin record for one half of
+  it. The transferable question: when work can take effect where it is executed,
+  what happens to the controls that used to attach to a crossing? The worked
+  answer is that the smallest durable unit changes. Where an artifact pipeline
+  could make the deployment the main audit object, direct operation has to make
+  the consequential action the unit -- a session is only a container, and
+  compressing one that acquired two capabilities, attempted five mutations, and
+  left one ambiguous result into a single success flag is the new version of
+  closing a ticket when its pull request merged. It also separates runtime from
+  execution: runtime is the durable field of consequences -- the live service,
+  the altered ledger, the sent reply, the active contract -- while execution is
+  the attempt to intervene in it, and the two can share a system while needing
+  different records. High-risk actions can still require proposal, simulation, a
+  second principal, or reversible staging; what disappears is the assumption
+  that every control fits at one universal handoff. Apply the question to a
+  workflow that no longer crosses a boundary. Name your unit of audit and what a
+  session-level success flag would hide. Say where your constraints diverge,
+  then read the successor and say what it adds.
 ---
 
 CI/CD did not solve the boundary between execution and runtime. It made one

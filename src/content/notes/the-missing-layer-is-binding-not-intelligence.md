@@ -42,6 +42,26 @@ summary:
   stack. It is a local-first system that remembers claims, checkpoints, routing
   choices, and promotion boundaries without pretending one operator needs a
   whole platform team.
+explorePrompt: >-
+  This note is superseded by "Where the assurance questions are already
+  answered", which maps its concerns to established engineering disciplines and
+  corrects the claim that the layer was conceptually unclaimed; read that first.
+  This note remains the project-origin framing, and is useful mainly as a dated
+  record of a position that later got corrected. The transferable question: when
+  autonomous work is already good enough to matter, what is actually missing --
+  more capability, or something that remembers what the work meant? The worked
+  answer at the time was a local-first system holding claims, checkpoints,
+  routing choices, and promotion boundaries, with a deliberate list of things
+  refused until the pain had a name: a remote coordination service, a browser
+  control plane, long-lived autonomous workers, general scheduling, full
+  retrieval memory, policy automation without an operator checkpoint. Three
+  months later some of those pressures did acquire names -- work crossing hosts,
+  shared queue state, concurrent dispatch, one operator needing a read surface
+  across repositories -- and the machinery arrived because the pain was
+  observable, not because the rule was abandoned. Apply the question to your own
+  tooling. List what you have refused to build and the named pain that would
+  justify each. Say where your constraints diverge, then read the successor and
+  say which of your framings is already established practice under another name.
 ---
 
 The agent work happens. The problem is that the system forgets.
