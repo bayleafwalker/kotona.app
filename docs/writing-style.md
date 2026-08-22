@@ -65,7 +65,10 @@ novelty where the work is established elsewhere.
 Use for a useful model that is not yet a settled rule. Show the trigger, mark
 the opening **Working model**, explain why the model is useful, name where it
 may fail, state evidence that could change it, and end with current confidence
-or the next test. A compelling title is a retrieval handle, not proof that the
+or the next test. State confidence only for claims whose confidence genuinely
+differs; one tier is fine. Vary the form -- a sentence, a short list, or a
+single named test. Do not use the fixed "high / moderate / low" triplet as a
+closing formula. A compelling title is a retrieval handle, not proof that the
 claim is a law.
 
 ### Project history

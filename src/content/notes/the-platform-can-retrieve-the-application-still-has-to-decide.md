@@ -7,7 +7,7 @@ status: exploration
 lifecycle: current
 area: model evaluation
 published: 2026-08-17
-lastRevised: 2026-08-17
+lastRevised: 2026-08-22
 projects:
   - acceptance-lab
 relates:
@@ -398,10 +398,9 @@ AI programmes, and the failure modes of real pilots will show whether the value
 continues moving upward or whether the abstraction leaks badly enough that the
 lower layer remains a durable specialization.
 
-Current confidence is high that tutorial RAG and vector-database setup are weak
-flagship projects, moderate that trajectory acceptance and authority will become
-larger architecture concerns, and deliberately low on which vendor surface will
-own the generic harness.
+The part I am sure of is narrow: tutorial RAG and vector-database setup are weak
+flagship projects. The rest of this allocation is a bet, and I am deliberately
+holding no view on which vendor surface ends up owning the generic harness.
 
 RAG is still worth building once. The project claim should no longer be that I
 built it.

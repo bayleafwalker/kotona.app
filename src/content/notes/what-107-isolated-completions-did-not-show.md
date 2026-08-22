@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: model evaluation
 published: 2026-08-03
-lastRevised: 2026-08-04
+lastRevised: 2026-08-22
 projects: []
 relates:
   - judge-agents-by-the-next-prompt
@@ -228,5 +228,5 @@ The pilot's design would need to change before another round is worth running:
   matching criterion, since the honest reading of this run is "this design
   produced no discriminating evidence," not "the effect does not exist."
 
-Current confidence: low in the strong claim, moderate in the working model,
-which does not depend on it.
+The strong claim has little support in this evidence. The working model does not
+depend on it, and still stands.

@@ -8,7 +8,7 @@ status: exploration
 lifecycle: current
 area: agent infrastructure
 published: 2026-08-16
-lastRevised: 2026-08-16
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
@@ -447,10 +447,10 @@ shorter architectural half-life than most of the systems around it.
 Outctl did not lose because the problem was imaginary. It lost the center
 because the platform implemented the right architecture.
 
-Current confidence: high that native PTC invalidates Outctl's original hot-path
-necessity, moderate that durable addressed evidence remains a separate problem,
-and low that Outctl rather than a smaller runner capability should own that
-problem.
+That native PTC invalidates Outctl's original hot-path necessity is the part of
+this I would defend hardest. Whether durable addressed evidence remains a
+separate problem is still open, and I doubt Outctl rather than a smaller runner
+capability is the thing that should own it.
 
 The next test is no longer another output-reduction pair. It is whether a
 cleared or compacted session can resume from explicit work state and externally

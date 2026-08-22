@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-08-17
-lastRevised: 2026-08-17
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
@@ -236,10 +236,9 @@ interrupt on its own. A reconciled target state is stronger again. I do not have
 a settled answer for where the line sits, only the claim that it is not in the
 same place for all three.
 
-Current confidence: high that the next-prompt rule is necessary but
-insufficient, moderate that this five-layer path is the right decomposition
-rather than a plausible first cut, low on which links above are reliable enough
-to drive policy without a human in the loop. The next test is narrow: take a
-case where the top layer looked clean and the outcome was still wrong — the
-merged-PR case is one — and check which of the four lower layers would actually
-have flagged it before the long-horizon review had to.
+That the next-prompt rule is necessary and insufficient, I would defend. The
+five-layer path I would defend only as a first cut, and where the line for
+automation sits I would not defend at all. The next test is narrow: take a case
+where the top layer looked clean and the outcome was still wrong — the merged-PR
+case is one — and check which of the four lower layers would actually have
+flagged it before the long-horizon review had to.
