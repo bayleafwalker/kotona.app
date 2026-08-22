@@ -19,7 +19,10 @@ tags:
   - workflow
   - succession
   - audit
-summary: "Working model: a production-critical agent pipeline becomes an institutional capability only when a second person can reconstruct, operate, change, and recover it from recorded substrate and evidence."
+summary:
+  "Working model: a production-critical agent pipeline becomes an institutional
+  capability only when a second person can reconstruct, operate, change, and
+  recover it from recorded substrate and evidence."
 draft: false
 ---
 
@@ -29,8 +32,8 @@ Here, _substrate_ means the actual repositories, source documents, claims,
 runtime observations, tools, and human judgments the pipeline depends on.
 
 This merge absorbs the concrete N=2 inventory from
-[_The second operator is the test_](/notes/the-second-operator-is-the-test/)
-and the formation argument from
+[_The second operator is the test_](/notes/the-second-operator-is-the-test/) and
+the formation argument from
 [_The junior ladder was a joint product_](/notes/the-junior-ladder-was-a-joint-product/).
 Those notes remain as superseded project-history records because their audited
 implementation details and original economic argument may still be useful.
@@ -38,9 +41,9 @@ implementation details and original economic argument may still be useful.
 Versioned prompts and scripts are not enough. A working pipeline also contains
 the choice of sources, model-routing habits, manual interventions, remembered
 failure modes, review heuristics, trust relationships, and explanations for
-guards that appear redundant until the incident they prevent happens again.
-Much of its effective design can remain in its creator even while every file is
-in Git.
+guards that appear redundant until the incident they prevent happens again. Much
+of its effective design can remain in its creator even while every file is in
+Git.
 
 The resulting system is legible in output and person-bound in operation. It
 works because its builder notices when the context is wrong, forgives a known
@@ -111,19 +114,18 @@ the successor has acquired a causal model.
 
 ## Secondary ownership is a formation path
 
-The succession role is also a plausible apprenticeship seat. A developing
-worker begins by reconstructing events and maintaining regression cases, then
-operates known exceptions, changes low-risk contracts, owns reconciliation for
-a bounded consequence, and eventually becomes capable of replacing the primary
-owner.
+The succession role is also a plausible apprenticeship seat. A developing worker
+begins by reconstructing events and maintaining regression cases, then operates
+known exceptions, changes low-risk contracts, owns reconciliation for a bounded
+consequence, and eventually becomes capable of replacing the primary owner.
 
 This gives a firm two outputs again: professional formation and reduced
 key-person risk. Neither depends on asking a junior to compete with the pipeline
 on routine throughput.
 
 This is a model of a local operating problem, not a claim that current labor
-market evidence has already established a universal collapse of junior roles.
-It predicts that formation becomes a separately funded activity wherever agents
+market evidence has already established a universal collapse of junior roles. It
+predicts that formation becomes a separately funded activity wherever agents
 make routine production cheap; a counterexample would be an organization that
 keeps producing credible successors through ordinary delivery without giving
 them a real secondary ownership path.
@@ -139,11 +141,11 @@ implementation conclusion remains useful: assignment, claim, attempt,
 submission, and acceptance must be separate records before two independent
 people can be governed by the system rather than by convention.
 
-That inventory is evidence about one implementation, not proof that every
-agent workflow needs the same data model. The next test is a bounded succession
-drill with another operator. If that person can explain the controls, run and
-recover the system, and make a safe change without inventing missing authority,
-the model earns more confidence. If not, the missing substrate is the result.
+That inventory is evidence about one implementation, not proof that every agent
+workflow needs the same data model. The next test is a bounded succession drill
+with another operator. If that person can explain the controls, run and recover
+the system, and make a safe change without inventing missing authority, the
+model earns more confidence. If not, the missing substrate is the result.
 
 The secondary owner must receive real capability, not honorary membership in a
 document. A progression can be encoded through narrow grants and countersign
@@ -188,9 +190,9 @@ failures, cannot change the pipeline, and has not exercised recovery is an
 on-call notification target, not continuity.
 
 Nor does model portability solve human portability. Replacing Claude with
-another model may prove the execution shell is not vendor-bound. It says
-nothing about whether another person understands why the pipeline exists or can
-accept responsibility for its consequences.
+another model may prove the execution shell is not vendor-bound. It says nothing
+about whether another person understands why the pipeline exists or can accept
+responsibility for its consequences.
 
 The control has a cost. Two people must spend time on a system one person could
 operate today. That cost should be reserved for capabilities whose loss would

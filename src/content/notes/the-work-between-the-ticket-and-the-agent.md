@@ -18,19 +18,22 @@ tags:
   - agents
   - workflow
   - coordination
-summary: Work-management systems can delegate and coding agents can execute, but authority, attempts, evidence, and acceptance still have no obvious neutral owner between them.
+summary:
+  Work-management systems can delegate and coding agents can execute, but
+  authority, attempts, evidence, and acceptance still have no obvious neutral
+  owner between them.
 ---
 
 No build intent. The analysis is the product.
 
 > **Update, 2026-07-20.** "Weakly occupied middle" should not be read as an
 > unclaimed conceptual layer. It overlaps requirements traceability, workflow
-> provenance, separation of duties, assurance evidence, and software-supply-chain
-> attestations — see [in-toto](https://in-toto.io/docs/getting-started/) and
+> provenance, separation of duties, assurance evidence, and
+> software-supply-chain attestations — see
+> [in-toto](https://in-toto.io/docs/getting-started/) and
 > [SLSA](https://slsa.dev/spec/v1.2/) for established, operational versions of
 > the same binding. A tracker-independent attempt record may still be useful
-> local tooling; usefulness is not evidence the industry lacks the concept.
-> See
+> local tooling; usefulness is not evidence the industry lacks the concept. See
 > [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
 > and
 > [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/).
@@ -39,23 +42,22 @@ Work-management systems are admitting agents. Coding-agent systems are taking
 over the branch-to-pull-request loop. Agent-native tools are growing their own
 task graphs, worker identities, handoffs, and merge machinery. Observability
 products can explain a run in detail. The weakly occupied part is the binding
-between those systems: who authorized an attempt, what it owned, what survived
-a handoff, what evidence belongs to it, and who could declare the work complete.
+between those systems: who authorized an attempt, what it owned, what survived a
+handoff, what evidence belongs to it, and who could declare the work complete.
 
-This survey starts from the implemented scope in
-[Vuoro](/projects/vuoro/): one operator, several
-workers, schema-owned sprint state, proof-bearing claims, resumable handoffs, a
-separate execution queue, and a cockpit that composes read surfaces without
-becoming their write authority. The question is what that system would meet if
-its operator boundary were removed.
+This survey starts from the implemented scope in [Vuoro](/projects/vuoro/): one
+operator, several workers, schema-owned sprint state, proof-bearing claims,
+resumable handoffs, a separate execution queue, and a cockpit that composes read
+surfaces without becoming their write authority. The question is what that
+system would meet if its operator boundary were removed.
 
 It tests two working assumptions. First: Linear's assignee/delegate split,
 GitHub's agent-to-pull-request loop, and sprintctl's claim model independently
 converged on the same rule — permission to execute work is not permission to
 declare it complete. Second: the landscape separates cleanly into an externally
-owned work plane, a neutral execution plane, and a pluggable runtime plane,
-with observability beside them rather than inside any one plane. These are
-hypotheses to test, not facts supplied by the sources.
+owned work plane, a neutral execution plane, and a pluggable runtime plane, with
+observability beside them rather than inside any one plane. These are hypotheses
+to test, not facts supplied by the sources.
 
 ## The market has edges, not a centre
 
@@ -83,8 +85,8 @@ establish market share, maturity, inevitability, or a settled category.
 
 ## The unclaimed record
 
-A ticket can say who is responsible. An agent session can say what the model
-and tools did. A pull request can carry the proposed change and review. None of
+A ticket can say who is responsible. An agent session can say what the model and
+tools did. A pull request can carry the proposed change and review. None of
 those records necessarily owns the whole attempt.
 
 **Assessment:** the weakly occupied middle is not another board and not another
@@ -125,8 +127,8 @@ commands take effect; they are not a second person's acceptance of completed
 work. The three-way convergence claim came from projecting a possible
 multi-operator design onto an implemented single-operator system. It is cut.
 
-> **Update, 2026-07-19.** Sprintctl subsequently added retained PostgreSQL
-> claim history and a lineage `lease_epoch`. The
+> **Update, 2026-07-19.** Sprintctl subsequently added retained PostgreSQL claim
+> history and a lineage `lease_epoch`. The
 > [retention note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/claim-history-retention.md)
 > records expired remote claims instead of deleting them; the
 > [epoch note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/lease-epoch-schema.md)
@@ -158,12 +160,12 @@ reinterpret their own state.
 
 ## What generalization would require
 
-**Assessment:** generalizing the implemented single-operator scope would
-require authenticated human and service principals, project-scoped
-authorization, retained claims plus auditable attempts, and an acceptance
-operation distinct from a worker's claim; tracker, Git, runtime, and trace
-adapters would carry stable IDs without taking over their source systems. That
-sentence describes the pressure, not a plan. There is no intent to build it.
+**Assessment:** generalizing the implemented single-operator scope would require
+authenticated human and service principals, project-scoped authorization,
+retained claims plus auditable attempts, and an acceptance operation distinct
+from a worker's claim; tracker, Git, runtime, and trace adapters would carry
+stable IDs without taking over their source systems. That sentence describes the
+pressure, not a plan. There is no intent to build it.
 
 ## Sources and model boundary
 
@@ -179,19 +181,19 @@ The external anchors are deliberately few and primary:
   [Gas Town](https://github.com/gastownhall/gastown) repositories, read
   directly, for their declared task-graph and workspace mechanisms
 - the [sprintctl repository](https://github.com/bayleafwalker/sprintctl) and the
-  [local project page](/projects/vuoro/) for the implemented
-  single-operator comparison
+  [local project page](/projects/vuoro/) for the implemented single-operator
+  comparison
 - [AgentOps.ai core concepts](https://docs.agentops.ai/v2/concepts/core-concepts)
   only to establish the observability category and disambiguate the name
 
-This note began as two model-generated working memos. They supplied search
-terms and the two assumptions stated near the beginning; they are process
-artifacts, not evidence, and a reader does not need them to evaluate the note.
-Product comparisons, category boundaries, the “weakly occupied middle,” the
-three-plane split, vendor-independence claims, and implications for a neutral
-protocol are assessments. No claim about market leadership, adoption, pricing,
-enterprise readiness, or an unverified vendor feature was retained. Sources
-were checked on 2026-07-19. All links omit tracking parameters.
+This note began as two model-generated working memos. They supplied search terms
+and the two assumptions stated near the beginning; they are process artifacts,
+not evidence, and a reader does not need them to evaluate the note. Product
+comparisons, category boundaries, the “weakly occupied middle,” the three-plane
+split, vendor-independence claims, and implications for a neutral protocol are
+assessments. No claim about market leadership, adoption, pricing, enterprise
+readiness, or an unverified vendor feature was retained. Sources were checked on
+2026-07-19. All links omit tracking parameters.
 
 Remove the proposed product and one useful question remains: which system can
 prove that a run was allowed to begin, and which different system can say that

@@ -26,21 +26,21 @@ tags:
   - career
 summary: >-
   RAG, vector search, graph engines, and generic evaluation tooling are moving
-  into managed platforms. The durable work is defining which evidence may
-  count, what failure means, and when an agentic system is acceptable to ship.
+  into managed platforms. The durable work is defining which evidence may count,
+  what failure means, and when an agentic system is acceptable to ship.
 explorePrompt: >-
   Use this note as a dated working model of an abstraction boundary moving up
   the AI application stack. The transferable question is which parts of an AI
   system are becoming purchasable platform capabilities and which decisions
   remain specific to the workflow, data, authority model, and risk. Apply that
   question to one system you operate or plan to build. Separate construction
-  mechanics from diagnostic fluency, and generic evaluation infrastructure
-  from the acceptance criteria, failure taxonomy, evidence requirements, and
+  mechanics from diagnostic fluency, and generic evaluation infrastructure from
+  the acceptance criteria, failure taxonomy, evidence requirements, and
   promotion decision the application owner must supply. Include at least one
   case where a technically correct output should still fail because it used a
   forbidden source, exceeded its authority, skipped verification, or could not
-  produce a required receipt. End with a deliberately small competency slice
-  for the commoditizing layer, a deeper project at the durable layer, and the
+  produce a required receipt. End with a deliberately small competency slice for
+  the commoditizing layer, a deeper project at the durable layer, and the
   observations that would falsify your allocation of effort.
 ---
 
@@ -78,16 +78,16 @@ Every box looked like application work.
 
 By August 2026, much of that path is available as platform behaviour. OpenAI's
 [vector-store API](https://platform.openai.com/docs/api-reference/vector-stores-files)
-accepts files, stores chunking configuration, and exposes the indexed content
-to file-search tooling. Claude Projects can
+accepts files, stores chunking configuration, and exposes the indexed content to
+file-search tooling. Claude Projects can
 [enable RAG automatically](https://support.anthropic.com/en/articles/11473015-retrieval-augmented-generation-rag-for-projects)
 when project knowledge outgrows the ordinary context path. Azure AI Search's
 [agentic retrieval](https://learn.microsoft.com/en-us/azure/search/agentic-retrieval-how-to-retrieve)
 can decompose a question, execute several searches, rerank results, and return
 citations and execution metadata through one knowledge-base surface.
 
-The implementation is not identical across those products, and none removes
-the need to understand retrieval. The relevant change is ownership. Chunking,
+The implementation is not identical across those products, and none removes the
+need to understand retrieval. The relevant change is ownership. Chunking,
 indexing, query decomposition, reranking, and citation assembly are becoming
 things an application can configure or invoke rather than necessarily build.
 
@@ -100,8 +100,8 @@ That is a poor place to anchor a multi-year career distinction.
 ## The original list splits in two
 
 The useful split is not between fashionable and unfashionable technology. It is
-between capabilities a platform can provide generically and decisions that
-only the application owner can make.
+between capabilities a platform can provide generically and decisions that only
+the application owner can make.
 
 | Moving toward platform capability                             | Still specific to the application                                                           |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -147,8 +147,8 @@ work becomes disproportionately diagnostic. Someone has to identify whether the
 problem belongs to corpus coverage, retrieval, authority, temporal semantics,
 agent planning, generation, or the business rule itself.
 
-That is directly relevant to field and forward-deployed architecture. The job
-is less often to invent an index than to explain why a customer's apparently
+That is directly relevant to field and forward-deployed architecture. The job is
+less often to invent an index than to explain why a customer's apparently
 working system cannot be promoted, then find the smallest change that makes the
 claim defensible.
 
@@ -161,16 +161,16 @@ following the same slightly impolite pattern.
 
 The same correction applies to “build an evaluation harness.”
 
-Current MLflow and Databricks surfaces already provide traces, evaluation
-runs, datasets, human review, built-in judges, custom
+Current MLflow and Databricks surfaces already provide traces, evaluation runs,
+datasets, human review, built-in judges, custom
 [code-based scorers](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/custom-scorers),
 and production monitoring. Anthropic's
 [agent-evaluation guidance](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
 likewise treats the infrastructure as shared while putting most task design in
 the hands of the product and domain teams closest to the requirement.
 
-Building another generic score dashboard is therefore not obviously more
-durable than building another vector store wrapper.
+Building another generic score dashboard is therefore not obviously more durable
+than building another vector store wrapper.
 
 The part that resists abstraction is the denominator:
 
@@ -311,11 +311,12 @@ scenario:
   budgets: What latency and cost are acceptable?
 ```
 
-A candidate run adds the actual answer, cited evidence, tool trajectory, effects,
-verification, latency, and cost. Deterministic scorers evaluate requirements that
-can be encoded mechanically. Model judges can later cover semantic criteria
-that do not have a complete oracle, but they do not get to override hard
-authority or evidence failures because they found the prose persuasive.
+A candidate run adds the actual answer, cited evidence, tool trajectory,
+effects, verification, latency, and cost. Deterministic scorers evaluate
+requirements that can be encoded mechanically. Model judges can later cover
+semantic criteria that do not have a complete oracle, but they do not get to
+override hard authority or evidence failures because they found the prose
+persuasive.
 
 The initial package is deliberately small:
 

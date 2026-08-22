@@ -2,7 +2,10 @@
 title: River-hydro spa retreat — background analysis
 date: 2026-07-19
 tags: [energy, hydro, concept, finland]
-summary: First-pass source material for the published river-hydro spa note — monthly energy model, early financial calibration, sources, and model code. Preserved as input, not current authority.
+summary:
+  First-pass source material for the published river-hydro spa note — monthly
+  energy model, early financial calibration, sources, and model code. Preserved
+  as input, not current authority.
 ---
 
 # River-hydro spa retreat — background analysis
@@ -14,8 +17,8 @@ the assumptions available when that model was built.
 The published note deliberately supersedes several of those assumptions: a new
 dam is difficult rather than categorically impossible; monthly 92%
 self-sufficiency is treated as an upper bound rather than an hourly result; the
-retreat is boutique and reservation-led rather than a 40,000-visit regional
-spa; staffing rises from 21 to 25–35 annualised FTE; direct tailrace swimming is
+retreat is boutique and reservation-led rather than a 40,000-visit regional spa;
+staffing rises from 21 to 25–35 annualised FTE; direct tailrace swimming is
 excluded; and the capital envelope includes water infrastructure, 15%
 professional costs, 20–25% brownfield contingency, and a renewal endowment.
 
@@ -26,46 +29,44 @@ the operating envelope, not only the annual electricity total.
 
 ## Premise
 
-- New dams are effectively unbuildable in Finland (EU Water Framework
-  Directive, national stream-restoration policy, active state funding for dam
-  removal). The viable path is acquisition: ~150 operating small hydro plants
-  plus hundreds of dormant mill sites with existing dams and — the actual
-  asset — existing water permits.
+- New dams are effectively unbuildable in Finland (EU Water Framework Directive,
+  national stream-restoration policy, active state funding for dam removal). The
+  viable path is acquisition: ~150 operating small hydro plants plus hundreds of
+  dormant mill sites with existing dams and — the actual asset — existing water
+  permits.
 - Site filter: existing permit with generation rights, 3–8 m head, mean flow
   supporting 100–500 kW, road access, buildable land above the flood line, no
   pending kalatalousvelvoite dispute or Natura 2000 entanglement. Old mill
   estates in Häme, Kymenlaakso, southern Savo surface periodically.
 - Bathing concept stacks three traditions that compose because all three are
-  sequences, not pools: Roman graded path (frigidarium → tepidarium →
-  caldarium, hypocaust as hydronic floors fed by the actual heating loop),
-  onsen ritual (kakeyu wash stations, silence norms, two outdoor rotenburo at
-  41–42 °C above the tailrace), and the Finnish layer (savusauna on the bank,
-  avanto in the tailrace — downstream, controlled entry, a genuine safety
-  design item).
+  sequences, not pools: Roman graded path (frigidarium → tepidarium → caldarium,
+  hypocaust as hydronic floors fed by the actual heating loop), onsen ritual
+  (kakeyu wash stations, silence norms, two outdoor rotenburo at 41–42 °C above
+  the tailrace), and the Finnish layer (savusauna on the bank, avanto in the
+  tailrace — downstream, controlled entry, a genuine safety design item).
 
 ## Energy architecture
 
-The bridge between hydro (electricity) and spa (heat) is water-source heat
-pumps drawing from the tailrace. Self-consumed electricity avoids transfer
-fees and taxes, roughly doubling its effective value versus export; the spa is
-a near-ideal baseload heat sink. Near-zero winter river water is the
-load-bearing technical risk: generous heat-exchanger surface, glycol loop,
-anti-icing design.
+The bridge between hydro (electricity) and spa (heat) is water-source heat pumps
+drawing from the tailrace. Self-consumed electricity avoids transfer fees and
+taxes, roughly doubling its effective value versus export; the spa is a
+near-ideal baseload heat sink. Near-zero winter river water is the load-bearing
+technical risk: generous heat-exchanger surface, glycol loop, anti-icing design.
 
 Archetype site: 5 m head, ~6 m³/s design flow, 250 kW nameplate after
-refurbishment. Turbine: refurbish whatever Kaplan variant fits the flume, or
-an Archimedes screw if replacing (fish-tolerant, debris-tolerant, and a
-visible slow-turning object guests can stand next to).
+refurbishment. Turbine: refurbish whatever Kaplan variant fits the flume, or an
+Archimedes screw if replacing (fish-tolerant, debris-tolerant, and a visible
+slow-turning object guests can stand next to).
 
 ### Monthly balance model (kW averages)
 
-Model: 250 kW nameplate, monthly capacity-factor profile for a
-southern-Finland rain/snowmelt river (CF 61% annual); heat demand from
-envelope UA 3 kW/K on a 27 °C pool hall, 45 kW steady indoor-pool losses,
-18 kW DHW, rotenburo losses scaled with (41 − T_air) and cut 45% by automated
-covers; COP linear in river temperature from 2.5 at 0.5 °C to 3.8 at 19 °C;
-direct electric loads for ventilation/lighting/pumps, a 25 kW sauna heater at
-seasonal duty, kitchen, and eight cabins.
+Model: 250 kW nameplate, monthly capacity-factor profile for a southern-Finland
+rain/snowmelt river (CF 61% annual); heat demand from envelope UA 3 kW/K on a 27
+°C pool hall, 45 kW steady indoor-pool losses, 18 kW DHW, rotenburo losses
+scaled with (41 − T_air) and cut 45% by automated covers; COP linear in river
+temperature from 2.5 at 0.5 °C to 3.8 at 19 °C; direct electric loads for
+ventilation/lighting/pumps, a 25 kW sauna heater at seasonal duty, kitchen, and
+eight cabins.
 
 | Month | Hydro | Heat demand | COP | HP load | Total electric | Import | Export |
 | ----- | ----- | ----------- | --- | ------- | -------------- | ------ | ------ |
@@ -86,30 +87,30 @@ Annual results:
 
 - Production 1,342 MWh (CF 61%), site electric load 1,156 MWh, heat delivered
   1,235 MWh via heat pumps.
-- Self-consumed 1,065 MWh — **92% of load covered by own hydro**; import
-  91 MWh (Feb–Mar concentrated); export 278 MWh (spring).
-- Avoided purchases ~€122k/yr (at 11.5 c/kWh delivered), export ~€12k/yr (at
-  4.5 c/kWh), import cost ~€10k/yr. Energy system contribution ~€135k/yr —
-  the real financial story is avoided purchase, not export.
+- Self-consumed 1,065 MWh — **92% of load covered by own hydro**; import 91 MWh
+  (Feb–Mar concentrated); export 278 MWh (spring).
+- Avoided purchases ~€122k/yr (at 11.5 c/kWh delivered), export ~€12k/yr (at 4.5
+  c/kWh), import cost ~€10k/yr. Energy system contribution ~€135k/yr — the real
+  financial story is avoided purchase, not export.
 - The late-winter import hole matches the Finnish wind production peak, so a
-  certified wind-PPA slice patches it cleanly. Backup boiler: wood chips —
-  the site burns nothing but water and wood.
+  certified wind-PPA slice patches it cleanly. Backup boiler: wood chips — the
+  site burns nothing but water and wood.
 
 Caveats to carry into the note:
 
-- Monthly averaging flatters hourly mismatch. Hour-by-hour, night hydro
-  exports while daytime peaks import; both flows are somewhat larger than the
-  table shows. The 92% self-sufficiency story survives; the "net exporter"
-  framing softens.
-- The rotenburo is the sneaky number: 41 °C outdoor water at −20 °C loses
-  more than 1 kW/m², evaporation-dominated; 30 m² ≈ 35–40 kW on design
-  nights. Automated covers outside opening hours are non-negotiable and worth
-  more than the turbine's February output.
-- Calibration: a mid-size Finnish public swimming hall runs 2,000–2,500
-  MWh/yr (Motiva/KETS); this smaller site delivers ~1.9 GWh of useful energy
-  on ~1.16 GWh of electricity because the river is used twice — turbine, then
-  tailrace heat exchangers. "The river heats the bath" is literally true
-  through two conversions.
+- Monthly averaging flatters hourly mismatch. Hour-by-hour, night hydro exports
+  while daytime peaks import; both flows are somewhat larger than the table
+  shows. The 92% self-sufficiency story survives; the "net exporter" framing
+  softens.
+- The rotenburo is the sneaky number: 41 °C outdoor water at −20 °C loses more
+  than 1 kW/m², evaporation-dominated; 30 m² ≈ 35–40 kW on design nights.
+  Automated covers outside opening hours are non-negotiable and worth more than
+  the turbine's February output.
+- Calibration: a mid-size Finnish public swimming hall runs 2,000–2,500 MWh/yr
+  (Motiva/KETS); this smaller site delivers ~1.9 GWh of useful energy on ~1.16
+  GWh of electricity because the river is used twice — turbine, then tailrace
+  heat exchangers. "The river heats the bath" is literally true through two
+  conversions.
 
 ## Capex (~€12M, the 10%-of-Eurojackpot allocation)
 
@@ -135,26 +136,25 @@ Public 2024 figures (Asiakastieto/Proff):
 
 - Järvisydän Oy (operating company, Rantasalmi): revenue €19.2M (+2.2%), EBIT
   €1.5M (7.3%), 47 staff, equity ratio 23%. Revenue per employee ~€409k.
-- Lomakylä Järvisydän Oy (property entity): revenue €2.4M, EBIT margin ~80%.
-  The opco/propco split is instructive if the concept ever grew past
-  dream-scale.
+- Lomakylä Järvisydän Oy (property entity): revenue €2.4M, EBIT margin ~80%. The
+  opco/propco split is instructive if the concept ever grew past dream-scale.
 
 Scaled to this footprint (~5× smaller than Järvisydän):
 
-- Revenue: 40,000 spa visits × €48 = €1.92M; 8 cabins × 60% occupancy × €260
-  = €0.46M; restaurant €1.1M; savusauna hire/treatments €0.35M; export €0.01M
-  → **€3.84M**.
+- Revenue: 40,000 spa visits × €48 = €1.92M; 8 cabins × 60% occupancy × €260 =
+  €0.46M; restaurant €1.1M; savusauna hire/treatments €0.35M; export €0.01M →
+  **€3.84M**.
 - Opex: ~21 staff × €52k = €1.09M; net energy ~€0.03M (import + wood chips);
-  other opex at 42% of revenue = €1.61M → EBITDA €1.11M (29%) at the
-  optimistic end. Järvisydän's actual 7.3% EBIT margin argues for
-  conservatism: quote **EBITDA €0.7–1.1M, yield 6–9% on €12M** — a poor
-  investment and a perfectly serviceable dream.
-- Sensitivities: visits ±25% → EBITDA €0.73M / €1.48M (yield 6.1% / 12.4%).
-  Dry year (−15% water) costs only ~€23k because lost self-consumption is
-  bought back at retail, not lost at spot.
-- Note the productivity gap: €183k revenue/employee here vs Järvisydän's
-  €409k — either staffing is generous or revenue conservative; both defensible
-  in this genre.
+  other opex at 42% of revenue = €1.61M → EBITDA €1.11M (29%) at the optimistic
+  end. Järvisydän's actual 7.3% EBIT margin argues for conservatism: quote
+  **EBITDA €0.7–1.1M, yield 6–9% on €12M** — a poor investment and a perfectly
+  serviceable dream.
+- Sensitivities: visits ±25% → EBITDA €0.73M / €1.48M (yield 6.1% / 12.4%). Dry
+  year (−15% water) costs only ~€23k because lost self-consumption is bought
+  back at retail, not lost at spot.
+- Note the productivity gap: €183k revenue/employee here vs Järvisydän's €409k —
+  either staffing is generous or revenue conservative; both defensible in this
+  genre.
 
 ## Regulatory stack, in order of pain
 
@@ -163,17 +163,17 @@ rights — confirm) → kalatalousvelvoite (assume a fishway; budget it; make it
 feature with a viewing window) → building permits with flood elevation →
 allasvesiasetus 315/2002 pool-water compliance (onsen mineral-water ambitions
 collide with chlorinated-recirculation assumptions; small natural-water
-exemption paths exist; engage Valvira and the municipal health inspector
-early) → hospitality licensing. Timeline 2–4 years from acquisition to
-opening, permits dominating.
+exemption paths exist; engage Valvira and the municipal health inspector early)
+→ hospitality licensing. Timeline 2–4 years from acquisition to opening, permits
+dominating.
 
 ## Phasing
 
 0. Site hunt + due diligence: permit audit, dam condition survey,
    sediment/contamination history (old mill sites can carry industrial past).
-1. Hydro refurbishment and grid connection; fishway negotiated here. The
-   plant must run first — measured generation and tailrace temperature drive
-   heat pump sizing.
+1. Hydro refurbishment and grid connection; fishway negotiated here. The plant
+   must run first — measured generation and tailrace temperature drive heat pump
+   sizing.
 2. Bathhouse, built around the energy system.
 3. Cabins, restaurant, retreat programming.
 
@@ -181,23 +181,22 @@ opening, permits dominating.
 
 - Järvisydän Oy financials: asiakastieto.fi (y-tunnus 2507488-2), proff.fi
 - Lomakylä Järvisydän Oy: asiakastieto.fi (y-tunnus 0585973-8)
-- Swimming-hall energy benchmarks: motiva.fi uimahallien energiatehokkuus;
-  KETS report (energiatehokkuussopimukset2017-2025.fi)
+- Swimming-hall energy benchmarks: motiva.fi uimahallien energiatehokkuus; KETS
+  report (energiatehokkuussopimukset2017-2025.fi)
 - Small hydro in Finland (~150 plants, 1–10 MW class): energia.fi;
   vesivoimanluonto.org; ELY-keskus renewable-energy permit guidance
 - Precedent for plant purchase/decommission dynamics: Kuusamo Myllykoski sale
   (Kaleva, 2023)
-- Prices: Nord Pool FI day-ahead (spot ~5 c/kWh 2025 average assumption;
-  July 2026 running ~2 c/kWh); delivered ~11.5 c/kWh incl. transfer and tax
+- Prices: Nord Pool FI day-ahead (spot ~5 c/kWh 2025 average assumption; July
+  2026 running ~2 c/kWh); delivered ~11.5 c/kWh incl. transfer and tax
 
 ## Note-writing intents
 
 - Thesis/title: "Size the spa to the river, not the river to the spa."
 - The monthly energy-balance table is the load-bearing artifact; it should
   survive editing intact.
-- Hero image brief: winter rotenburo, steam, snow on railings, dam and
-  millhouse behind; one consistent duotone style; caption as generated
-  concept art.
+- Hero image brief: winter rotenburo, steam, snow on railings, dam and millhouse
+  behind; one consistent duotone style; caption as generated concept art.
 
 ## Appendix — model code
 

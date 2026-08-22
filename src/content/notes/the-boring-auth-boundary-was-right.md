@@ -13,7 +13,10 @@ lastRevised: 2026-04-08
 projects:
   - household-operating-platform
 draft: false
-summary: Homelab analytics had enough auth surface to accidentally grow a second identity product. The useful decision was to keep identity proof upstream, keep authorization local, and demote local login to a narrow break-glass path.
+summary:
+  Homelab analytics had enough auth surface to accidentally grow a second
+  identity product. The useful decision was to keep identity proof upstream,
+  keep authorization local, and demote local login to a narrow break-glass path.
 tags:
   - auth
   - architecture

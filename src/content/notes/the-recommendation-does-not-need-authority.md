@@ -14,7 +14,11 @@ tags:
   - architecture
   - decision-making
   - organizational-design
-summary: Senior analysts rarely start with complete information or a blank strategic canvas. Their job is to produce a recommendation that holds together when other people challenge it; AI can help maintain that reasoning without making the decision.
+summary:
+  Senior analysts rarely start with complete information or a blank strategic
+  canvas. Their job is to produce a recommendation that holds together when
+  other people challenge it; AI can help maintain that reasoning without making
+  the decision.
 explorePrompt: >-
   Examine the argument that high-level enterprise work has a larger automation
   surface than its current use of AI suggests. The central claim is not that AI
@@ -22,15 +26,16 @@ explorePrompt: >-
   work between strategic intent and committed execution is structured coherence:
   requirements synthesis, alternative analysis, dependency discovery, roadmap
   construction, precedent retrieval, impact assessment, and continuous
-  reconciliation between decisions and reality. Test whether "decision-sufficient
-  understanding" is a strong enough substitute for complete organizational
-  knowledge, and whether proof-carrying recommendations can be useful without
-  possessing authority. Pay particular attention to the counterargument that
-  formalized artifacts do not imply formalizable decisions: objectives can
-  conflict, tacit knowledge matters, and polished coherence can conceal weak
-  assumptions. Distinguish discovery, coherence, and commitment, and challenge
-  the argument where those boundaries are less clean than presented. Prefer
-  concrete counterexamples over generic claims that human judgment is required.
+  reconciliation between decisions and reality. Test whether
+  "decision-sufficient understanding" is a strong enough substitute for complete
+  organizational knowledge, and whether proof-carrying recommendations can be
+  useful without possessing authority. Pay particular attention to the
+  counterargument that formalized artifacts do not imply formalizable decisions:
+  objectives can conflict, tacit knowledge matters, and polished coherence can
+  conceal weak assumptions. Distinguish discovery, coherence, and commitment,
+  and challenge the argument where those boundaries are less clean than
+  presented. Prefer concrete counterexamples over generic claims that human
+  judgment is required.
 ---
 
 Enterprise AI is usually introduced with small tasks: draft the email, summarize
@@ -128,8 +133,8 @@ Within that space, an AI system could check ordinary but expensive questions:
 - Did an implementation change invalidate an assumption in the business case?
 - Does a new proposal repeat an option rejected earlier under the same facts?
 
-These checks do not choose the strategy. They keep its downstream documents
-from drifting apart unnoticed.
+These checks do not choose the strategy. They keep its downstream documents from
+drifting apart unnoticed.
 
 ## Three kinds of work
 
@@ -197,8 +202,8 @@ rule no longer fits.
 
 Agents are good candidates for finding and comparing those records. But a
 precedent without its original scope and assumptions becomes dogma. A reusable
-decision record needs the conclusion, the reasons, the exceptions, the date,
-and what happened afterward.
+decision record needs the conclusion, the reasons, the exceptions, the date, and
+what happened afterward.
 
 The goal is not to make every decision consistent with history. It is to make a
 departure deliberate.
@@ -210,8 +215,8 @@ shadow process for one continuing decision, such as a platform retirement.
 
 The system would maintain the consumer list, assumptions, alternatives,
 dependencies, decision record, and review triggers. It would propose updates
-when source records change but could not approve or execute them. A human analyst
-would compare its recommendation with the ordinary process.
+when source records change but could not approve or execute them. A human
+analyst would compare its recommendation with the ordinary process.
 
 The test should record:
 
@@ -224,8 +229,8 @@ The test should record:
 
 Evidence that the system repeatedly misses decisive tacit constraints, or makes
 review slower by producing plausible noise, would weaken this model. Evidence
-that it keeps the decision current while making disagreement more specific
-would strengthen it.
+that it keeps the decision current while making disagreement more specific would
+strengthen it.
 
 For now, the claim remains narrower than autonomous strategy: AI may be able to
 maintain much of the reasoning around a consequential recommendation without

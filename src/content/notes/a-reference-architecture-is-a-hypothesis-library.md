@@ -18,23 +18,26 @@ tags:
   - strategy
   - planning
   - reference-models
-summary: A reference architecture is a set of ideas to test, not a target to copy. It can suggest capabilities, controls, and common failure modes; local strategy and evidence decide which parts survive.
+summary:
+  A reference architecture is a set of ideas to test, not a target to copy. It
+  can suggest capabilities, controls, and common failure modes; local strategy
+  and evidence decide which parts survive.
 explorePrompt: >-
   Use this note as a worked instantiation, not an answer to repeat. The
-  transferable question is how to use a reference architecture without
-  mistaking its broad coverage or familiar notation for local authority. This
-  note concludes that references are most useful as libraries of candidate
-  capabilities, boundaries, information structures, controls, dependencies,
-  and failure warnings. Strategy selects the effects that matter; local
-  constraints and evidence then support an adopt, specialise, map, or reject
-  decision. Apply that method to one bounded decision in your own system or
-  organisation. Name the desired effect, strategic role, inherited constraints,
-  recovery requirements, and the narrow reference slice being considered.
-  Convert its material propositions into explicit hypotheses, distinguish
-  accumulated evidence from convention, and identify where your local history
-  agrees or conflicts. Challenge this note where capability language obscures
-  responsibility, where a standard imposes a mandatory requirement rather than
-  a candidate pattern, or where the four-decision vocabulary loses an important
+  transferable question is how to use a reference architecture without mistaking
+  its broad coverage or familiar notation for local authority. This note
+  concludes that references are most useful as libraries of candidate
+  capabilities, boundaries, information structures, controls, dependencies, and
+  failure warnings. Strategy selects the effects that matter; local constraints
+  and evidence then support an adopt, specialise, map, or reject decision. Apply
+  that method to one bounded decision in your own system or organisation. Name
+  the desired effect, strategic role, inherited constraints, recovery
+  requirements, and the narrow reference slice being considered. Convert its
+  material propositions into explicit hypotheses, distinguish accumulated
+  evidence from convention, and identify where your local history agrees or
+  conflicts. Challenge this note where capability language obscures
+  responsibility, where a standard imposes a mandatory requirement rather than a
+  candidate pattern, or where the four-decision vocabulary loses an important
   distinction. Produce a compact mapping of propositions, evidence, decisions,
   consequences, tests, and review triggers—not an alignment percentage or a
   renamed copy of the reference model.
@@ -48,9 +51,9 @@ The diagram may also be wrong for the system being designed.
 
 A reference architecture is better used as a set of ideas to test. It can
 suggest functions the system may need, common separations of responsibility,
-information that has to move, useful controls, and failures other designers
-have already met. Local goals and constraints decide which suggestions belong
-in the design.
+information that has to move, useful controls, and failures other designers have
+already met. Local goals and constraints decide which suggestions belong in the
+design.
 
 ## What the reference can and cannot know
 
@@ -103,10 +106,10 @@ choose what is worth doing.
 The starting position matters too. Work on
 [dynamic capabilities](https://sms.onlinelibrary.wiley.com/toc/10970266/1997/18/7)
 shows why two organizations can accept the same general idea and still need
-different paths. [Discovery-driven
-planning](https://hbr.org/1995/07/discovery-driven-planning) provides the
-practical response: test the assumptions that carry the most risk before
-committing the whole roadmap.
+different paths.
+[Discovery-driven planning](https://hbr.org/1995/07/discovery-driven-planning)
+provides the practical response: test the assumptions that carry the most risk
+before committing the whole roadmap.
 
 ## Use capabilities carefully
 
@@ -126,8 +129,8 @@ Before adopting a reference capability, classify its local role:
 | Commodity       | Prefer adoption and reuse over local invention.                                          |
 | Transitional    | Keep it working long enough to remove it; do not polish it into permanence.              |
 
-The classification is local. A capability may be ordinary in the reference
-model and differentiating here. The reverse is equally common.
+The classification is local. A capability may be ordinary in the reference model
+and differentiating here. The reverse is equally common.
 
 Capability language also has a limit: it can hide the person or system that
 actually does the work. Once a capability matters to the design, name who owns
@@ -158,8 +161,8 @@ local_fact: >-
 
 decision: specialise
 reason: >-
-  Segmentation is useful, but the controller needs a bootstrap and recovery
-  path that does not depend on the network it is repairing.
+  Segmentation is useful, but the controller needs a bootstrap and recovery path
+  that does not depend on the network it is repairing.
 
 tests:
   - remove ordinary client reachability
@@ -182,8 +185,8 @@ network should not remove the ability to administer infrastructure.
 
 In this homelab, the network controller runs inside Kubernetes, and Kubernetes
 depends on the switches managed by that controller. Copying the reference
-boundary directly can make the controller unreachable during the change meant
-to protect it.
+boundary directly can make the controller unreachable during the change meant to
+protect it.
 
 The reference still improves the design. It prompts five checks:
 
@@ -206,13 +209,12 @@ The mismatches are usually the useful output:
 - the local design needs a distinction the reference does not make;
 - a proposed boundary would break recovery;
 - a supposedly standard function is locally differentiating;
-- a low-priority box is receiving investment because it appears in the model;
-  or
+- a low-priority box is receiving investment because it appears in the model; or
 - a workaround is being normalized even though it should be removed.
 
-Also resist one-to-one mappings. A reference capability is not automatically
-one service, team, repository, or data product. Its maturity sequence may not be
-a safe migration order. Its terminology does not change who decides, which
+Also resist one-to-one mappings. A reference capability is not automatically one
+service, team, repository, or data product. Its maturity sequence may not be a
+safe migration order. Its terminology does not change who decides, which
 database owns a record, or what fails together.
 
 ## Minimum workflow

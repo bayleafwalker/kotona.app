@@ -22,21 +22,23 @@ tags:
   - agents
   - workflow
   - coordination
-summary: sprintctl and actionq enforce useful execution discipline, but five current invariants rely on one operator remaining the only source of identity, authority, and audit judgment.
+summary:
+  sprintctl and actionq enforce useful execution discipline, but five current
+  invariants rely on one operator remaining the only source of identity,
+  authority, and audit judgment.
 ---
 
 No second human operator, no coordination system. Only disciplined
 self-management.
 
-Within the
-[Vuoro project](/projects/vuoro/), sprintctl owns work
-items, claims, dependencies, and handoffs; actionq owns queued machine actions
-and their execution lifecycle. Both can arbitrate concurrent worker sessions.
-That is not the same as arbitrating between people. Their current contracts
-assume one human authority behind every actor string, claim token, queue worker,
-and completion decision. Here `N=2` means two independent human authorities,
-not two agents operating for the same person. The single-operator assumption is
-load-bearing in five places.
+Within the [Vuoro project](/projects/vuoro/), sprintctl owns work items, claims,
+dependencies, and handoffs; actionq owns queued machine actions and their
+execution lifecycle. Both can arbitrate concurrent worker sessions. That is not
+the same as arbitrating between people. Their current contracts assume one human
+authority behind every actor string, claim token, queue worker, and completion
+decision. Here `N=2` means two independent human authorities, not two agents
+operating for the same person. The single-operator assumption is load-bearing in
+five places.
 
 ## The claimant can certify completion
 
@@ -48,8 +50,8 @@ item to `done` and normally releases the claim. The
 has one status and no submission, review, or acceptance relation. With one
 operator, execution proof and the decision that the work is sufficient can be
 the same act. At N=2, the implementer can certify their own result and the
-system cannot express a reviewer disagreeing without rewriting the item state
-by convention.
+system cannot express a reviewer disagreeing without rewriting the item state by
+convention.
 
 ## Names stand in for principals
 
@@ -63,9 +65,9 @@ Actionq likewise stores `created_by`, `claimed_by`, and event `actor` as
 [`TEXT`](https://github.com/bayleafwalker/actionq/blob/85b72bd824dbe1af1a83ceaec7e253a1eca28ebb/actionq/migrations/001_init.sql#L4),
 and its CLI accepts the worker and actor labels from the caller. With one
 operator, a name is a useful note because the reader already knows who caused
-the event. At N=2, either operator can write the other's name, assignment
-cannot grant permission, and the audit log records a claim about identity
-rather than identity established by the system.
+the event. At N=2, either operator can write the other's name, assignment cannot
+grant permission, and the audit log records a claim about identity rather than
+identity established by the system.
 
 ## Expired ownership is disposable
 
@@ -74,23 +76,22 @@ rather than identity established by the system.
 > before creating its replacement. The current
 > [verification note](https://github.com/bayleafwalker/sprintctl/blob/80aaa9782cb51fde6d645b6225c2b4be1b285b5c/docs/verification/claim-history-retention.md)
 > also states the remaining boundary: SQLite expiry still deletes, and
-> proof-bearing release still deliberately deletes an active claim. The
-> original paragraph below records the behavior at the audited commit; it is no
-> longer the complete PostgreSQL behavior.
+> proof-bearing release still deliberately deletes an active claim. The original
+> paragraph below records the behavior at the audited commit; it is no longer
+> the complete PostgreSQL behavior.
 
-Expired sprintctl claims are deleted, not retained as claim history. The
-SQLite maintenance path executes
+Expired sprintctl claims are deleted, not retained as claim history. The SQLite
+maintenance path executes
 [`DELETE FROM claim`](https://github.com/bayleafwalker/sprintctl/blob/11519c42f905a26542bea329d111d91d866e6d5a/sprintctl/maintain.py#L156),
 and the PostgreSQL path does the
 [`same`](https://github.com/bayleafwalker/sprintctl/blob/11519c42f905a26542bea329d111d91d866e6d5a/sprintctl/pg.py#L2360)
 for rows past backend time. The documented remote-mode checklist still tells an
-operator to schedule that purge. No retained claim-history model exists in
-these paths: claim creation and expiry purge do not append matching lifecycle
-events. With one operator, deletion is tolerable because the person
-reconstructing the incident is the person who held the claim. At N=2, expiry
-erases who occupied the work, when their authority lapsed, and which later
-attempt replaced it; the remaining item state cannot reconstruct the deleted
-lease.
+operator to schedule that purge. No retained claim-history model exists in these
+paths: claim creation and expiry purge do not append matching lifecycle events.
+With one operator, deletion is tolerable because the person reconstructing the
+incident is the person who held the claim. At N=2, expiry erases who occupied
+the work, when their authority lapsed, and which later attempt replaced it; the
+remaining item state cannot reconstruct the deleted lease.
 
 ## Expiry disciplines the holder but does not fence them
 
@@ -114,8 +115,8 @@ looser: its
 check only that the action is currently `claimed`, not that the caller is the
 current `claimed_by` worker, and its protocol names this limitation explicitly.
 With one operator, TTL and sweep are self-discipline. At N=2, a timed-out worker
-can continue external writes or win a terminal transition after reassignment,
-so the newer claim does not make the older execution harmless.
+can continue external writes or win a terminal transition after reassignment, so
+the newer claim does not make the older execution harmless.
 
 ## Repository identity carries project authority
 
@@ -139,9 +140,9 @@ The conceptual repair is small even if an implementation would not be:
 **assignment** names the accountable party; a **claim** grants temporary
 execution rights; an **attempt** records one session and its artifacts; a
 **submission** presents an attempt for judgment; **acceptance** is the
-authorized decision that the work item is complete. None implies the next.
-This is what a multi-operator fix would have to express, not a statement of
-build intent.
+authorized decision that the work item is complete. None implies the next. This
+is what a multi-operator fix would have to express, not a statement of build
+intent.
 
 ## Verification boundary
 
@@ -150,9 +151,9 @@ This inventory was checked against sprintctl commit
 and actionq commit
 [`85b72bd`](https://github.com/bayleafwalker/actionq/commit/85b72bd824dbe1af1a83ceaec7e253a1eca28ebb)
 on 2026-07-19. Code, current schema, tests, and protocol documents outrank the
-project narrative. The claims above are limited to those two revisions. The
-N=2 consequences and five-part resolution are analysis, not implemented state.
-The dated updates were checked against sprintctl commit
+project narrative. The claims above are limited to those two revisions. The N=2
+consequences and five-part resolution are analysis, not implemented state. The
+dated updates were checked against sprintctl commit
 [`80aaa97`](https://github.com/bayleafwalker/sprintctl/commit/80aaa9782cb51fde6d645b6225c2b4be1b285b5c);
 actionq remained at the audited revision.
 

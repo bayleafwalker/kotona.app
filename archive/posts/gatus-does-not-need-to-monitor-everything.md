@@ -3,7 +3,10 @@ title: Gatus does not need to monitor everything
 date: 2026-04-08T17:00:00Z
 contextWindow: cluster monitoring work, 2025-2026
 draft: false
-summary: "The monitoring split that held up best was also the less ambitious one: keep Gatus on in-cluster checks, keep edge probes in blackbox-exporter, and stop trying to make one checker own every route shape."
+summary:
+  "The monitoring split that held up best was also the less ambitious one: keep
+  Gatus on in-cluster checks, keep edge probes in blackbox-exporter, and stop
+  trying to make one checker own every route shape."
 tags:
   - note
   - monitoring
@@ -21,11 +24,11 @@ adopted.
 That is not a dramatic design result, but it is a useful one.
 
 The temptation in monitoring setups is always the same. Once a tool is already
-working, it starts looking like the natural home for adjacent problems. If
-Gatus can check internal endpoints, why not public routes too? If the public
-routes are slightly awkward because of network policy or hairpin behavior, why
-not add a dedicated checker identity and a few more rules? The logic is always
-plausible one step at a time.
+working, it starts looking like the natural home for adjacent problems. If Gatus
+can check internal endpoints, why not public routes too? If the public routes
+are slightly awkward because of network policy or hairpin behavior, why not add
+a dedicated checker identity and a few more rules? The logic is always plausible
+one step at a time.
 
 The problem is that alert ownership gets murkier while operational surface area
 gets larger. You end up with multiple tools telling overlapping stories about

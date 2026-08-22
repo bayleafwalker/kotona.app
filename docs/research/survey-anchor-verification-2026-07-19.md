@@ -1,9 +1,9 @@
 # Survey anchor verification — 2026-07-19
 
 This list is the only external-source input permitted for article baseline A.
-The brainstorm documents are discovery material, not sources. Assessments
-about category gaps, market shape, or what a neutral protocol should own are
-not external claims and must be labelled as analysis in the article.
+The brainstorm documents are discovery material, not sources. Assessments about
+category gaps, market shape, or what a neutral protocol should own are not
+external claims and must be labelled as analysis in the article.
 
 | Claim                                                                                                                                                                             | Primary URL                                                                        | Verdict                                                                                                                                    | Checked    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
@@ -25,7 +25,7 @@ not external claims and must be labelled as analysis in the article.
 
 - Use the factual mechanisms above; do not infer market share, maturity,
   adoption, or inevitability from them.
-- Keep “the weakly occupied middle,” the work/execution/runtime plane split,
-  and vendor-independence as explicitly labelled assessments.
+- Keep “the weakly occupied middle,” the work/execution/runtime plane split, and
+  vendor-independence as explicitly labelled assessments.
 - Name AgentOps.ai when discussing the observability category.
 - Remove the failed Beads atomicity claim rather than weakening it.

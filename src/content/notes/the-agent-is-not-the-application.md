@@ -19,7 +19,10 @@ tags:
   - software-architecture
   - authorization
   - verification
-summary: A durable agent application keeps permissions, records, checks, and recovery outside the model, so changing models does not also replace the system's memory or rules.
+summary:
+  A durable agent application keeps permissions, records, checks, and recovery
+  outside the model, so changing models does not also replace the system's
+  memory or rules.
 ---
 
 Consider an agent asked to repair a failed customer import. It reads the ticket,
@@ -58,22 +61,22 @@ replaceable model work
   execution choices inside the granted scope
 ```
 
-This application is not itself a security kernel. A [security
-kernel](https://csrc.nist.gov/glossary/term/security_kernel) is the small,
-protected, verifiable part of a trusted computing base that mediates access.
-The application owns a wider workflow; the mechanism that enforces access
-should remain much smaller. [Where the assurance questions are already
-answered](/notes/where-the-assurance-questions-are-already-answered/) and [A
-field guide to assurance-managed AI
-development](/notes/a-field-guide-to-assurance-managed-ai-development/) cover
-the established disciplines behind this design.
+This application is not itself a security kernel. A
+[security kernel](https://csrc.nist.gov/glossary/term/security_kernel) is the
+small, protected, verifiable part of a trusted computing base that mediates
+access. The application owns a wider workflow; the mechanism that enforces
+access should remain much smaller.
+[Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+and
+[A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/)
+cover the established disciplines behind this design.
 
 ## Give the model applicable context, not merely related text
 
 Search can find several runbooks. The application has to decide which one
-currently governs this import, whether a later decision superseded it, and
-which unresolved exception applies to this customer. It should then record the
-exact material the agent received.
+currently governs this import, whether a later decision superseded it, and which
+unresolved exception applies to this customer. It should then record the exact
+material the agent received.
 
 ```text
 sources and revisions
@@ -89,24 +92,24 @@ decide which text has standing or whether it is stale.
 
 ## Give tools narrow permission
 
-A tool schema explains how to call `repair_import`. It does not explain why
-this agent may repair this account now.
+A tool schema explains how to call `repair_import`. It does not explain why this
+agent may repair this account now.
 
-Broad credentials plus an instruction to behave sensibly leave policy inside
-the prompt. A stronger design gives the attempt a short-lived permission bound
-to the operator or service identity, work item, action, target, constraints,
-and expiry. The target checks that permission and returns its own receipt.
+Broad credentials plus an instruction to behave sensibly leave policy inside the
+prompt. A stronger design gives the attempt a short-lived permission bound to
+the operator or service identity, work item, action, target, constraints, and
+expiry. The target checks that permission and returns its own receipt.
 
-This still leaves the model freedom to choose a method inside the granted
-scope. Better reasoning can improve that choice without quietly widening what
-the session is allowed to change.
+This still leaves the model freedom to choose a method inside the granted scope.
+Better reasoning can improve that choice without quietly widening what the
+session is allowed to change.
 
 ## Keep organizational memory out of the conversation
 
 Tickets, approved decisions, document revisions, attempts, target effects, and
-later corrections belong in systems with explicit retention rules. A session
-can read a projection of those records and propose additions. It should not be
-the only place they exist.
+later corrections belong in systems with explicit retention rules. A session can
+read a projection of those records and propose additions. It should not be the
+only place they exist.
 
 This is easy to test: start a later session with a different model. Can it
 reconstruct what was authorized, attempted, observed, and left unresolved
@@ -115,8 +118,8 @@ does not yet own its continuity.
 
 ## Evaluate the work outside the answer
 
-A fluent completion is useful, but it does not establish that the repair
-worked. The application needs checks that can answer:
+A fluent completion is useful, but it does not establish that the repair worked.
+The application needs checks that can answer:
 
 - Did the agent receive the current runbook and relevant exception?
 - Was the attempted change permitted for this account?
@@ -134,7 +137,7 @@ chatbot. It is whether permissions, records, verification, and recovery remain
 intact when the model is replaced.
 
 Exact generated artifacts still matter when tests or analysis depend on their
-precise behaviour. [Derive status only from reproducible
-evidence](/notes/derived-status-is-earned/) describes when the process can
-carry the continuing claim and when the generated object must remain part of
-the record.
+precise behaviour.
+[Derive status only from reproducible evidence](/notes/derived-status-is-earned/)
+describes when the process can carry the continuing claim and when the generated
+object must remain part of the record.

@@ -14,7 +14,9 @@ tags:
   - event-sourcing
   - audit
   - systems
-summary: A reference design for audit-native systems where code, layout, control decisions, and data are all log artifacts.
+summary:
+  A reference design for audit-native systems where code, layout, control
+  decisions, and data are all log artifacts.
 ---
 
 ## Thesis

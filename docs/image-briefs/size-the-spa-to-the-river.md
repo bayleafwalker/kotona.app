@@ -1,8 +1,9 @@
 # Image brief: Size the spa to the river
 
-These images are concept art for `src/content/notes/size-the-spa-to-the-river.md`.
-They should look like several views of one restrained Finnish mill-site retreat,
-not unrelated luxury-spa renders.
+These images are concept art for
+`src/content/notes/size-the-spa-to-the-river.md`. They should look like several
+views of one restrained Finnish mill-site retreat, not unrelated luxury-spa
+renders.
 
 ## Shared visual language
 
@@ -15,16 +16,16 @@ Use this continuity block at the start of every prompt:
 > and pale Finnish granite, spruce and birch forest, tactile stone and wood,
 > warm indirect light, quiet functional details, credible drainage and winter
 > maintenance, no fantasy megastructure. Muted moss, soot, rust, snow, and amber
-> palette. Human scale, 35 mm architectural photography, natural contrast,
-> fine film grain, believable Finnish weather. No logos or written text.
+> palette. Human scale, 35 mm architectural photography, natural contrast, fine
+> film grain, believable Finnish weather. No logos or written text.
 
 Use this negative prompt where the image system supports one:
 
 > No Alpine mountains, Japanese temple, torii gate, pagoda, Roman statues,
 > replica columns, Vegas theming, tropical plants, giant waterfall, monumental
-> concrete dam, infinity pool edge over dangerous water, geothermal spring,
-> blue LED lighting, glossy marble hotel, empty showroom sterility, bathers in
-> unsafe turbine areas, distorted railings, illegible signage, watermark, text.
+> concrete dam, infinity pool edge over dangerous water, geothermal spring, blue
+> LED lighting, glossy marble hotel, empty showroom sterility, bathers in unsafe
+> turbine areas, distorted railings, illegible signage, watermark, text.
 
 People should be background scale figures only. Keep swimwear and towelling
 non-sensational, and avoid identifiable faces. The river, weir, pool barriers,
@@ -81,8 +82,8 @@ Prompt:
 
 Alt text:
 
-> A stone and timber thermal bathing hall progressing from wash stations to
-> warm rooms and a cold pool facing the river.
+> A stone and timber thermal bathing hall progressing from wash stations to warm
+> rooms and a cold pool facing the river.
 
 Caption:
 
@@ -121,8 +122,7 @@ Caption:
 
 ## 4. Site: one operational landscape
 
-Target file:
-`public/images/notes/size-the-spa-to-the-river/site-oblique.webp`
+Target file: `public/images/notes/size-the-spa-to-the-river/site-oblique.webp`
 
 Available derivative: 1312 × 816, WebP, about 245 kB.
 
@@ -184,8 +184,11 @@ place, add this block to the note frontmatter:
 ```yaml
 hero:
   src: /images/notes/size-the-spa-to-the-river/hero-winter-rotenburo.webp
-  alt: Two steaming outdoor baths beside a low mill dam in a snowy Finnish forest at dusk.
-  caption: Generated concept image, not a surveyed site or safe hydraulic layout.
+  alt:
+    Two steaming outdoor baths beside a low mill dam in a snowy Finnish forest
+    at dusk.
+  caption:
+    Generated concept image, not a surveyed site or safe hydraulic layout.
   width: 1376
   height: 768
 ```

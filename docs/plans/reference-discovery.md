@@ -4,8 +4,8 @@ Status: planned
 Architecture: [`docs/architecture/reference-discovery.md`](../architecture/reference-discovery.md)
 
 This is the maintained implementation backlog for the reference-discovery
-direction. Work lands in independently reviewable and reversible slices. A
-slice is complete only when its contract, tests, and documentation agree;
+direction. Work lands in independently reviewable and reversible slices. A slice
+is complete only when its contract, tests, and documentation agree;
 implementation and deployment are separate activities.
 
 ## Delivery order
@@ -42,7 +42,8 @@ Status: pending; depends on slice 1
 
 - Add explicit note and project `.md` paths backed by the existing projection.
 - Prepend deterministic allowlisted reference metadata.
-- Remove the complete optional-prompt element before HTML-to-Markdown conversion.
+- Remove the complete optional-prompt element before HTML-to-Markdown
+  conversion.
 - Add plain-text `.prompt.txt` routes only for published prompt-bearing notes.
 - Advertise Markdown alternates and preserve canonical-host, draft, lifecycle,
   revision, security, query-string, and `HEAD` behavior.
@@ -74,7 +75,8 @@ project/note top-k expectations pass deterministically.
 
 Status: pending; depends on slice 2
 
-- Add a compact `Reference: Markdown · Copy · Download` row to notes and projects.
+- Add a compact `Reference: Markdown · Copy · Download` row to notes and
+  projects.
 - Fetch the explicit `.md` representation for copy and download.
 - Rename the prompt block to **Optional exploration template** and keep it
   collapsed.
@@ -107,9 +109,9 @@ Each implemented slice runs `npm run validate`. Worker coverage must include:
 
 The retrieval evaluation continues to exercise only public HTTP surfaces. It
 must test reference-index, `llms.txt`, and graph agreement, vague top-k
-selection, lifecycle interpretation, and prompt separation. Fresh-session
-trials receive only a question, the site root, and ordinary web access; they do
-not receive internal paths or known note titles.
+selection, lifecycle interpretation, and prompt separation. Fresh-session trials
+receive only a question, the site root, and ordinary web access; they do not
+receive internal paths or known note titles.
 
 Compatibility gates preserve RSS, sitemap, redirects, canonical HTML, content
 negotiation, draft exclusion, revision and security headers, and the existing
@@ -119,7 +121,7 @@ or makes a private tier a source or build dependency.
 ## Plan maintenance
 
 Update status here when a slice lands and link the implementation evidence.
-Change the architecture document when direction or a public contract changes;
-do not quietly rewrite this backlog around an incompatible implementation.
-Deferred capabilities require their stated evidence gate and, where they add a
-service or authority boundary, a separate architecture decision.
+Change the architecture document when direction or a public contract changes; do
+not quietly rewrite this backlog around an incompatible implementation. Deferred
+capabilities require their stated evidence gate and, where they add a service or
+authority boundary, a separate architecture decision.

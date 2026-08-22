@@ -30,7 +30,8 @@ relates: []
 draft: true
 tags:
   - replace-me
-summary: Replace with a concrete one-line statement of what the note establishes.
+summary:
+  Replace with a concrete one-line statement of what the note establishes.
 # Optional, and only once the note below is editorially complete. See
 # docs/explore-prompts.md for the contract; do not write this alongside the
 # note's first draft.

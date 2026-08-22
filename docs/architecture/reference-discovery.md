@@ -7,9 +7,9 @@ Source baseline: `6c610a4627bd71dd2781e94d0a998db1b958e900`
 This document is the repository authority for the intended public reference
 discovery architecture. It incorporates the publication-safe design handoff
 identified by SHA-256
-`2745a8530fc225fb91c1ee2d85e2c3b334de35f7d75a9ecc95d9f011b83514f3`.
-Repository policy, current source, and tests remain authoritative when an
-implementation detail in the handoff no longer fits.
+`2745a8530fc225fb91c1ee2d85e2c3b334de35f7d75a9ecc95d9f011b83514f3`. Repository
+policy, current source, and tests remain authoritative when an implementation
+detail in the handoff no longer fits.
 
 ## Outcome and boundary
 
@@ -91,16 +91,16 @@ available only when deliberately requested and precedes the prompt with source,
 lifecycle, and revision context.
 
 This separation prevents portable task language from being mistaken for source
-authority while preserving the existing editorial capability. Prompt routes
-must return 404 for unpublished, draft, or prompt-less notes.
+authority while preserving the existing editorial capability. Prompt routes must
+return 404 for unpublished, draft, or prompt-less notes.
 
 ## Retrieval policy
 
 Retrieval remains deterministic and local. A shared browser-safe implementation
-tokenizes queries, applies a small stop-word set, scores weighted fields, applies
-lifecycle and type policy, diversifies top results, and exposes stable match
-reasons. Curated `reference.discoverFor` phrases receive the strongest boost;
-titles remain strong.
+tokenizes queries, applies a small stop-word set, scores weighted fields,
+applies lifecycle and type policy, diversifies top results, and exposes stable
+match reasons. Curated `reference.discoverFor` phrases receive the strongest
+boost; titles remain strong.
 
 For equal lexical relevance, current project evidence and current operating or
 synthesis notes precede current explorations, historical material, and

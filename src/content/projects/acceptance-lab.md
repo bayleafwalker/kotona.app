@@ -22,7 +22,8 @@ evidence:
   integrations: []
   knownLimitation: >-
     The current proof uses deterministic fixtures. It does not yet capture a
-    live model trace, execute an effect, or enforce an external promotion policy.
+    live model trace, execute an effect, or enforce an external promotion
+    policy.
   nextProof: >-
     Bind one real read-only agent run to runner-owned tool observations and show
     which trajectory details the initial candidate schema fails to preserve.
@@ -92,10 +93,10 @@ verification code.
 
 ## Open edges
 
-The next proof is one real, bounded agent run. The adapter must obtain tool calls,
-effects, and receipts from the trace or runner rather than from model self-report.
-The resulting failure analysis should identify fields that the fixture-designed
-schema flattened or missed.
+The next proof is one real, bounded agent run. The adapter must obtain tool
+calls, effects, and receipts from the trace or runner rather than from model
+self-report. The resulting failure analysis should identify fields that the
+fixture-designed schema flattened or missed.
 
 A model judge can be added later for genuinely semantic criteria, but it should
 not override deterministic authority, evidence, or execution failures. Shared

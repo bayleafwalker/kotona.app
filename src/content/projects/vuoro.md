@@ -26,10 +26,10 @@ evidence:
     Public tools own sprint, knowledge, queue, dispatch, audit, and cockpit
     state through separate contracts, with local and shared operating modes.
   latest: >-
-    Served composition through v0.1.35 binds component and schema
-    compatibility to migration admissibility: four capability gates passed,
-    production preflight rejected an unsafe schema-5 rollout, and the
-    maintenance bridge was staged without claiming the schema had migrated.
+    Served composition through v0.1.35 binds component and schema compatibility
+    to migration admissibility: four capability gates passed, production
+    preflight rejected an unsafe schema-5 rollout, and the maintenance bridge
+    was staged without claiming the schema had migrated.
   proofLinks:
     - label: Vuoro composition repository
       href: https://github.com/bayleafwalker/vuoro
@@ -53,19 +53,33 @@ tags:
   - cli-tooling
 terms:
   - term: Vuoro
-    definition: The public label for this family of small, separately owned agent-workflow tools.
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
   - term: sprintctl
-    definition: The CLI and schema that own sprint work, dependencies, claims, and handoffs.
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
   - term: kctl
-    definition: The read-only pipeline that turns reviewed sprint history into durable knowledge.
+    definition:
+      The read-only pipeline that turns reviewed sprint history into durable
+      knowledge.
   - term: actionq
-    definition: The PostgreSQL-backed queue that owns actions, sessions, claims, and outcomes.
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
   - term: actionq-dispatch
-    definition: The one-action coordinator that creates a bounded workspace, invokes a worker, and records the result.
+    definition:
+      The one-action coordinator that creates a bounded workspace, invokes a
+      worker, and records the result.
   - term: auditctl
-    definition: The tool that indexes audit events and emits portable daily evidence shards.
+    definition:
+      The tool that indexes audit events and emits portable daily evidence
+      shards.
   - term: agent-cockpit
-    definition: The operator interface that composes state from the owning tools without becoming their database.
+    definition:
+      The operator interface that composes state from the owning tools without
+      becoming their database.
 ---
 
 ## Overview
@@ -78,8 +92,8 @@ make a CLI the write authority.
 
 kctl followed as the read-only knowledge path. It consumes sprint history,
 extracts durable and coordination candidates, and puts them through explicit
-review and publication. It does not silently turn every session note into
-canon, and it never writes work back into sprintctl.
+review and publication. It does not silently turn every session note into canon,
+and it never writes work back into sprintctl.
 
 Those two tools are still useful on their own. They are no longer the whole
 story. The same state-ownership rule has grown into Vuoro: each repository owns
@@ -124,8 +138,8 @@ sprintctl owns sprints, work items, dependencies, events, claims, and handoffs.
 It runs against repo-local SQLite or a shared PostgreSQL backend, and a declared
 backend mismatch fails rather than quietly opening a different source of truth.
 Claim ID and token prove possession of an active claim; resume and handoff
-commands turn live state into deterministic context for a new operator or
-agent session. PostgreSQL now retains expired claim rows and exposes a lineage
+commands turn live state into deterministic context for a new operator or agent
+session. PostgreSQL now retains expired claim rows and exposes a lineage
 `lease_epoch`. The epoch is historical structure, not downstream fencing.
 
 kctl reads sprintctl events and owns the extraction, review, publication, and
@@ -155,8 +169,8 @@ monolith.
 
 Here is the end-to-end property the system is designed to demonstrate:
 
-1. An operator creates a work item through sprintctl. Sprintctl records the
-   item and event history.
+1. An operator creates a work item through sprintctl. Sprintctl records the item
+   and event history.
 2. An agent starts a claim. Its claim ID and secret token—not the actor name,
    branch, or hostname—prove the current ownership incarnation.
 3. Dispatch submits an action through actionq. Actionq-dispatch creates a
@@ -164,9 +178,9 @@ Here is the end-to-end property the system is designed to demonstrate:
    runs its gates.
 4. If the worker fails or returns an invalid result, the result is recorded as
    failed or rejected. It is not published and does not close the work item.
-5. The same owner can resume with its private recovery record. A new owner
-   needs an explicit handoff or recovery that rotates proof, so stale proof
-   cannot settle the item.
+5. The same owner can resume with its private recovery record. A new owner needs
+   an explicit handoff or recovery that rotates proof, so stale proof cannot
+   settle the item.
 6. Once a valid result clears independent verification, the owning CLI records
    completion and releases the claim. Auditctl indexes portable evidence, and
    the cockpit projects the sprint, claim, dispatch, and audit outcome.
@@ -187,9 +201,9 @@ audit shards.
 
 The agent-cockpit is live and can show repository and sprint state, claims,
 session and dispatch lifecycles, audit outcomes, and bounded cost or model
-headroom signals. Its dispatch surface forwards work through actionq.
-sprintctl state and workspace artifacts remain separate service contracts
-rather than tables the UI is free to rewrite.
+headroom signals. Its dispatch surface forwards work through actionq. sprintctl
+state and workspace artifacts remain separate service contracts rather than
+tables the UI is free to rewrite.
 
 ![Agent-cockpit sprint overview showing backlog, claims, and dispatch state](/images/projects/vuoro/cockpit-main.png)
 
@@ -205,24 +219,23 @@ or needs an operator surface.
 
 By 8 August, served composition had reached v0.1.35 with component and schema
 compatibility made explicit. Four capability gates passed, while production
-preflight correctly rejected an unsafe schema-5 rollout. The maintenance
-bridge was staged to make the transition admissible without representing the
-production schema as already migrated.
+preflight correctly rejected an unsafe schema-5 rollout. The maintenance bridge
+was staged to make the transition admissible without representing the production
+schema as already migrated.
 
 ## Open edges
 
 The substrate has enough parts that it must continually justify them. A tool
-designed to remove coordination ambiguity can recreate it through version
-drift, overlapping commands, or unclear recovery rules between repositories.
-Interface contracts and end-to-end verification matter more now than another
-feature in any one CLI.
+designed to remove coordination ambiguity can recreate it through version drift,
+overlapping commands, or unclear recovery rules between repositories. Interface
+contracts and end-to-end verification matter more now than another feature in
+any one CLI.
 
 kctl and auditctl are also less exercised than sprintctl and agent-cockpit.
 Their clean ownership boundaries are promising, but durable extraction and
-recovery need more operational mileage before they should be treated as
-settled.
+recovery need more operational mileage before they should be treated as settled.
 
-The agent-cockpit write surface should stay narrow. Dispatch and explicit
-sprint operations are useful; turning the UI into a privileged backdoor around
-claim, queue, or audit rules would recreate the original Markdown problem with
-better CSS.
+The agent-cockpit write surface should stay narrow. Dispatch and explicit sprint
+operations are useful; turning the UI into a privileged backdoor around claim,
+queue, or audit rules would recreate the original Markdown problem with better
+CSS.

@@ -19,7 +19,10 @@ tags:
   - open-source
   - verification
   - maintenance
-summary: AI weakens the old correlation between producing a plausible patch and understanding a project, so OSS contribution shifts toward evidence, verification, standing, and durable ownership.
+summary:
+  AI weakens the old correlation between producing a plausible patch and
+  understanding a project, so OSS contribution shifts toward evidence,
+  verification, standing, and durable ownership.
 draft: false
 ---
 
@@ -39,10 +42,10 @@ work rationed maintainer attention without anybody designing an admission
 system.
 
 AI weakens the correlation. It can make a plausible patch cheap without making
-the project's substrate equally cheap to acquire. The artifact no longer
-proves that its author can explain the change, respond to review, recognize a
-hidden constraint, or maintain the behavior later. Submission cost falls while
-review cost remains attached to the maintainer.
+the project's substrate equally cheap to acquire. The artifact no longer proves
+that its author can explain the change, respond to review, recognize a hidden
+constraint, or maintain the behavior later. Submission cost falls while review
+cost remains attached to the maintainer.
 
 The patch was open source's proof of work. It still proves that some work was
 performed. It no longer proves who understood it.
@@ -65,8 +68,8 @@ one generated suggestion.
 
 Downstream, projects need assurance and ownership: adversarial tests, affected
 version analysis, compatibility evidence, independent reproduction, deployment
-experience, documentation grounded in actual use, sustained triage, and a
-person willing to remain when the first review comment arrives.
+experience, documentation grounded in actual use, sustained triage, and a person
+willing to remain when the first review comment arrives.
 
 Code remains valuable where it embodies difficult discovery or expertise. Its
 default value changes. "Here is a patch" becomes weaker than "here is a fact
@@ -111,9 +114,10 @@ curl security submissions, while only about 5% of that year's submissions had
 been genuine vulnerabilities at that point. Each report could engage several
 security-team members for substantial triage. The project ended monetary bug
 bounties in January 2026. Stenberg later reported that the obvious slop had
-largely disappeared while report volume remained high and quality improved.
-The composition responded to a change in incentives and intake; saturation was
-not an irreversible property of contributors. ([July 2025](https://daniel.haxx.se/blog/2025/07/14/death-by-a-thousand-slops/),
+largely disappeared while report volume remained high and quality improved. The
+composition responded to a change in incentives and intake; saturation was not
+an irreversible property of contributors.
+([July 2025](https://daniel.haxx.se/blog/2025/07/14/death-by-a-thousand-slops/),
 [January 2026](https://daniel.haxx.se/blog/2026/01/26/the-end-of-the-curl-bug-bounty/),
 [April 2026](https://daniel.haxx.se/blog/2026/04/22/high-quality-chaos/))
 
@@ -153,8 +157,8 @@ unwelcome and remain honest artifacts maintained by one person.
 
 Projects in the middle have the worst exposure: enough users to attract a flood,
 enough consequence that changes need judgment, and too few maintainers to build
-an intake institution. Their rational outcomes include ignoring unsolicited
-pull requests, requiring prior issues, accepting changes only from known users,
+an intake institution. Their rational outcomes include ignoring unsolicited pull
+requests, requiring prior issues, accepting changes only from known users,
 moving implementation in-house with agents, or abandoning collaborative
 maintenance while leaving forks available.
 
@@ -171,19 +175,18 @@ of formation.
 
 If standing precedes all review, that ladder disappears exactly when firms are
 also reducing routine junior production. The replacement seat is again
-reconciliation: triage, reproduction, bisection, regression maintenance,
-release verification, issue history, and bounded review against declared
-contracts. This work is now more valuable than another plausible patch, exposes
-the learner to project substrate, and can earn trust through evidence rather
-than polish.
+reconciliation: triage, reproduction, bisection, regression maintenance, release
+verification, issue history, and bounded review against declared contracts. This
+work is now more valuable than another plausible patch, exposes the learner to
+project substrate, and can earn trust through evidence rather than polish.
 
 Projects that formalize a path from verification work to scoped authority can
 still form maintainers. Projects that only filter submissions will protect the
 current team while emptying the succession pool.
 
-The expected destination is not closed source. It is open artifacts with
-metered judgment. Unknown contributors will still enter where they can make
-their claims cheap to verify. Everywhere else, the scarce contribution will be
-neither code nor model access. It will be evidence that the contributor knows
-what should change, plus standing earned by staying long enough to be wrong in
-public and repair it.
+The expected destination is not closed source. It is open artifacts with metered
+judgment. Unknown contributors will still enter where they can make their claims
+cheap to verify. Everywhere else, the scarce contribution will be neither code
+nor model access. It will be evidence that the contributor knows what should
+change, plus standing earned by staying long enough to be wrong in public and
+repair it.

@@ -24,8 +24,8 @@ evidence:
       href: https://github.com/bayleafwalker/box
   integrations: []
   knownLimitation: >-
-    The repository proves coherent boundaries, not a running platform or
-    service replacement.
+    The repository proves coherent boundaries, not a running platform or service
+    replacement.
   nextProof: >-
     Run one end-to-end slice through all three services with service-owned
     persistence and contract-valid events.
@@ -35,7 +35,9 @@ tags:
   - simulation
 terms:
   - term: Box
-    definition: A contract-first platform scaffold for testing a small reusable service kernel before implementing its runtime.
+    definition:
+      A contract-first platform scaffold for testing a small reusable service
+      kernel before implementing its runtime.
 ---
 
 ## Overview
@@ -43,8 +45,8 @@ terms:
 Box is a small "business in a box" platform built around contract-first service
 boundaries and scenario overlays. It generalizes part of the household-platform
 work into a deliberately smaller test: can a reusable business kernel support
-different scenarios without turning into one application with decorative
-service names?
+different scenarios without turning into one application with decorative service
+names?
 
 The repository fixes the initial boundaries early because demo pressure is
 excellent at inventing shared databases, private imports, and simulator
@@ -84,9 +86,9 @@ systems yet.
 
 The next meaningful proof is an end-to-end slice through the three reference
 services using service-owned persistence and contract-valid events. After that,
-the deterministic simulator has to generate both scenario packs without
-writing around the public interfaces.
+the deterministic simulator has to generate both scenario packs without writing
+around the public interfaces.
 
 The stronger test comes later: replace one service with another implementation
-while callers and scenarios remain unchanged. Until that works, "contract
-first" is a design constraint with good tests, not replacement proof.
+while callers and scenarios remain unchanged. Until that works, "contract first"
+is a design constraint with good tests, not replacement proof.

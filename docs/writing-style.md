@@ -7,24 +7,23 @@ says whether it remains current. They are separate from role.
 
 ## Metadata: area and tags
 
-`area` is the controlled, reader-facing primary kind of work or reasoning a
-note demonstrates. It is not the note's editorial domain, a technology label,
-or a bag of topics. Choose the single area that best helps a reader understand
-the note's primary work; use `tags` for narrower technologies, contexts,
-subjects, and secondary concerns. The permitted values live in
+`area` is the controlled, reader-facing primary kind of work or reasoning a note
+demonstrates. It is not the note's editorial domain, a technology label, or a
+bag of topics. Choose the single area that best helps a reader understand the
+note's primary work; use `tags` for narrower technologies, contexts, subjects,
+and secondary concerns. The permitted values live in
 `src/data/knowledge-areas.ts`; add one only when it names a stable distinction
 that more than one note can use.
 
-The atlas derives spatial domain placement from its reviewed cluster rules.
-Do not change an `area` merely to move a note on the map.
+The atlas derives spatial domain placement from its reviewed cluster rules. Do
+not change an `area` merely to move a note on the map.
 
 Use operationally grounded analytical prose. Write as a practitioner reasoning
 from a real system, decision, experiment, or failure. Start with the person,
 system, event, decision, or failed check that gives the reader something
 concrete to hold. State material assumptions and starting conditions plainly.
-When two concepts need separating, show what the distinction changes in a
-test, decision, implementation, storage choice, publication choice, or recovery
-path.
+When two concepts need separating, show what the distinction changes in a test,
+decision, implementation, storage choice, publication choice, or recovery path.
 
 Prefer named actors and active verbs. Say that CI rejects a release, an owner
 accepts an exception, or a database stores a record. Use terms such as
@@ -33,12 +32,12 @@ itself matters, not because they belong to the site's vocabulary. Preserve
 details that establish contact with reality: dates, commands, counts, awkward
 exceptions, failed assumptions, and recovery behaviour.
 
-Allow variation in cadence and confidence. First person is appropriate when
-the evidence comes from personal operation, judgment, or uncertainty. Keep a
-personal motive when it materially changed the decision. One strong sentence
-may carry a section; the surrounding sentences should explain it rather than
-compete with it. Dry humour is welcome when it punctures false grandeur or
-clarifies a contradiction.
+Allow variation in cadence and confidence. First person is appropriate when the
+evidence comes from personal operation, judgment, or uncertainty. Keep a
+personal motive when it materially changed the decision. One strong sentence may
+carry a section; the surrounding sentences should explain it rather than compete
+with it. Dry humour is welcome when it punctures false grandeur or clarifies a
+contradiction.
 
 Extract reusable guidance only after the case supports it. Preserve
 counterexamples, inconvenient residuals, and questions the evidence has not
@@ -50,16 +49,16 @@ says nothing.
 
 ### Operating
 
-Use for current rules and reference designs. Be terse and procedural: rule,
-why it exists, scope, implementation, validation, then failure or rollback.
-Avoid a conceptual lead-in when the useful reader action is already known.
+Use for current rules and reference designs. Be terse and procedural: rule, why
+it exists, scope, implementation, validation, then failure or rollback. Avoid a
+conceptual lead-in when the useful reader action is already known.
 
 ### Synthesis
 
-Use to map a question across observations or established material. Be
-corrective without becoming impersonal: question, relevant cases or evidence,
-useful distinction, corrections, open edge, and practical consequence. Do not
-claim novelty where the work is established elsewhere.
+Use to map a question across observations or established material. Be corrective
+without becoming impersonal: question, relevant cases or evidence, useful
+distinction, corrections, open edge, and practical consequence. Do not claim
+novelty where the work is established elsewhere.
 
 ### Exploration
 
@@ -72,9 +71,9 @@ claim is a law.
 ### Project history
 
 Use for incidents, decisions that have since changed, and historical project
-context. Prefer concrete chronology: what happened, what was expected, what
-was observed, the fix or decision, and the lesson or remaining uncertainty.
-Keep dates, commands, counts, and inconvenient details when they establish the
+context. Prefer concrete chronology: what happened, what was expected, what was
+observed, the fix or decision, and the lesson or remaining uncertainty. Keep
+dates, commands, counts, and inconvenient details when they establish the
 record.
 
 ## Shared checks
@@ -96,6 +95,11 @@ record.
   certainty.
 - Prefer an ordinary explanation over an "X is not Y; it is Z" construction
   unless the contrast genuinely corrects the reader's model.
+- Hard-wrap Markdown prose at 80 columns. This is enforced by Prettier
+  (`proseWrap: "always"`, `printWidth: 80` in `prettier.config.mjs`) and runs in
+  the pre-commit hook, so it needs no manual attention; do not hand-wrap against
+  it. Tables, fenced code, and single long tokens such as URLs are left alone by
+  the formatter.
 
 ## General structure
 
@@ -142,23 +146,22 @@ Before publishing, ask:
 
 ## Editing instruction
 
-Edit toward the author's practitioner voice. Treat raw reasoning as the
-primary source and published notes as secondary calibration, not as prose to
-imitate. Preserve stated assumptions, conditional reasoning, concrete actors
-and states, personal motive, counterexamples, useful uncertainty, and dry
-deflation. Do not rewrite unaffected passages merely to make the voice
-uniform.
+Edit toward the author's practitioner voice. Treat raw reasoning as the primary
+source and published notes as secondary calibration, not as prose to imitate.
+Preserve stated assumptions, conditional reasoning, concrete actors and states,
+personal motive, counterexamples, useful uncertainty, and dry deflation. Do not
+rewrite unaffected passages merely to make the voice uniform.
 
-Revise passages that accumulate abstract nouns without a concrete referent,
-turn a local observation into a law, introduce a term before its case, restate
-the preceding sentence more elegantly, or make every paragraph end like a
-maxim. Treat words such as _authority_, _artifact_, _capability_, _surface_,
-_bounded_, _load-bearing_, _explicit_, _defensible_, and _tractable_ as precise
-tools, not house decorations. Prefer actor and verb: "CI blocks the release,"
-"the domain owner accepts the exception," or "the old pod remains ready."
+Revise passages that accumulate abstract nouns without a concrete referent, turn
+a local observation into a law, introduce a term before its case, restate the
+preceding sentence more elegantly, or make every paragraph end like a maxim.
+Treat words such as _authority_, _artifact_, _capability_, _surface_, _bounded_,
+_load-bearing_, _explicit_, _defensible_, and _tractable_ as precise tools, not
+house decorations. Prefer actor and verb: "CI blocks the release," "the domain
+owner accepts the exception," or "the old pod remains ready."
 
-Use at most one deliberately aphoristic sentence per section. This is a
-ceiling, not a quota.
+Use at most one deliberately aphoristic sentence per section. This is a ceiling,
+not a quota.
 
 ## Calibration notes
 
@@ -189,8 +192,8 @@ to copy sentence by sentence.
   lets chronology, timings, and the failed transition carry the lesson.
 - **Project history:**
   [`moving-a-live-cluster-to-a-new-subnet.md`](../src/content/notes/moving-a-live-cluster-to-a-new-subnet.md)
-  keeps the topology, ordering constraint, and awkward exception in view
-  without inflating the work.
+  keeps the topology, ordering constraint, and awkward exception in view without
+  inflating the work.
 - **Exploration:**
   [`the-workshop-is-learning-my-accent.md`](../src/content/notes/the-workshop-is-learning-my-accent.md)
   retains first person, motive, ambivalence, and humour without forcing the
@@ -203,8 +206,8 @@ to copy sentence by sentence.
 contains useful self-critique and strong individual lines, but it is also a
 caution against copying the site's most abstract register as a default voice.
 
-Do not revise an older note merely to make it resemble these examples. Apply
-the current guide when its claim, evidence, lifecycle, or practical advice is
+Do not revise an older note merely to make it resemble these examples. Apply the
+current guide when its claim, evidence, lifecycle, or practical advice is
 substantively touched; otherwise preserve the public record.
 
 When adding notes to the knowledge map, review the title, summary, and opening
@@ -228,8 +231,7 @@ conversion funnel.
    mechanism, timing, and attribution are still recognizable.
 4. Derive the transferable `explorePrompt` from the final note (see
    `docs/explore-prompts.md`) -- never before the note is complete.
-5. Validate that the prompt produces a sibling rather than a summary or
-   clone.
+5. Validate that the prompt produces a sibling rather than a summary or clone.
 6. Publish.
 
 Use the private `kotona-notes-private` repository for non-public editorial work
@@ -237,6 +239,6 @@ that is safe for GitHub custody. Use the private Forgejo or Obsidian tier for
 information-private material. Promotion is a separately reviewed copy, never an
 automatic synchronization from either private tier.
 
-When reviewing a prompt, ask whether it carries the note's actual
-conclusion, names the material constraints that produced it, and asks the
-next agent to test where those constraints diverge from their own.
+When reviewing a prompt, ask whether it carries the note's actual conclusion,
+names the material constraints that produced it, and asks the next agent to test
+where those constraints diverge from their own.

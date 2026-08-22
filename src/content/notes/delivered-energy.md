@@ -12,7 +12,10 @@ tags:
   - batteries
   - off-grid
   - ev
-summary: A business plan for battery-swap delivered energy that works in one narrow niche and matters most for what it implies about EVs, home batteries, and off-grid design.
+summary:
+  A business plan for battery-swap delivered energy that works in one narrow
+  niche and matters most for what it implies about EVs, home batteries, and
+  off-grid design.
 ---
 
 No capital, no time, no intention to execute. Published because the analysis is
@@ -47,9 +50,9 @@ one cuts both ways.
 one year according to
 [BloombergNEF's 2025 survey](https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/).
 The cheapest observed LFP packs hit $50/kWh. The model assumes second-life EV
-packs at €20–40/kWh as Europe's first major EV retirement wave lands
-~2027–2030. Direction: strongly favorable, but the second-life price is still an
-assumption rather than a quoted supply contract.
+packs at €20–40/kWh as Europe's first major EV retirement wave lands ~2027–2030.
+Direction: strongly favorable, but the second-life price is still an assumption
+rather than a quoted supply contract.
 
 **Second-life fit.** The core economic flaw of swap-based heating is cycle
 waste: a pack swapped monthly cycles ~12 times a year, throwing away thousands
@@ -69,10 +72,10 @@ favorable, and it strengthens before the regulatory countermeasure arrives.
 negative-price hours in 2024 and 465 in 2025, according to
 [Finnish Energy's 2025 review](https://energia.fi/wp-content/uploads/2026/01/Electricity-Year-2025-1.pdf)
 using ENTSO-E data. Flexible demand — including grid batteries and electric
-boilers in district heating — is absorbing more of the spread. The arbitrage
-the depot depends on is being competed away by stationary players with no
-trucks. Direction: unfavorable; the model assigns a 40–50% probability that the
-spread stays exploitable through 2030.
+boilers in district heating — is absorbing more of the spread. The arbitrage the
+depot depends on is being competed away by stationary players with no trucks.
+Direction: unfavorable; the model assigns a 40–50% probability that the spread
+stays exploitable through 2030.
 
 **Regulatory seams.** Every margin component — avoided fixed fees, avoided
 winter transfer, sähkövero classification of a charged pack as goods rather than
@@ -98,8 +101,8 @@ service (5 swaps/winter of ~400 kWh):
 | Depot, handling, overhead                                    | 0.02          |
 | **Delivered cost**                                           | **0.11–0.15** |
 
-Against the alternatives the target customer actually faces: effective grid
-cost €0.30–0.45/kWh at cottage consumption levels, or €15–45k connection capex
+Against the alternatives the target customer actually faces: effective grid cost
+€0.30–0.45/kWh at cottage consumption levels, or €15–45k connection capex
 avoided entirely. The spread is real. It is also entirely composed of the other
 side's fixed-cost structure.
 
@@ -118,17 +121,16 @@ through the existing wire.
 | Construction / events / grid-queue temporary power     | existing market, diesel-priced                                    | €0.30–0.60/kWh        | adjacent, already contested |
 
 SOM for a pilot operator: hundreds of customers, low single-digit €M revenue,
-one depot, one truck route geometry. This is a lifestyle-business ceiling
-unless the model exports beyond Finland's cottage belt.
+one depot, one truck route geometry. This is a lifestyle-business ceiling unless
+the model exports beyond Finland's cottage belt.
 
 ## Plan, 2026–2030
 
-**Phase 0, 2026 — paper.** Vero advance ruling on sähkövero treatment of
-swapped packs. ADR assessment: lithium packs are UN 3480 Class 9 dangerous
-goods; routed multi-tonne residential delivery of used packs is a real
-compliance and insurance problem, possibly the plan's hardest practical
-constraint. DSO tariff-reform watch. One spreadsheet model with contact-tested
-logistics quotes.
+**Phase 0, 2026 — paper.** Vero advance ruling on sähkövero treatment of swapped
+packs. ADR assessment: lithium packs are UN 3480 Class 9 dangerous goods; routed
+multi-tonne residential delivery of used packs is a real compliance and
+insurance problem, possibly the plan's hardest practical constraint. DSO
+tariff-reform watch. One spreadsheet model with contact-tested logistics quotes.
 
 **Phase 1, 2027 — pilot.** One depot behind the meter at a wind park with
 curtailment history. 10–20 cottage customers in one route cluster. Second-life
@@ -141,10 +143,10 @@ caps peak draw and the customer downsizes their main fuse against rising
 tehomaksu. Reserve-market stacking (FCR-D) on depot dwell capacity.
 
 **Phase 3, 2029–2030 — scale or fold.** Decision gates: second-life pack price
-under €30/kWh at volume; charging spread surviving; no Energiavirasto
-bypass-fee response. Any gate fails, fold the operating business and keep the
-depot as a stationary storage asset — the fallback is itself a viable business,
-which is the plan's main risk hedge.
+under €30/kWh at volume; charging spread surviving; no Energiavirasto bypass-fee
+response. Any gate fails, fold the operating business and keep the depot as a
+stationary storage asset — the fallback is itself a viable business, which is
+the plan's main risk hedge.
 
 ## Risk register
 
@@ -156,8 +158,8 @@ the depot's charging advantage is being eaten by stationary flexibility; the
 reflex:** the margin is a tariff-structure short position; the moat is measured
 in legislative sessions. **Home battery cannibalization:** at $50/kWh packs,
 every customer is one wall-box purchase from self-supply, except where there is
-no wire at all — which is why the only defensible segment is the one without
-the wire.
+no wire at all — which is why the only defensible segment is the one without the
+wire.
 
 ## The actual conclusions
 
@@ -172,10 +174,9 @@ out-competed by its customers' own vehicles — this is the strongest single
 finding.
 
 **Off-grid design point moved.** At second-life pack prices, the rational
-new-build mökki skips the €25k connection: solar covers April–September, a
-20–40 kWh pack plus either EV top-ups or a commercial winter-swap service
-covers the rest. The connection-fee comparison now loses in a growing share of
-rural cases.
+new-build mökki skips the €25k connection: solar covers April–September, a 20–40
+kWh pack plus either EV top-ups or a commercial winter-swap service covers the
+rest. The connection-fee comparison now loses in a growing share of rural cases.
 
 **Home batteries are the same trade through the wire.** Everything the depot
 does — buy curtailment hours, sell against peak tariffs and fixed fees — a wall
@@ -205,8 +206,8 @@ The external anchors are deliberately few:
 Everything else in the cost stack and market sizing is an order-of-magnitude
 model assumption: second-life pack price and life, route density, depot cost,
 eligible-customer share, connection cost, and future tariff response. None is a
-supplier quote, regulatory ruling, or investment recommendation. The analysis
-is useful only if those inputs remain visible enough to replace.
+supplier quote, regulatory ruling, or investment recommendation. The analysis is
+useful only if those inputs remain visible enough to replace.
 
 The idea survived a long attempt to kill it in one room of the house. That room
 has no electricity, which is the point.

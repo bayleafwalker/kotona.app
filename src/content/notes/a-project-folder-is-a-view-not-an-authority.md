@@ -27,19 +27,20 @@ explorePrompt: >-
   Use this note as a worked reference design, not a folder convention to copy.
   The transferable question is: when several authoritative systems are composed
   into one convenient workspace, how do you prevent the composition layer from
-  silently becoming another authority? In this instantiation, a source-controlled
-  project binding selects repository members and shared guidance, while generated
-  materialization instances expose linked worktrees for a session. Git commits
-  and refs remain repository-owned; work selection, queue execution, audit and
-  deployment remain with their existing systems; the folder root has no Git
-  identity; writable instances use unique branches and are destroyable only when
-  clean. Apply the question to a multi-repository workspace, data-product
-  workbench, incident room or agent environment you operate. Identify each
-  underlying authority, what the composed view may cache or render, how identity
-  and provenance are recorded, and which actions must be performed through a
-  member or owning system rather than the view. Challenge the design where your
-  workspace is itself the durable source. Produce an authority matrix, lifecycle
-  rules and three tests that would expose accidental authority capture.
+  silently becoming another authority? In this instantiation, a
+  source-controlled project binding selects repository members and shared
+  guidance, while generated materialization instances expose linked worktrees
+  for a session. Git commits and refs remain repository-owned; work selection,
+  queue execution, audit and deployment remain with their existing systems; the
+  folder root has no Git identity; writable instances use unique branches and
+  are destroyable only when clean. Apply the question to a multi-repository
+  workspace, data-product workbench, incident room or agent environment you
+  operate. Identify each underlying authority, what the composed view may cache
+  or render, how identity and provenance are recorded, and which actions must be
+  performed through a member or owning system rather than the view. Challenge
+  the design where your workspace is itself the durable source. Produce an
+  authority matrix, lifecycle rules and three tests that would expose accidental
+  authority capture.
 ---
 
 A project folder may present several repositories as one working surface. It
@@ -161,8 +162,8 @@ local instance
 ```
 
 A project may have no active instances, one conventional instance, or several
-task-specific instances. Separate instances are not forks of project truth.
-They are concurrent views and work surfaces over the same reviewed binding.
+task-specific instances. Separate instances are not forks of project truth. They
+are concurrent views and work surfaces over the same reviewed binding.
 
 The instance marker, rather than the folder name, carries identity. It records
 the project and instance IDs, mode, binding source, binding commit, binding
@@ -171,9 +172,8 @@ convenience. Without the marker and provenance, it is just a directory with
 excellent branding.
 
 One instance activates one project binding. A repository may participate in
-several logical projects, but the system does not merge every project's
-guidance into one checkout. Different active contexts require different
-instances.
+several logical projects, but the system does not merge every project's guidance
+into one checkout. Different active contexts require different instances.
 
 ## The root has no repository identity
 
@@ -200,8 +200,8 @@ The same rule applies to Git operations. Normal Git commands update member
 branches. The project materializer may create or inspect worktrees, but it does
 not invent a project-wide commit, branch or merge operation.
 
-A project view is not a monorepo emulator. If atomic cross-repository commits are
-required, the project has discovered a different architectural problem.
+A project view is not a monorepo emulator. If atomic cross-repository commits
+are required, the project has discovered a different architectural problem.
 
 ## Read and write instances need different contracts
 
@@ -217,8 +217,8 @@ instance. Membership is not permission.
 A writable instance also needs a lease because a unique branch does not stop two
 processes from modifying the same filesystem concurrently. The current lease is
 host-local and cooperative. It protects instance lifecycle operations such as
-context regeneration, Git movement and destruction. It is not a distributed
-work or authorization authority, and it must not be presented as one.
+context regeneration, Git movement and destruction. It is not a distributed work
+or authorization authority, and it must not be presented as one.
 
 The branch and lease solve different problems:
 
@@ -335,11 +335,11 @@ A local project instance should normally be excluded from broad backup,
 cross-host synchronization, repository discovery, dispatcher clone discovery and
 IDE indexing.
 
-The durable inputs already live in their owner repositories and systems.
-Backing up generated worktrees duplicates Git data, captures local leases and
-scratch, and risks restoring an instance whose worktree registrations no longer
-match the host. Cross-host synchronization is worse: a Git worktree is not a
-portable folder independent of its common Git directory.
+The durable inputs already live in their owner repositories and systems. Backing
+up generated worktrees duplicates Git data, captures local leases and scratch,
+and risks restoring an instance whose worktree registrations no longer match the
+host. Cross-host synchronization is worse: a Git worktree is not a portable
+folder independent of its common Git directory.
 
 Exclusion does not make the instance expendable while dirty. It removes the
 derived structure from systems that would otherwise mistake it for durable
@@ -384,8 +384,7 @@ separate consumers and require separate evidence.
 The boundary gives common failures uninteresting responses:
 
 - **The binding changed:** create a new instance or explicitly refresh the
-  binding. Do not silently advance the home member underneath an active
-  session.
+  binding. Do not silently advance the home member underneath an active session.
 - **A member is dirty or ahead:** leave it unchanged and report the condition.
   Commit, review or recover it through the owning repository.
 - **The context is stale:** regenerate context from recorded member revisions.
@@ -395,8 +394,8 @@ The boundary gives common failures uninteresting responses:
 - **A reference member needs modification:** change its declared access and
   rematerialize through reviewed project configuration. Do not remove the
   read-only bit by hand and call it exceptional.
-- **The instance cannot be trusted:** preserve any uncommitted state, destroy the
-  verified-clean remainder, and rebuild from the binding and durable
+- **The instance cannot be trusted:** preserve any uncommitted state, destroy
+  the verified-clean remainder, and rebuild from the binding and durable
   authorities.
 - **Scratch contains durable evidence:** promote it before teardown. A session
   directory is a staging area, not an audit ledger.

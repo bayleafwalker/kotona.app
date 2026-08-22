@@ -17,24 +17,27 @@ tags:
   - evaluation
   - agents
   - verification
-summary: A small isolated-completion pilot asked whether a model can report influences on its own output. External-reconstruction controls qualitatively reproduced the effects, so the useful residue was operational, not introspective.
+summary:
+  A small isolated-completion pilot asked whether a model can report influences
+  on its own output. External-reconstruction controls qualitatively reproduced
+  the effects, so the useful residue was operational, not introspective.
 explorePrompt: >-
   Use this note as a worked instantiation, not a conclusion to repeat. The
-  transferable question: when an autonomous worker reports on its own
-  execution — what it attended to, what influenced it, what it changed —
-  under what conditions is that report evidence rather than generated text?
-  This instantiation ran 107 isolated single completions with no tools and
-  no persistence, and found that an unblinded external reconstructor holding
-  only the prompt and output could account for the reported influences; the
-  surviving practice was to have the worker declare its execution scope and
-  then reconstruct that scope independently from artifacts, treating
-  divergence as the signal. Apply the question to a system you actually
-  supervise. Identify where your constraints differ — long sessions with
-  accumulated context, tool traces, persistent state, or work that leaves no
-  artifact trail all change what an external reconstructor can see, and some
-  of them break the reconstruction check entirely. Say which conclusions
-  survive and which do not. Produce a discriminating experiment or a
-  supervision design with its failure mode named, not a summary.
+  transferable question: when an autonomous worker reports on its own execution
+  — what it attended to, what influenced it, what it changed — under what
+  conditions is that report evidence rather than generated text? This
+  instantiation ran 107 isolated single completions with no tools and no
+  persistence, and found that an unblinded external reconstructor holding only
+  the prompt and output could account for the reported influences; the surviving
+  practice was to have the worker declare its execution scope and then
+  reconstruct that scope independently from artifacts, treating divergence as
+  the signal. Apply the question to a system you actually supervise. Identify
+  where your constraints differ — long sessions with accumulated context, tool
+  traces, persistent state, or work that leaves no artifact trail all change
+  what an external reconstructor can see, and some of them break the
+  reconstruction check entirely. Say which conclusions survive and which do not.
+  Produce a discriminating experiment or a supervision design with its failure
+  mode named, not a summary.
 ---
 
 Across 107 isolated completions, models sometimes reported concepts that were
@@ -73,10 +76,10 @@ access to the model's own influencing state, unavailable to an outside observer
 holding the same prompt and output.
 
 Only the strong claim would be operationally interesting. If a worker can
-truthfully declare what it was actually attending to, a supervisor gets telemetry
-that no amount of artifact inspection provides. If it cannot, an "introspection"
-field is a generated sentence with the grammar of evidence and none of the
-standing.
+truthfully declare what it was actually attending to, a supervisor gets
+telemetry that no amount of artifact inspection provides. If it cannot, an
+"introspection" field is a generated sentence with the grammar of evidence and
+none of the standing.
 
 ## Setup
 
@@ -151,9 +154,8 @@ observable through model internals can be entirely real while remaining
 unrecoverable from prompts and outputs — those are separate access paths, and a
 black-box pilot has nothing to say about the first. It does not show that models
 lack internal representations, that introspective report is impossible in
-general, or anything about consciousness. It also does
-not show the reports were false; a report can be both accurate and externally
-reconstructable.
+general, or anything about consciousness. It also does not show the reports were
+false; a report can be both accurate and externally reconstructable.
 
 It shows one specific failure: under these conditions, this method could not
 distinguish privileged access from reconstruction. That is a limitation of the
@@ -195,8 +197,8 @@ claim being true:
 2. **Reconstruct that scope independently** from the artifacts: the diff, the
    commands run, the files opened, the tests touched.
 3. **Compare the two.** Divergence is the signal. A declared scope that omits a
-   touched interface, or includes work that left no trace, is worth an
-   interrupt regardless of what was happening inside the model.
+   touched interface, or includes work that left no trace, is worth an interrupt
+   regardless of what was happening inside the model.
 
 This works precisely because the declaration is externally checkable. It costs a
 prompt field and a reconstruction step, and it degrades gracefully: even when

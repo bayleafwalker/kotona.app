@@ -13,7 +13,10 @@ lastRevised: 2026-04-08
 projects:
   - gitops-cluster
 draft: false
-summary: A live rollback fixed a crashlooping workload, but the more interesting part was needing to suspend reconciliation long enough for the fix to become the desired state instead of a temporary lie.
+summary:
+  A live rollback fixed a crashlooping workload, but the more interesting part
+  was needing to suspend reconciliation long enough for the fix to become the
+  desired state instead of a temporary lie.
 tags:
   - operations
   - gitops

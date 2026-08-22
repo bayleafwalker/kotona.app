@@ -14,7 +14,9 @@ tags:
   - data-platforms
   - replay
   - audit
-summary: "A pipeline rule: land raw, split deterministically, enrich point-in-time, then shape for consumers."
+summary:
+  "A pipeline rule: land raw, split deterministically, enrich point-in-time,
+  then shape for consumers."
 ---
 
 ## Rule
@@ -61,8 +63,8 @@ splitter may not read:
   - mutable reference data
 ```
 
-If the same input bytes and same splitter version do not produce the same
-output later, the operation was enrichment.
+If the same input bytes and same splitter version do not produce the same output
+later, the operation was enrichment.
 
 ## Contract
 
@@ -94,8 +96,7 @@ Gold is not truth. It is a useful opinion.
 
 Silver is not prestigious. It is the cheap reproducible layer.
 
-Enrichment is not dirty. It is the expensive layer that needs stronger
-lineage.
+Enrichment is not dirty. It is the expensive layer that needs stronger lineage.
 
 ## Replay
 

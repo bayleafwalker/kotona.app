@@ -3,7 +3,10 @@ title: A GitOps rollback needs time to reach Git
 date: 2026-04-08T18:00:00Z
 contextWindow: cluster operations, 2025-2026
 draft: false
-summary: A live rollback fixed a crashlooping workload, but the more interesting part was needing to suspend reconciliation long enough for the fix to become the desired state instead of a temporary lie.
+summary:
+  A live rollback fixed a crashlooping workload, but the more interesting part
+  was needing to suspend reconciliation long enough for the fix to become the
+  desired state instead of a temporary lie.
 tags:
   - note
   - operations

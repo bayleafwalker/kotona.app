@@ -19,13 +19,16 @@ tags:
   - organizational-design
   - audit
   - workflow
-summary: Agent-ready work keeps the reason, permission, attempted action, observed result, and correction connected while the work happens instead of reconstructing them later.
+summary:
+  Agent-ready work keeps the reason, permission, attempted action, observed
+  result, and correction connected while the work happens instead of
+  reconstructing them later.
 ---
 
-A reporting calendar says a filing is complete. That does not tell me which
-data was submitted, which rule version applied, who approved an adjustment,
-whether the portal accepted the file, or what happened after a later correction.
-Those facts may exist, but often in separate systems and in people's memory.
+A reporting calendar says a filing is complete. That does not tell me which data
+was submitted, which rule version applied, who approved an adjustment, whether
+the portal accepted the file, or what happened after a later correction. Those
+facts may exist, but often in separate systems and in people's memory.
 
 I use _legibility_ for the ability to join five facts while the work is still
 operational:
@@ -50,9 +53,9 @@ that "a correction happened" leaves the important part to memory again.
 
 Software engineering is relatively close to this model. A requirement names an
 intent, a commit records a change, CI records checks, a deployment records an
-attempt, and monitoring can show an effect. These records are incomplete, but
-an operator can often join them without asking the engineer to reconstruct the
-day from memory.
+attempt, and monitoring can show an effect. These records are incomplete, but an
+operator can often join them without asking the engineer to reconstruct the day
+from memory.
 
 Calling other work "unstructured" does not explain much. Legal matters have
 structure. Sales processes have stages. Support teams have queues and runbooks.
@@ -60,11 +63,11 @@ Regulatory reporting has schemas and calendars. The gap is often that their
 systems record descriptions before or after the work while the consequential
 action happens somewhere else.
 
-A CRM may record that a conversation occurred without recording the promise
-the customer now expects the organization to keep. A contract repository stores
-the signed agreement but may not operate its deadlines and conditions. A
-support system can close a ticket without showing that the service recovered or
-that the intervention was correct.
+A CRM may record that a conversation occurred without recording the promise the
+customer now expects the organization to keep. A contract repository stores the
+signed agreement but may not operate its deadlines and conditions. A support
+system can close a ticket without showing that the service recovered or that the
+intervention was correct.
 
 ## Record the consequence, not just the activity
 
@@ -83,17 +86,17 @@ revision, permission, target, request, immediate response, and later observed
 state as part of acting. The record no longer depends entirely on someone
 summarizing a call or updating a tracker afterwards.
 
-An agent can also make the problem worse. Driving an unobserved browser,
-calling an opaque service, or summarizing its own actions in free text produces
-activity without a reliable account of the result. Exhaustive traces are not
+An agent can also make the problem worse. Driving an unobserved browser, calling
+an opaque service, or summarizing its own actions in free text produces activity
+without a reliable account of the result. Exhaustive traces are not
 automatically better. Ten thousand tool events are of little use if none shows
 which commitment permitted the change or whether the target actually accepted
 it.
 
 ## Legibility is not continuous observation
 
-Recording work has a political cost. Collecting every keystroke, screen view,
-or model thought can become surveillance while doing little for recovery or
+Recording work has a political cost. Collecting every keystroke, screen view, or
+model thought can become surveillance while doing little for recovery or
 accountability.
 
 The safer constraint is to collect the minimum evidence needed to connect a

@@ -1,6 +1,7 @@
 ---
 title: A platform capability does not exist all at once
-seoTitle: Outctl, programmatic tool calling, and moving agent-platform boundaries
+seoTitle:
+  Outctl, programmatic tool calling, and moving agent-platform boundaries
 socialTitle: I built the missing layer while the platform was still shipping it
 role: synthesis
 status: exploration
@@ -36,11 +37,11 @@ explorePrompt: >-
   scheduler, or policy surface. Construct an availability ladder for the native
   capability that could replace it. Separate the problem that remains real from
   the implementation boundary that may have moved. State which project claims
-  are disproven, which are merely superseded, which evidence remains useful,
-  and the smallest residual test the project must pass to avoid archival. Do
-  not assume that a model can reliably report the capabilities or topology of
-  its own harness; require an external trace, API contract, or controlled
-  execution result.
+  are disproven, which are merely superseded, which evidence remains useful, and
+  the smallest residual test the project must pass to avoid archival. Do not
+  assume that a model can reliably report the capabilities or topology of its
+  own harness; require an external trace, API contract, or controlled execution
+  result.
 ---
 
 I spent a mildly unreasonable amount of time trying to answer a question that
@@ -64,12 +65,12 @@ model
   -> next tool call
 ```
 
-Large command results therefore produced three obvious responses: truncate
-them, summarize them, or capture them through an external wrapper and expose
-bounded slices later. Outctl implemented the third one.
+Large command results therefore produced three obvious responses: truncate them,
+summarize them, or capture them through an external wrapper and expose bounded
+slices later. Outctl implemented the third one.
 
-The missing answer was **programmatic tool calling**. The model writes code in
-a bounded runtime, invokes eligible tools from that program, loops, filters,
+The missing answer was **programmatic tool calling**. The model writes code in a
+bounded runtime, invokes eligible tools from that program, loops, filters,
 joins, handles errors and parallelizes work there, then returns selected output
 to the model:
 
@@ -85,12 +86,12 @@ model
 
 That is almost exactly the execution topology I was trying to discover.
 
-**Working model.** A platform capability is not practically present when
-someone has published the architecture. It becomes present for a project when
-the active model, API, harness, tool permissions and trace surface line up well
-enough that the capability can actually be selected and verified. Between
-roadmap and dependable substrate there is a grey strip where building an
-approximation can be rational and still become obsolete very quickly.
+**Working model.** A platform capability is not practically present when someone
+has published the architecture. It becomes present for a project when the active
+model, API, harness, tool permissions and trace surface line up well enough that
+the capability can actually be selected and verified. Between roadmap and
+dependable substrate there is a grey strip where building an approximation can
+be rational and still become obsolete very quickly.
 
 ## The question I was actually asking
 
@@ -159,8 +160,8 @@ I asked variants of the right question several times:
 - Am I building a worse version of something OpenAI or Anthropic already owns?
 
 The sessions still tended to reason from the visible interface: direct tool
-calls, shell commands, hooks, wrappers and transcript output. They helped
-design and evaluate Outctl. They did not reliably route the problem to PTC.
+calls, shell commands, hooks, wrappers and transcript output. They helped design
+and evaluate Outctl. They did not reliably route the problem to PTC.
 
 There are several reasons, and none requires a particularly exotic failure.
 
@@ -210,16 +211,16 @@ operationally imaginary.
 
 The discovery does not make the earlier work nonsensical.
 
-Outctl reduced model-visible Kubernetes command output by about 84% in the
-clean direct-call comparisons. A later long-horizon pair reduced it by about
-95%. It retained complete raw observations, provided deterministic retrieval,
-and forced the experiments to distinguish mechanism, diagnostic quality,
-economics and execution authority.
+Outctl reduced model-visible Kubernetes command output by about 84% in the clean
+direct-call comparisons. A later long-horizon pair reduced it by about 95%. It
+retained complete raw observations, provided deterministic retrieval, and forced
+the experiments to distinguish mechanism, diagnostic quality, economics and
+execution authority.
 
 Those results remain true about the implementation and the tested topology.
 
-The work also exposed several things that a clean architectural sketch would
-not have:
+The work also exposed several things that a clean architectural sketch would not
+have:
 
 - a bounded result without useful omission cues makes retrieval guessy;
 - a shared top-level diagnosis is not proof that both arms found the same
@@ -229,18 +230,17 @@ not have:
 - a result can be complete as an experimental record while still failing to
   support the intended product claim.
 
-The earlier note, [Measure the diagnosis, not only the
-transcript](/notes/measure-the-diagnosis-not-only-the-transcript/), remains a
-useful evaluation record for exactly that reason. The mechanism result survived
-more scrutiny than the product conclusion.
+The earlier note,
+[Measure the diagnosis, not only the transcript](/notes/measure-the-diagnosis-not-only-the-transcript/),
+remains a useful evaluation record for exactly that reason. The mechanism result
+survived more scrutiny than the product conclusion.
 
 Outctl also arrived at the right architectural instinct: do not make the model
 read every intermediate byte merely because a tool produced it.
 
-What it did not establish was exclusive product value. It proved the problem
-and one workable mechanism. It did not prove that the mechanism belonged in a
-new external product once the harness could perform the same hot-path work
-natively.
+What it did not establish was exclusive product value. It proved the problem and
+one workable mechanism. It did not prove that the mechanism belonged in a new
+external product once the harness could perform the same hot-path work natively.
 
 ## The premise that failed
 
@@ -303,9 +303,8 @@ permissions, approvals and execution receipts. Moving the loop into code does
 not turn the model into the authorization layer.
 
 [The agent is not the application](/notes/the-agent-is-not-the-application/)
-therefore survives intact. So does the main argument in [Why production access
-changes the shape of agent
-tooling](/notes/why-production-access-changes-the-shape-of-agent-tooling/):
+therefore survives intact. So does the main argument in
+[Why production access changes the shape of agent tooling](/notes/why-production-access-changes-the-shape-of-agent-tooling/):
 production work needs domain context, scoped authority, evidence and completion
 rules around the model. PTC changes one interface inside that envelope.
 
@@ -348,8 +347,8 @@ cases and A/B harnesses remain useful records. They should not be deleted merely
 because the product interpretation changed.
 
 **Require the residual scope to prove itself.** Outctl only earns continued
-implementation if it demonstrates something native PTC does not already own.
-The strongest candidate is a long-horizon evidence test:
+implementation if it demonstrates something native PTC does not already own. The
+strongest candidate is a long-horizon evidence test:
 
 1. a native PTC program invokes several operational tools;
 2. complete observations receive stable external references;
@@ -366,9 +365,9 @@ product.
 A project does not earn a life extension for correctly predicting its
 replacement.
 
-For now the honest status is **maintenance and architectural pivot**, not
-active rollout and not yet full archival. No more central integration work
-should proceed until the residual edge wins a concrete comparison.
+For now the honest status is **maintenance and architectural pivot**, not active
+rollout and not yet full archival. No more central integration work should
+proceed until the residual edge wins a concrete comparison.
 
 ## Keep the notes that became wrong
 
@@ -392,23 +391,21 @@ That is what the lifecycle metadata is for:
 - **Archived** when the record remains useful but no successor needs to carry
   its claim.
 
-[Measure the diagnosis, not only the
-transcript](/notes/measure-the-diagnosis-not-only-the-transcript/) should become
-superseded. Its mechanism and evaluation findings remain valid; its
-recommendation that Outctl continue as the context-management product is no
+[Measure the diagnosis, not only the transcript](/notes/measure-the-diagnosis-not-only-the-transcript/)
+should become superseded. Its mechanism and evaluation findings remain valid;
+its recommendation that Outctl continue as the context-management product is no
 longer current.
 
-[Why production access changes the shape of agent
-tooling](/notes/why-production-access-changes-the-shape-of-agent-tooling/)
+[Why production access changes the shape of agent tooling](/notes/why-production-access-changes-the-shape-of-agent-tooling/)
 should remain current after revision. Its real subject is the binding between a
 general harness and a consequential environment. PTC makes that harness
 stronger. It does not remove the binding.
 
 The Outctl repository should state the pivot at the top rather than requiring a
-visitor to reconstruct it from experiment reports. Historical design and
-rollout documents should remain available with dated status notices. Current
-project pages should describe the narrowed direction and stop presenting an
-external context wrapper as missing infrastructure.
+visitor to reconstruct it from experiment reports. Historical design and rollout
+documents should remain available with dated status notices. Current project
+pages should describe the narrowed direction and stop presenting an external
+context wrapper as missing infrastructure.
 
 The wrong notes are part of the evidence for the new one. Removing them would
 turn a useful correction into ordinary website gardening.
@@ -421,13 +418,13 @@ the feature already had a name.
 The more useful telling is that the feature did not exist for me in one clean
 moment.
 
-The architecture was public. Then a beta existed. Then experimental harness
-code existed. Then the model/API capability was documented. Then the capability
+The architecture was public. Then a beta existed. Then experimental harness code
+existed. Then the model/API capability was documented. Then the capability
 appeared in the frontier setup. Finally a separate trace proved that the run had
 actually used the topology.
 
-Five months between experimental harness support and practical discovery is
-not long. Neither is five weeks between a named OpenAI release and a project
+Five months between experimental harness support and practical discovery is not
+long. Neither is five weeks between a named OpenAI release and a project
 decision. The fact that a vendor had already started shipping the answer does
 not make the exploration irrational. It makes the decommissioning decision
 time-sensitive.
@@ -444,10 +441,10 @@ shorter architectural half-life than most of the systems around it.
 Outctl did not lose because the problem was imaginary. It lost the center
 because the platform implemented the right architecture.
 
-Current confidence: high that native PTC invalidates Outctl's original
-hot-path necessity, moderate that durable addressed evidence remains a separate
-problem, and low that Outctl rather than a smaller runner capability should own
-that problem.
+Current confidence: high that native PTC invalidates Outctl's original hot-path
+necessity, moderate that durable addressed evidence remains a separate problem,
+and low that Outctl rather than a smaller runner capability should own that
+problem.
 
 The next test is no longer another output-reduction pair. It is whether a
 cleared or compacted session can resume from explicit work state and externally

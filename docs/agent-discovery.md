@@ -17,8 +17,8 @@ below describes the currently published behavior until those slices land.
   guide for navigating the site's public material.
 - `/llms.txt` provides a compact map of the site's primary content surfaces.
 - `/version.json` ties the deployed Worker to its source commit.
-- HTML responses negotiate to Markdown when the request prefers
-  `text/markdown`. HTML remains the default when qualities tie.
+- HTML responses negotiate to Markdown when the request prefers `text/markdown`.
+  HTML remains the default when qualities tie.
 - `robots.txt` allows search and AI input, while declining AI training:
   `ai-train=no, search=yes, ai-input=yes`.
 - Former `/writing/` URLs with observed agent demand permanently redirect to
@@ -27,23 +27,23 @@ below describes the currently published behavior until those slices land.
 
 Every note publishes a role, claim posture, and lifecycle. Role states whether
 the document is operating guidance, synthesis, an exploration, or project
-history; it is useful evidence about the register, not a ranking of truth.
-Treat `superseded`, `archived`, and `disproven` notices as authority boundaries,
+history; it is useful evidence about the register, not a ranking of truth. Treat
+`superseded`, `archived`, and `disproven` notices as authority boundaries,
 follow declared successors, and do not silently restate a non-current note as
 present guidance.
 
-Some notes also publish `explorePrompt`: a post-hoc "Explore this note with
-AI" prompt for applying and extending the note elsewhere, currently present in
-both HTML and negotiated Markdown (see `docs/explore-prompts.md`). It is not the
+Some notes also publish `explorePrompt`: a post-hoc "Explore this note with AI"
+prompt for applying and extending the note elsewhere, currently present in both
+HTML and negotiated Markdown (see `docs/explore-prompts.md`). It is not the
 note's original generating prompt or a reconstruction of how the note was
-written, and it is not an independent surface -- lifecycle remains
-authoritative over it. A superseded or disproven note's prompt says so and
-points to the successor; do not treat a retrievable prompt as evidence that
-the note is current.
+written, and it is not an independent surface -- lifecycle remains authoritative
+over it. A superseded or disproven note's prompt says so and points to the
+successor; do not treat a retrievable prompt as evidence that the note is
+current.
 
-The accepted architecture changes that contract: default reference Markdown
-will exclude the prompt, while a deliberately selected plain-text route will
-preserve it with source and lifecycle context.
+The accepted architecture changes that contract: default reference Markdown will
+exclude the prompt, while a deliberately selected plain-text route will preserve
+it with source and lifecycle context.
 
 ## Intentionally not published
 
@@ -66,9 +66,9 @@ DNS-AID cannot be delivered by this Worker. It requires records in the
 authoritative `kotona.app` DNS zone and DNSSEC at the zone's delegation.
 
 Do not add a DNS-AID record merely to satisfy a scanner. First deploy a real
-agent protocol endpoint. Then publish a record for the hostname that serves
-that endpoint (for the current public host, likely under
-`_agents.kotona.app`), using the protocol's current DNS-AID profile and
-its required `alpn`, endpoint, and experimental numeric SvcParamKey fields.
-Enable DNSSEC in Cloudflare, verify the DS record at the registrar, then verify
-with a validating resolver before announcing the endpoint.
+agent protocol endpoint. Then publish a record for the hostname that serves that
+endpoint (for the current public host, likely under `_agents.kotona.app`), using
+the protocol's current DNS-AID profile and its required `alpn`, endpoint, and
+experimental numeric SvcParamKey fields. Enable DNSSEC in Cloudflare, verify the
+DS record at the registrar, then verify with a validating resolver before
+announcing the endpoint.

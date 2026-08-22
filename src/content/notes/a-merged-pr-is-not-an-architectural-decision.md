@@ -22,10 +22,10 @@ explorePrompt: >-
   that merging a change is a policy decision about a repository rather than a
   design decision about a system; that change acceptability, system coherence,
   and composed behaviour are three distinct reviews that answer different
-  questions and cannot substitute for one another; and that a decision
-  exercised inside the cheapest of them must not be recorded as a constraint
-  binding the others. Its constraints are a single operator, agents holding far
-  more situational context than the approver, and a merge gate kept deliberately
+  questions and cannot substitute for one another; and that a decision exercised
+  inside the cheapest of them must not be recorded as a constraint binding the
+  others. Its constraints are a single operator, agents holding far more
+  situational context than the approver, and a merge gate kept deliberately
   casual because a repository delta is cheap to revert. Apply the question to
   your own setting. Name where your constraints diverge -- regulated change
   control, many reviewers, changes whose consequences cannot be reverted -- and
@@ -39,7 +39,11 @@ tags:
   - decision-making
   - provenance
   - workflow
-summary: An agent asks for a design decision mid-implementation, the operator answers at pull-request depth, and the answer gets filed as architecture. The fix is not a better escalation prompt but keeping three separate reviews from borrowing each other's authority.
+summary:
+  An agent asks for a design decision mid-implementation, the operator answers
+  at pull-request depth, and the answer gets filed as architecture. The fix is
+  not a better escalation prompt but keeping three separate reviews from
+  borrowing each other's authority.
 ---
 
 An agent has been inside an implementation for an hour. It has read the schema,
@@ -59,13 +63,13 @@ subsequent implementation treats it as an architectural constraint. A reviewer
 confirms the code correctly implements the ratified decision. Six weeks later
 several agents are faithfully implementing my great vision for B.
 
-My actual contribution was approximately "sure, I suppose." Provenance turned
-it into intent.
+My actual contribution was approximately "sure, I suppose." Provenance turned it
+into intent.
 
-**Working model.** The failure here is not that I was underinformed, and the
-fix is not a better escalation prompt. The question was asked inside a pull
-request, answered at the depth a pull request implies, and then filed at a depth
-a pull request does not reach. Nobody was negligent. The record is still false.
+**Working model.** The failure here is not that I was underinformed, and the fix
+is not a better escalation prompt. The question was asked inside a pull request,
+answered at the depth a pull request implies, and then filed at a depth a pull
+request does not reach. Nobody was negligent. The record is still false.
 
 ## What a pull request gate is actually for
 
@@ -88,11 +92,11 @@ It strengthens the surface that was never carrying the weight.
 
 The delta is cheap to reverse. Its consequences may not be. A pull request that
 adds a column, ships, and acquires three consumers is a clean `git revert` and a
-dirty system state. [Derive status only
-from reproducible evidence](/notes/derived-status-is-earned/) makes the same
-split between a throwaway query and a migration that changes customer records:
-generation cost says almost nothing about which case you are in, and neither
-does diff size.
+dirty system state.
+[Derive status only from reproducible evidence](/notes/derived-status-is-earned/)
+makes the same split between a throwaway query and a migration that changes
+customer records: generation cost says almost nothing about which case you are
+in, and neither does diff size.
 
 So a small number of changes carry semantics that outlive their own revert:
 persisted data contracts, published API shape, security and authority
@@ -103,8 +107,8 @@ Those need routing out of the casual gate, not reviewing harder inside it. A
 stricter review at the same surface still produces a decision stamped with
 pull-request authority. The useful mechanism is a filter on the change stream
 that says _this one is not a merge question_, and then hands it somewhere else.
-The filter is not itself a review. It only decides which review a change
-belongs to.
+The filter is not itself a review. It only decides which review a change belongs
+to.
 
 ## The second review has no merge event
 
@@ -153,28 +157,28 @@ was followed exactly and the architecture is now the problem.
 
 ## A pull request is not the product either
 
-Architectural coherence is not the last surface. A system can be internally
-tidy and still behave badly as the thing someone uses.
+Architectural coherence is not the last surface. A system can be internally tidy
+and still behave badly as the thing someone uses.
 
-Retries are the clearest case I have. The frontend retries. The API retries.
-The queue redelivers. The worker times out. Reconciliation runs. The user
-presses submit again. Every one of those implementations can be correct against
-its own specification, tested, reviewed and architecturally where it belongs.
-The interesting behaviour exists only in the interaction, and no single pull
-request contains it.
+Retries are the clearest case I have. The frontend retries. The API retries. The
+queue redelivers. The worker times out. Reconciliation runs. The user presses
+submit again. Every one of those implementations can be correct against its own
+specification, tested, reviewed and architecturally where it belongs. The
+interesting behaviour exists only in the interaction, and no single pull request
+contains it.
 
 The same is true of most of what makes a system pleasant or unpleasant to
 operate: latency, recovery after a partial failure, resource consumption,
-observability, upgrade behaviour, how many operations a common workflow
-actually takes, and plain feel. Those are properties of the composed thing.
-Asking a diff about them is a category error.
+observability, upgrade behaviour, how many operations a common workflow actually
+takes, and plain feel. Those are properties of the composed thing. Asking a diff
+about them is a category error.
 
 This is where heavy change-level assurance becomes quietly misleading. The
-measurable layer — coverage, lint, security findings, review comments resolved
-— responds well to effort, and agents can make it spectacular. Every pull
-request can carry exhaustive tests, three independent reviews and a clean scan.
-None of that is evidence about the composed behaviour, because none of it was
-ever measuring that. A project can have excellent change review, defensible
+measurable layer — coverage, lint, security findings, review comments resolved —
+responds well to effort, and agents can make it spectacular. Every pull request
+can carry exhaustive tests, three independent reviews and a clean scan. None of
+that is evidence about the composed behaviour, because none of it was ever
+measuring that. A project can have excellent change review, defensible
 architecture and a product that is slow and awkward to use, and nothing in the
 pipeline will say so.
 
@@ -199,11 +203,12 @@ an architectural decision record, later agents are not entitled to treat it as
 settled, and a planner discovering it should see what it actually is: an
 operator unblocking work, not an operator setting direction.
 
-This is the same shape as [authority must travel with the
-action](/notes/authority-must-travel-with-the-action/). The authority attached
-to a decision has to match the review where it was actually exercised, not the
-review where it later turns out to be useful. Authority should not silently
-increase as a decision travels from implementation into history.
+This is the same shape as
+[authority must travel with the action](/notes/authority-must-travel-with-the-action/).
+The authority attached to a decision has to match the review where it was
+actually exercised, not the review where it later turns out to be useful.
+Authority should not silently increase as a decision travels from implementation
+into history.
 
 ## What this does not fix
 
@@ -229,11 +234,11 @@ of any process that claims to have closed it.
 ## Where the model may fail
 
 The confident half of this note is the separation of the three reviews. The
-uncertain half is whether the routing filter works. Detecting which changes carry
-non-revertible semantics is itself a judgment, and an agent applying it will
-have both false negatives — a schema change that looked internal — and false
-positives that push routine work into the expensive path until the path stops
-being trusted.
+uncertain half is whether the routing filter works. Detecting which changes
+carry non-revertible semantics is itself a judgment, and an agent applying it
+will have both false negatives — a schema change that looked internal — and
+false positives that push routine work into the expensive path until the path
+stops being trusted.
 
 I am also not claiming that agent review is generally better. It does not get
 bored on file 37 and it can search every caller instead of the three that looked

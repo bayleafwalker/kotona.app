@@ -19,7 +19,10 @@ tags:
   - workflow
   - authorization
   - audit
-summary: Direct agent operation removes a universal deployment handoff, so authority, evidence, and reconciliation must bind to each consequential action instead of to its location.
+summary:
+  Direct agent operation removes a universal deployment handoff, so authority,
+  evidence, and reconciliation must bind to each consequential action instead of
+  to its location.
 ---
 
 ## Question
@@ -51,9 +54,9 @@ intent + pinned governing context + authenticated principal
   -> reconciliation of the consequence
 ```
 
-The capability is the before-boundary: it limits what may be attempted, by
-whom, against which target, and for how long. The receipt is the during-boundary:
-it links the work, actor, authorization, request, target, and immediate result.
+The capability is the before-boundary: it limits what may be attempted, by whom,
+against which target, and for how long. The receipt is the during-boundary: it
+links the work, actor, authorization, request, target, and immediate result.
 Reconciliation is the after-boundary: it determines whether the consequence
 actually holds and what must happen if it does not.
 
@@ -65,8 +68,8 @@ maps the larger field.
 
 ## Location is access, not authority
 
-An access cell — devbox, workstation, CI runner, or ephemeral task environment
-— can authenticate a session, offer approved tools, mediate network reach, and
+An access cell — devbox, workstation, CI runner, or ephemeral task environment —
+can authenticate a session, offer approved tools, mediate network reach, and
 emit session evidence. It must not silently become the owner of policy,
 canonical context, or target effects.
 
@@ -87,6 +90,6 @@ This is a working design for small, repository-backed agent workflows. It does
 not say that every mutation needs a new platform, nor that every target can
 produce a perfect receipt. The next useful test is narrower: choose one
 consequential action, bind it to a work reference and short-lived capability,
-record the target's observable result, then exercise the reconciliation path.
-If that cannot distinguish an attempted action from an achieved effect, the
+record the target's observable result, then exercise the reconciliation path. If
+that cannot distinguish an attempted action from an achieved effect, the
 envelope remains incomplete.
