@@ -23,6 +23,27 @@ summary:
   Agent-ready work keeps the reason, permission, attempted action, observed
   result, and correction connected while the work happens instead of
   reconstructing them later.
+explorePrompt: >-
+  Use this note as a worked model, not a maturity score. The transferable
+  question: for a piece of work your organization already cares about, can you
+  join why it happened, who was permitted to act, what was attempted, what
+  condition was later observed, and what changed when expectation and
+  observation differed -- while the work is still operational rather than
+  reconstructed afterwards? The worked argument holds that calling non-
+  engineering work unstructured explains little; legal, sales, support, and
+  regulatory work all have structure. The gap is that their systems record
+  descriptions before or after the work while the consequential action happens
+  somewhere else, so a CRM logs that a conversation occurred without the promise
+  the customer now expects kept. Agents can close that join by recording as part
+  of acting, or widen it by driving unobserved browsers and summarizing
+  themselves in free text; ten thousand tool events help nobody if none shows
+  which commitment permitted the change. The constraint against surveillance is
+  to collect the minimum evidence connecting decision to permission, action,
+  consequence, and repair. Apply the question to one consequence your
+  organization already cares about and work backwards through those five facts.
+  Say where your constraints differ -- regulated retention, no target that
+  issues receipts, work whose result is a human judgment. Produce the joins you
+  can make today and the first one you would build, not an assessment.
 ---
 
 A reporting calendar says a filing is complete. That does not tell me which data

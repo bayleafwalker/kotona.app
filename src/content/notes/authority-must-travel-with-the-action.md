@@ -23,6 +23,27 @@ summary:
   Direct agent operation removes a universal deployment handoff, so authority,
   evidence, and reconciliation must bind to each consequential action instead of
   to its location.
+explorePrompt: >-
+  Use this note as a worked model, not a new primitive. The transferable
+  question: when a worker can inspect a live system and change it in the same
+  session, what replaces the deployment boundary that used to collect review,
+  tests, signatures, promotion, and rollback? The worked answer moves the record
+  from the crossing to the action. Each consequential act carries intent, pinned
+  governing context, an authenticated principal, a scoped capability, a target,
+  and preconditions into an attempt, then a target receipt, then reconciliation
+  of the consequence -- capability as the before- boundary, receipt as the
+  during-boundary, reconciliation as the after- boundary. The motivating fact is
+  that an attempt and its durable effect are not the same: an API call can time
+  out after committing, a controller can accept a declaration without
+  converging, a message can be sent without being delivered. Location is access,
+  not authority: an access cell authenticates a session and mediates reach but
+  must not become the owner of policy, canonical context, or target effects.
+  Apply the question to a system where work now happens directly. Take one
+  consequential action, name what issues its capability, what receipt the target
+  can actually produce, and how you would detect an attempt that did not achieve
+  its effect. Say where your constraints diverge -- targets with no receipt, no
+  policy service, irreversible actions. Produce the envelope for that one action
+  and the gap that defeats it.
 ---
 
 ## Question

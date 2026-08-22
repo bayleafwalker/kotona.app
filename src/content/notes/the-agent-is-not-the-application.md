@@ -23,6 +23,27 @@ summary:
   A durable agent application keeps permissions, records, checks, and recovery
   outside the model, so changing models does not also replace the system's
   memory or rules.
+explorePrompt: >-
+  Use this note as a worked architecture, not a template. The transferable
+  question: which parts of an agent system must survive a new prompt, session,
+  or model, and where do they currently live? The worked answer puts identities
+  and permissions, work state and approved transitions, current source
+  revisions, checks and their results, target receipts, and reconciliation
+  outside the model, leaving plans, queries, explanations, situational code, and
+  execution choices inside the granted scope as replaceable. Two moves carry
+  most of the weight: selecting which sources actually govern this work and
+  binding that packet to the attempt, rather than retrieving merely similar
+  text; and giving each attempt a short-lived permission bound to identity, work
+  item, action, target, constraints, and expiry, so policy is not left in the
+  prompt. The stated test is direct -- start a later session with a different
+  model and see whether it can reconstruct what was authorized, attempted,
+  observed, and left unresolved without imitating the previous model's
+  recollection. Apply the question to an agent system you operate. Run that test
+  on paper and name what only exists in conversation history. Say where your
+  constraints diverge: no policy service to issue capabilities, targets that
+  cannot return receipts, a workflow with no durable work item. Produce the list
+  of facts you would move out of the model and the mechanism for each, not an
+  architecture diagram.
 ---
 
 Consider an agent asked to repair a failed customer import. It reads the ticket,

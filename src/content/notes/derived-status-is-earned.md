@@ -24,6 +24,28 @@ summary:
   Continuing assurance can move away from an exact generated output only when
   retained inputs and independent checks can produce another acceptable result;
   retention remains a separate decision.
+explorePrompt: >-
+  Use this note as a worked distinction, not a classification to adopt
+  wholesale. The transferable question: for a generated output, when can the
+  contract and the acceptance process carry the continuing assurance claim, and
+  when must the exact object stay part of the record? The worked answer rejects
+  generation cost as the discriminator and sets two demands before an output may
+  be called derived. First, the system retains enough -- contract, semantic
+  inputs, interfaces, constraints, dependencies, environment assumptions -- that
+  an approved generator could produce another acceptable result. Second,
+  something other than the generator decides acceptability: a schema check,
+  test, invariant, simulation, static analysis, canary, or human review. Where
+  properties need inspection of the exact object that will run, the reviewed
+  thing is source plus toolchain, pinned dependencies, configuration,
+  environment assumptions, provenance, and executable digest. Use determines the
+  classification, and the consumer's answer can override the producer's.
+  Retention is a separate decision from derived status. Apply the question to
+  generated outputs you are responsible for. Classify a handful, name the
+  acceptance signal for each, and say which would fail the second demand today.
+  Say where your constraints diverge -- a regulator that requires the artifact
+  regardless, no independent check available, a consumer compiling against an
+  exact interface. Produce the classification with its retention decision stated
+  separately, not a policy summary.
 ---
 
 Suppose an agent writes two things: a query for a one-off internal analysis and
