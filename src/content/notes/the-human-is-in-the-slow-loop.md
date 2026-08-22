@@ -15,6 +15,11 @@ relates:
   - the-agent-is-not-the-application
   - the-recommendation-does-not-need-authority
 draft: false
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
 tags:
   - agents
   - workflow

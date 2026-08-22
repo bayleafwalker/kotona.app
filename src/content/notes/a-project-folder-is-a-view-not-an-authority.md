@@ -13,6 +13,31 @@ relates:
   - the-coordinator-never-touches-the-repo
   - legibility-is-an-operating-property
 draft: false
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: kctl
+    definition:
+      The read-only pipeline that turns reviewed sprint history into durable
+      knowledge.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
+  - term: auditctl
+    definition:
+      The tool that indexes audit events and emits portable daily evidence
+      shards.
+  - term: Appservice
+    definition:
+      The private GitOps repository that holds desired state, recovery rules,
+      and operational evidence for the cluster.
 tags:
   - agents
   - workflow

@@ -17,6 +17,11 @@ summary:
   Backend-owned contracts only become useful release artifacts once the
   compatibility tooling is conservative enough to complain about real breakage
   instead of politely missing it.
+terms:
+  - term: homelab-analytics
+    definition:
+      The household data and decision platform that owns long-lived semantics,
+      scenarios, policies, and approvals.
 tags:
   - contracts
   - release-engineering

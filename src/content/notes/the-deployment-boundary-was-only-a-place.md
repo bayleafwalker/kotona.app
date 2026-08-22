@@ -20,6 +20,11 @@ relates:
   - the-devbox-is-an-access-cell
   - legibility-is-an-operating-property
   - the-agent-is-not-the-application
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
 tags:
   - agents
   - workflow

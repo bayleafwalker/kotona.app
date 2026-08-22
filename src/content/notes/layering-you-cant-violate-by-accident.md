@@ -10,6 +10,11 @@ projects:
   - household-operating-platform
 relates:
   - the-coordinator-never-touches-the-repo
+terms:
+  - term: homelab-analytics
+    definition:
+      The household data and decision platform that owns long-lived semantics,
+      scenarios, policies, and approvals.
 tags:
   - architecture
   - contracts

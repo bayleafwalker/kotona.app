@@ -10,6 +10,11 @@ projects:
   - household-operating-platform
 relates:
   - log-as-system
+terms:
+  - term: Homelab Analytics
+    definition:
+      The household data and decision platform that owns long-lived semantics,
+      scenarios, policies, and approvals.
 tags:
   - data-platforms
   - replay

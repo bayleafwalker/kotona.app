@@ -17,6 +17,12 @@ relates:
   - the-agent-is-not-the-application
   - the-missing-layer-is-binding-not-intelligence
 draft: false
+terms:
+  - term: Outctl
+    definition:
+      A tool that captures a command's full output outside the agent's context
+      and returns a bounded projection the agent can query later for the omitted
+      evidence.
 tags:
   - agents
   - harness-engineering

@@ -17,6 +17,21 @@ relates:
   - the-agent-is-not-the-application
   - authority-must-travel-with-the-action
 draft: false
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: Outctl
+    definition:
+      A tool that captures a command's full output outside the agent's context
+      and returns a bounded projection the agent can query later for the omitted
+      evidence.
+  - term: Acceptance Lab
+    definition:
+      A local-first prototype that turns agent requirements, observed evidence,
+      authority rules, and operating budgets into executable promotion
+      decisions.
 tags:
   - agents
   - evaluation

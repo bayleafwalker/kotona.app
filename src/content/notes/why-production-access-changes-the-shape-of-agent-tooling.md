@@ -15,6 +15,16 @@ relates:
   - a-field-guide-to-assurance-managed-ai-development
   - a-platform-capability-does-not-exist-all-at-once
 draft: false
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: Outctl
+    definition:
+      A tool that captures a command's full output outside the agent's context
+      and returns a bounded projection the agent can query later for the omitted
+      evidence.
 tags:
   - agents
   - harness-engineering

@@ -11,6 +11,19 @@ projects:
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-coordinator-never-touches-the-repo
+terms:
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq-dispatcher
+    definition:
+      The one-action coordinator that creates a bounded workspace, invokes a
+      worker, and records the result.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
 tags:
   - agents
   - workflow

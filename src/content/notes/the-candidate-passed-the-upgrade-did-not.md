@@ -15,6 +15,11 @@ relates:
   - derived-status-is-earned
   - the-deployment-boundary-was-only-a-place
   - authority-must-travel-with-the-action
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
 tags:
   - release-engineering
   - verification

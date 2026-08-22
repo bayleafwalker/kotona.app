@@ -30,6 +30,16 @@ relates:
   - derived-status-is-earned
   - a-platform-capability-does-not-exist-all-at-once
 draft: false
+terms:
+  - term: Appservice
+    definition:
+      The private GitOps repository that holds desired state, recovery rules,
+      and operational evidence for the cluster.
+  - term: Outctl
+    definition:
+      A tool that captures a command's full output outside the agent's context
+      and returns a bounded projection the agent can query later for the omitted
+      evidence.
 tags:
   - agents
   - evaluation

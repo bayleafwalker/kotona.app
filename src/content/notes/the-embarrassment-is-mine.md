@@ -13,6 +13,20 @@ relates:
   - the-workshop-is-learning-my-accent
   - the-aftertaste-of-resolution
   - the-junior-ladder-was-a-joint-product
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: artifact of record
+    definition:
+      An output whose exact identity has to stay bound to its evidence; for this
+      site, a note's body, front matter, declared relations, and lifecycle
+      state.
+  - term: person of record
+    definition:
+      The named human who stays answerable for an action whatever share of the
+      work a model performed.
 tags:
   - agents
   - writing

@@ -22,6 +22,11 @@ relates:
   - judge-agents-by-the-next-prompt
   - a-pipeline-without-a-successor-is-personal-tooling
   - the-patch-was-open-sources-proof-of-work
+terms:
+  - term: person of record
+    definition:
+      The named human who stays answerable for an action whatever share of the
+      work a model performed.
 tags:
   - agents
   - organizational-design

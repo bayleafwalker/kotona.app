@@ -14,6 +14,24 @@ relates:
   - the-person-of-record
   - the-agent-is-not-the-application
   - the-workshop-is-learning-my-accent
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
+  - term: artifact of record
+    definition:
+      An output whose exact identity has to stay bound to its evidence; for this
+      site, a note's body, front matter, declared relations, and lifecycle
+      state.
 tags:
   - agents
   - workflow

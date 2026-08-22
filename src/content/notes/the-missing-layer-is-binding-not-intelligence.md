@@ -21,6 +21,19 @@ relates:
   - the-coordinator-never-touches-the-repo
   - where-the-assurance-questions-are-already-answered
   - a-field-guide-to-assurance-managed-ai-development
+terms:
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
+  - term: auditctl
+    definition:
+      The tool that indexes audit events and emits portable daily evidence
+      shards.
 tags:
   - workflow
   - agents

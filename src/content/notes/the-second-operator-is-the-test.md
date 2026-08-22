@@ -18,6 +18,19 @@ relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-work-between-the-ticket-and-the-agent
   - a-pipeline-without-a-successor-is-personal-tooling
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
 tags:
   - agents
   - workflow

@@ -14,6 +14,23 @@ relates:
   - the-second-operator-is-the-test
   - where-the-assurance-questions-are-already-answered
   - a-field-guide-to-assurance-managed-ai-development
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: kctl
+    definition:
+      The read-only pipeline that turns reviewed sprint history into durable
+      knowledge.
+  - term: agent-cockpit
+    definition:
+      The operator interface that composes state from the owning tools without
+      becoming their database.
 tags:
   - agents
   - workflow

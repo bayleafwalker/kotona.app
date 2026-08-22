@@ -782,6 +782,12 @@ async function runChecks(baseUrl) {
       "(archived; project-history; archival)",
       "llms.txt lifecycle",
     );
+    assertIncludes(llms.body, "## Vocabulary", "llms.txt vocabulary section");
+    assertIncludes(
+      llms.body,
+      "- Vuoro: The public label for this family",
+      "llms.txt vocabulary entry",
+    );
 
     const version = await request("/version.json");
     assertEqual(version.response.status, 200, "version endpoint status");

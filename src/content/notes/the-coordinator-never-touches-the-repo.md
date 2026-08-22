@@ -12,6 +12,11 @@ projects:
 relates:
   - subprocess-not-service
   - the-missing-layer-is-binding-not-intelligence
+terms:
+  - term: homelab-analytics
+    definition:
+      The household data and decision platform that owns long-lived semantics,
+      scenarios, policies, and approvals.
 tags:
   - agents
   - workflow

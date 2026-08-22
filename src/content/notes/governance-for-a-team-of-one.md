@@ -16,6 +16,19 @@ relates:
   - the-person-of-record
   - the-human-is-in-the-slow-loop
 draft: false
+terms:
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
+  - term: auditctl
+    definition:
+      The tool that indexes audit events and emits portable daily evidence
+      shards.
 tags:
   - agents
   - architecture

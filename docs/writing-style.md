@@ -80,6 +80,12 @@ record.
 
 - Ground the first use of a local abstraction in one concrete sentence. For
   example, define the actual records, actions, or people a term refers to.
+- A note that introduces a local system name or a site-specific concept either
+  defines it in the body or carries it in `terms`. Take the wording from
+  [the glossary](./glossary.md) rather than writing a second definition, and cap
+  a note at roughly six terms -- needing more is a signal that the note is
+  restating another note's argument. A note that defines the term inline does
+  not also carry it.
 - Put uncertainty where it does the most work: in the opening, an assumption,
   counterexample, missing evidence, or an unresolved question. Do not add a
   ceremonial caveat after every assertion.

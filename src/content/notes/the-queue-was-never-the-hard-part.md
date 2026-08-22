@@ -15,6 +15,19 @@ relates:
   - the-second-operator-is-the-test
   - why-production-access-changes-the-shape-of-agent-tooling
 draft: false
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
 tags:
   - agents
   - infrastructure
