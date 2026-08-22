@@ -9,6 +9,7 @@ lastRevised: 2026-08-08
 projects:
   - vuoro
 relates:
+  - authority-must-travel-with-the-action
   - legibility-is-an-operating-property
   - the-agent-is-not-the-application
   - derived-status-is-earned

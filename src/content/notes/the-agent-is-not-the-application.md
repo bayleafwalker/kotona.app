@@ -5,10 +5,11 @@ status: exploration
 lifecycle: current
 area: agent architecture
 published: 2026-07-19
-lastRevised: 2026-08-08
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
+  - authority-must-travel-with-the-action
   - the-missing-layer-is-binding-not-intelligence
   - derived-status-is-earned
   - the-person-of-record
@@ -117,9 +118,9 @@ A tool schema explains how to call `repair_import`. It does not explain why this
 agent may repair this account now.
 
 Broad credentials plus an instruction to behave sensibly leave policy inside the
-prompt. A stronger design gives the attempt a short-lived permission bound to
-the operator or service identity, work item, action, target, constraints, and
-expiry. The target checks that permission and returns its own receipt.
+prompt. The alternative -- a short-lived permission bound to the attempt, and a
+receipt returned by the target -- is the action envelope set out in
+[Authority must travel with the action](/notes/authority-must-travel-with-the-action/).
 
 This still leaves the model freedom to choose a method inside the granted scope.
 Better reasoning can improve that choice without quietly widening what the

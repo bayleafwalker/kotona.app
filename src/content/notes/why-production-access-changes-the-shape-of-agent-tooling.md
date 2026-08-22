@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent infrastructure
 published: 2026-08-16
-lastRevised: 2026-08-16
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
@@ -290,16 +290,16 @@ traces how that capability arrived and why an external wrapper stops being the
 only way to keep large intermediate results out of context once it is available
 and enabled.
 
-That does not settle the surrounding questions this note is actually about. The
-runner or application still owns credentials, target scope, permissions,
-approvals, and execution receipts; moving the loop into code does not turn the
-model into the authorization layer. A separate capability may still be useful
-for durable addressed observations — evidence that survives past the request
-that produced it, can be retrieved deterministically after a session is
-compacted or cleared, and remains inspectable for policy and provenance. PTC
-does not own that by itself, and `outctl` has not yet earned ownership of it
-either; the residual case has to be won against a simpler runner or tracing
-capability, not assumed.
+That does not settle the surrounding questions this note is actually about.
+Moving the loop into code does not turn the model into the authorization layer;
+[A platform capability does not exist all at once](/notes/a-platform-capability-does-not-exist-all-at-once/)
+works through what the runner or application still has to own. A separate
+capability may still be useful for durable addressed observations — evidence
+that survives past the request that produced it, can be retrieved
+deterministically after a session is compacted or cleared, and remains
+inspectable for policy and provenance. PTC does not own that by itself, and
+`outctl` has not yet earned ownership of it either; the residual case has to be
+won against a simpler runner or tracing capability, not assumed.
 
 This note's main conclusion is unaffected: the reusable unit is a general
 execution substrate plus a versioned binding of informational, procedural,

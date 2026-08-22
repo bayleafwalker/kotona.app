@@ -5,10 +5,11 @@ status: exploration
 lifecycle: current
 area: organizational systems
 published: 2026-07-19
-lastRevised: 2026-08-08
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
+  - authority-must-travel-with-the-action
   - the-deployment-boundary-was-only-a-place
   - the-devbox-is-an-access-cell
   - the-work-between-the-ticket-and-the-agent
@@ -102,10 +103,11 @@ Each function has a different result worth joining to the work:
 - For sales, it includes promises the organization must now fulfil, not only a
   stage named `closed-won`.
 
-This is where agents can help. A governed tool can record the work item, source
-revision, permission, target, request, immediate response, and later observed
-state as part of acting. The record no longer depends entirely on someone
-summarizing a call or updating a tracker afterwards.
+This is where agents can help. A governed tool can produce that record as part
+of acting -- the action envelope in
+[Authority must travel with the action](/notes/authority-must-travel-with-the-action/)
+enumerates what it has to carry -- so the record no longer depends entirely on
+someone summarizing a call or updating a tracker afterwards.
 
 An agent can also make the problem worse. Driving an unobserved browser, calling
 an opaque service, or summarizing its own actions in free text produces activity
