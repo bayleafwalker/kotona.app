@@ -14,6 +14,27 @@ summary:
   "Cassettes, diskettes, and cartridges as physical handles for digital media.
   The rule that makes the whole family of projects work: the tag points, it
   never hosts."
+explorePrompt: >-
+  Use this note as a worked contract, not a hardware project. The transferable
+  question: when a physical object stands for digital content, what should the
+  object carry, and what has to live somewhere you can still edit after the
+  object has left your hands? The worked answer is one decision applied across
+  three unrelated builds: the tag identifies, it never hosts. It holds a key and
+  nothing else; the key resolves through a manifest with one entry per key
+  giving source, destination, and protocol, and the reader dispatches on
+  protocol. Repointing means editing a text file rather than reprogramming a tag
+  glued inside someone else's device. The manifest lives in version control, so
+  what a token pointed at last year is a log lookup and a bad repoint rolls
+  back; because that layer is public it carries no credentials, which stay in
+  each reader's local config. The failure mode designed against is a keepsake
+  whose function depends on a link staying alive, so readers cache
+  last-known-good resolutions. One fork is left open: keying on factory UID
+  makes tokens unforgeable but requires enrolment, while written keys make them
+  interchangeable and reskinnable. Apply the question to an artifact you are
+  building that stands for something remote. Name the indirection layer, where
+  it is versioned, and what the object does when the far side is gone. Say where
+  your constraints differ, and produce the contract plus the fork you are
+  leaving open.
 ---
 
 A cluster of retro media projects in progress: a cassette shell with decoder

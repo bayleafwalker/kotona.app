@@ -22,6 +22,27 @@ tags:
 summary:
   Agents may perform most of a professional workflow while a named person still
   supplies local judgment, trusted relationships, or accountable approval.
+explorePrompt: >-
+  Use this note as a worked model, not a forecast. The transferable question:
+  when most of a professional workflow can be performed by an agent, what is
+  actually holding the final decision to a named person, and would that thing
+  survive a change in law, trust, or instrumentation? The worked model separates
+  three reasons and insists they be tested apart: whether the agent can obtain
+  the context needed to act competently, whether someone can check what it did
+  and what followed, and whether the right to commit, attest, decide, or accept
+  liability can move away from the person at all. An agent may pass the first
+  two and still fail the third; it may hold permission in principle while
+  lacking the access that makes competent action possible. Tacit knowledge is
+  treated as movable rather than permanent protection, while relationships and
+  deliberate institutional accountability are treated as different constraints
+  with political rather than technical timelines. The capacity question becomes
+  how much agent-operated work one accountable person can genuinely review, and
+  the failure mode is a name on a form with the judgment gone elsewhere. Apply
+  the question to a role you understand. Test the three separately, and name
+  what the system would have to escalate, evidence, limit, or refuse for the
+  accountable person to stay real. Say where your constraints diverge -- no
+  licensure, transferable trust, an employer already carrying the liability.
+  Produce a per-reason assessment with the evidence that would weaken it.
 ---
 
 **Working model.** An engineer may use agents to produce calculations, drawings,

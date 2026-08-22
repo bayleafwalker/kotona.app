@@ -16,6 +16,27 @@ summary:
   A business plan for battery-swap delivered energy that works in one narrow
   niche and matters most for what it implies about EVs, home batteries, and
   off-grid design.
+explorePrompt: >-
+  Use this note as a worked analysis, not a business case to fund. The
+  transferable question: when you model a service business seriously enough to
+  price it, what does the model tell you once you remove the company from it?
+  The worked case rebuilds the Finnish heating-oil delivery model on second-
+  life battery packs -- a truck brings charged packs, takes empty ones away, the
+  customer never thinks about energy logistics -- and concludes the business is
+  viable in exactly one narrow niche and structurally selected against
+  everywhere else. The findings that survive are not about the company. A
+  cottage-owning household already drives a 75-100 kWh battery to the site every
+  weekend, so the delivery fleet is out-competed by its own customers' vehicles;
+  at second-life pack prices the rational rural new-build skips the grid
+  connection; and a wall pack captures the same arbitrage as the depot wherever
+  a wire exists. Delivery survives only where delivery is the product: no wire,
+  no road to a wire, or no time to wait for one. Apply the question to a venture
+  idea you have modelled or dismissed. Build the cost stack, then ask which
+  findings hold once the vehicle is deleted. Say where your constraints diverge
+  -- different grid economics, no incumbent infrastructure, a resource with no
+  second-life supply. Produce the implications that outlive the business, and
+  name the assumptions that would have to be quoted rather than modelled before
+  any of it is bankable.
 ---
 
 No capital, no time, no intention to execute. Published because the analysis is

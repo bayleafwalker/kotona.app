@@ -15,6 +15,27 @@ summary:
   "Migrating a Talos cluster from a legacy subnet to its own VLAN while it kept
   serving. The design was mostly an ordering problem, plus one bootstrap loop:
   the network controller lives inside the network it manages."
+explorePrompt: >-
+  Use this note as a worked migration, not a runbook to copy. The transferable
+  question: in a live migration, which single step is irreversible, and does
+  everything else in the plan exist to prepare for it or clean up behind it? In
+  the worked case a Kubernetes cluster moved from a legacy flat subnet to a
+  dedicated VLAN while still serving. Preparation was parameterizing every
+  hardcoded address and CIDR before touching anything live, with one documented
+  exception handled by string replacement at cutover -- the exception went in
+  the runbook, which is where exceptions belong. The real constraint was
+  announcement coverage: service addresses resolve only while some node still
+  announces them, so the gate was a single atomic commit assigning dual
+  addresses and updating the resolver override, executed while speakers existed
+  on both subnets and necessarily before the last legacy node left. The awkward
+  part was self-reference: the controller managing the switching fabric ran
+  in-cluster on an address the migration was moving, so fabric and cluster had
+  to never both let go at once. Apply the question to a migration you are
+  planning. Find the irreversible step, name what must be true at the instant it
+  lands, and look for the component that manages the thing it runs on. Say where
+  your constraints diverge -- no dual-stack window, no atomic configuration
+  commit, a fabric you do not control. Produce the ordering with the
+  irreversible step marked.
 ---
 
 The cluster sat on a legacy flat private subnet — a known debt rather than a

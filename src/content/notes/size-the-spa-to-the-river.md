@@ -28,6 +28,27 @@ hero:
     Generated concept image, not a surveyed site or safe hydraulic layout.
   width: 1376
   height: 768
+explorePrompt: >-
+  Use this note as a worked instantiation, not a design to reuse. The
+  transferable question: when a venture is built on a fixed natural resource,
+  how do you let that resource set the programme's size instead of sizing the
+  programme first and hoping the resource cooperates? The worked case is a
+  boutique Finnish mill-site retreat where the river fixes the scale of baths,
+  restaurant, lodging, and renewal reserve. Annual electricity equality is only
+  the first constraint: the spa is one continuous wet process whose energy,
+  water, wastewater, staffing, and renewal systems must close together. Heat is
+  recovered before the river is asked for more, water is treated as a second
+  plant with its own permits, and the build order runs by uncertainty --
+  disprove sites on title, water rights, dam safety, hydrology, and permitting
+  before drawing anything; instrument the river through a winter and a flood;
+  freeze the utility briefs against hourly data; then open the smallest complete
+  version. The model is monthly while the design problem is hourly, which makes
+  the arithmetic falsifiable rather than bankable. Apply the question to a
+  resource-bounded venture you are considering. Name the binding resource, the
+  systems that must close together, and the cheapest test that could kill the
+  site. Say where your constraints diverge -- a resource you can buy more of, no
+  seasonality, a permitting regime with different gates. Produce a
+  disproof-ordered build sequence with its clean failure mode named.
 ---
 
 Size the spa to the river, not the river to the spa.
