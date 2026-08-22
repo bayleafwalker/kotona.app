@@ -308,3 +308,28 @@ When done, report: per step, files touched, tests run and their result,
 `lastRevised` bumps made, and anything skipped with the reason. List any note
 where an explore prompt could not pass sibling validation (step 6.7) and any
 paragraph in step 1 you were unsure how to classify.
+
+---
+
+## Follow-ups deferred out of this pass
+
+**Render a `Terms` block under the note summary.** `AnnotatedText` matches
+against the summary text only, so a note's `terms` produce a visible definition
+for a human reader only where the term appears in that summary — 11 of the 21
+notes that carry terms. Agents get all of them through the `## Vocabulary`
+section of `/llms.txt`.
+
+Body annotation is the complete fix and is a real change: it means
+post-processing rendered HTML or the Markdown AST, and deciding
+first-occurrence-only versus every occurrence. Defer it.
+
+The cheap partial fix, and the one to do first: render a small `Terms` block
+under the summary on `src/pages/notes/[slug].astro` for any note with a
+non-empty `terms` array, reusing `TermHint`. No body parsing, no new component.
+That closes the human-reader gap for the other 10 notes.
+
+**Spot-check explore prompts in a clean context.** Step 6 added 30 prompts
+validated by rubric review rather than isolated clean-context execution, which
+`docs/explore-prompts.md` permits with disclosure. Thirty is enough that a
+sibling check on two or three — one current, one superseded — is cheap insurance
+before they are treated as settled.
