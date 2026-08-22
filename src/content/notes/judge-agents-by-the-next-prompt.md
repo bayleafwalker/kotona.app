@@ -86,7 +86,7 @@ The new generation has therefore changed the main review question. With older ag
 
 ## How I route the work now
 
-I now find three roles more useful than one ranking. Outside the fixed dispatch path, I route frontier agents by the behavior I have actually observed:
+I now find three roles more useful than one ranking. Outside the fixed dispatch path, I route frontier agents by the behavior I have actually observed. The assignments below are the July 2026 snapshot and are not maintained.
 
 | Role                     | Current agent | Best fit                                                                                             | Required guardrail                                                           |
 | ------------------------ | ------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |

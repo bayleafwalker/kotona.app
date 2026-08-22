@@ -113,9 +113,9 @@ the system we intend to have. It has no natural transaction boundary: nothing
 arrives, nothing is pending, nothing blocks. That is not the same as being
 unschedulable. A release milestone, a large schema addition, measured growth in
 the dependency graph or simply a date can all trigger it. What it cannot have is
-a merge event, which is why it does not happen by itself. Product intent, architecture, public interfaces,
-domain and data models, code structure, runtime behaviour — do those still
-describe approximately the same thing?
+a merge event, which is why it does not happen by itself. Product intent,
+architecture, public interfaces, domain and data models, code structure, runtime
+behaviour — do those still describe approximately the same thing?
 
 Five hundred individually acceptable changes can produce a system nobody would
 deliberately design. There is no offending pull request to reject. The failure
