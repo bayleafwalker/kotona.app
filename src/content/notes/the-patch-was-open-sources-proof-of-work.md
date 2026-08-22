@@ -24,6 +24,28 @@ summary:
   understanding a project, so OSS contribution shifts toward evidence,
   verification, standing, and durable ownership.
 draft: false
+explorePrompt: >-
+  Use this note as a worked argument, not a prediction to accept. The
+  transferable question: when a contribution's production cost was doing double
+  duty as a filter, what happens to the intake process once that cost collapses?
+  The worked case is open source. A patch used to supply execution capacity and,
+  incidentally, evidence that its author had acquired the project's substrate;
+  it also rationed maintainer attention without anyone designing an admission
+  system. Cheap generation breaks the second function while leaving review cost
+  attached to the maintainer, so contribution value moves to both sides of
+  implementation: upstream to reproductions, constraints, and precise
+  behavioural claims; downstream to adversarial tests, compatibility evidence,
+  and someone who will stay through review. The prediction is stratified intake
+  -- mechanically decidable changes stay open because rejection is cheap,
+  judgment-heavy channels acquire prerequisites -- with the trap named: if
+  standing is required everywhere, the ladder that produced maintainers closes.
+  The curl bug-bounty case shows composition responding to incentives rather
+  than being fixed, and projects in the middle take the damage. Apply the
+  question to a queue you maintain. Name what the old cost was silently
+  filtering, what evidence could replace it, and which entry surface a stranger
+  could still use to earn standing. Say where your constraints diverge -- paid
+  reviewers, contractual contributors, no succession need. Produce the tiering
+  and the proof-carrying entry path, not a policy statement.
 ---
 
 Open source may stop wanting code from strangers before it stops wanting

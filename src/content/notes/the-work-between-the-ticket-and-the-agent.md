@@ -39,6 +39,27 @@ summary:
   Work-management systems can delegate and coding agents can execute, but
   authority, attempts, evidence, and acceptance still have no obvious neutral
   owner between them.
+explorePrompt: >-
+  Use this note as a dated survey with its assumptions tested, not a market map
+  to trust. The transferable question: across the systems that delegate work,
+  execute it, and observe it, which one owns the record binding who authorized
+  an attempt, what it owned, what survived a handoff, what evidence belongs to
+  it, and who could declare it complete? The worked survey found edges rather
+  than a centre: work management begins at the item, git hosting at the pull
+  request, agent-native tools at the dependency graph, workspaces at the pool of
+  workers, observability inside the run. It tested two assumptions and kept one.
+  The claim that three independent systems had converged on execution authority
+  not being completion authority was cut, because the local tool's own
+  claim-proof path can close an item; that was projecting a multi-operator
+  design onto a single-operator implementation. The split into an externally
+  owned work plane, a neutral execution plane, and a pluggable runtime survived,
+  as an assessment rather than a standard, and a note that observability
+  receives identifiers rather than becoming a fourth authority. The middle is
+  weakly occupied, not empty; established supply-chain attestation work covers
+  much of it. Apply the question to your own toolchain. Say where your
+  constraints diverge -- a single operator, one vendor owning several planes,
+  regulated attestation already in place. Produce the record you can reconstruct
+  today and the assumption you had to cut.
 ---
 
 No build intent. The analysis is the product.

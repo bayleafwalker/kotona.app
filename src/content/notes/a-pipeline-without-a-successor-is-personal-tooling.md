@@ -42,6 +42,28 @@ summary:
   capability only when a second person can reconstruct, operate, change, and
   recover it from recorded substrate and evidence."
 draft: false
+explorePrompt: >-
+  Use this note as a worked model, not a governance framework. The transferable
+  question: for a system that matters, can a second person assume it from
+  recorded substrate and evidence, or does its effective design still live in
+  its builder? The worked model insists that versioned prompts and scripts are
+  not enough: a working agent pipeline also contains the choice of sources,
+  model-routing habits, manual interventions, remembered failure modes, review
+  heuristics, and explanations for guards that look redundant until the incident
+  recurs. It is legible in output and person-bound in operation, working because
+  its builder notices when the context is wrong or that a formally successful
+  result should not be trusted. Succession is expressed in the same operational
+  semantics the system already uses for claims and capabilities -- primary and
+  secondary ownership, countersigned actions, demonstrated drills, progressive
+  grants -- and the test is explicitly not whether a second person can run the
+  command, but whether they can tell when it should not be run, change the
+  system safely, and recover after its builder is gone. A named backup who never
+  sees failures is a notification target. The control costs two people's time
+  and should be reserved for capabilities whose loss would matter. Apply the
+  question to a system you own. Name what only you would notice, and which drill
+  has never been run. Say where your constraints diverge -- a real team, a
+  system that can be abandoned safely. Produce the succession status with its
+  missing demonstrations listed.
 ---
 
 **Working model.** A production-critical agent pipeline is not institutionally

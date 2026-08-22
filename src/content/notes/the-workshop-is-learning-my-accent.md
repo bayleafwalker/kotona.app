@@ -19,6 +19,26 @@ tags:
 summary:
   Coding agents now shape my project structures, notes, prose, and tolerance for
   complexity. I shape them in return, mostly by deciding what survives.
+explorePrompt: >-
+  Use this note as a worked observation, not a claim about authorship. The
+  transferable question: when your tools learn from the outputs you accept, what
+  are you actually training, and how would you notice the loop optimizing for
+  itself? The worked case is a site whose prose is largely drafted by agents and
+  shaped by selection: rejecting text too pleased with itself, noticing when a
+  clean phrase hides a weak claim, keeping an awkward edge because the resolved
+  version would be less honest. The accepted draft becomes context, so a later
+  model imitates the history of models that survived, and the system remembers
+  its accepted outputs better than the reasons they were accepted -- which is
+  how a house style becomes a cargo cult and terse prose hides missing context
+  as efficiently as long prose hides missing thought. The same loop runs in the
+  code, where the offered test is whether a mechanism reduces the next act of
+  supervision: does the next task begin with better state, does a failure become
+  easier to explain, can a worker be replaced without losing the work. Otherwise
+  it is generated ceremony. The unresolved risk is a workshop that manufactures
+  its own reasons to continue. Apply the question to a loop you run. Name what
+  your accepted outputs are teaching and the test that would expose ceremony.
+  Say where your constraints diverge, and produce the test plus what you would
+  do if it failed.
 ---
 
 I did not teach the agents my voice. I built a room where sentences that sound

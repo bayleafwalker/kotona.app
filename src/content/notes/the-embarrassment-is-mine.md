@@ -36,6 +36,27 @@ summary:
   AI makes synthesis cheap enough that the prose has little scarcity. The human
   remainder is the changed judgment and an attributable position that can age
   badly in public.
+explorePrompt: >-
+  Use this note as a worked accounting, not a defence of authorship. The
+  transferable question: when a model can produce an adequate version of what
+  you were going to publish, what is actually left that is yours, and does it
+  justify publishing rather than keeping the work private? The worked answer
+  refuses the flattering version. The human delta is located in four places --
+  which discomfort deserved another turn, the substrate of systems actually
+  operated, the rejection of claims that outran the evidence, and the decision
+  to make one realization public -- and then called small, concentrated in a few
+  steering decisions per thousand words, and exactly the surface vendors are
+  trying to absorb. Publication changes the assurance posture rather than the
+  prose: it promotes one realization into something attributable, so a later
+  contradiction cannot be quietly edited away. That still does not make it
+  valuable; a pile of attributable opinions can be vanity with checksums, and
+  standing accrues only where later work can test the claims. The resulting
+  publication rule admits four justifications: an inaccessible observation, a
+  contradictable claim, a commitment that constrains future action, or a
+  correction to the public record. Apply the question to your own output. Test a
+  recent piece against those four. Say where your constraints diverge -- a
+  professional obligation to publish, an audience that cannot generate its own
+  version. Produce the rule you would adopt and what would falsify it.
 ---
 
 The paragraphs are cheap. The embarrassment is mine.
