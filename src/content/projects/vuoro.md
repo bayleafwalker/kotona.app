@@ -70,8 +70,9 @@ terms:
       outcomes.
   - term: actionq-dispatch
     definition:
-      The one-action coordinator that creates a bounded workspace, invokes a
-      worker, and records the result.
+      Retired (2026-08-20 tombstone release). It formerly created a bounded
+      workspace, invoked a worker, and recorded the result; product-native
+      runtimes now own execution directly.
   - term: auditctl
     definition:
       The tool that indexes audit events and emits portable daily evidence
@@ -151,9 +152,10 @@ The sibling tools fill different gaps:
 
 - `actionq` owns PostgreSQL-backed action and session lifecycles with a strict
   queue contract and append-only events.
-- `actionq-dispatch` owns the bounded one-action coordinator: worktrees, worker
-  invocation, path ACLs, pre- and post-gates, and result recording through the
-  owning CLIs.
+- `actionq-dispatch` formerly owned the bounded one-action coordinator:
+  worktrees, worker invocation, path ACLs, pre- and post-gates, and result
+  recording through the owning CLIs. It is retired as of 2026-08-20;
+  product-native runtimes execute work directly now.
 - `auditctl` owns a repo-local audit index plus durable daily NDJSON artifacts
   that can be rebuilt and read independently.
 - `agentops` owns reusable dispatch skills and schemas, cross-repository plans,
@@ -195,9 +197,9 @@ restore without bypassing its compatibility gates.
 The tools are public and used across active repositories. sprintctl supports
 both local and remote modes, recoverable claims, provenance links, and a
 single-command resume bundle. kctl has a functioning two-stream extraction and
-review pipeline. actionq supplies the queue and session read contracts, while
-actionq-dispatch supplies the one-shot coordinator and auditctl emits portable
-audit shards.
+review pipeline. actionq supplies the queue and session read contracts, and
+auditctl emits portable audit shards. actionq-dispatch, the former one-shot
+coordinator, is retired; product-native runtimes execute work directly.
 
 The agent-cockpit is live and can show repository and sprint state, claims,
 session and dispatch lifecycles, audit outcomes, and bounded cost or model
