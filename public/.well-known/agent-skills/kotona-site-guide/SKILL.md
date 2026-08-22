@@ -1,6 +1,7 @@
 ---
 name: kotona-site-guide
-description: Find and cite public project and system notes published at kotona.app.
+description:
+  Find and cite public project and system notes published at kotona.app.
 ---
 
 # kotona.app site guide
@@ -24,6 +25,6 @@ the editorial model behind the corpus.
 
 Use `/version.json` when a task needs to tie the live site to its source commit.
 
-The site has no API, account registration, protected resource, or MCP server.
-Do not infer one from the presence of this guide. Cite the canonical page URL
-when using material from the site.
+The site has no API, account registration, protected resource, or MCP server. Do
+not infer one from the presence of this guide. Cite the canonical page URL when
+using material from the site.

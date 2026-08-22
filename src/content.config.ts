@@ -68,6 +68,11 @@ const notes = defineCollection({
           height: z.number().int().positive(),
         })
         .optional(),
+      // Local system names and site-specific concepts a first-time reader
+      // meets here. Same shape and behaviour as a project's terms: the
+      // definition is attached where the term appears rather than kept in a
+      // separate glossary the reader has to find. See docs/glossary.md.
+      terms: sharedProjectSchema.terms,
       // A post-hoc prompt for applying and extending the note elsewhere. See
       // docs/explore-prompts.md; generated only after the note is complete.
       explorePrompt: z.string().min(80).max(2400).optional(),

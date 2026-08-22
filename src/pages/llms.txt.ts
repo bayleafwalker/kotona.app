@@ -22,6 +22,16 @@ export const GET: APIRoute = async ({ site }) => {
       })),
     ),
   );
+  // One definition per term, generated from the terms the notes and projects
+  // already carry. Agents retrieving a single note otherwise meet the local
+  // vocabulary with no way to resolve it.
+  const vocabulary = new Map<string, string>();
+  for (const entry of [...projects, ...notes]) {
+    for (const { term, definition } of entry.data.terms ?? []) {
+      if (!vocabulary.has(term)) vocabulary.set(term, definition);
+    }
+  }
+
   const body = [
     `# ${siteConfig.title}`,
     "",
@@ -58,6 +68,18 @@ export const GET: APIRoute = async ({ site }) => {
       (entry) =>
         `- [${entry.data.title}](${new URL(`/notes/${entry.id}/`, baseUrl)}) (${entry.data.lifecycle}; ${entry.data.role}; ${entry.data.status}): ${entry.data.summary ?? "System note."}`,
     ),
+    ...(vocabulary.size > 0
+      ? [
+          "",
+          "## Vocabulary",
+          "",
+          "Local system names and site-specific concepts, defined where the notes and projects use them.",
+          "",
+          ...[...vocabulary]
+            .sort(([left], [right]) => left.localeCompare(right, "en"))
+            .map(([term, definition]) => `- ${term}: ${definition}`),
+        ]
+      : []),
   ].join("\n");
 
   return new Response(body, {

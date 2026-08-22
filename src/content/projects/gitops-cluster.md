@@ -34,30 +34,33 @@ evidence:
     a disruptive production control-plane restore.
   nextProof: >-
     Renew the independent restore evidence on schedule and verify agreement
-    between Git, live upgrade plans, and the selected target before node changes.
+    between Git, live upgrade plans, and the selected target before node
+    changes.
 tags:
   - gitops
   - kubernetes
   - operations
 terms:
   - term: Appservice
-    definition: The private GitOps repository that holds desired state, recovery rules, and operational evidence for the cluster.
+    definition:
+      The private GitOps repository that holds desired state, recovery rules,
+      and operational evidence for the cluster.
 ---
 
 ## Overview
 
-Appservice is the operations repository for a Talos-based Kubernetes cluster.
-It declares workloads, but that is the least interesting part. The repository
-also holds the secret model, upgrade rules, recovery procedures, health-check
+Appservice is the operations repository for a Talos-based Kubernetes cluster. It
+declares workloads, but that is the least interesting part. The repository also
+holds the secret model, upgrade rules, recovery procedures, health-check
 protocols, and sanitized incident records needed to operate the cluster after
 the bootstrap excitement has worn off.
 
-The architecture is the result of migrations rather than a pristine first
-draft. Ingress eventually settled on Envoy Gateway API after earlier controller
-choices became poor fits. Storage, DNS, database recovery, and application
-backups acquired their current rules through failures that were reproduced and
-written down. The repo is an operating surface, not a diagram of the system I
-once intended to build.
+The architecture is the result of migrations rather than a pristine first draft.
+Ingress eventually settled on Envoy Gateway API after earlier controller choices
+became poor fits. Storage, DNS, database recovery, and application backups
+acquired their current rules through failures that were reproduced and written
+down. The repo is an operating surface, not a diagram of the system I once
+intended to build.
 
 ## System shape
 
@@ -98,9 +101,9 @@ exercise.
 
 The restore drill proves that an externally stored snapshot can be retrieved,
 checked, decrypted, and read with compatible tooling. It does not pretend to be
-a production control-plane restore; that remains a disruptive incident path.
-The evidence also has to be renewed on schedule rather than treated as a
-one-time achievement.
+a production control-plane restore; that remains a disruptive incident path. The
+evidence also has to be renewed on schedule rather than treated as a one-time
+achievement.
 
 The external backup spans this repository and a separate host-configuration
 repository, so interface drift between the two is a real maintenance risk.
@@ -113,8 +116,7 @@ version pins can try to undo a manual upgrade. Future runs now need both the
 backup gate and agreement between Git, live plans, and the selected target
 before the first node changes.
 
-Git owns desired state, but not every stateful surface involved in realizing
-it. UEFI variables, boot entries, storage-client databases, and other
-host-local records can survive reconciliation and invalidate an otherwise
-correct rollout. Their health belongs in maintenance preflight and recovery
-procedures.
+Git owns desired state, but not every stateful surface involved in realizing it.
+UEFI variables, boot entries, storage-client databases, and other host-local
+records can survive reconciliation and invalidate an otherwise correct rollout.
+Their health belongs in maintenance preflight and recovery procedures.

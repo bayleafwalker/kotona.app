@@ -1,9 +1,13 @@
 ---
-title: You can fix contract drift or you can pretend the frontend is authoritative
+title:
+  You can fix contract drift or you can pretend the frontend is authoritative
 date: 2026-04-08T12:00:00Z
 contextWindow: contract governance work, 2025-2026
 draft: false
-summary: Backend-owned contract exports are mainly a way to stop arguing with a stale frontend view of reality. The useful part is not code generation by itself but making the backend the source of truth and then checking the drift explicitly.
+summary:
+  Backend-owned contract exports are mainly a way to stop arguing with a stale
+  frontend view of reality. The useful part is not code generation by itself but
+  making the backend the source of truth and then checking the drift explicitly.
 tags:
   - note
   - contracts

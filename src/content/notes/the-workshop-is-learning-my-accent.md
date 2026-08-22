@@ -16,7 +16,29 @@ tags:
   - agents
   - writing
   - maintenance
-summary: Coding agents now shape my project structures, notes, prose, and tolerance for complexity. I shape them in return, mostly by deciding what survives.
+summary:
+  Coding agents now shape my project structures, notes, prose, and tolerance for
+  complexity. I shape them in return, mostly by deciding what survives.
+explorePrompt: >-
+  Use this note as a worked observation, not a claim about authorship. The
+  transferable question: when your tools learn from the outputs you accept, what
+  are you actually training, and how would you notice the loop optimizing for
+  itself? The worked case is a site whose prose is largely drafted by agents and
+  shaped by selection: rejecting text too pleased with itself, noticing when a
+  clean phrase hides a weak claim, keeping an awkward edge because the resolved
+  version would be less honest. The accepted draft becomes context, so a later
+  model imitates the history of models that survived, and the system remembers
+  its accepted outputs better than the reasons they were accepted -- which is
+  how a house style becomes a cargo cult and terse prose hides missing context
+  as efficiently as long prose hides missing thought. The same loop runs in the
+  code, where the offered test is whether a mechanism reduces the next act of
+  supervision: does the next task begin with better state, does a failure become
+  easier to explain, can a worker be replaced without losing the work. Otherwise
+  it is generated ceremony. The unresolved risk is a workshop that manufactures
+  its own reasons to continue. Apply the question to a loop you run. Name what
+  your accepted outputs are teaching and the test that would expose ceremony.
+  Say where your constraints diverge, and produce the test plus what you would
+  do if it failed.
 ---
 
 I did not teach the agents my voice. I built a room where sentences that sound
@@ -84,8 +106,8 @@ repair when tired.
 
 The agents did not create the need for discipline. They changed its economics.
 They produce enough work, quickly enough, that failures once considered rare
-become routine. At the same time, they make the safeguards cheaper to build.
-The pressure and the means arrive together.
+become routine. At the same time, they make the safeguards cheaper to build. The
+pressure and the means arrive together.
 
 ## This site has more than one reader\*
 
@@ -105,9 +127,9 @@ sentences that can survive removal from their original narrative. Human reading
 often needs the opposite: scene, uncertainty, motive, and enough slack to
 understand why the conclusion mattered.
 
-There's some pull towards the machine-readable version. Every paragraph wants
-to become a durable rule. Every incident wants to become a pattern. Every
-project wants a clean ownership boundary and a sentence explaining it.
+There's some pull towards the machine-readable version. Every paragraph wants to
+become a durable rule. Every incident wants to become a pattern. Every project
+wants a clean ownership boundary and a sentence explaining it.
 
 That pressure often improves the note. It can also bleach it. A field notebook
 that contains only conclusions stops showing the field.
@@ -124,8 +146,8 @@ These systems are high maintenance. Some are brittle. I allow that because this
 is a hobby, and because operating near the edge of what one person can sustain
 is part of the enjoyment.
 
-LLMs changed that edge. They lowered the marginal cost of adding a repository,
-a verifier, a migration, a runbook, or another narrow tool. Work that would have
+LLMs changed that edge. They lowered the marginal cost of adding a repository, a
+verifier, a migration, a runbook, or another narrow tool. Work that would have
 made no sense for one person can now remain just inside the feasible boundary.
 
 This is not the same as making complexity cheap. Agents also create maintenance:
@@ -144,13 +166,13 @@ ceremony.
 
 ## The loop can optimize for itself
 
-There is an obvious danger in a workshop that can keep building additions to
-the workshop.
+There is an obvious danger in a workshop that can keep building additions to the
+workshop.
 
 Agents make ambitious systems feasible. Ambitious systems generate more work
 suited to agents. Their failures justify more controls. The controls produce
-more structured context, which makes later agents more capable, which raises
-the scale of the next project.
+more structured context, which makes later agents more capable, which raises the
+scale of the next project.
 
 The loop is productive. It is also perfectly capable of manufacturing its own
 reasons to continue.

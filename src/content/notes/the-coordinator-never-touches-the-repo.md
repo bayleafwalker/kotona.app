@@ -12,10 +12,36 @@ projects:
 relates:
   - subprocess-not-service
   - the-missing-layer-is-binding-not-intelligence
+terms:
+  - term: homelab-analytics
+    definition:
+      The household data and decision platform that owns long-lived semantics,
+      scenarios, policies, and approvals.
 tags:
   - agents
   - workflow
-summary: Sprint work is split into plan, build, and review dispatches, and the orchestrating session is structurally barred from editing deliverables. The bar is the point.
+summary:
+  Sprint work is split into plan, build, and review dispatches, and the
+  orchestrating session is structurally barred from editing deliverables. The
+  bar is the point.
+explorePrompt: >-
+  Use this note as one worked instantiation, not a rule to copy. The
+  transferable question: when one component of a workflow holds the widest
+  context, what should it be structurally forbidden from doing, and how do you
+  make that prohibition checkable rather than aspirational? In the worked case
+  an orchestrating agent session may inspect repositories, read results, choose
+  the next task, and stop a sprint, but may not edit a deliverable; every file
+  change comes from a scoped plan, build, or review dispatch, and the check is
+  that the coordinator's own worktree stays clean. The cost of an exception is
+  not a bad edit but a false record: an audit trail that describes less work
+  than actually happened. Model assignment follows the same logic, allocated by
+  where an error can still be caught rather than by price. Apply the question to
+  a system you operate. Name the component with the widest view, the action it
+  must be barred from, and the cheap mechanical check that proves the bar held.
+  Say where your constraints diverge -- multiple operators, no scoped-session
+  mechanism, changes that cannot be re- dispatched -- and which conclusions stop
+  holding there. Produce the prohibition, its check, and its stop procedure, not
+  a restatement of the three stages.
 ---
 
 The coordinating session may inspect repositories, read results, choose the next
@@ -37,9 +63,9 @@ The coordinator has the widest context. It can see the sprint, the plans, the
 agent reports, and the state of several repositories. That makes it useful for
 sequencing work and unusually dangerous as an editor.
 
-If it changes a file directly, the recorded workflow becomes false. The edit
-was not part of a dispatched claim, its scope was not fixed before execution,
-and the review stage may never see it. One small edit is unlikely to cause an
+If it changes a file directly, the recorded workflow becomes false. The edit was
+not part of a dispatched claim, its scope was not fixed before execution, and
+the review stage may never see it. One small edit is unlikely to cause an
 incident. Repeating the shortcut creates a system whose audit trail describes
 less work than actually happened.
 
@@ -63,8 +89,8 @@ is useful, but it follows from those choices rather than deciding them.
 
 ## What the coordinator still owns
 
-Keeping it out of the repository does not make the coordinator passive. It
-still has to:
+Keeping it out of the repository does not make the coordinator passive. It still
+has to:
 
 - choose the next eligible item;
 - cut scope when a sprint is too large;
@@ -87,8 +113,9 @@ At the end of every dispatch:
 - verify that the coordinator's own worktree is clean.
 
 If the coordinator has edited a deliverable, stop the sprint. Preserve the diff,
-move the change into a properly scoped build session, and review it there. Do not
-repair the record after the fact by pretending the edit came from a dispatch.
+move the change into a properly scoped build session, and review it there. Do
+not repair the record after the fact by pretending the edit came from a
+dispatch.
 
 The coordinator is useful because it decides what work may happen next. Keeping
 it out of the repository makes that decision visible.

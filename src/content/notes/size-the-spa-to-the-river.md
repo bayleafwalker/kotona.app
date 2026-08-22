@@ -16,22 +16,48 @@ tags:
   - heat-pumps
   - spa
   - finland
-summary: An operating sketch for a boutique Finnish mill-site retreat where the river sets the scale of the baths, restaurant, lodging, and renewal reserve.
+summary:
+  An operating sketch for a boutique Finnish mill-site retreat where the river
+  sets the scale of the baths, restaurant, lodging, and renewal reserve.
 hero:
   src: /images/notes/size-the-spa-to-the-river/hero-winter-rotenburo.webp
-  alt: Two steaming outdoor baths beside a low mill dam in a snowy Finnish forest at dusk.
-  caption: Generated concept image, not a surveyed site or safe hydraulic layout.
+  alt:
+    Two steaming outdoor baths beside a low mill dam in a snowy Finnish forest
+    at dusk.
+  caption:
+    Generated concept image, not a surveyed site or safe hydraulic layout.
   width: 1376
   height: 768
+explorePrompt: >-
+  Use this note as a worked instantiation, not a design to reuse. The
+  transferable question: when a venture is built on a fixed natural resource,
+  how do you let that resource set the programme's size instead of sizing the
+  programme first and hoping the resource cooperates? The worked case is a
+  boutique Finnish mill-site retreat where the river fixes the scale of baths,
+  restaurant, lodging, and renewal reserve. Annual electricity equality is only
+  the first constraint: the spa is one continuous wet process whose energy,
+  water, wastewater, staffing, and renewal systems must close together. Heat is
+  recovered before the river is asked for more, water is treated as a second
+  plant with its own permits, and the build order runs by uncertainty --
+  disprove sites on title, water rights, dam safety, hydrology, and permitting
+  before drawing anything; instrument the river through a winter and a flood;
+  freeze the utility briefs against hourly data; then open the smallest complete
+  version. The model is monthly while the design problem is hourly, which makes
+  the arithmetic falsifiable rather than bankable. Apply the question to a
+  resource-bounded venture you are considering. Name the binding resource, the
+  systems that must close together, and the cheapest test that could kill the
+  site. Say where your constraints diverge -- a resource you can buy more of, no
+  seasonality, a permitting regime with different gates. Produce a
+  disproof-ordered build sequence with its clean failure mode named.
 ---
 
 Size the spa to the river, not the river to the spa.
 
-This is a lottery project, not an investment recommendation: acquire an
-existing Finnish mill or small-hydro site, repair the river system around it,
-and build a bathhouse that can live within the site's energy, water, staffing,
-and renewal envelope. The hydro plant is not a miniature utility business. It
-is the reason the architecture exists.
+This is a lottery project, not an investment recommendation: acquire an existing
+Finnish mill or small-hydro site, repair the river system around it, and build a
+bathhouse that can live within the site's energy, water, staffing, and renewal
+envelope. The hydro plant is not a miniature utility business. It is the reason
+the architecture exists.
 
 Annual electricity equality is only the first constraint. A spa is one wet,
 continuous process containing a dam, pool-water plant, heat-recovery network,
@@ -55,10 +81,9 @@ The reference version has:
 - a 40-seat restaurant with one restrained seasonal menu; and
 - enough adjacent land to add lodging, but no hotel wing in the first project.
 
-Lower volume has to earn a higher spend through accommodation, food,
-treatments, private bathing periods, and a sequence worth reserving. That is
-more coherent than making the outdoor baths into a warm roundabout for 300
-Saturday guests.
+Lower volume has to earn a higher spend through accommodation, food, treatments,
+private bathing periods, and a sequence worth reserving. That is more coherent
+than making the outdoor baths into a warm roundabout for 300 Saturday guests.
 
 ## Acquire a bundle, not a millhouse
 
@@ -68,8 +93,8 @@ limited by environmental and conservation concerns, and current Finnish energy
 guidance locates most small-hydro potential in modernising existing or
 decommissioned plants.
 
-The acquisition object is not a picturesque building with a turbine in it. It
-is a bundle of dam ownership, riverbed and shoreline title, water and generation
+The acquisition object is not a picturesque building with a turbine in it. It is
+a bundle of dam ownership, riverbed and shoreline title, water and generation
 rights, access easements, grid connection, civil structures, safety files,
 upstream liabilities, downstream duties, ecological obligations, and
 neighbouring rights. Any missing part can turn the rest into a concrete
@@ -91,8 +116,8 @@ Before buying, commission a title and permit audit, dam-condition survey,
 hydrology and flood study, grid study, sediment and soil contamination screen,
 potable-water and wastewater concept, ecological baseline, and an operator's
 access review. The Finnish Dam Safety Act makes maintenance, monitoring, annual
-and periodic inspections, and transfer of the dam-safety file owner duties,
-not optional heritage activities.
+and periodic inspections, and transfer of the dam-safety file owner duties, not
+optional heritage activities.
 
 ## One reference river, four seasons
 
@@ -120,17 +145,16 @@ The useful operating envelope is:
 | Summer low-flow |    110–140 kW |          90–100 / 160–200 kW |    95–110 kW | Import on events and peaks       |
 | Autumn rains    |    140–190 kW |         110–150 / 190–230 kW |   120–160 kW | Mostly direct supply             |
 
-These are scenario averages, not design guarantees. The weakest river period
-can overlap the coldest weather, and pools, water treatment, frost protection,
-and ventilation do not accept an annual renewable certificate in place of
-power.
+These are scenario averages, not design guarantees. The weakest river period can
+overlap the coldest weather, and pools, water treatment, frost protection, and
+ventilation do not accept an annual renewable certificate in place of power.
 
 The control hierarchy is:
 
 1. Recover useful heat already inside the site.
 2. Run staged river-source heat pumps.
-3. Shift hours with buffer tanks and permitted temperature movement in the
-   water and floor structures.
+3. Shift hours with buffer tanks and permitted temperature movement in the water
+   and floor structures.
 4. Use grid electricity for short peaks and electrical resilience.
 5. Use biomass for prolonged winter heat deficits.
 6. Close outdoor and speciality pools in a planned order before compromising
@@ -303,8 +327,8 @@ control, and safe separation from the network.
 | Road blocked               | Resident shelter plan, stored essentials, relief shift                   |
 
 The bathhouse can close while cabins, communications, dam monitoring, and frost
-protection remain operable. That boundary matters more than an invented
-off-grid badge.
+protection remain operable. That boundary matters more than an invented off-grid
+badge.
 
 ## Pay for people and replacement
 
@@ -326,8 +350,8 @@ The plant operates continuously even when the guest door is locked. Water
 testing, dam rounds, cleaning, snow, deliveries, and call-out cover do not fit
 inside an admissions spreadsheet.
 
-A boutique revenue case can still reach the earlier order of magnitude with
-less volume and higher spend:
+A boutique revenue case can still reach the earlier order of magnitude with less
+volume and higher spend:
 
 | Revenue line                   | Base assumption after package allocation | Annual revenue |
 | ------------------------------ | ---------------------------------------- | -------------: |
@@ -352,8 +376,8 @@ The dream-project objective is narrower:
 
 An old dam, underwater civil works, protected structures, corrosive pool air,
 flood constraints, and unknown ground do not deserve a 12% catch-all allowance.
-Before detailed surveys, use 15% for design and professional work and 20–25%
-for brownfield uncertainty.
+Before detailed surveys, use 15% for design and professional work and 20–25% for
+brownfield uncertainty.
 
 | Capital envelope                                 | Concept allowance |
 | ------------------------------------------------ | ----------------: |
@@ -365,8 +389,8 @@ for brownfield uncertainty.
 | Opening and first-renewal endowment              |        €1.0–1.5 M |
 | **Total dream capital**                          |  **€16.4–26.1 M** |
 
-The useful mental anchor is now about €20 million plus patience, not a crisp
-€12 million. The range is wide because the site does not exist. Dam defects,
+The useful mental anchor is now about €20 million plus patience, not a crisp €12
+million. The range is wide because the site does not exist. Dam defects,
 sediment, wastewater, grid work, or flood elevation can consume the low case
 before anyone chooses a tile.
 
@@ -394,8 +418,8 @@ repair cannot coexist—the correct site decision is no.
 ## Build in the order of uncertainty
 
 **Phase 0 — find and disprove.** Kill sites on title, water rights, dam safety,
-hydrology, ecology, flood level, contamination, water, wastewater, grid cost,
-or municipal planning before drawing the spa.
+hydrology, ecology, flood level, contamination, water, wastewater, grid cost, or
+municipal planning before drawing the spa.
 
 **Phase 1 — make the river measurable.** Acquire the site, complete permit and
 safety work, restore generation and fish passage, and instrument power, flow,
@@ -407,9 +431,9 @@ energy data and a complete water balance. Set heat recovery, heat-pump duty,
 backup, storage, treatment, discharge, pool area, and grid capacity. If the
 river supports a smaller spa, build the smaller spa.
 
-**Phase 3 — open the smallest complete retreat.** Build the bathhouse,
-40-seat restaurant, central sauna, and first eight lodging units. Add four units
-or occasional saunas only after guest flow, staffing, and lifecycle funding are
+**Phase 3 — open the smallest complete retreat.** Build the bathhouse, 40-seat
+restaurant, central sauna, and first eight lodging units. Add four units or
+occasional saunas only after guest flow, staffing, and lifecycle funding are
 real.
 
 The project fails cleanly if the acquired hydro site remains a restored plant
@@ -429,8 +453,8 @@ The regulatory and sector anchors were checked on 19 July 2026:
   and places most potential in modernisation and existing sites.
 - The official
   [renewable-energy permit guide](https://www.ymparisto.fi/sites/default/files/documents/Uusiutuvan%20energian%20tuotantolaitosten%20lupamenettelyt%20ja%20muut%20hallinnolliset%20menettelyt.pdf)
-  explains that significant modifications can require a water permit and uses
-  a decommissioned small-hydro site as its worked example.
+  explains that significant modifications can require a water permit and uses a
+  decommissioned small-hydro site as its worked example.
 - The current [Water Act](https://www.finlex.fi/fi/lainsaadanto/2011/587)
   provides for fisheries obligations or fees where a water project harms fish
   stocks or fishing; the

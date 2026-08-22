@@ -21,25 +21,26 @@ tags:
   - rollback
 summary: >-
   Two upgrade failures came from persistent node-local state outside Git:
-  malformed UEFI NVRAM and an iSCSI record that poisoned shared parsing. The
-  fix was bounded exceptions, preflight checks, controlled migration and
+  malformed UEFI NVRAM and an iSCSI record that poisoned shared parsing. The fix
+  was bounded exceptions, preflight checks, controlled migration and
   verification.
 explorePrompt: >-
-  Use this note as a worked instantiation, not a universal rule. The transferable
-  question is: which persistent state stores sit below a declared or reconciled
-  system and can invalidate an upgrade, rollback, or recovery test? In this
-  instantiation, one node carried malformed UEFI NVRAM that broke a bootloader
-  management step after the target system version was already running; another
-  carried an iSCSI node record whose unsupported field caused shared parsing to
-  fail across volume attachments. The resulting controls were deliberately
-  different: a narrowly scoped operational exception with post-upgrade
-  verification for the firmware case, and preflight detection, graceful drain,
-  and targeted record migration for the storage case. Apply the question to a
-  system you operate. Identify each relevant local state store, the actuator that
-  reads it, whether it can be recreated, validated, migrated, or only accepted,
-  and how it affects rollback evidence. Challenge the conclusions where your
-  platform makes local state immutable, disposable, or externally authoritative.
-  Produce a state-boundary table plus a concrete preflight and rollback design.
+  Use this note as a worked instantiation, not a universal rule. The
+  transferable question is: which persistent state stores sit below a declared
+  or reconciled system and can invalidate an upgrade, rollback, or recovery
+  test? In this instantiation, one node carried malformed UEFI NVRAM that broke
+  a bootloader management step after the target system version was already
+  running; another carried an iSCSI node record whose unsupported field caused
+  shared parsing to fail across volume attachments. The resulting controls were
+  deliberately different: a narrowly scoped operational exception with
+  post-upgrade verification for the firmware case, and preflight detection,
+  graceful drain, and targeted record migration for the storage case. Apply the
+  question to a system you operate. Identify each relevant local state store,
+  the actuator that reads it, whether it can be recreated, validated, migrated,
+  or only accepted, and how it affects rollback evidence. Challenge the
+  conclusions where your platform makes local state immutable, disposable, or
+  externally authoritative. Produce a state-boundary table plus a concrete
+  preflight and rollback design.
 ---
 
 Two upgrade problems initially looked like software regressions. Neither was
@@ -84,9 +85,9 @@ UEFI NVRAM ───────────────→ bootloader managemen
 /var/lib/iscsi/nodes/ ────→ volume discovery and attachment
 ```
 
-Neither store belonged in Git. Firmware variables are maintained by firmware
-and boot tooling. The iSCSI database is runtime state maintained by storage
-clients. Persisting them is normal.
+Neither store belonged in Git. Firmware variables are maintained by firmware and
+boot tooling. The iSCSI database is runtime state maintained by storage clients.
+Persisting them is normal.
 
 The mistake would be assuming that normal persistence makes them irrelevant to
 declarative operations. A clean Git tree proves that the declaration is clean.
@@ -124,8 +125,8 @@ bootloader-management cleanup failed
 
 Repairing malformed firmware state was possible in principle. It was not
 obviously the lowest-risk action. Resetting firmware defaults or rewriting boot
-entries would widen the intervention from a known upgrade inconvenience into
-the machine's boot configuration. That is a poor trade merely to make the next
+entries would widen the intervention from a known upgrade inconvenience into the
+machine's boot configuration. That is a poor trade merely to make the next
 automation run end in green.
 
 The accepted resolution was therefore an explicit exception:
@@ -185,8 +186,8 @@ established something narrower and more useful: the node carried persistent
 state capable of surviving the version change and continuing to block storage
 startup.
 
-A rollback can restore code without restoring the conditions under which the
-old code last worked.
+A rollback can restore code without restoring the conditions under which the old
+code last worked.
 
 ## The fix was an operating control, not a theory
 
@@ -195,8 +196,8 @@ mutation before upgrades could continue. It needed a way to detect the concrete
 blocker before moving workloads onto an affected node.
 
 A tester script was created to identify upgrade blockers in the persisted iSCSI
-state. With the failure made visible before the disruptive step, nodes could take
-one of two controlled paths:
+state. With the failure made visible before the disruptive step, nodes could
+take one of two controlled paths:
 
 - drain gracefully and proceed when their local state passed the checks;
 - migrate the faulty node records deliberately before proceeding when it did
@@ -249,7 +250,8 @@ For a local state store that can affect upgrades, there are four useful
 dispositions:
 
 1. **Recreate it** when it is genuinely disposable and reconstruction is tested.
-2. **Validate it** when malformed or incompatible content can be detected safely.
+2. **Validate it** when malformed or incompatible content can be detected
+   safely.
 3. **Migrate it** when the state is necessary but its representation changes.
 4. **Accept it explicitly** when remediation is riskier than a bounded
    operational workaround.
@@ -258,8 +260,8 @@ Anything else is usually accidental persistence with an optimistic name.
 
 ## What an upgrade preflight now has to ask
 
-Manifest validation and image compatibility remain necessary. They are no
-longer the whole preflight.
+Manifest validation and image compatibility remain necessary. They are no longer
+the whole preflight.
 
 For each persistent node-local store that participates in the operation, the
 procedure should be able to answer:
@@ -333,9 +335,9 @@ That would confuse authority rather than improve it. The answer is to inventory
 the local stores that can materially change an operation and assign each one a
 control: recreate, validate, migrate, or accept.
 
-The rollout ended with all nodes on the target version. Faulty iSCSI records were
-handled through graceful drain or deliberate migration. The known UEFI defect
-was not subjected to speculative surgery; its consequence is covered by a
+The rollout ended with all nodes on the target version. Faulty iSCSI records
+were handled through graceful drain or deliberate migration. The known UEFI
+defect was not subjected to speculative surgery; its consequence is covered by a
 node-specific reboot and verification procedure. The tester script now moves the
 storage failure from post-upgrade diagnosis into preflight.
 

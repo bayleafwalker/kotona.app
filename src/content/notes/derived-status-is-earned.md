@@ -20,7 +20,32 @@ tags:
   - software-architecture
   - verification
   - provenance
-summary: Continuing assurance can move away from an exact generated output only when retained inputs and independent checks can produce another acceptable result; retention remains a separate decision.
+summary:
+  Continuing assurance can move away from an exact generated output only when
+  retained inputs and independent checks can produce another acceptable result;
+  retention remains a separate decision.
+explorePrompt: >-
+  Use this note as a worked distinction, not a classification to adopt
+  wholesale. The transferable question: for a generated output, when can the
+  contract and the acceptance process carry the continuing assurance claim, and
+  when must the exact object stay part of the record? The worked answer rejects
+  generation cost as the discriminator and sets two demands before an output may
+  be called derived. First, the system retains enough -- contract, semantic
+  inputs, interfaces, constraints, dependencies, environment assumptions -- that
+  an approved generator could produce another acceptable result. Second,
+  something other than the generator decides acceptability: a schema check,
+  test, invariant, simulation, static analysis, canary, or human review. Where
+  properties need inspection of the exact object that will run, the reviewed
+  thing is source plus toolchain, pinned dependencies, configuration,
+  environment assumptions, provenance, and executable digest. Use determines the
+  classification, and the consumer's answer can override the producer's.
+  Retention is a separate decision from derived status. Apply the question to
+  generated outputs you are responsible for. Classify a handful, name the
+  acceptance signal for each, and say which would fail the second demand today.
+  Say where your constraints diverge -- a regulator that requires the artifact
+  regardless, no independent check available, a consumer compiling against an
+  exact interface. Produce the classification with its retention decision stated
+  separately, not a policy summary.
 ---
 
 Suppose an agent writes two things: a query for a one-off internal analysis and
@@ -37,19 +62,18 @@ or reverse it. Generation cost says almost nothing about which case I am in.
 > framing: the local terms below sit inside ordinary assurance-case practice,
 > not a new assurance method. A claim is credible only for an identified
 > configuration, under stated assumptions, with evidence that actually supports
-> it. [Where the assurance questions are already
-> answered](/notes/where-the-assurance-questions-are-already-answered/) and [A
-> field guide to assurance-managed AI
-> development](/notes/a-field-guide-to-assurance-managed-ai-development/) map
-> the established material.
+> it.
+> [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
+> and
+> [A field guide to assurance-managed AI development](/notes/a-field-guide-to-assurance-managed-ai-development/)
+> map the established material.
 
 ## When the exact output remains part of the record
 
-Some checks need the object that will run. Static analysis, type checking,
-model checking, interface compatibility, and adversarial review all inspect
-properties that a successful execution log cannot establish. A log can show
-what happened once; it cannot show what an unexercised code path would have
-done.
+Some checks need the object that will run. Static analysis, type checking, model
+checking, interface compatibility, and adversarial review all inspect properties
+that a successful execution log cannot establish. A log can show what happened
+once; it cannot show what an unexercised code path would have done.
 
 In that case, retaining source alone may still be insufficient. The reviewed
 object is closer to this:
@@ -83,9 +107,9 @@ Calling an output derived requires two practical demonstrations.
 
 First, the system must retain enough to make another acceptable output: the
 contract, semantic inputs, interfaces, constraints, dependencies, and relevant
-environment assumptions. Exact replay may be neither possible nor useful with
-a stochastic generator. The useful test is whether an approved generator can
-still produce an output inside the allowed range.
+environment assumptions. Exact replay may be neither possible nor useful with a
+stochastic generator. The useful test is whether an approved generator can still
+produce an output inside the allowed range.
 
 Second, something other than the generator must decide whether the result is
 acceptable. Depending on the consequence, that may be a schema check, test,
@@ -117,12 +141,12 @@ while a downstream team has built controls around that exact version. In that
 case the producer's convenience does not remove the consumer's retention and
 change-control needs.
 
-Retention is separate from derived status. A derived output may still need to
-be kept for audit, debugging, cost analysis, or historical reconstruction. The
+Retention is separate from derived status. A derived output may still need to be
+kept for audit, debugging, cost analysis, or historical reconstruction. The
 narrower claim is that the contract and acceptance process carry the continuing
 assurance claim; the old text does not automatically do so.
 
 AI makes replacement cheap enough to tempt us into calling every output
-reproducible. The safe default is more demanding: move continuing assurance
-away from the exact output only after the generation inputs and independent
-checks have shown they can carry the same claim. Decide retention separately.
+reproducible. The safe default is more demanding: move continuing assurance away
+from the exact output only after the generation inputs and independent checks
+have shown they can carry the same claim. Decide retention separately.

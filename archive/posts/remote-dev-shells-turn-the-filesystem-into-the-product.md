@@ -3,7 +3,11 @@ title: Remote dev shells turn the filesystem into the product
 date: 2026-04-08T14:00:00Z
 contextWindow: remote shell cutover work, 2025-2026
 draft: false
-summary: The interesting part of the remote dev shell cutover was not SSH or code-server. It was moving the real working state onto shared storage without corrupting repo-local databases or pretending two writable trees could coexist peacefully.
+summary:
+  The interesting part of the remote dev shell cutover was not SSH or
+  code-server. It was moving the real working state onto shared storage without
+  corrupting repo-local databases or pretending two writable trees could coexist
+  peacefully.
 tags:
   - note
   - remote-development

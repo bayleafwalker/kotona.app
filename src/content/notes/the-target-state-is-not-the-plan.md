@@ -19,7 +19,10 @@ tags:
   - homelab
   - gitops
   - systems-design
-summary: A live migration needs more than a target diagram. Before changing the first node, name the temporary configurations, the checks between them, who controls each handoff, and the point after which rollback stops being cheap.
+summary:
+  A live migration needs more than a target diagram. Before changing the first
+  node, name the temporary configurations, the checks between them, who controls
+  each handoff, and the point after which rollback stops being cheap.
 explorePrompt: >-
   Use this note as a worked instantiation, not a runbook to copy. The
   transferable question is how to design a live migration when the target
@@ -102,7 +105,9 @@ invariants:
   - claim: Required persistent storage remains readable and writable.
     test: A disposable pod writes, reads, syncs, and removes a test file.
 
-  - claim: Git describes the intended configuration, or reconciliation is recorded as suspended.
+  - claim:
+      Git describes the intended configuration, or reconciliation is recorded as
+      suspended.
     test: Flux status and the repository revision match the runbook state.
 ```
 
@@ -283,11 +288,11 @@ simulating every command:
 If two states have the same answers, combine them. The method should expose
 decisions, not manufacture paperwork.
 
-The concrete records behind this rule are [Moving a live cluster to a new
-subnet](/notes/moving-a-live-cluster-to-a-new-subnet/), [A GitOps rollback needs
-time to reach Git](/notes/a-gitops-rollback-needs-time-to-reach-git/), and
-[Account for node-local state in GitOps
-recovery](/notes/the-node-remembers-what-git-does-not/).
+The concrete records behind this rule are
+[Moving a live cluster to a new subnet](/notes/moving-a-live-cluster-to-a-new-subnet/),
+[A GitOps rollback needs time to reach Git](/notes/a-gitops-rollback-needs-time-to-reach-git/),
+and
+[Account for node-local state in GitOps recovery](/notes/the-node-remembers-what-git-does-not/).
 
 ## Sources and further study
 

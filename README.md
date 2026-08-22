@@ -71,26 +71,26 @@ On a network that sinkholes the Cloudflare Web Analytics beacon, use
 
 Site metadata and public links live in `src/site.ts`.
 
-Project pages live in `src/content/projects/`.
-Project and system notes live in `src/content/notes/`.
+Project pages live in `src/content/projects/`. Project and system notes live in
+`src/content/notes/`.
 
 To add a note:
 
 1. Create a Markdown file in `src/content/notes/`.
 2. Fill in the frontmatter.
-3. Write from the concrete problem outward, using diagrams only when they make
-   a relationship easier to understand.
+3. Write from the concrete problem outward, using diagrams only when they make a
+   relationship easier to understand.
 
-Frontmatter is schema-validated during `npm run check` and `npm run build`.
-Note `projects` and `relates` values are collection IDs and are validated as
+Frontmatter is schema-validated during `npm run check` and `npm run build`. Note
+`projects` and `relates` values are collection IDs and are validated as
 references during those checks.
 
 Every note declares a role (`operating`, `synthesis`, `exploration`, or
-`project-history`), a claim posture (`guiding`, `prospective`, `exploration`,
-or `archival`), and a publication lifecycle (`current`,
-`superseded`, `archived`, or `disproven`). Non-current notes require a dated
-reason. Superseded notes also require a successor reference, and project state
-that invalidated a note can be linked explicitly.
+`project-history`), a claim posture (`guiding`, `prospective`, `exploration`, or
+`archival`), and a publication lifecycle (`current`, `superseded`, `archived`,
+or `disproven`). Non-current notes require a dated reason. Superseded notes also
+require a successor reference, and project state that invalidated a note can be
+linked explicitly.
 
 Role selects the writing register and expected evidence; claim posture and
 lifecycle do not. See `docs/writing-style.md` for the four role-specific
@@ -128,8 +128,8 @@ The public site must not depend on either tier through paths, submodules,
 symlinks, build inputs, or generated references.
 
 Promotion from a private tier is an explicit editorial copy after a separate
-publishability review. There is no automatic synchronization, and a private
-note marked as a possible public candidate is not authorized for publication.
+publishability review. There is no automatic synchronization, and a private note
+marked as a possible public candidate is not authorized for publication.
 Sanitization alone does not establish publishability.
 
 Draft behavior:
@@ -142,7 +142,8 @@ Draft behavior:
 
 ## Information architecture
 
-- `/` reader-facing introduction, a curated starting set, projects, and recent notes
+- `/` reader-facing introduction, a curated starting set, projects, and recent
+  notes
 - `/projects/` project index
 - `/projects/[slug]/` durable project context and current state
 - `/notes/` reverse chronological notes index
@@ -161,11 +162,10 @@ Draft behavior:
 The old `/case-studies/` paths are compatibility redirects. Projects and notes
 are the canonical content surfaces.
 
-The deterministic retrieval evaluation discovers those surfaces from
-`llms.txt`, reads them through public Markdown negotiation, and verifies that
-current authority, historical context, and absent evidence remain retrievable.
-Its cases and operating limits are documented in
-`docs/retrieval-evaluation.md`.
+The deterministic retrieval evaluation discovers those surfaces from `llms.txt`,
+reads them through public Markdown negotiation, and verifies that current
+authority, historical context, and absent evidence remain retrievable. Its cases
+and operating limits are documented in `docs/retrieval-evaluation.md`.
 
 The accepted machine-first reference-discovery direction is maintained in
 `docs/architecture/reference-discovery.md`; its independently reversible
@@ -183,7 +183,8 @@ Useful commands:
 - `npm run build` builds the Worker and static assets into `dist/`
 - `npm run preview` builds and starts the Cloudflare-backed Astro preview
 - `npm run deploy` builds and deploys the Worker through Wrangler
-- `npm run cf-typegen` regenerates `worker-configuration.d.ts` after binding changes
+- `npm run cf-typegen` regenerates `worker-configuration.d.ts` after binding
+  changes
 
 Production deploys are handled by `.github/workflows/deploy.yml` after the `ci`
 workflow succeeds on `main`.

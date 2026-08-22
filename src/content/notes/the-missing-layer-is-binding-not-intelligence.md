@@ -6,8 +6,8 @@ lifecycle: superseded
 lifecycleChanged: 2026-07-22
 lifecycleReason: >-
   Preserved as the project-origin framing. The assurance synthesis maps its
-  useful concerns to established engineering disciplines and corrects the
-  claim that the layer was conceptually unclaimed.
+  useful concerns to established engineering disciplines and corrects the claim
+  that the layer was conceptually unclaimed.
 supersededBy:
   - where-the-assurance-questions-are-already-answered
 area: agent workflow
@@ -21,10 +21,47 @@ relates:
   - the-coordinator-never-touches-the-repo
   - where-the-assurance-questions-are-already-answered
   - a-field-guide-to-assurance-managed-ai-development
+terms:
+  - term: sprintctl
+    definition:
+      The CLI and schema that own sprint work, dependencies, claims, and
+      handoffs.
+  - term: actionq
+    definition:
+      The PostgreSQL-backed queue that owns actions, sessions, claims, and
+      outcomes.
+  - term: auditctl
+    definition:
+      The tool that indexes audit events and emits portable daily evidence
+      shards.
 tags:
   - workflow
   - agents
-summary: The useful workflow layer for solo agent work is not a giant orchestration stack. It is a local-first system that remembers claims, checkpoints, routing choices, and promotion boundaries without pretending one operator needs a whole platform team.
+summary:
+  The useful workflow layer for solo agent work is not a giant orchestration
+  stack. It is a local-first system that remembers claims, checkpoints, routing
+  choices, and promotion boundaries without pretending one operator needs a
+  whole platform team.
+explorePrompt: >-
+  This note is superseded by "Where the assurance questions are already
+  answered", which maps its concerns to established engineering disciplines and
+  corrects the claim that the layer was conceptually unclaimed; read that first.
+  This note remains the project-origin framing, and is useful mainly as a dated
+  record of a position that later got corrected. The transferable question: when
+  autonomous work is already good enough to matter, what is actually missing --
+  more capability, or something that remembers what the work meant? The worked
+  answer at the time was a local-first system holding claims, checkpoints,
+  routing choices, and promotion boundaries, with a deliberate list of things
+  refused until the pain had a name: a remote coordination service, a browser
+  control plane, long-lived autonomous workers, general scheduling, full
+  retrieval memory, policy automation without an operator checkpoint. Three
+  months later some of those pressures did acquire names -- work crossing hosts,
+  shared queue state, concurrent dispatch, one operator needing a read surface
+  across repositories -- and the machinery arrived because the pain was
+  observable, not because the rule was abandoned. Apply the question to your own
+  tooling. List what you have refused to build and the named pain that would
+  justify each. Say where your constraints diverge, then read the successor and
+  say which of your framings is already established practice under another name.
 ---
 
 The agent work happens. The problem is that the system forgets.
@@ -37,10 +74,10 @@ The agent work happens. The problem is that the system forgets.
 > system that established it. The model assignments are likewise a dated
 > snapshot, not current routing guidance.
 
-> **Update, 2026-07-20.** "Missing layer" should be read narrowly: missing
-> from my own tooling, not from the field. Binding requirements, design,
-> evidence, and operation across a lifecycle is the subject of model-based
-> systems engineering and continuous assurance; see
+> **Update, 2026-07-20.** "Missing layer" should be read narrowly: missing from
+> my own tooling, not from the field. Binding requirements, design, evidence,
+> and operation across a lifecycle is the subject of model-based systems
+> engineering and continuous assurance; see
 > [SEBoK: Model-Based Systems Engineering](https://sebokwiki.org/wiki/Model-Based_Systems_Engineering_%28MBSE%29).
 > Test any proposed binding here against those established models before
 > reaching for "missing abstraction." See
@@ -51,11 +88,11 @@ The agent work happens. The problem is that the system forgets.
 ## The April model
 
 That is the actual failure mode I keep tripping over. The model can plan. The
-model can write code. The model can even review its own output well enough to
-be useful. But between sessions the system sheds state: what was claimed, what
-was deferred, what checkpoint mattered, which model tier was used, which result
-was durable, and which output was just residue from a run that happened to go
-well once.
+model can write code. The model can even review its own output well enough to be
+useful. But between sessions the system sheds state: what was claimed, what was
+deferred, what checkpoint mattered, which model tier was used, which result was
+durable, and which output was just residue from a run that happened to go well
+once.
 
 That is the part I wanted to fix.
 
@@ -66,8 +103,8 @@ more boring than that. I want a local-first coordination surface for one
 operator using multiple model tiers without relying on memory, branch names, or
 the hope that the next session will infer the same story from the repo.
 
-The useful boundary is not "agent framework" versus "no framework". It is
-"what needs explicit coordination" versus "what can stay ordinary tooling".
+The useful boundary is not "agent framework" versus "no framework". It is "what
+needs explicit coordination" versus "what can stay ordinary tooling".
 
 For me, the coordination layer needs to remember a few things reliably:
 
@@ -81,17 +118,17 @@ This is also not hypothetical substrate design. The pieces already exist:
 `sprintctl` for sprint state and claims, `.agents/skills/` for reusable
 operating instructions, `.agents/handoffs/` for session continuity, and thin
 harnesses around planning, implementation, and review so the routing stays
-explicit. None of those pieces is especially grand on its own. The point is
-that they already have jobs, and the missing layer is the glue that binds them
-into one repeatable loop.
+explicit. None of those pieces is especially grand on its own. The point is that
+they already have jobs, and the missing layer is the glue that binds them into
+one repeatable loop.
 
 Everything outside that boundary should stay suspiciously plain.
 
 OpenHands is interesting because it adds a more integrated agent runtime and
 task loop, but that still would not solve my need for explicit local claims,
-handoff state, and promotion boundaries. Windmill is interesting because it
-adds a serious execution plane for jobs, secrets, schedules, and a control UI,
-but those are benefits for shared operations rather than for remembering what a
+handoff state, and promotion boundaries. Windmill is interesting because it adds
+a serious execution plane for jobs, secrets, schedules, and a control UI, but
+those are benefits for shared operations rather than for remembering what a
 single operator session was doing. Temporal is interesting because it gives you
 durable orchestration and retries, but durable orchestration is not the same
 thing as deciding what should be claimed, reviewed, promoted, or left as local
@@ -199,5 +236,5 @@ were now observable, not because the local-first rule had been abandoned.
 
 The agent work is already good enough to matter. The missing system is the one
 that remembers what the work meant, how it was routed, what should survive the
-session, and which pains have actually earned more machinery. The
-implementation grew; that binding remains the product.
+session, and which pains have actually earned more machinery. The implementation
+grew; that binding remains the product.

@@ -20,19 +20,48 @@ relates:
   - the-devbox-is-an-access-cell
   - legibility-is-an-operating-property
   - the-agent-is-not-the-application
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
 tags:
   - agents
   - workflow
   - runtime
   - audit
-summary: Agents can bypass the physical handoff between execution and runtime, so authorization, evidence, and reconciliation have to attach to each consequential action instead.
+summary:
+  Agents can bypass the physical handoff between execution and runtime, so
+  authorization, evidence, and reconciliation have to attach to each
+  consequential action instead.
+explorePrompt: >-
+  This note is superseded by "Authority must travel with the action", which
+  merges its argument with the access-cell boundary and owns the current
+  guidance; read that first. This note remains the origin record for one half of
+  it. The transferable question: when work can take effect where it is executed,
+  what happens to the controls that used to attach to a crossing? The worked
+  answer is that the smallest durable unit changes. Where an artifact pipeline
+  could make the deployment the main audit object, direct operation has to make
+  the consequential action the unit -- a session is only a container, and
+  compressing one that acquired two capabilities, attempted five mutations, and
+  left one ambiguous result into a single success flag is the new version of
+  closing a ticket when its pull request merged. It also separates runtime from
+  execution: runtime is the durable field of consequences -- the live service,
+  the altered ledger, the sent reply, the active contract -- while execution is
+  the attempt to intervene in it, and the two can share a system while needing
+  different records. High-risk actions can still require proposal, simulation, a
+  second principal, or reversible staging; what disappears is the assumption
+  that every control fits at one universal handoff. Apply the question to a
+  workflow that no longer crosses a boundary. Name your unit of audit and what a
+  session-level success flag would hide. Say where your constraints diverge,
+  then read the successor and say what it adds.
 ---
 
 CI/CD did not solve the boundary between execution and runtime. It made one
 particularly convenient version of that boundary governable.
 
-The software moved in stages. A person edited a representation of the system,
-an artifact was built, and a pipeline carried that artifact into an environment
+The software moved in stages. A person edited a representation of the system, an
+artifact was built, and a pipeline carried that artifact into an environment
 where it could take effect. The crossing was visible enough to acquire gates:
 tests, review, signatures, promotion rules, deployment records, and rollback.
 The industry became good at guarding the bridge because there was a bridge.
@@ -45,16 +74,16 @@ medium of execution is already the place where the consequence occurs. There is
 no artifact waiting politely at the edge of production.
 
 This is not peculiar to AI. Operators, support staff, database administrators,
-and traders have always worked this way. Agents generalize their condition:
-more organizational work becomes direct manipulation of live state, performed
-at machine speed through reusable interfaces.
+and traders have always worked this way. Agents generalize their condition: more
+organizational work becomes direct manipulation of live state, performed at
+machine speed through reusable interfaces.
 
 The physical planes collapse. The semantic distinction must not.
 
 An attempted action and a durable consequence are still different facts. An API
-call may time out after committing. A message may be sent but never delivered.
-A controller may accept a new declaration without converging on it. A contract
-may be signed while its obligations remain unperformed. Calling all of this one
+call may time out after committing. A message may be sent but never delivered. A
+controller may accept a new declaration without converging on it. A contract may
+be signed while its obligations remain unperformed. Calling all of this one
 "operational plane" would describe the topology while throwing away the exact
 distinction an audit needs.
 
@@ -83,11 +112,11 @@ trace is useful evidence but too weak as the contract: it can explain a run
 without proving that the run was entitled to change anything.
 
 Reconciliation is the after-boundary. It asks whether the intended consequence
-actually holds and whether it continues to hold. This is not merely review
-after the damage. High-risk actions can still require a proposal, simulation,
-transaction, second principal, or reversible staging step before execution.
-What disappears is the assumption that every useful control can sit at one
-universal handoff called deployment.
+actually holds and whether it continues to hold. This is not merely review after
+the damage. High-risk actions can still require a proposal, simulation,
+transaction, second principal, or reversible staging step before execution. What
+disappears is the assumption that every useful control can sit at one universal
+handoff called deployment.
 
 The smallest durable unit therefore changes. In an artifact pipeline it was
 reasonable to make the deployment the main audit object. In direct operation it
@@ -106,9 +135,9 @@ that field. They can occupy the same system and still require different records.
 For Vuoro, the implication is narrower than building an organizational control
 plane. Claims and sessions already point in the right direction, but a wider
 substrate would need to bind capabilities and consequence receipts to stable
-work and knowledge references without becoming the owner of every target
-system. The target still decides what happened. The work system still decides
-why it mattered. The substrate preserves the causal join.
+work and knowledge references without becoming the owner of every target system.
+The target still decides what happened. The work system still decides why it
+mattered. The substrate preserves the causal join.
 
 CI/CD gated the crossing. Agents often do not cross. What remains gateable is
 the action, and what remains provable is the path from authority to consequence.

@@ -15,36 +15,43 @@ relates:
   - derived-status-is-earned
   - the-deployment-boundary-was-only-a-place
   - authority-must-travel-with-the-action
+terms:
+  - term: Vuoro
+    definition:
+      The public label for this family of small, separately owned agent-workflow
+      tools.
 tags:
   - release-engineering
   - verification
   - contracts
   - operations
-summary: A release candidate passed every gate and failed on contact with production six minutes later. The gates proved compatibility with the target database state; nothing had proved the transition from the state actually running.
+summary:
+  A release candidate passed every gate and failed on contact with production
+  six minutes later. The gates proved compatibility with the target database
+  state; nothing had proved the transition from the state actually running.
 explorePrompt: >-
   Use this note as one worked instantiation, not a rule to copy. The
-  transferable question: when a release qualification suite passes every
-  gate and the release still fails on contact with production, what class of
-  claim did the suite never make? This instantiation concludes that
+  transferable question: when a release qualification suite passes every gate
+  and the release still fails on contact with production, what class of claim
+  did the suite never make? This instantiation concludes that
   compatibility-with-destination and admissibility-of-the-transition-from-
   the-actual-current-state are separate claims, that disposable-database
-  fixtures silently encode an assumed starting schema version instead of the
-  one production is actually running, and that the fix is a state-transition
-  contract (S0 through R0) where the untested edge -- not the destination --
-  is where fixtures must be built. Its constraints are a system with staged,
+  fixtures silently encode an assumed starting schema version instead of the one
+  production is actually running, and that the fix is a state-transition
+  contract (S0 through R0) where the untested edge -- not the destination -- is
+  where fixtures must be built. Its constraints are a system with staged,
   numbered schema migrations, a runtime that fails closed rather than
-  discovering mismatch mid-transaction, and a cheap image-only rollback
-  because no persistent state had changed yet. Apply the question to your
-  own release pipeline. Name where your constraints diverge -- unversioned
-  schemas, migrations that run automatically rather than being staged
-  separately, rollbacks that are not cheap -- and say which parts of this
-  method still transfer. Produce the state-transition diagram for your own
-  release edges and name which arrow currently has no test.
+  discovering mismatch mid-transaction, and a cheap image-only rollback because
+  no persistent state had changed yet. Apply the question to your own release
+  pipeline. Name where your constraints diverge -- unversioned schemas,
+  migrations that run automatically rather than being staged separately,
+  rollbacks that are not cheap -- and say which parts of this method still
+  transfer. Produce the state-transition diagram for your own release edges and
+  name which arrow currently has no test.
 ---
 
-At 22:36 UTC on 2026-08-02, I pinned Vuoro `v0.1.33` into both
-containers of the `vuoro-shared` deployment. Six minutes later I merged the
-rollback.
+At 22:36 UTC on 2026-08-02, I pinned Vuoro `v0.1.33` into both containers of the
+`vuoro-shared` deployment. Six minutes later I merged the rollback.
 
 The new pod had failed at startup:
 
@@ -68,13 +75,12 @@ passed:
   against the exact source and tag;
 - the producer, session, and claim gate;
 - full validation and both root and focused Kustomize renders;
-- the preflight harness, a client dry-run, the SOPS commit hook, and exact static
-  assertions; and
+- the preflight harness, a client dry-run, the SOPS commit hook, and exact
+  static assertions; and
 - independent review.
 
-The pull request also limited itself to changing the image pin. It did not
-claim to migrate schemas, resume producers, replace sentinels, or alter
-replicas.
+The pull request also limited itself to changing the image pin. It did not claim
+to migrate schemas, resume producers, replace sentinels, or alter replicas.
 
 All of that evidence was valid. It answered the wrong release question.
 
@@ -139,8 +145,7 @@ proved it could leave the state production was actually in.
 
 The maintenance bridge is staged, but the cutover is not complete. The failing
 permission test has specified the required grant, but that grant has not yet
-been applied to the live ledgers. The transition has been proved state by
-state in disposable databases; it has not yet been walked end to end in
-production.
+been applied to the live ledgers. The transition has been proved state by state
+in disposable databases; it has not yet been walked end to end in production.
 
 That unfinished walk is the next release gate.

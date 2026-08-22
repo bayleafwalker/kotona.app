@@ -14,11 +14,9 @@ const defaultRootDirectory = fileURLToPath(new URL("..", import.meta.url));
 
 /**
  * These are deliberately structural, not content-graded. See
- * docs/explore-prompts.md for the editorial contract itself, and the
- * "Enforcement" section for why "every current non-draft note requires
- * explorePrompt" is not yet one of these checks: the backfill across the
- * existing note corpus has not been completed, so that rule cannot be turned
- * on without failing notes that predate the feature.
+ * docs/explore-prompts.md for the editorial contract itself. The backfill
+ * across the existing corpus completed on 2026-08-22, so "every published note
+ * carries an explorePrompt" is now enforced here rather than deferred.
  *
  * @param {{ id: string; filePath: string; data: Record<string, unknown> }[]} notes
  */
@@ -29,7 +27,10 @@ export function explorePromptIssues(notes) {
   for (const note of notes) {
     const prompt = note.data.explorePrompt;
 
-    if (prompt === undefined) continue;
+    if (prompt === undefined) {
+      issues.push(`${note.id}: published notes require an explorePrompt`);
+      continue;
+    }
 
     if (typeof prompt !== "string" || prompt.trim().length === 0) {
       issues.push(`${note.id}: explorePrompt is empty`);

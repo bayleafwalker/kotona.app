@@ -2,8 +2,8 @@
 
 > Shared environment guidance lives in `/projects/dev/AGENTS.md`.
 
-This is a small, read-only Astro and MDX reference site. Public content lives
-in `src/content/projects/` and `src/content/notes/`; site metadata and external
+This is a small, read-only Astro and MDX reference site. Public content lives in
+`src/content/projects/` and `src/content/notes/`; site metadata and external
 links live in `src/site.ts`. Keep project context compressed, factual, and safe
 for publication.
 
@@ -12,10 +12,10 @@ draft pull request as published regardless of Astro's `draft` flag. Material
 that is safe for private GitHub custody but outside the publication boundary
 belongs in the private `kotona-notes-private` repository. Employer-specific,
 personal, source-restricted, operationally sensitive, or otherwise
-information-private material belongs in the private Forgejo or Obsidian tier.
-Do not create cross-tier paths, submodules, symlinks, build dependencies, or
-automatic promotion. Promotion requires a separate publishability review and
-an explicit copy into this repository.
+information-private material belongs in the private Forgejo or Obsidian tier. Do
+not create cross-tier paths, submodules, symlinks, build dependencies, or
+automatic promotion. Promotion requires a separate publishability review and an
+explicit copy into this repository.
 
 Every note must declare a content `role` in frontmatter. Role selects the
 register (`operating`, `synthesis`, `exploration`, or `project-history`); it is
@@ -40,9 +40,8 @@ not a publication or deployment invariant. The `external links` workflow runs
 report or substantially changing cited sources. Remote timeouts, bot policy,
 `403`/`429`, and `5xx` responses are warnings rather than proof of link rot.
 Treat one definitive `404` or `410` as an observation; change or remove a
-citation only after the same result is confirmed on a second scheduled or
-manual run. None of these remote results may block an otherwise valid site
-revision.
+citation only after the same result is confirmed on a second scheduled or manual
+run. None of these remote results may block an otherwise valid site revision.
 
 On a network that sinkholes the Cloudflare Web Analytics beacon, set
 `LINK_CHECK_LOCAL_NETWORK_POLICY=1` so `check:links` reports that one declared

@@ -14,7 +14,30 @@ tags:
   - event-sourcing
   - audit
   - systems
-summary: A reference design for audit-native systems where code, layout, control decisions, and data are all log artifacts.
+summary:
+  A reference design for audit-native systems where code, layout, control
+  decisions, and data are all log artifacts.
+explorePrompt: >-
+  Use this note as a reference design held deliberately in reserve, not a target
+  architecture. The transferable question: what would it cost to make a system
+  where no authoritative state exists outside an append-only log, and which
+  workloads actually need to pay that? The worked design puts everything derived
+  -- tables, indexes, projections, materialized views, caches, placement state,
+  running operators -- downstream of the log, makes deployment a logged binding
+  change so there is no ambient current version the audit trail has to trust,
+  and turns control decisions and rollbacks into further events. It names the
+  irreducible non-log kernel honestly: storage drivers, bootstrap reader, effect
+  emitter, root identity. The discipline is keeping that kernel named and small.
+  Its own verdict is that the portable fragment -- pure split, then
+  point-in-time enrichment, then consumer output -- is what to use now, and the
+  full substrate stays prospective until a workload demands it, plausibly
+  regulated submissions, model reporting, clinical pipelines, or forensic
+  reconstruction. Apply the question to a system you operate. Identify what is
+  authoritative outside your log today and what an auditor would have to trust
+  that no event records. Say where your constraints diverge -- no replay
+  pressure, state that cannot be reconstructed, latency budgets that forbid
+  projection. Produce the smallest lineage additions that would pay rent now,
+  and the trigger that would justify the full substrate.
 ---
 
 ## Thesis

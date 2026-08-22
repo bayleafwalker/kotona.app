@@ -22,13 +22,42 @@ relates:
   - judge-agents-by-the-next-prompt
   - a-pipeline-without-a-successor-is-personal-tooling
   - the-patch-was-open-sources-proof-of-work
+terms:
+  - term: person of record
+    definition:
+      The named human who stays answerable for an action whatever share of the
+      work a model performed.
 tags:
   - agents
   - organizational-design
   - future-of-work
   - apprenticeship
-summary: Routine junior work once paid for useful production and professional formation at the same time; agent automation separates those goods and leaves succession needing an explicit operating model.
+summary:
+  Routine junior work once paid for useful production and professional formation
+  at the same time; agent automation separates those goods and leaves succession
+  needing an explicit operating model.
 draft: false
+explorePrompt: >-
+  This note is superseded by "Design internal pipelines for succession, not just
+  operation", which carries its formation argument into an operational model;
+  read that first. This note remains the project-history record of the economic
+  argument. The transferable question: when a category of work was quietly
+  paying for two things at once, what happens to the second one after the work
+  is automated? The worked case is routine junior production, which allocated
+  work efficiently and formed practitioners in the same transaction. Once agents
+  absorb the routine output, formation stops being a free side effect and
+  becomes something that has to be purchased deliberately, with a predictable
+  funding problem: the firm pays while the worker keeps a portable benefit and
+  may leave. Regulated professions have residencies and licensure to impose it;
+  open professions have fewer mechanisms against free-riding. The narrower
+  incentive that survives is continuity -- a team depending on a person-bound
+  pipeline needs a second operator before it needs an industry apprenticeship
+  scheme, so pairing a developing worker with reconciliation and replacement
+  work makes formation into resilience rather than charity. It also warns that a
+  small residency can preserve capability while narrowing access. Apply the
+  question to a joint product in your own field. Name the second good, who now
+  pays for it, and what you would buy instead. Then read the successor and say
+  which part becomes operational.
 ---
 
 Junior work used to buy two things at once. The work got done, and a future
@@ -54,21 +83,22 @@ AI did not reveal that the old work was a pretext. It made the work into one.
 That distinction explains why replacing the ladder is harder than preserving a
 few entry-level vacancies. The old arrangement required no institution to value
 formation explicitly. Firms could underinvest in training as a stated priority
-and still produce experienced workers as a side effect of ordinary delivery.
-The replacement has to survive a budget review as training.
+and still produce experienced workers as a side effect of ordinary delivery. The
+replacement has to survive a budget review as training.
 
 The current labor-market evidence does not yet establish that AI has already
 broken the junior ladder. Anthropic found a 14% post-2022 decline in the job
 finding rate of 22–25-year-olds entering its most exposed occupations, but
 described the estimate as barely statistically significant and gave several
-alternative explanations. A New York Fed analysis of job postings found no
-clear post-2022 divergence between junior and senior roles inside highly
-exposed occupations and concluded that AI was not the main explanation for the
-broader hiring slowdown. Earlier OECD surveys of employers and workers found
-training and worker consultation to be associated with better outcomes for
-workers. These results describe an unsettled transition, not a verdict. The
-formation problem is an incentive implied by sufficiently capable pipelines,
-whether or not it is yet cleanly visible in aggregate data. ([Anthropic](https://www.anthropic.com/research/labor-market-impacts),
+alternative explanations. A New York Fed analysis of job postings found no clear
+post-2022 divergence between junior and senior roles inside highly exposed
+occupations and concluded that AI was not the main explanation for the broader
+hiring slowdown. Earlier OECD surveys of employers and workers found training
+and worker consultation to be associated with better outcomes for workers. These
+results describe an unsettled transition, not a verdict. The formation problem
+is an incentive implied by sufficiently capable pipelines, whether or not it is
+yet cleanly visible in aggregate data.
+([Anthropic](https://www.anthropic.com/research/labor-market-impacts),
 [New York Fed](https://libertystreeteconomics.newyorkfed.org/2026/05/do-job-postings-show-early-labor-market-effects-of-ai/),
 [OECD](https://www.oecd.org/en/publications/the-impact-of-ai-on-the-workplace-main-findings-from-the-oecd-ai-surveys-of-employers-and-workers_ea0a0fe1-en.html))
 
@@ -130,10 +160,10 @@ If agents perform the routine production, the most promising entry point is the
 reconciliation loop around that production.
 
 A new worker can inspect attempts against outcomes, investigate drift, trace
-failed assumptions, maintain context sources, challenge acceptance evidence,
-and propose changes to the contract. This is bounded work with direct exposure
-to the organization's actual substrate. It also improves the pipeline rather
-than duplicating its cheapest output.
+failed assumptions, maintain context sources, challenge acceptance evidence, and
+propose changes to the contract. This is bounded work with direct exposure to
+the organization's actual substrate. It also improves the pipeline rather than
+duplicating its cheapest output.
 
 A progression could be expressed as expanding scope of record:
 
@@ -152,25 +182,25 @@ This resembles a residency more than an old junior backlog. Advancement is not
 measured mainly by how many artifacts the worker can produce. It is measured by
 which operational scope they can understand, challenge, and safely answer for.
 
-Reconciliation cannot be the entire curriculum. There is an unresolved
-epistemic question: can someone develop sound production judgment through
-reviewing agent work without first producing enough of that work themselves?
-Editors first wrote. Attending physicians passed through residency. Senior
-engineers usually carry memories of implementing, breaking, and repairing
-systems rather than merely approving them.
+Reconciliation cannot be the entire curriculum. There is an unresolved epistemic
+question: can someone develop sound production judgment through reviewing agent
+work without first producing enough of that work themselves? Editors first
+wrote. Attending physicians passed through residency. Senior engineers usually
+carry memories of implementing, breaking, and repairing systems rather than
+merely approving them.
 
 If production experience is necessary for calibration, organizations will have
 to fund deliberately inefficient human practice. The useful exercises are not
 random denial of tools. They concentrate on artifacts of record, ambiguous
 requirements, state and concurrency problems, incident reconstruction, manual
 fallback, and new domains without a strong acceptance oracle. A learner might
-implement a bounded feature without generation, model a state transition,
-debug a deliberately corrupted system, replace a generated component and prove
+implement a bounded feature without generation, model a state transition, debug
+a deliberately corrupted system, replace a generated component and prove
 compatibility, or operate the fallback during a simulation.
 
-This is analogous to practicing failures that automation normally prevents.
-The inefficiency is the product. It creates the judgment later used to decide
-when cheap generation is unsafe.
+This is analogous to practicing failures that automation normally prevents. The
+inefficiency is the product. It creates the judgment later used to decide when
+cheap generation is unsafe.
 
 If review and reconciliation alone can form that judgment, much of this
 residency is avoidable cost. That possibility should remain open. There is
@@ -188,9 +218,9 @@ proposed contract change.
 Ask them to map the system, identify unreliable assumptions, distinguish an
 artifact defect from a substrate defect, add one verification boundary, and
 state which scope they would be comfortable owning. A junior does not need to
-solve the whole exercise. The useful signal is disciplined investigation,
-causal reasoning, appropriate escalation, and whether the system becomes more
-legible after they touch it.
+solve the whole exercise. The useful signal is disciplined investigation, causal
+reasoning, appropriate escalation, and whether the system becomes more legible
+after they touch it.
 
 The role is not "produce these artifacts with AI." It is "learn to inherit and
 govern this agent-operated capability."
@@ -226,8 +256,8 @@ selective, more educational, and less justified by immediate throughput.
 That creates a distributional risk. When employers can no longer test a broad
 pool through useful junior production, selection can retreat toward credentials,
 networks, and pedigree. A small residency can preserve professional capability
-while making access to the profession socially narrower. Formation policy has
-to solve both problems, not celebrate selectivity as efficiency.
+while making access to the profession socially narrower. Formation policy has to
+solve both problems, not celebrate selectivity as efficiency.
 
 ## Training now has an owner, whether anyone wants it or not
 
@@ -244,9 +274,9 @@ reconciliation and replacement work turns formation into operational resilience
 rather than charity. It does not solve the market-wide externality, but it gives
 the individual firm something concrete to buy.
 
-The junior question is therefore not whether companies should preserve work
-that machines can do. It is which experiences produce the judgment, substrate,
-and standing that still have to reside in people, and how to purchase those
+The junior question is therefore not whether companies should preserve work that
+machines can do. It is which experiences produce the judgment, substrate, and
+standing that still have to reside in people, and how to purchase those
 experiences after routine output stops paying for them automatically.
 
 The old ladder trained people while allocating work efficiently. The new ladder

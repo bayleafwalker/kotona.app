@@ -13,10 +13,38 @@ lastRevised: 2026-04-08
 projects:
   - household-operating-platform
 draft: false
-summary: Backend-owned contracts only become useful release artifacts once the compatibility tooling is conservative enough to complain about real breakage instead of politely missing it.
+summary:
+  Backend-owned contracts only become useful release artifacts once the
+  compatibility tooling is conservative enough to complain about real breakage
+  instead of politely missing it.
+terms:
+  - term: homelab-analytics
+    definition:
+      The household data and decision platform that owns long-lived semantics,
+      scenarios, policies, and approvals.
 tags:
   - contracts
   - release-engineering
+explorePrompt: >-
+  This note is archived: it is historical contract-governance evidence, and the
+  household platform project page is authoritative for the current capability
+  and its limitations. Read it as a case, not as guidance. The transferable
+  question: what does a compatibility checker have to be willing to complain
+  about before its silence means anything? The worked case moved a checker from
+  polite to conservative -- treating tightened request-body requiredness as
+  breaking, traversing composition keywords instead of treating them as opaque,
+  and extending publication compatibility to semantic metadata and renderer
+  drift rather than only column presence. It also separates classes of failure
+  so one cannot hide another: a stale export is not the same thing as a
+  legitimate breaking change, and both deserve different attention. The stated
+  limit is that conservative classification does not make the release decision;
+  it raises the cost of pretending a change is safer than it is, so the tool is
+  not replacing judgment but making weak judgment harder to hide. The note names
+  its own missing evidence: no specific release the reports have actually
+  blocked. Apply the question to a contract check you rely on. List what it
+  currently declines to call breaking and what a false green would cost. Say
+  where your constraints diverge, and produce the cases you would make it rude
+  about, plus the evidence you would collect to show it changed a decision.
 ---
 
 There is a stage in contract tooling where everything looks mature because JSON
@@ -37,10 +65,10 @@ The repo now treats backend-owned contracts as release artifacts, not just build
 inputs. That alone is sensible but not enough. The more interesting move is the
 way the compatibility report is expected to be conservative.
 
-Removed routes are breaking. Removed fields are breaking. Required request fields
-getting tighter are breaking. Response drift is breaking. Publication removal,
-column removal, semantic-role regression, renderer-hint regression, and UI
-descriptor navigation drift are all treated as contract changes that matter.
+Removed routes are breaking. Removed fields are breaking. Required request
+fields getting tighter are breaking. Response drift is breaking. Publication
+removal, column removal, semantic-role regression, renderer-hint regression, and
+UI descriptor navigation drift are all treated as contract changes that matter.
 
 That is a much better posture than the usual narrow definition of compatibility
 where only obvious schema deletions count and everything else is politely waved
@@ -51,18 +79,18 @@ compatibility tooling should be a little rude.
 
 It should interrupt optimistic stories.
 
-It should say, no, that request body becoming required is not a harmless tidy-up.
-No, removing a union member is not invisible. No, publication metadata drift is
-not just documentation if renderer consumers rely on it. No, a breaking change
-without a major schema-version bump is not a clean release just because the code
-compiled.
+It should say, no, that request body becoming required is not a harmless
+tidy-up. No, removing a union member is not invisible. No, publication metadata
+drift is not just documentation if renderer consumers rely on it. No, a breaking
+change without a major schema-version bump is not a clean release just because
+the code compiled.
 
 The workflow around this is also well judged. `make contract-export-check`
 distinguishes stale backend-owned exports from stale derived frontend artifacts.
 `make web-codegen-check` focuses on the TypeScript side. The release-artifact
-bundle packages the contracts and the compatibility summary together so reviewers
-can inspect the actual surface that changed instead of regenerating everything by
-hand and hoping they chose the right baseline.
+bundle packages the contracts and the compatibility summary together so
+reviewers can inspect the actual surface that changed instead of regenerating
+everything by hand and hoping they chose the right baseline.
 
 That separation is useful because it stops one class of failure from hiding
 another. A stale export is not the same thing as a legitimate breaking change.
@@ -86,8 +114,8 @@ judgment. It is trying to make weak judgment harder to hide.
 
 If there is one small follow-up I would still want, it is a better sense of how
 often these reports have already changed a release decision rather than merely
-strengthening the process before that kind of breakage becomes routine. The
-repo is stronger on why the checks matter than on a specific release they have
+strengthening the process before that kind of breakage becomes routine. The repo
+is stronger on why the checks matter than on a specific release they have
 already blocked.
 
 Even without that, the note holds up.

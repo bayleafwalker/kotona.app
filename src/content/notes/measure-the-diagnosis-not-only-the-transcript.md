@@ -4,19 +4,22 @@ seoTitle: Evaluating bounded-output tooling for coding agents
 socialTitle: What an 84% output reduction did not prove
 role: project-history
 status: archival
-lifecycle: superseded
+lifecycle: disproven
 lifecycleChanged: 2026-08-16
 lifecycleReason: >-
-  Native programmatic tool calling now owns the ephemeral orchestration and
-  context-filtering boundary that this note treated as an external-tool product
-  opportunity. The direct-call measurements and evaluation lessons remain
-  valid, but the recommendation to continue Outctl as a general context layer
-  is no longer current.
+  The note's headline claim -- that Outctl had earned continuation as a general
+  context-management layer -- failed against evidence. Native programmatic tool
+  calling now owns the ephemeral orchestration and context-filtering boundary
+  that this note treated as an external-tool product opportunity, so the
+  recommendation is not merely out of date; the case for it did not hold. The
+  direct-call measurements and the four-part evaluation model -- mechanism,
+  quality, economics, authority -- remain valid. See A platform capability does
+  not exist all at once.
 supersededBy:
   - a-platform-capability-does-not-exist-all-at-once
 area: model evaluation
 published: 2026-08-09
-lastRevised: 2026-08-16
+lastRevised: 2026-08-22
 projects:
   - vuoro
 relates:
@@ -27,6 +30,16 @@ relates:
   - derived-status-is-earned
   - a-platform-capability-does-not-exist-all-at-once
 draft: false
+terms:
+  - term: Appservice
+    definition:
+      The private GitOps repository that holds desired state, recovery rules,
+      and operational evidence for the cluster.
+  - term: Outctl
+    definition:
+      A tool that captures a command's full output outside the agent's context
+      and returns a bounded projection the agent can query later for the omitted
+      evidence.
 tags:
   - agents
   - evaluation
@@ -34,35 +47,41 @@ tags:
   - context-management
   - cli-tooling
 summary: >-
-  Outctl cut model-visible Kubernetes output by about 84%, while pair-level
-  cost and diagnostic quality remained unresolved. The useful result was a
-  four-part evaluation model: mechanism, quality, economics, and authority.
+  Outctl cut model-visible Kubernetes output by about 84%, while pair-level cost
+  and diagnostic quality remained unresolved. The useful result was a four-part
+  evaluation model: mechanism, quality, economics, and authority.
 explorePrompt: >-
-  Use this note as a worked instantiation, not a result to repeat. The
-  transferable question is how to evaluate a tool that changes what an agent
-  can see or retrieve without confusing mechanism success with task efficacy.
-  In the worked case, bounded command projections reduced model-visible
-  Kubernetes output by about 84%, but the harness could not establish equal
-  diagnostic quality or stable session savings because the quality oracle was
-  too coarse, cache effects changed sign across pairs, and shell-level guards
-  did not prove identical execution identity. Apply the question to a
-  context-reduction, retrieval, summarization, tool-routing, or observability
-  feature you supervise. Separate four claims: mechanism, task quality,
-  economics, and authority. For each, name the denominator or receipt that
-  would let the treatment fail visibly. Distinguish protocol validity from
-  outcome quality so weak results remain in the dataset. Identify where the
-  worked case's assumptions do not transfer, especially where no complete
-  answer key exists. Produce a three-layer evaluation design: deterministic
-  mechanism tests, a controlled task comparison with predeclared quality
-  measures, and a real-use pilot. Include primary outcomes, invalidity
-  conditions, and the strongest claim the evidence could honestly support.
+  This note is disproven: its recommendation that Outctl continue as a general
+  context-management layer failed against evidence, and native programmatic tool
+  calling now owns that boundary. The current guidance is in "A platform
+  capability does not exist all at once". What survives is the evaluation
+  method, so use this note as a worked instantiation, not a result to repeat.
+  The transferable question is how to evaluate a tool that changes what an agent
+  can see or retrieve without confusing mechanism success with task efficacy. In
+  the worked case, bounded command projections reduced model-visible Kubernetes
+  output by about 84%, but the harness could not establish equal diagnostic
+  quality or stable session savings because the quality oracle was too coarse,
+  cache effects changed sign across pairs, and shell-level guards did not prove
+  identical execution identity. Apply the question to a context-reduction,
+  retrieval, summarization, tool-routing, or observability feature you
+  supervise. Separate four claims: mechanism, task quality, economics, and
+  authority. For each, name the denominator or receipt that would let the
+  treatment fail visibly. Distinguish protocol validity from outcome quality so
+  weak results remain in the dataset. Identify where the worked case's
+  assumptions do not transfer, especially where no complete answer key exists.
+  Produce a three-layer evaluation design: deterministic mechanism tests, a
+  controlled task comparison with predeclared quality measures, and a real-use
+  pilot. Include primary outcomes, invalidity conditions, and the strongest
+  claim the evidence could honestly support.
 ---
 
-> **Update, 16 August 2026.** The output-reduction measurements and evaluation
-> findings below remain valid for the direct-tool topology tested. The
-> recommendation that Outctl continue as a general context-management layer is
-> superseded by native programmatic tool calling. This note is retained as the
-> experiment record.
+> **Update, 16 August 2026 -- disproven.** The output-reduction measurements and
+> evaluation findings below remain valid for the direct-tool topology tested.
+> The note's own recommendation -- that Outctl had earned continuation as a
+> general context-management layer -- did not survive native programmatic tool
+> calling, which now owns that boundary. See
+> [A platform capability does not exist all at once](/notes/a-platform-capability-does-not-exist-all-at-once/).
+> This note is retained as the experiment record.
 
 Outctl did what it was built to do. In clean comparisons, it reduced the
 Kubernetes command output shown to a coding agent by about 84%. The reduction
@@ -83,8 +102,8 @@ four different questions to collapse into one result.
 
 ## One comparison contained four claims
 
-A context-management tool can succeed at one layer while failing at another.
-The four relevant claims were:
+A context-management tool can succeed at one layer while failing at another. The
+four relevant claims were:
 
 | Claim         | Question                                                                    | What would establish it                                                               |
 | ------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -125,13 +144,13 @@ adequate denominators.
 
 ## Completeness needs a denominator
 
-Both formally valid proofset pairs returned the same overall status:
-`degraded`. The harness treated that agreement as evidence that diagnostic
-quality had been preserved.
+Both formally valid proofset pairs returned the same overall status: `degraded`.
+The harness treated that agreement as evidence that diagnostic quality had been
+preserved.
 
-The underlying findings did not justify that inference. Evidence overlap was
-low in both pairs, with Jaccard scores of **0.286** and **0.350**. In one pair,
-the arms disagreed about critical or high-severity findings. Both could say
+The underlying findings did not justify that inference. Evidence overlap was low
+in both pairs, with Jaccard scores of **0.286** and **0.350**. In one pair, the
+arms disagreed about critical or high-severity findings. Both could say
 `degraded` while describing meaningfully different failures.
 
 > Agreement on the label is not agreement on the diagnosis.
@@ -171,8 +190,8 @@ way: blinded adjudication, seeded faults with known expected deltas, or
 metamorphic checks that specify what must change when the underlying condition
 changes.
 
-The denominator is not the amount of prose produced, nor the final adjective.
-It is the set of facts and distinctions the diagnosis was supposed to carry.
+The denominator is not the amount of prose produced, nor the final adjective. It
+is the set of facts and distinctions the diagnosis was supposed to carry.
 
 ## Validity is not an outcome
 
@@ -205,8 +224,8 @@ economics:
 
 All protocol-valid pairs remain in the result set. A quality failure counts
 against the treatment; it does not make the comparison vanish. Instrumentation
-or identity failures can invalidate a causal comparison without pretending
-that the observed behaviour never happened.
+or identity failures can invalidate a causal comparison without pretending that
+the observed behaviour never happened.
 
 This is the same distinction that appears elsewhere in agent supervision: a
 record can be complete as a record and still describe a bad outcome. Evidence
@@ -220,8 +239,8 @@ assessment found command forms that bypassed the function and escaped the
 textual guard. A simple `command kubectl ...` was enough to step around the
 function that injected the expected kubeconfig and context.
 
-There was no evidence that a cluster mutation occurred. The narrower problem
-was that the harness could not prove that both arms used the same executable,
+There was no evidence that a cluster mutation occurred. The narrower problem was
+that the harness could not prove that both arms used the same executable,
 credentials, context, and arguments. The authority comparison was therefore
 weaker than the output comparison.
 
@@ -244,12 +263,12 @@ logical kubectl request
 Both arms should share the same execution receipt. They should differ only in
 what portion of the already completed result is exposed to the model.
 
-This is a concrete instance of two broader rules. [The agent is not the
-application](/notes/the-agent-is-not-the-application/): the model can choose an
-operation inside its granted scope, but the application owns permissions,
-execution records, and recovery. [Authority must travel with the
-action](/notes/authority-must-travel-with-the-action/): a command string is not
-an authority receipt merely because it looks familiar.
+This is a concrete instance of two broader rules.
+[The agent is not the application](/notes/the-agent-is-not-the-application/):
+the model can choose an operation inside its granted scope, but the application
+owns permissions, execution records, and recovery.
+[Authority must travel with the action](/notes/authority-must-travel-with-the-action/):
+a command string is not an authority receipt merely because it looks familiar.
 
 The harness should not keep expanding a denylist of shell conveniences. That is
 parser whack-a-mole with a clipboard. The runner has to own the operation being
@@ -271,10 +290,9 @@ The agent understood and adopted outctl. It made fewer cluster calls and kept
 substantially less command output in the conversation. It then issued 13
 searches against retained captures, only two of which returned a bounded match.
 
-That is not evidence that retrieval is a bad idea. It is evidence that
-retrieval without omission cues makes the agent guess what might be missing.
-The tool removed noise successfully, then offered a search box where a map was
-needed.
+That is not evidence that retrieval is a bad idea. It is evidence that retrieval
+without omission cues makes the agent guess what might be missing. The tool
+removed noise successfully, then offered a search box where a map was needed.
 
 A bounded projection should explain its boundary:
 
@@ -349,11 +367,11 @@ It can verify byte-preserving capture, bounded projection, explicit omission,
 redaction, signals, cancellation, quota handling, and recovery without paying
 for an agent or depending on a cluster's current mood.
 
-The second should use seeded operational scenarios and a runner-owned direct-argv
-boundary. Diagnostic quality and critical misses are co-primary outcomes, not an
-inclusion rule. Visible command output and uncached input measure the intended
-mechanism and session effect. Cost and duration remain secondary until the
-variance is understood.
+The second should use seeded operational scenarios and a runner-owned
+direct-argv boundary. Diagnostic quality and critical misses are co-primary
+outcomes, not an inclusion rule. Visible command output and uncached input
+measure the intended mechanism and session effect. Cost and duration remain
+secondary until the variance is understood.
 
 The third should retain genuine opt-in guidance and realistic tasks. It answers
 the product questions that a fixed corpus cannot: whether agents adopt the tool,

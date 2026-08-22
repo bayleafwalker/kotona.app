@@ -21,7 +21,8 @@ evidence:
       href: https://github.com/owner/repo
   integrations:
     - A supported integration
-  knownLimitation: The most important boundary the current evidence does not cross.
+  knownLimitation:
+    The most important boundary the current evidence does not cross.
   nextProof: The next result that would materially strengthen the claim.
 tags:
   - replace-me
@@ -29,7 +30,8 @@ tags:
 # card and project summaries on hover, keyboard focus, and touch focus.
 terms:
   - term: Internal tool name
-    definition: One sentence explaining the tool's responsibility in this project.
+    definition:
+      One sentence explaining the tool's responsibility in this project.
 summary: One or two sentences explaining what the project is for.
 ---
 
@@ -49,8 +51,8 @@ supports that state.
 ## Open edges
 
 Describe what is unfinished, still being decided, or intentionally left out.
-Name the next verification or implementation step when one is justified. If
-the honest next step is to observe longer or leave the question open, say that.
+Name the next verification or implementation step when one is justified. If the
+honest next step is to observe longer or leave the question open, say that.
 
 Use Notes for argument-heavy notes, reference designs, and narrower technical
 ideas that do not need a stable project page.

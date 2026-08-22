@@ -18,24 +18,27 @@ tags:
   - agents
   - software-engineering
   - references
-summary: A reading map for building AI systems that can show what they were asked to do, what they did, why a result should be trusted, and how failures are contained. It starts with established assurance practice and ends with a dated watch list of open work.
+summary:
+  A reading map for building AI systems that can show what they were asked to
+  do, what they did, why a result should be trusted, and how failures are
+  contained. It starts with established assurance practice and ends with a dated
+  watch list of open work.
 explorePrompt: >-
   Build or update a field guide for assurance-managed AI development in my
   context: [describe the domain, system, risk, team, and tools]. Use this note
   as one worked map, not as a bibliography to copy. Organize the result by the
   engineering question each source answers: intent, assurance arguments,
   verification, tool qualification, lifecycle integration, provenance,
-  authority, runtime evidence, resilience, and AI-specific workflow
-  composition. Separate two tiers: established methods with a real study path,
-  and a dated watch list for active composition work. Prefer primary sources,
-  standards, research programmes, and concrete industrial reports; verify
-  every link, date, attribution, and maturity claim. For each entry, state what
-  it supports and what it does not solve. Then map the guide onto my own
-  terminology and practices, identify where my constraints differ from the
-  note's single-operator homelab and small-project baseline, and recommend the
-  shortest reading and experimentation path. Do not infer an unsolved problem
-  from poor adoption, and do not present an active research stream as a
-  settled method.
+  authority, runtime evidence, resilience, and AI-specific workflow composition.
+  Separate two tiers: established methods with a real study path, and a dated
+  watch list for active composition work. Prefer primary sources, standards,
+  research programmes, and concrete industrial reports; verify every link, date,
+  attribution, and maturity claim. For each entry, state what it supports and
+  what it does not solve. Then map the guide onto my own terminology and
+  practices, identify where my constraints differ from the note's
+  single-operator homelab and small-project baseline, and recommend the shortest
+  reading and experimentation path. Do not infer an unsolved problem from poor
+  adoption, and do not present an active research stream as a settled method.
 ---
 
 A coding agent receives a task, edits a repository, runs tests, and reports that
@@ -48,8 +51,8 @@ to several older engineering questions:
 - Which permissions applied to the action?
 - What happens when a check misses a defect?
 
-Those questions do not form a new discipline called agent assurance. They
-belong to requirements engineering, assurance cases, formal methods, tool
+Those questions do not form a new discipline called agent assurance. They belong
+to requirements engineering, assurance cases, formal methods, tool
 qualification, secure development, supply-chain security, runtime verification,
 and resilience engineering.
 
@@ -66,11 +69,11 @@ For a first pass, read in this order:
 1. [SEBoK: Requirements Engineering](https://sebokwiki.org/wiki/Requirements_Engineering),
    [System Verification](https://sebokwiki.org/wiki/System_Verification), and
    [System Validation](https://sebokwiki.org/wiki/System_Validation).
-2. The SEI introductions to [assurance
-   cases](https://www.sei.cmu.edu/library/assurance-cases-overview/) and
+2. The SEI introductions to
+   [assurance cases](https://www.sei.cmu.edu/library/assurance-cases-overview/)
+   and
    [assurance-case resources](https://www.sei.cmu.edu/library/resources-for-assurance-cases/).
-3. [Formal Arguments for Large-Scale
-   Assurance](https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/)
+3. [Formal Arguments for Large-Scale Assurance](https://www.sei.cmu.edu/annual-reviews/2023-research-review/formal-arguments-for-large-scale-assurance-falsa/)
    for systems that keep changing.
 4. [RTCA DO-330](https://www.rtca.org/products/do-330/) and
    [ISO 26262-8](https://www.iso.org/standard/68390.html) for the choice between
@@ -80,11 +83,9 @@ For a first pass, read in this order:
 6. [in-toto](https://in-toto.io/docs/getting-started/) and
    [SLSA 1.2](https://slsa.dev/spec/v1.2/) for recording how an artifact was
    produced.
-7. [NIST SP 800-160 Volume
-   2](https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final) for recovery when
-   prevention is incomplete.
-8. [Trusted AI-assisted
-   Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)
+7. [NIST SP 800-160 Volume 2](https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final)
+   for recovery when prevention is incomplete.
+8. [Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)
    and [Programming with Trust](https://arxiv.org/abs/2502.13767) for current
    work that connects those methods to coding agents.
 
@@ -183,12 +184,12 @@ logs. They still cannot prove that the result was wanted.
 
 ## Who may act, and what happens after failure?
 
-The [reference monitor and security-kernel
-model](https://csrc.nist.gov/glossary/term/security_kernel) says the trusted
-mechanism should mediate relevant access, resist modification, and be small
-enough to inspect. [Cedar](https://docs.cedarpolicy.com/) provides one practical
-example: principals, actions, resources, and context are evaluated by a policy
-engine rather than left to an agent to interpret from prose.
+The
+[reference monitor and security-kernel model](https://csrc.nist.gov/glossary/term/security_kernel)
+says the trusted mechanism should mediate relevant access, resist modification,
+and be small enough to inspect. [Cedar](https://docs.cedarpolicy.com/) provides
+one practical example: principals, actions, resources, and context are evaluated
+by a policy engine rather than left to an agent to interpret from prose.
 
 Prevention will remain incomplete. Recovery therefore belongs in the design:
 
@@ -212,27 +213,24 @@ Useful starting points include:
 - [Trusted AI-assisted Programming](https://www.microsoft.com/en-us/research/project/trusted-ai-assisted-programming/)
   and [Programming with Trust](https://arxiv.org/abs/2502.13767), which connect
   agents with specification, testing, analysis, and verification;
-- [AI for the SDLC workflow
-  guidance](https://code.mil/AI4SDLC/plays/ai_sdlc_workflows-play/), which works
-  through task autonomy and oversight;
-- [DARPA AI Cyber Challenge
-  results](https://www.darpa.mil/news/2025/aixcc-results), which demonstrate
-  automated analysis and patching at substantial scale;
-- [METR's developer
-  RCT](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/),
+- [AI for the SDLC workflow guidance](https://code.mil/AI4SDLC/plays/ai_sdlc_workflows-play/),
+  which works through task autonomy and oversight;
+- [DARPA AI Cyber Challenge results](https://www.darpa.mil/news/2025/aixcc-results),
+  which demonstrate automated analysis and patching at substantial scale;
+- [METR's developer RCT](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/),
   which found experienced developers slower with AI assistance while they
   believed they were faster;
-- [DORA's State of AI-assisted Software
-  Development](https://dora.dev/research/2025/dora-report/) and
+- [DORA's State of AI-assisted Software Development](https://dora.dev/research/2025/dora-report/)
+  and
   [AI Capabilities Model](https://dora.dev/research/ai/ai-capabilities-model/),
   which examine AI in delivery processes rather than as an isolated tool; and
-- the public [Exploring Gen
-  AI](https://martinfowler.com/articles/exploring-gen-ai.html) series, including
-  work on human intervention, internal quality, spec-driven development,
-  [harness
-  engineering](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering-memo.html),
-  and [context
-  engineering](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html).
+- the public
+  [Exploring Gen AI](https://martinfowler.com/articles/exploring-gen-ai.html)
+  series, including work on human intervention, internal quality, spec-driven
+  development,
+  [harness engineering](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering-memo.html),
+  and
+  [context engineering](https://martinfowler.com/articles/exploring-gen-ai/context-engineering-coding-agents.html).
 
 This section is a dated watch list, not a curriculum. Research programmes,
 practitioner reports, government guidance, and vendor-sponsored surveys carry
