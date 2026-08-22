@@ -179,6 +179,19 @@ const canonicalNoteUrl = new URL(
             </ul>
           ) : null
         }
+
+        {
+          entry.data.terms.length > 0 ? (
+            <dl class="term-list" aria-label="Terms used in this note">
+              {entry.data.terms.map((term) => (
+                <div>
+                  <dt>{term.term}</dt>
+                  <dd>{term.definition}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null
+        }
       </header>
 
       {

@@ -523,6 +523,27 @@ async function runChecks(baseUrl) {
     );
   });
 
+  await check("note terms render as a definition block", async () => {
+    // the-queue-was-never-the-hard-part carries Vuoro, sprintctl and actionq,
+    // none of which its summary mentions -- so this is exactly the case the
+    // summary-only annotation could not reach.
+    const html = await request("/notes/the-queue-was-never-the-hard-part/");
+    assertIncludes(html.body, 'class="term-list"', "term list in HTML");
+    assertIncludes(html.body, "<dt>actionq</dt>", "term name in HTML");
+    assertIncludes(
+      html.body,
+      "The PostgreSQL-backed queue that owns actions",
+      "term definition in HTML",
+    );
+
+    // A note without terms must not render an empty block.
+    const withoutTerms = await request("/notes/the-aftertaste-of-resolution/");
+    assert(
+      !withoutTerms.body.includes('class="term-list"'),
+      "term list rendered on a note with no terms",
+    );
+  });
+
   await check("explore-prompt rendering and Markdown negotiation", async () => {
     const assurancePath =
       "/notes/where-the-assurance-questions-are-already-answered/";

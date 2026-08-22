@@ -328,6 +328,16 @@ under the summary on `src/pages/notes/[slug].astro` for any note with a
 non-empty `terms` array, reusing `TermHint`. No body parsing, no new component.
 That closes the human-reader gap for the other 10 notes.
 
+**Done, 2026-08-22**, with one deviation: not `TermHint`. That component is a
+hover/focus tooltip, so reusing it for a visible block would have hidden each
+definition behind an interaction, which is the opposite of the point. The block
+is a plain `<dl>` in the note header, after the relation links -- semantically
+right, keyboard and screen-reader legible with no JavaScript. It lists every
+term the note carries, including ones the summary already annotates; the small
+duplication is worth a reader seeing the note's whole local vocabulary in one
+place. Projects were left alone -- they can have the same block if it proves
+useful on notes.
+
 **Spot-check explore prompts in a clean context.** Step 6 added 30 prompts
 validated by rubric review rather than isolated clean-context execution, which
 `docs/explore-prompts.md` permits with disclosure. Thirty is enough that a
@@ -356,6 +366,11 @@ route by which they were sampled. So this tests 1 of the 30 rubric-reviewed
 prompts plus 2 written under the older process. It is evidence that the rubric
 route can produce a sibling-valid prompt, not that the batch is settled. 29
 remain unexecuted.
+
+A scenario set for the remaining 29 is in
+[`docs/research/2026-08-22-explore-prompt-sibling-checks.md`](../research/2026-08-22-explore-prompt-sibling-checks.md):
+five prompts chosen for the two failure modes rubric review cannot detect, heavy
+compression and lifecycle disclosure, with a scenario and a watch-list for each.
 
 **Two by-products worth acting on**, both candidates for a note revision rather
 than a prompt change:
