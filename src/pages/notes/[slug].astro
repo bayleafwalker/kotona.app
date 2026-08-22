@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 
+import AnnotatedText from "../../components/AnnotatedText.astro";
 import ContentToc from "../../components/ContentToc.astro";
 import ExplorePrompt from "../../components/ExplorePrompt.astro";
 import TagList from "../../components/TagList.astro";
@@ -118,7 +119,13 @@ const canonicalNoteUrl = new URL(
         <h1 class="content-title">{entry.data.title}</h1>
         {
           entry.data.summary ? (
-            <p class="content-summary">{entry.data.summary}</p>
+            <p class="content-summary">
+              <AnnotatedText
+                text={entry.data.summary}
+                terms={entry.data.terms}
+                idPrefix={`note-${entry.id}`}
+              />
+            </p>
           ) : null
         }
 
