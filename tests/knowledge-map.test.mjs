@@ -432,14 +432,35 @@ test("suppresses territory headings only while identifying a node without disabl
 });
 
 test("keeps the Agent systems heading clear of the node it previously intercepted", () => {
-  assert.match(
-    knowledgeMapSource,
-    /clusterLabelYOverrides[\s\S]{0,500}?"agents-assurance"\s*:\s*(?:\d+|\{[\s\S]{0,180}?(?:labelY|y)\s*:\s*\d+)/,
+  const override = knowledgeMapSource.match(
+    /clusterLabelYOverrides[\s\S]{0,700}?"agents-assurance"\s*:\s*(-?\d+)/,
+  );
+  assert.ok(
+    override,
     "the Agent systems territory needs an explicit label placement adjustment",
   );
   assert.match(
     knowledgeMapSource,
     /const\s+labelY\s*=[\s\S]{0,240}?clusterLabelYOverrides\[cluster\.id\][\s\S]{0,240}?Math\.max\(20,\s*y\s*-\s*95\)/,
     "the override must be used when rendering territory labels",
+  );
+
+  // The heading sits above the node ring, which on this territory means above
+  // the coordinate origin. The viewBox has to reserve that margin or the
+  // heading is simply clipped instead of overlapped.
+  const viewBox = knowledgeMapSource.match(
+    /class="knowledge-map"\s+viewBox="(-?\d+) (-?\d+) (-?\d+) (-?\d+)"/,
+  );
+  assert.ok(viewBox, "the map viewBox should be readable from the source");
+  const [, , top, , height] = viewBox.map(Number);
+  const labelY = Number(override[1]);
+  assert.ok(
+    labelY > top,
+    `the Agent systems heading at y=${labelY} is outside the viewBox top edge ${top}`,
+  );
+  assert.equal(
+    height,
+    620 - top,
+    "widening the top margin must extend the viewBox rather than crop the map",
   );
 });

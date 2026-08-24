@@ -16,7 +16,11 @@ below describes the currently published behavior until those slices land.
 - Homepage `Link` headers advertise the skills index, `llms.txt`, the reference
   catalog, and RSS.
 - `/.well-known/agent-skills/index.json` points to a small, integrity-pinned
-  guide for navigating the site's public material.
+  guide for navigating the site's public material. The digest is generated from
+  the artifact's bytes at build time and drift-checked in CI, because a
+  conformant client must refuse an artifact whose hash does not match and a
+  hand-maintained digest silently disables the whole surface. Artifact URLs are
+  path-absolute so they resolve against whichever host served the index.
 - `/llms.txt` provides a compact map of the site's primary content surfaces.
 - `/reference-index.json` is the flattened reference catalog: one entry per
   published note or project, with public identity, classification, dates,

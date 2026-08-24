@@ -33,3 +33,29 @@ test("external reachability is scheduled maintenance, not a deployment gate", as
     true,
   );
 });
+
+test("the browser gate and the digest drift check run in CI", async () => {
+  const ci = await readWorkflow("ci.yml");
+  const runs = ci.jobs.build.steps.map((step) => step.run);
+
+  // The browser suite has already caught correctness defects the unit, worker,
+  // and retrieval suites cannot reach, so it is a gate rather than a local
+  // convenience -- which means CI has to provision Chromium for it.
+  assert.ok(runs.includes("npm run test:browser"));
+  assert.ok(
+    runs.includes("npx playwright install --with-deps chromium"),
+    "CI must provision Chromium before running the browser suite",
+  );
+  assert.ok(
+    runs.indexOf("npx playwright install --with-deps chromium") <
+      runs.indexOf("npm run test:browser"),
+  );
+
+  // A stale digest makes the skills index unusable by a conformant client, and
+  // the drift check only proves the committed index is correct if it runs
+  // before the build regenerates it.
+  assert.ok(runs.includes("npm run check:agent-skills"));
+  assert.ok(
+    runs.indexOf("npm run check:agent-skills") < runs.indexOf("npm run build"),
+  );
+});
