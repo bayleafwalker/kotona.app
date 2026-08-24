@@ -177,6 +177,12 @@ External visibility  Given only the public web, does an outside system find
 
 ### A. External retrieval corpus
 
+Status: instrument frozen 2026-08-24 in
+[`docs/external-retrieval-questions.json`](../external-retrieval-questions.json),
+method in
+[`docs/external-retrieval-evaluation.md`](../external-retrieval-evaluation.md).
+Eighteen questions; no run recorded yet.
+
 Freeze 15 to 20 natural-language questions in source control, spanning:
 
 - an exact distinctive concept;

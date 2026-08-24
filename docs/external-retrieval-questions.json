@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "frozen": "2026-08-24",
+  "site": "https://kotona.app",
+  "notice": "Frozen instrument. Do not rewrite a question because a run went badly; record the run and, if the question itself is wrong, retire it with a dated reason and add a replacement.",
+  "questions": [
+    {
+      "id": "exact-project-folder-authority",
+      "category": "exact-distinctive-concept",
+      "question": "What does kotona.app mean by a project folder being a view rather than an authority?",
+      "acceptable": ["/notes/a-project-folder-is-a-view-not-an-authority/"]
+    },
+    {
+      "id": "exact-explore-prompt",
+      "category": "exact-distinctive-concept",
+      "question": "What is an explore prompt on kotona.app, and how does it differ from the prompt that produced a note?",
+      "acceptable": ["/notes/why-i-publish-explore-prompts/"]
+    },
+    {
+      "id": "exact-vuoro",
+      "category": "exact-distinctive-concept",
+      "question": "What is Vuoro?",
+      "acceptable": ["/projects/vuoro/"]
+    },
+    {
+      "id": "paraphrase-workspace-ownership",
+      "category": "paraphrased-distinctive-concept",
+      "question": "If a workspace folder pulls several repositories together, is it allowed to own any state of its own?",
+      "acceptable": ["/notes/a-project-folder-is-a-view-not-an-authority/"]
+    },
+    {
+      "id": "paraphrase-post-hoc-prompt",
+      "category": "paraphrased-distinctive-concept",
+      "question": "Why would someone publish a prompt alongside a finished article instead of the prompt that wrote it?",
+      "acceptable": ["/notes/why-i-publish-explore-prompts/"]
+    },
+    {
+      "id": "paraphrase-separately-owned-tools",
+      "category": "paraphrased-distinctive-concept",
+      "question": "Which family of small command-line tools keeps sprint, queue, audit and cockpit state in separate contracts instead of one monolith?",
+      "acceptable": ["/projects/vuoro/"]
+    },
+    {
+      "id": "vague-agent-handover",
+      "category": "vague-domain-intent",
+      "question": "How do I hand work from one agent session to another without losing the context behind it?",
+      "acceptable": [
+        "/notes/the-work-between-the-ticket-and-the-agent/",
+        "/notes/authority-must-travel-with-the-action/",
+        "/notes/the-ref-nobody-adds/",
+        "/projects/vuoro/"
+      ]
+    },
+    {
+      "id": "vague-context-reduction-evaluation",
+      "category": "vague-domain-intent",
+      "question": "How should I evaluate a tool that reduces how much command output an AI agent sees?",
+      "acceptable": [
+        "/notes/measure-the-diagnosis-not-only-the-transcript/",
+        "/notes/a-platform-capability-does-not-exist-all-at-once/"
+      ]
+    },
+    {
+      "id": "vague-planning-binding",
+      "category": "vague-domain-intent",
+      "question": "My implementation plans live in documents and my tasks live in a tracker, and nothing connects them. What should I do?",
+      "acceptable": ["/notes/the-ref-nobody-adds/"]
+    },
+    {
+      "id": "vague-deployment-boundary",
+      "category": "vague-domain-intent",
+      "question": "What replaces the deployment boundary when an agent can inspect and change a live system in the same session?",
+      "acceptable": [
+        "/notes/authority-must-travel-with-the-action/",
+        "/notes/why-production-access-changes-the-shape-of-agent-tooling/",
+        "/notes/the-deployment-boundary-was-only-a-place/"
+      ]
+    },
+    {
+      "id": "authority-superseded-note",
+      "category": "current-versus-historical",
+      "question": "Is \"the missing layer is binding, not intelligence\" still the current view on kotona.app?",
+      "acceptable": [
+        "/notes/the-missing-layer-is-binding-not-intelligence/",
+        "/notes/where-the-assurance-questions-are-already-answered/"
+      ],
+      "lifecycleExpectation": "The answer must say the note is superseded and name its successor. Presenting it as current guidance is a failure even when the URL is right."
+    },
+    {
+      "id": "authority-current-cluster-state",
+      "category": "current-versus-historical",
+      "question": "What is the current backup, restore and upgrade state of the Talos homelab cluster described on kotona.app?",
+      "acceptable": ["/projects/gitops-cluster/"],
+      "lifecycleExpectation": "The archived rollback incident note must not be presented as the current state."
+    },
+    {
+      "id": "authority-historical-incident",
+      "category": "current-versus-historical",
+      "question": "What happened in the GitOps rollback incident where reconciliation put the problem back?",
+      "acceptable": ["/notes/a-gitops-rollback-needs-time-to-reach-git/"],
+      "lifecycleExpectation": "History is the right answer here, but it must be presented as an archived incident lesson rather than current procedure."
+    },
+    {
+      "id": "control-what-is-gitops",
+      "category": "should-not-dominate",
+      "question": "What is GitOps?",
+      "acceptable": [],
+      "expectation": "Established sources should lead. A personal site leading this question is a symptom, not a success."
+    },
+    {
+      "id": "control-reference-monitor",
+      "category": "should-not-dominate",
+      "question": "What is a reference monitor in computer security?",
+      "acceptable": [],
+      "expectation": "NIST and standard security literature should lead."
+    },
+    {
+      "id": "control-kubernetes-upgrades",
+      "category": "should-not-dominate",
+      "question": "What are best practices for upgrading a Kubernetes cluster?",
+      "acceptable": [],
+      "expectation": "Vendor and community documentation should lead."
+    },
+    {
+      "id": "project-box-current",
+      "category": "project-current-state",
+      "question": "What can the contract-first Box project prove today, and what evidence is still missing?",
+      "acceptable": ["/projects/contract-first-box/"],
+      "lifecycleExpectation": "The absence of a runtime must survive into the answer; the project must not be described as a working platform."
+    },
+    {
+      "id": "project-household-current",
+      "category": "project-current-state",
+      "question": "What is the latest verified capability of the household analytics operating platform, and its known limitation?",
+      "acceptable": ["/projects/household-operating-platform/"],
+      "lifecycleExpectation": "The answer should be bounded by the published lastVerified date."
+    }
+  ]
+}
