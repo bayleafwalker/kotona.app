@@ -81,6 +81,23 @@ terms:
     definition:
       The operator interface that composes state from the owning tools without
       becoming their database.
+reference:
+  purpose: current-project-orientation
+  discoverFor:
+    - composing separately owned agent workflow tools without a monolith
+    - binding component and schema compatibility to migration admissibility
+  establishes:
+    - that sprint, queue, dispatch, knowledge, audit, and cockpit state can stay
+      in separate contracts under one composition
+    - that version-bound preflight can reject an unsafe schema rollout before it
+      runs
+  doesNotEstablish:
+    - that the live schema transition is complete
+    - operational mileage for kctl and auditctl comparable to sprintctl and the
+      cockpit
+  supplementWith:
+    - the deployed component versions and migration state of the receiving
+      environment
 ---
 
 ## Overview

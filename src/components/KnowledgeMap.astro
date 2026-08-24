@@ -1,8 +1,12 @@
 ---
 import type { KnowledgeGraph } from "../lib/knowledge-map";
+import type { ReferenceSearchDocument } from "../lib/reference-ranking.js";
 
-type Props = { graph: KnowledgeGraph };
-const { graph } = Astro.props;
+type Props = {
+  graph: KnowledgeGraph;
+  searchDocuments: ReferenceSearchDocument[];
+};
+const { graph, searchDocuments } = Astro.props;
 const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));
 const clusterCentres = new Map<string, { x: number; y: number }>(
   graph.clusters.map((cluster) => {
@@ -97,9 +101,14 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 ---
 
 <section class="knowledge-explorer" data-knowledge-explorer>
+  <script
+    type="application/json"
+    data-knowledge-search-index
+    set:html={JSON.stringify(searchDocuments).replaceAll("<", "\\u003c")}
+  />
   <form class="knowledge-controls" aria-label="Filter the knowledge atlas">
     <label class="knowledge-search">
-      <span>Search titles, summaries, and tags</span>
+      <span>Search or ask a question</span>
       <input type="search" name="knowledge-search" autocomplete="off" />
     </label>
     <fieldset>
@@ -114,6 +123,16 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     </fieldset>
     <p class="knowledge-result-count" aria-live="polite"></p>
   </form>
+
+  <section class="knowledge-results" data-knowledge-results hidden>
+    <h2>Ranked results</h2>
+    <p class="knowledge-results-note">
+      Ranked by curated reference scope, title, summary, and tags. Current
+      material leads unless the question asks about the past. The grouped index
+      below stays complete.
+    </p>
+    <ol data-knowledge-results-list></ol>
+  </section>
 
   <div class="knowledge-map-stage">
     <div class="knowledge-map-frame" aria-label="Visual knowledge map">
@@ -380,6 +399,11 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 </section>
 
 <script>
+  import {
+    rankReferences,
+    type ReferenceSearchDocument,
+  } from "../lib/reference-ranking.js";
+
   const explorer = document.querySelector("[data-knowledge-explorer]");
   if (explorer instanceof HTMLElement) {
     const search = explorer.querySelector('input[name="knowledge-search"]');
@@ -391,6 +415,102 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     const clusterControls = [...explorer.querySelectorAll("[data-cluster-id]")];
     const map = explorer.querySelector(".knowledge-map");
     const count = explorer.querySelector(".knowledge-result-count");
+    const resultsRegion = explorer.querySelector("[data-knowledge-results]");
+    const resultsList = explorer.querySelector("[data-knowledge-results-list]");
+    const searchIndexSource = explorer.querySelector(
+      "[data-knowledge-search-index]",
+    );
+    const searchIndex: ReferenceSearchDocument[] = searchIndexSource
+      ? JSON.parse(searchIndexSource.textContent ?? "[]")
+      : [];
+
+    // One ranking drives both the ranked list and what the map and index show.
+    // A natural-language question used to empty the map, because the filter
+    // asked for a contiguous substring that no title contains.
+    let lastQuery: string | undefined;
+    let lastRanked: ReturnType<typeof rankReferences> = [];
+    const rankedFor = (query: string) => {
+      if (query !== lastQuery) {
+        lastQuery = query;
+        lastRanked = rankReferences(searchIndex, query);
+      }
+      return lastRanked;
+    };
+
+    const renderResults = (
+      query: string,
+      types: Set<string>,
+      showHistory: boolean,
+    ) => {
+      if (!(resultsRegion instanceof HTMLElement)) return;
+      if (!(resultsList instanceof HTMLElement)) return;
+
+      if (query.length < 3) {
+        resultsRegion.hidden = true;
+        resultsList.replaceChildren();
+        return;
+      }
+
+      // The ranked list obeys the same controls as the map and the index.
+      // A result the reader has filtered out must not reappear here.
+      const ranked = rankedFor(query)
+        .filter(
+          (result) =>
+            types.has(result.document.type) &&
+            (showHistory ||
+              !result.document.lifecycle ||
+              result.document.lifecycle === "current"),
+        )
+        .slice(0, 8);
+      resultsRegion.hidden = false;
+      resultsList.replaceChildren(
+        ...ranked.map((result) => {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = result.document.path;
+          link.textContent = result.document.title;
+          item.appendChild(link);
+
+          const meta = document.createElement("span");
+          meta.className = "knowledge-result-meta";
+          meta.textContent =
+            result.document.type === "project"
+              ? "Project"
+              : [result.document.area, result.document.lifecycle]
+                  .filter(Boolean)
+                  .join(" / ");
+          item.appendChild(meta);
+
+          if (result.document.summary) {
+            const summary = document.createElement("p");
+            summary.textContent = result.document.summary;
+            item.appendChild(summary);
+          }
+
+          // Why this result, in the ranker's own terms. A reader who
+          // disagrees with the order can see what produced it.
+          const reasons = result.reasons
+            .filter((reason) => reason.field !== "tags")
+            .slice(0, 2)
+            .map((reason) => `${reason.field}: ${reason.value}`);
+          if (reasons.length > 0) {
+            const why = document.createElement("p");
+            why.className = "knowledge-result-why";
+            why.textContent = reasons.join(" -- ");
+            item.appendChild(why);
+          }
+
+          return item;
+        }),
+      );
+
+      if (ranked.length === 0) {
+        const empty = document.createElement("li");
+        empty.textContent =
+          "No ranked match. The grouped index below is complete.";
+        resultsList.appendChild(empty);
+      }
+    };
     const detail = explorer.querySelector("[data-knowledge-detail]");
     const detailKind = explorer.querySelector("[data-detail-kind]");
     const detailTitle = explorer.querySelector("[data-detail-title]");
@@ -732,12 +852,28 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       explorer.querySelectorAll(".knowledge-history").forEach((details) => {
         if (details instanceof HTMLDetailsElement) details.open = showHistory;
       });
+      // Short queries stay substring-based: a two-character fragment is a
+      // filter, not a question, and ranking it would be noise.
+      // A query that ranks nothing falls back to substring matching. An empty
+      // ranking used to hide every node and every index entry, while the page
+      // went on claiming the grouped index below was complete.
+      const ranked = query.length >= 3 ? rankedFor(query) : [];
+      const rankedIds =
+        ranked.length > 0
+          ? new Set(ranked.map((result) => result.document.id))
+          : undefined;
+      const matchesQuery = (element: SVGElement | HTMLElement, id: string) =>
+        !query ||
+        (rankedIds
+          ? rankedIds.has(id)
+          : element.dataset.search?.includes(query));
+
       const visible = new Set();
       for (const node of nodes) {
         if (!(node instanceof SVGElement)) continue;
         const match =
           types.has(node.dataset.nodeType ?? "") &&
-          (!query || node.dataset.search?.includes(query)) &&
+          matchesQuery(node, node.dataset.nodeId ?? "") &&
           (showHistory || !node.classList.contains("is-historical"));
         node.classList.toggle("is-filtered", !match);
         if (match && node.dataset.nodeId) visible.add(node.dataset.nodeId);
@@ -758,7 +894,13 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       if (selectedNodeId && !visible.has(selectedNodeId)) {
         closeDetail();
       }
-      if (count) count.textContent = `${visible.size} published entries shown`;
+      if (count) {
+        count.textContent =
+          ranked.length > 0
+            ? `${visible.size} of ${ranked.length} ranked matches shown`
+            : `${visible.size} published entries shown`;
+      }
+      renderResults(query, types, showHistory);
     };
 
     explorer.addEventListener("input", refresh);

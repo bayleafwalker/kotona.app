@@ -34,6 +34,19 @@ Content frontmatter, collection references, freshness, build output, and Worker
 behavior are all part of that check. Run `npm run cf-typegen` only after
 intentional Worker binding changes.
 
+Browser coverage is a separate gate, because it needs a provisioned browser:
+
+```bash
+npx playwright install chromium   # once per machine
+npm run test:browser
+```
+
+It covers only the seam the other suites cannot reach -- whether the Explore
+page presents what the ranking decides. Run it after changing Explore, the
+knowledge map, or `src/lib/reference-ranking.js`. It is deliberately absent from
+`npm run validate`; add it there only once browser provisioning is reproducible
+in CI.
+
 External reachability is a weekly and manually dispatched maintenance signal,
 not a publication or deployment invariant. The `external links` workflow runs
 `npm run check:links`; run the same command locally when investigating its

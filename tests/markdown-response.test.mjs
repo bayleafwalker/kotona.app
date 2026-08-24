@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   htmlToMarkdown,
   prefersMarkdown,
+  stripExplorePrompt,
 } from "../src/lib/markdown-response.js";
 
 test("Markdown must be preferred with a positive quality", () => {
@@ -133,4 +134,44 @@ test("Markdown projection preserves ordered and unordered list semantics", () =>
       "",
     ].join("\n"),
   );
+});
+
+test("drops the inline term tooltip the page also publishes as a list", () => {
+  const html =
+    '<main><p><span class="term-hint"><dfn>Outctl</dfn><span class="term-note" role="tooltip">A tool that captures output.</span></span> cut visible output.</p></main>';
+
+  assert.equal(htmlToMarkdown(html), "Outctl cut visible output.\n");
+});
+
+test("keeps a definition list paired", () => {
+  const html =
+    "<main><dl><dt>Outctl</dt><dd>A tool that captures output.</dd><dt>Vuoro</dt><dd>A family of tools.</dd></dl></main>";
+
+  assert.equal(
+    htmlToMarkdown(html),
+    "- **Outctl** -- A tool that captures output.\n- **Vuoro** -- A family of tools.\n",
+  );
+});
+
+test("removes the exploration template as a whole element", () => {
+  const html =
+    '<details class="explore-prompt"><summary><h2>Explore this note with AI</h2></summary><pre><code>prompt</code></pre></details><p>Body.</p>';
+
+  assert.equal(stripExplorePrompt(html), "<p>Body.</p>");
+});
+
+test("a definition list degrades rather than losing content", () => {
+  const html =
+    "<main><dl><dt>Term</dt><dd>First sense.</dd><dd>Second sense.</dd><dt>Orphan</dt></dl></main>";
+
+  assert.equal(
+    htmlToMarkdown(html),
+    "- **Term** -- First sense.\n  - Second sense.\n- **Orphan**\n",
+  );
+});
+
+test("a definition without a preceding term is still published", () => {
+  const html = "<main><dl><dd>Stray definition.</dd></dl></main>";
+
+  assert.equal(htmlToMarkdown(html), "- Stray definition.\n");
 });

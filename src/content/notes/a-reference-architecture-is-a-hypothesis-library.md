@@ -41,6 +41,20 @@ explorePrompt: >-
   distinction. Produce a compact mapping of propositions, evidence, decisions,
   consequences, tests, and review triggers—not an alignment percentage or a
   renamed copy of the reference model.
+reference:
+  purpose: design-rationale
+  discoverFor:
+    - how to use a reference architecture without copying its diagram
+    - deciding which reference suggestions belong in a local design
+  establishes:
+    - that a reference architecture supplies hypotheses to test rather than a
+      design to match
+    - that local goals and constraints decide which suggestions apply
+  doesNotEstablish:
+    - the correct architecture for any specific system
+    - conformance to any cited architecture standard
+  supplementWith:
+    - the receiving system's own goals, constraints, and quality requirements
 ---
 
 A reference architecture makes it easy to produce a tidy diagram. Match the

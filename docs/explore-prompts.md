@@ -2,11 +2,11 @@
 
 A note may publish an optional `explorePrompt`: a portable prompt that helps a
 reader, their agent, or future me apply and extend the note in a different
-context. It renders as the "Explore this note with AI" block and is present in
-both HTML and negotiated Markdown today -- see `docs/agent-discovery.md`. The
-accepted reference-discovery architecture will keep it as a collapsed optional
-HTML artifact, remove it from default Markdown, and expose it only through a
-deliberately selected prompt-text route. See
+context. It renders as the "Explore this note with AI" block in HTML and is
+served on its own resource at `/notes/<slug>.prompt.txt`, with the note's
+source, lifecycle, and site revision attached. It is deliberately absent from
+the Markdown reference representation, so a document retrieved as evidence
+carries no portable task language. See `docs/agent-discovery.md` and
 [`docs/architecture/reference-discovery.md`](architecture/reference-discovery.md).
 
 An `explorePrompt` is not the prompt that produced the note, a reconstruction of

@@ -4,6 +4,22 @@ import { z } from "astro/zod";
 
 import { knowledgeAreas } from "./data/knowledge-areas";
 import { noteLifecycleIssues } from "./lib/note-lifecycle.js";
+import { referencePurposes } from "./lib/reference-index";
+
+// An optional, bounded declaration of what a document is useful for and what
+// it does not settle. It is published in `/reference-index.json` and must
+// describe capability and claim boundaries only: it may not carry instructions
+// that purport to override a receiving agent. See
+// docs/architecture/reference-discovery.md.
+const referenceScope = z
+  .object({
+    purpose: z.enum(referencePurposes),
+    discoverFor: z.array(z.string().min(1).max(160)).min(1).max(6),
+    establishes: z.array(z.string().min(1).max(200)).min(1).max(6),
+    doesNotEstablish: z.array(z.string().min(1).max(200)).min(1).max(6),
+    supplementWith: z.array(z.string().min(1).max(200)).max(6).default([]),
+  })
+  .optional();
 
 const sharedProjectSchema = {
   title: z.string().min(1),
@@ -23,6 +39,7 @@ const sharedProjectSchema = {
     )
     .default([]),
   draft: z.boolean().default(true),
+  reference: referenceScope,
 };
 
 const notes = defineCollection({
@@ -76,6 +93,7 @@ const notes = defineCollection({
       // A post-hoc prompt for applying and extending the note elsewhere. See
       // docs/explore-prompts.md; generated only after the note is complete.
       explorePrompt: z.string().min(80).max(2400).optional(),
+      reference: referenceScope,
       draft: z.boolean().default(false),
     })
     .superRefine((note, context) => {

@@ -5,6 +5,9 @@ import KnowledgeMap from "../components/KnowledgeMap.astro";
 import { knowledgeClusters } from "../data/knowledge-clusters";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { buildKnowledgeGraph } from "../lib/knowledge-map";
+import { buildReferenceIndex } from "../lib/reference-index";
+import { buildRevision } from "../build";
+import { siteConfig } from "../site";
 
 export const prerender = true;
 
@@ -13,6 +16,28 @@ const entries = [
   ...(await getCollection("projects")),
 ];
 const graph = buildKnowledgeGraph(entries, knowledgeClusters);
+// The in-page ranker scores the same fields the public catalog publishes, from
+// the same projection. It deliberately omits document bodies: a machine client
+// retrieves those from the `.md` resources, and shipping the whole corpus to
+// every reader would cost far more than the ranking it buys.
+const searchDocuments = buildReferenceIndex(entries, {
+  baseUrl: Astro.site ?? new URL(siteConfig.siteUrl),
+  revision: buildRevision,
+}).documents.map((document) => ({
+  id: document.id,
+  type: document.type,
+  path: new URL(document.url).pathname,
+  title: document.title,
+  summary: document.summary,
+  area: document.classification.area,
+  role: document.classification.role,
+  claimPosture: document.classification.claimPosture,
+  lifecycle: document.classification.lifecycle,
+  tags: document.classification.tags,
+  supersededBy: document.supersededBy?.map((successor) => successor.id),
+  discoverFor: document.reference?.discoverFor,
+  establishes: document.reference?.establishes,
+}));
 ---
 
 <BaseLayout
@@ -28,6 +53,6 @@ const graph = buildKnowledgeGraph(entries, knowledgeClusters);
     </p>
   </section>
   <section class="page-section">
-    <KnowledgeMap graph={graph} />
+    <KnowledgeMap graph={graph} searchDocuments={searchDocuments} />
   </section>
 </BaseLayout>

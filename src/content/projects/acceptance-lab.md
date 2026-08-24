@@ -36,6 +36,21 @@ tags:
 summary: >-
   A local-first prototype for turning agent requirements, observed evidence,
   authority rules, and operating budgets into executable promotion decisions.
+reference:
+  purpose: current-project-orientation
+  discoverFor:
+    - deciding whether an agent run should be promoted
+    - turning acceptance criteria into executable scoring
+  establishes:
+    - that promotion can be scored from bounded candidate records against
+      versioned acceptance scenarios
+    - that mechanism, quality, authority, and economics are separable promotion
+      dimensions
+  doesNotEstablish:
+    - behaviour against live model traces or executed effects
+    - a promotion policy that any other system is obliged to follow
+  supplementWith:
+    - the run evidence and acceptance criteria of the receiving task
 ---
 
 ## Overview

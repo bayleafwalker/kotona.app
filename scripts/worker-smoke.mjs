@@ -8,6 +8,8 @@ import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, URL } from "node:url";
 
+import { rankReferences } from "../src/lib/reference-ranking.js";
+
 const rootDirectory = fileURLToPath(new URL("../", import.meta.url));
 const require = createRequire(import.meta.url);
 const astroPackagePath = require.resolve("astro/package.json");
@@ -544,7 +546,7 @@ async function runChecks(baseUrl) {
     );
   });
 
-  await check("explore-prompt rendering and Markdown negotiation", async () => {
+  await check("prompt separation across representations", async () => {
     const assurancePath =
       "/notes/where-the-assurance-questions-are-already-answered/";
     const html = await request(assurancePath);
@@ -563,51 +565,87 @@ async function runChecks(baseUrl) {
       'class="explore-prompt-copy"',
       "explore-prompt copy button in HTML",
     );
-    assertIncludes(
-      html.body,
-      "Copy prompt",
-      "explore-prompt copy label in HTML",
-    );
 
+    // The neutral reference representation carries no portable task language.
     const markdown = await request(assurancePath, { accept: "text/markdown" });
     assertContentType(markdown.response, "text/markdown");
-    assertIncludes(
-      markdown.body,
-      "## Explore this note with AI",
-      "explore-prompt heading in Markdown",
-    );
-    assertIncludes(
-      markdown.body,
-      "not a reconstruction of how the note was written",
-      "explore-prompt explanation in Markdown",
-    );
-    assertIncludes(
-      markdown.body,
+    for (const forbidden of [
+      "Explore this note with AI",
       "Use this note as a worked instantiation",
-      "explore-prompt text in Markdown",
+      "not a reconstruction of how the note was written",
+      "Copy prompt",
+    ]) {
+      assert(
+        !markdown.body.includes(forbidden),
+        `Markdown must not carry ${JSON.stringify(forbidden)}`,
+      );
+    }
+    assertIncludes(
+      markdown.body,
+      "The same correction applies to several terms I developed locally.",
+      "reference Markdown still carries the body",
     );
-    assert(
-      !markdown.body.includes("Copy prompt"),
-      "Markdown must not leak the copy-button label",
+    assertIncludes(
+      markdown.body,
+      'lifecycle: "current"',
+      "reference Markdown carries its allowlisted prelude",
     );
 
-    const guide = await request(
-      "/notes/a-field-guide-to-assurance-managed-ai-development/",
-      { accept: "text/markdown" },
+    // The prompt remains retrievable, but never without its lifecycle.
+    const disprovenSlug = "measure-the-diagnosis-not-only-the-transcript";
+    const prompt = await request(`/notes/${disprovenSlug}.prompt.txt`);
+    assertEqual(prompt.response.status, 200, "prompt resource status");
+    assertContentType(prompt.response, "text/plain");
+    assertIncludes(
+      prompt.body,
+      "Lifecycle: disproven",
+      "prompt resource lifecycle context",
     );
-    const explorePromptIndex = guide.body.indexOf(
-      "## Explore this note with AI",
+    assertIncludes(
+      prompt.body,
+      `Source: https://kotona.app/notes/${disprovenSlug}/`,
+      "prompt resource source context",
     );
-    const firstBodyHeadingIndex = guide.body.indexOf(
-      "## The shortest useful route",
+    assertIncludes(
+      prompt.body,
+      "is not evidence that the document is current",
+      "prompt resource authority boundary",
+    );
+    assertIncludes(
+      prompt.body,
+      "use this note as a worked instantiation",
+      "prompt resource carries the prompt",
+    );
+  });
+
+  await check("Markdown fidelity of structured blocks", async () => {
+    const path = "/notes/measure-the-diagnosis-not-only-the-transcript.md";
+    const markdown = (await request(path)).body;
+
+    // Slice 0 regression: a term and its inline definition were concatenated.
+    assert(
+      !/OutctlA tool/.test(markdown),
+      "term and definition must keep a lexical boundary",
+    );
+    assertIncludes(
+      markdown,
+      "Outctl cut model-visible Kubernetes output",
+      "summary text must survive intact",
+    );
+    assertIncludes(
+      markdown,
+      "- **Outctl** -- A tool that captures",
+      "definition list must stay paired",
+    );
+    assertIncludes(markdown, "```text", "code fences must survive");
+    assertIncludes(
+      markdown,
+      "> **Update, 16 August 2026",
+      "lifecycle blockquote must survive",
     );
     assert(
-      explorePromptIndex > -1 && firstBodyHeadingIndex > -1,
-      "explore-prompt and body heading must both be present",
-    );
-    assert(
-      explorePromptIndex < firstBodyHeadingIndex,
-      "explore-prompt block must precede the table of contents and body",
+      /\n- \[The platform can retrieve/.test(markdown),
+      "list items must stay separate",
     );
   });
 
@@ -831,6 +869,232 @@ async function runChecks(baseUrl) {
       robots.body,
       "https://kotona.app/sitemap-index.xml",
       "robots.txt sitemap",
+    );
+  });
+
+  await check("Explore ships a working ranked search", async () => {
+    const explore = await request("/explore/");
+    assertEqual(explore.response.status, 200, "explore status");
+
+    // The grouped index must remain complete without JavaScript.
+    assertIncludes(explore.body, "Grouped index", "explore grouped index");
+    assertIncludes(
+      explore.body,
+      "remains useful without JavaScript",
+      "explore no-JavaScript guarantee",
+    );
+
+    const embedded = explore.body.match(
+      /<script[^>]*data-knowledge-search-index[^>]*>([\s\S]*?)<\/script>/i,
+    );
+    assert(embedded, "explore page does not embed a search index");
+    const searchIndex = JSON.parse(
+      embedded[1].replaceAll("&quot;", '"').replaceAll("&amp;", "&"),
+    );
+    assertEqual(searchIndex.length, 59, "embedded search index document count");
+    assert(
+      !JSON.stringify(searchIndex).includes("doesNotEstablish"),
+      "the browser index must not carry claim-boundary text it does not rank",
+    );
+
+    // Rank the bytes the browser actually receives, with the module it
+    // actually loads. Curated scope alone has to carry vague intent here,
+    // because the page deliberately ships no document bodies.
+    const expectations = [
+      [
+        "binding planning documents to tracked work items",
+        "/notes/the-ref-nobody-adds/",
+      ],
+      [
+        "is a project folder allowed to own state or is it just a view",
+        "/notes/a-project-folder-is-a-view-not-an-authority/",
+      ],
+      [
+        "evaluating a tool that reduces how much output an agent sees",
+        "/notes/measure-the-diagnosis-not-only-the-transcript/",
+      ],
+    ];
+
+    for (const [question, expectedPath] of expectations) {
+      const ranked = rankReferences(searchIndex, question);
+      assertEqual(
+        ranked[0]?.document.path,
+        expectedPath,
+        `explore ranking for ${JSON.stringify(question)}`,
+      );
+      assert(
+        ranked[0].reasons.length > 0,
+        `explore ranking for ${JSON.stringify(question)} gives no match reason`,
+      );
+    }
+  });
+
+  await check("reference catalog and its advertisement", async () => {
+    const home = await request("/");
+    assertIncludes(
+      home.response.headers.get("Link") ?? "",
+      '</reference-index.json>; rel="index"',
+      "homepage advertises the reference catalog",
+    );
+
+    const catalog = await request("/reference-index.json");
+    assertEqual(catalog.response.status, 200, "reference-index status");
+    assertContentType(catalog.response, "application/json");
+    const index = JSON.parse(catalog.body);
+    assertEqual(index.version, 1, "reference-index version");
+    assert(
+      /^[0-9a-f]{40}$/.test(index.revision),
+      "reference-index revision is not a commit SHA",
+    );
+
+    // The catalog carries claim scope, not portable instructions. Prompt text
+    // must stay out of it even though prompt availability is published.
+    for (const document of index.documents) {
+      assert(!document.draft, `${document.id} publishes a draft flag`);
+      if (document.prompt) {
+        assertEqual(
+          Object.keys(document.prompt).join(","),
+          "available,url,mediaType",
+          `${document.id} prompt projection`,
+        );
+      }
+    }
+    assert(
+      !catalog.body.includes("Explore this note"),
+      "reference-index leaks explore prompt text",
+    );
+
+    // Every public document occurs once in the catalog, in the graph, and in
+    // llms.txt. Slice 1 must not let the three surfaces disagree.
+    const catalogPaths = index.documents.map(
+      (document) => new URL(document.url).pathname,
+    );
+    assertEqual(
+      catalogPaths.length,
+      new Set(catalogPaths).size,
+      "reference-index contains a duplicate document",
+    );
+
+    const llms = await request("/llms.txt");
+    const llmsPaths = [
+      ...llms.body.matchAll(
+        /\]\(https?:\/\/[^/]+(\/(?:notes|projects)\/[^)]+)\)/g,
+      ),
+    ].map((match) => match[1]);
+    const graph = JSON.parse((await request("/knowledge.json")).body);
+    const graphPaths = new Set(graph.nodes.map((node) => node.href));
+
+    assertEqual(
+      catalogPaths.length,
+      new Set(llmsPaths).size,
+      "reference-index and llms.txt document counts differ",
+    );
+    for (const path of catalogPaths) {
+      assert(llmsPaths.includes(path), `${path} is missing from llms.txt`);
+      assert(graphPaths.has(path), `${path} is missing from knowledge.json`);
+    }
+
+    // Every declared representation must be exercisable from the catalog
+    // alone. The index is the test driver: nothing here hard-codes a route.
+    const sample = index.documents.find(
+      (document) => document.type === "note" && document.prompt,
+    );
+    const markdownRepresentations = sample.representations.filter(
+      (representation) => representation.mediaType === "text/markdown",
+    );
+    assertEqual(
+      markdownRepresentations
+        .map((representation) => representation.access)
+        .join(","),
+      "direct,content-negotiation",
+      "markdown representations",
+    );
+
+    const [directRepresentation, negotiatedRepresentation] =
+      markdownRepresentations;
+    const direct = await request(new URL(directRepresentation.url).pathname);
+    assertEqual(direct.response.status, 200, "direct markdown status");
+    assertContentType(direct.response, "text/markdown");
+
+    const negotiated = await request(
+      new URL(negotiatedRepresentation.url).pathname,
+      { accept: negotiatedRepresentation.accept },
+    );
+    assertEqual(negotiated.response.status, 200, "negotiated markdown status");
+    assertContentType(negotiated.response, "text/markdown");
+    assertEqual(
+      direct.body,
+      negotiated.body,
+      "direct and negotiated Markdown must be byte-identical",
+    );
+
+    // A representation is not a competing canonical document.
+    assertIncludes(
+      direct.response.headers.get("Link") ?? "",
+      `<${sample.url}>; rel="canonical"`,
+      "direct Markdown declares its canonical HTML",
+    );
+
+    const directHead = await request(
+      new URL(directRepresentation.url).pathname,
+      {
+        method: "HEAD",
+      },
+    );
+    assertEqual(directHead.response.status, 200, "direct markdown HEAD status");
+    assertContentType(directHead.response, "text/markdown");
+    assertEqual(directHead.body, "", "direct markdown HEAD body");
+    assertEqual(
+      directHead.response.headers.get("Link"),
+      direct.response.headers.get("Link"),
+      "HEAD must mirror GET discovery headers",
+    );
+
+    const promptResource = await request(new URL(sample.prompt.url).pathname);
+    assertEqual(promptResource.response.status, 200, "prompt resource status");
+    assertContentType(promptResource.response, sample.prompt.mediaType);
+    assertIncludes(
+      promptResource.body,
+      `Source: ${sample.url}`,
+      "prompt resource names its source",
+    );
+
+    // The canonical page advertises the same representations the index does.
+    const canonical = await request(new URL(sample.url).pathname);
+    const advertised = canonical.response.headers.get("Link") ?? "";
+    assertIncludes(
+      advertised,
+      `<${new URL(directRepresentation.url).pathname}>; rel="alternate"; type="text/markdown"`,
+      "content page advertises its Markdown alternate",
+    );
+    assertIncludes(
+      advertised,
+      `<${new URL(sample.prompt.url).pathname}>; rel="alternate"; type="text/plain"`,
+      "content page advertises its prompt alternate",
+    );
+
+    // Boundaries stay boring: unknown, prompt-less, and draft resources are
+    // one indistinguishable 404.
+    const missing = await request("/notes/does-not-exist.md");
+    assertEqual(missing.response.status, 404, "unknown Markdown resource");
+    const promptless = await request("/projects/vuoro.prompt.txt");
+    assertEqual(promptless.response.status, 404, "prompt-less prompt resource");
+    assertEqual(
+      missing.response.headers.get("Content-Type"),
+      promptless.response.headers.get("Content-Type"),
+      "404 boundaries must not be distinguishable",
+    );
+
+    const scoped = index.documents.filter((document) => document.reference);
+    assert(
+      scoped.length >= 15,
+      `reference scope backfill is incomplete (${scoped.length} documents)`,
+    );
+    assert(
+      index.documents
+        .filter((document) => document.type === "project")
+        .every((document) => document.reference),
+      "a project is missing its reference scope",
     );
   });
 }

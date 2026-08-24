@@ -48,6 +48,21 @@ explorePrompt: >-
   rollbacks that are not cheap -- and say which parts of this method still
   transfer. Produce the state-transition diagram for your own release edges and
   name which arrow currently has no test.
+reference:
+  purpose: historical-evidence
+  discoverFor:
+    - why a release can pass qualification and still fail on deployment
+    - what a verified rollback of a composed deployment looks like
+  establishes:
+    - that image-level qualification does not establish runtime composition
+      compatibility
+    - a recorded containment in which the old pod kept serving and no migration
+      ran
+  doesNotEstablish:
+    - the current version or migration state of any deployment
+    - that the same qualification gaps exist in another release process
+  supplementWith:
+    - the receiving system's own release gates and deployed versions
 ---
 
 At 22:36 UTC on 2026-08-02, I pinned Vuoro `v0.1.33` into both containers of the

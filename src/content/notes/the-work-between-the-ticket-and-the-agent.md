@@ -60,6 +60,20 @@ explorePrompt: >-
   constraints diverge -- a single operator, one vendor owning several planes,
   regulated attestation already in place. Produce the record you can reconstruct
   today and the assumption you had to cut.
+reference:
+  purpose: exploratory-hypothesis
+  discoverFor:
+    - what happens between a tracked ticket and an agent's actual attempt
+    - whether a tracker-independent attempt record is worth building
+  establishes:
+    - the shape of the question and the reasons the author found it worth
+      examining
+  doesNotEstablish:
+    - that the described middle is unclaimed, since supply-chain attestation and
+      provenance work already covers it
+    - any measured result or built system
+  supplementWith:
+    - the established provenance and attestation specifications the note cites
 ---
 
 No build intent. The analysis is the product.
