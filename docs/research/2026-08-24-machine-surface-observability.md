@@ -78,23 +78,78 @@ crawler behaviour and is reported only as an existence check:
 Real-time logs are not stored, so a tail window cannot answer the question. It
 can only confirm the instrument works.
 
-## Where the decision actually sits
+## Zone analytics covers what the Worker cannot
 
-Not on price, and not on enabling Workers Logs, which is already on. The open
-questions are:
+Zone-level GraphQL analytics observes every HTTP request Cloudflare handles,
+including the static assets the Worker never sees. It was verified working from
+this environment with the same `wrangler login` credential that the
+observability API rejects:
 
-1. **Coverage.** Counting `/reference-index.json`, `/knowledge.json`, and the
-   skills index at the Worker layer requires making them Worker-served rather
-   than prerendered. That trades cached static delivery for a Worker invocation
-   on every request, and it is a production change made solely to obtain a
-   measurement. Zone-level HTTP analytics sees every request including static
-   assets and needs no code change; whether it exposes per-path grouping on this
-   plan is unverified.
-2. **Access.** Reading the retained logs needs the dashboard or a scoped token.
+- `httpRequestsAdaptiveGroups` supports grouping by `clientRequestPath` and
+  `edgeResponseStatus` on this zone's Free plan.
+- A query may span at most one day. A longer window is refused outright, so a
+  multi-day reading is several queries, not one.
+- The zone reports `Free Website`.
 
-Accepting partial coverage is also a legitimate answer: `.md`, `.prompt.txt`,
-`llms.txt`, and negotiated Markdown are the surfaces that indicate an agent is
-actually consuming references, as opposed to fetching one catalog once.
+This needs no code change, no binding, and no deploy, and it is the only
+instrument that can see `/reference-index.json`, `/knowledge.json`, and the
+agent-skills index at all.
+
+## First reading, and why it says almost nothing yet
+
+Named machine surfaces over roughly 23.5 hours:
+
+| Requests | Status   | Path                                   |
+| -------- | -------- | -------------------------------------- |
+| 11       | 200      | `/rss.xml`                             |
+| 6 + 1    | 200, 304 | `/sitemap-index.xml`                   |
+| 4        | 200      | `/notes/the-ref-nobody-adds.md`        |
+| 4        | 200      | `/reference-index.json`                |
+| 3        | 200      | `/knowledge.json`                      |
+| 3        | 200      | `/llms.txt`                            |
+| 2        | 200      | `/.well-known/agent-skills/index.json` |
+| 1        | 200      | `/version.json`                        |
+
+Nearly every row except the feed and the sitemap is this assessment's own
+traffic: the probe requests issued while establishing which surfaces reach the
+Worker. Read honestly, organic machine traffic in this window is RSS and sitemap
+fetching, and the reference surfaces show no third-party consumption at all.
+That is the expected result hours after publication, not a finding about demand.
+
+Zone traffic overall was 1686 requests in the same window, dominated by ordinary
+HTML pages.
+
+## Decisions
+
+**Worker logs are reference-consumption telemetry, not discovery traffic.** The
+surfaces the Worker can see are the high-intent ones: `/llms.txt` for
+orientation, `.md` for explicit reference consumption, `.prompt.txt` for
+deliberate prompt retrieval, and negotiated Markdown for an explicitly
+machine-oriented representation. A catalog fetch is interesting; a subsequent
+`.md` fetch is much stronger evidence that a discovery chain led somewhere. The
+partial view is therefore not a degraded version of the whole -- it is the more
+informative half. Label it accordingly and never present it as total machine
+traffic.
+
+**Static assets will not be routed through the Worker for telemetry.** Rejected.
+Static delivery is the correct serving architecture for a published catalog, and
+observability should adapt to the architecture rather than distort it. Revisit
+only if one of those resources needs to become dynamic for an independent
+functional reason.
+
+**Analytics Engine stays deferred.** It is not needed to answer the current
+question, and cost is not the reason: a binding, application instrumentation,
+and a deliberately stored dataset are a larger commitment than the question
+currently justifies.
+
+## A calibration point
+
+The one organic non-asset hit observed during the tail windows identified itself
+as a Palo Alto Networks scanner. It is a useful reminder that a machine request
+is not AI consumption. Client family is an observation to record, not a
+classification to trust; the surface requested carries most of the signal,
+because a scanner sweeping `/` and an agent fetching `/notes/<slug>.prompt.txt`
+are asking for very different things.
 
 ## Caveat on any window measured now
 

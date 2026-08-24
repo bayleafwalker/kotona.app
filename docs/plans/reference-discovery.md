@@ -204,10 +204,20 @@ the site root, and ordinary web access.
 
 ### B. Machine-surface analytics
 
+Status: instrument chosen 2026-08-24; findings in
+[`docs/research/2026-08-24-machine-surface-observability.md`](../research/2026-08-24-machine-surface-observability.md).
+Zone-level GraphQL analytics is the instrument, because half the surfaces are
+static assets that never invoke the Worker. Workers Logs, already enabled and
+persisted, covers the high-intent half and is labelled reference-consumption
+telemetry rather than total machine traffic. Routing static assets through the
+Worker to make them countable is rejected: observability adapts to the serving
+architecture, not the reverse.
+
 The question is narrow: are agents actually walking the discovery paths this
 architecture publishes? Browser-side page analytics cannot answer it, because
 agent retrieval usually runs no JavaScript. Measurement therefore belongs at the
-Worker or CDN request layer.
+CDN request layer, which sees every request, rather than only at the Worker,
+which sees only the routes it serves.
 
 Surfaces worth counting:
 
