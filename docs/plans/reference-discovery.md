@@ -204,10 +204,20 @@ the site root, and ordinary web access.
 
 ### B. Machine-surface analytics
 
+Status: instrument chosen 2026-08-24; findings in
+[`docs/research/2026-08-24-machine-surface-observability.md`](../research/2026-08-24-machine-surface-observability.md).
+Zone-level GraphQL analytics is the instrument, because half the surfaces are
+static assets that never invoke the Worker. Workers Logs, already enabled and
+persisted, covers the high-intent half and is labelled reference-consumption
+telemetry rather than total machine traffic. Routing static assets through the
+Worker to make them countable is rejected: observability adapts to the serving
+architecture, not the reverse.
+
 The question is narrow: are agents actually walking the discovery paths this
 architecture publishes? Browser-side page analytics cannot answer it, because
 agent retrieval usually runs no JavaScript. Measurement therefore belongs at the
-Worker or CDN request layer.
+CDN request layer, which sees every request, rather than only at the Worker,
+which sees only the routes it serves.
 
 Surfaces worth counting:
 
@@ -230,6 +240,45 @@ This is deliberately not per-client behavioral measurement. Raw addresses, full
 user-agent strings, query strings, and reconstructed per-client journeys are out
 of scope. Aggregate machine consumption answers the question and keeps the
 privacy posture the site already publishes.
+
+#### Measurement protocol
+
+Frozen 2026-08-24, before the first real window, so the denominator cannot be
+adjusted after seeing a result.
+
+- **Exclude 2026-08-24 entirely.** It is commissioning and deployment traffic:
+  the reference surfaces were published that day and the assessment's own probes
+  dominate exactly the paths under measurement.
+- **First baseline is 2026-08-25 to 2026-08-31**, as seven one-day
+  `httpRequestsAdaptiveGroups` queries stitched together offline. One day is the
+  maximum window this zone accepts per query, so a seven-day reading is seven
+  queries by construction, not a limitation to work around.
+- **Run it on 2026-09-01, and no later than 2026-09-02.** Two independent limits
+  apply and only one of them is the query span. This zone also refuses data
+  older than eight days: a window six days back returns data, twenty days back
+  is refused outright. Measured, not read from documentation. So the earliest
+  day of the baseline leaves the retention window around 2026-09-02, and a run
+  that slips loses the start of its own window.
+- **If the deadline is missed, re-declare the window rather than shortening it
+  silently.** A baseline that quietly becomes "the last few days that happened
+  to survive" is not a baseline, and nothing downstream would show that it had
+  changed.
+- **Report three buckets:**
+  - _Discovery_ -- sitemap, RSS, `llms.txt`, `/reference-index.json`,
+    `/knowledge.json`, agent-skills.
+  - _Reference consumption_ -- direct `.md` and `.prompt.txt`.
+  - _Ordinary site traffic_ -- everything else, mainly as the denominator.
+- **Keep negotiated Markdown in its own line**, sourced from Worker telemetry.
+  Zone path analytics cannot distinguish `GET /notes/<slug>/` as HTML from the
+  same path requested with `Accept: text/markdown`; only the Worker sees the
+  difference. Reporting them together would silently merge a human page view
+  with a machine representation request.
+- **Record absolute counts and share of total requests.** Do not manufacture
+  derived ratios such as catalog-to-Markdown conversion until the traffic is
+  large enough for one to mean anything.
+
+Checkpoints are seven days, then roughly thirty. At this site's traffic level,
+daily interpretation would be reading tea leaves with HTTP status codes.
 
 ## Sequencing
 
