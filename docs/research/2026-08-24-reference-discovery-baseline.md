@@ -180,6 +180,26 @@ browser loads, so the page's own selection quality is measured over HTTP.
 
 `npm run validate` passed: 106 unit tests, 13 worker checks, 13 retrieval cases.
 
-Not verified: the rendered result list was not exercised in a browser. The
-embedded index, the ranking over it, the bundled client script, and the markup
-are all checked, but the DOM wiring itself has no runtime test.
+### Browser verification
+
+The rendered page was driven in headless Chromium over CDP, against the built
+preview. The first run found two defects that no server-side check could have
+caught:
+
+- The map and grouped index still filtered by contiguous substring. A
+  natural-language question emptied the map and reported "0 published entries
+  shown" while the ranked list beside it showed eight results. Both now use one
+  ranking; the count reads "17 of 21 ranked matches shown", and map, index, and
+  count agree.
+- The ranked list ignored the Show controls, listing a superseded note while
+  "Historical notes" was unchecked. It now obeys the same filters: the
+  superseded note is absent by default and present when history is shown.
+
+After the fixes: results render with titles, summaries, and match reasons; the
+grouped index still holds all 59 entries; and the only console error is the
+Cloudflare beacon refused by the local sinkhole, which
+[`AGENTS.md`](../../AGENTS.md) already describes as an environment condition.
+
+There is still no automated test of the DOM wiring itself. The embedded index,
+the ranking over it, and the markup are checked in CI; the rendering was
+verified by hand.

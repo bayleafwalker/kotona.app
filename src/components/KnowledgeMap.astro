@@ -108,7 +108,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
   />
   <form class="knowledge-controls" aria-label="Filter the knowledge atlas">
     <label class="knowledge-search">
-      <span>Search titles, summaries, and tags</span>
+      <span>Search or ask a question</span>
       <input type="search" name="knowledge-search" autocomplete="off" />
     </label>
     <fieldset>
@@ -424,7 +424,24 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       ? JSON.parse(searchIndexSource.textContent ?? "[]")
       : [];
 
-    const renderResults = (query: string) => {
+    // One ranking drives both the ranked list and what the map and index show.
+    // A natural-language question used to empty the map, because the filter
+    // asked for a contiguous substring that no title contains.
+    let lastQuery: string | undefined;
+    let lastRanked: ReturnType<typeof rankReferences> = [];
+    const rankedFor = (query: string) => {
+      if (query !== lastQuery) {
+        lastQuery = query;
+        lastRanked = rankReferences(searchIndex, query);
+      }
+      return lastRanked;
+    };
+
+    const renderResults = (
+      query: string,
+      types: Set<string>,
+      showHistory: boolean,
+    ) => {
       if (!(resultsRegion instanceof HTMLElement)) return;
       if (!(resultsList instanceof HTMLElement)) return;
 
@@ -434,7 +451,17 @@ const clusterNodes = graph.clusters.map((cluster) => ({
         return;
       }
 
-      const ranked = rankReferences(searchIndex, query).slice(0, 8);
+      // The ranked list obeys the same controls as the map and the index.
+      // A result the reader has filtered out must not reappear here.
+      const ranked = rankedFor(query)
+        .filter(
+          (result) =>
+            types.has(result.document.type) &&
+            (showHistory ||
+              !result.document.lifecycle ||
+              result.document.lifecycle === "current"),
+        )
+        .slice(0, 8);
       resultsRegion.hidden = false;
       resultsList.replaceChildren(
         ...ranked.map((result) => {
@@ -825,12 +852,24 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       explorer.querySelectorAll(".knowledge-history").forEach((details) => {
         if (details instanceof HTMLDetailsElement) details.open = showHistory;
       });
+      // Short queries stay substring-based: a two-character fragment is a
+      // filter, not a question, and ranking it would be noise.
+      const rankedIds =
+        query.length >= 3
+          ? new Set(rankedFor(query).map((result) => result.document.id))
+          : undefined;
+      const matchesQuery = (element: SVGElement | HTMLElement, id: string) =>
+        !query ||
+        (rankedIds
+          ? rankedIds.has(id)
+          : element.dataset.search?.includes(query));
+
       const visible = new Set();
       for (const node of nodes) {
         if (!(node instanceof SVGElement)) continue;
         const match =
           types.has(node.dataset.nodeType ?? "") &&
-          (!query || node.dataset.search?.includes(query)) &&
+          matchesQuery(node, node.dataset.nodeId ?? "") &&
           (showHistory || !node.classList.contains("is-historical"));
         node.classList.toggle("is-filtered", !match);
         if (match && node.dataset.nodeId) visible.add(node.dataset.nodeId);
@@ -851,8 +890,13 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       if (selectedNodeId && !visible.has(selectedNodeId)) {
         closeDetail();
       }
-      if (count) count.textContent = `${visible.size} published entries shown`;
-      renderResults(query);
+      if (count) {
+        count.textContent =
+          query.length >= 3
+            ? `${visible.size} of ${rankedFor(query).length} ranked matches shown`
+            : `${visible.size} published entries shown`;
+      }
+      renderResults(query, types, showHistory);
     };
 
     explorer.addEventListener("input", refresh);
