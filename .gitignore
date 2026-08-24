@@ -11,6 +11,11 @@ worker-configuration.d.ts
 temp/
 public/og/generated/
 
+# Playwright output. The browser suite is a separate gate; its browsers and
+# artifacts are machine state, not repository contract.
+test-results/
+playwright-report/
+
 # Local direnv/environment files
 .envrc
 .envrc.local
