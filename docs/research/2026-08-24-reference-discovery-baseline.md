@@ -203,3 +203,36 @@ Cloudflare beacon refused by the local sinkhole, which
 There is still no automated test of the DOM wiring itself. The embedded index,
 the ranking over it, and the markup are checked in CI; the rendering was
 verified by hand.
+
+## Review pass
+
+An independent review of the branch raised eight findings; all were real and all
+are fixed. Three could have reached readers or machine clients:
+
+- **An empty ranking blanked the page.** A query of three or more characters
+  that ranked nothing produced an empty match set, which hid every map node and
+  every index entry while the page still said the grouped index below was
+  complete. An empty ranking now falls back to substring matching, so a typo or
+  a stop word narrows the view instead of erasing it.
+- **Diversity re-inverted succession.** Area-based displacement ran after the
+  succession ordering and could lift a superseded note back above its own
+  successor -- the exact invariant succession exists to hold. Diversity now runs
+  first: it is a presentation preference, and succession is a claim about
+  authority.
+- **A failed render was served as a reference document.** The `.md` route
+  checked the rewritten response's content type but not its status, so a page
+  that threw at render time would have been converted to Markdown, wrapped in a
+  valid prelude, and returned as `200`. Status is now propagated.
+
+The remaining five were smaller: `was` and `were` were listed as historical
+intent markers but stripped as stop words before intent was read; the embedded
+search index was serialized without escaping `<`, so a `</script` sequence in
+any published string would have killed all Explore interactivity; the
+definition-list conversion silently deleted anything it could not pair;
+`discoverFor` was pushed as a match reason twice, crowding out the informative
+ones; and the corpus size 59 was hard-coded in two suites, which would have
+failed an unrelated change.
+
+Each fix that could regress has a test that reproduces the original defect. The
+diversity case is checked both ways: it fails with the previous ordering and
+passes with the current one.

@@ -104,7 +104,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
   <script
     type="application/json"
     data-knowledge-search-index
-    set:html={JSON.stringify(searchDocuments)}
+    set:html={JSON.stringify(searchDocuments).replaceAll("<", "\\u003c")}
   />
   <form class="knowledge-controls" aria-label="Filter the knowledge atlas">
     <label class="knowledge-search">
@@ -854,9 +854,13 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       });
       // Short queries stay substring-based: a two-character fragment is a
       // filter, not a question, and ranking it would be noise.
+      // A query that ranks nothing falls back to substring matching. An empty
+      // ranking used to hide every node and every index entry, while the page
+      // went on claiming the grouped index below was complete.
+      const ranked = query.length >= 3 ? rankedFor(query) : [];
       const rankedIds =
-        query.length >= 3
-          ? new Set(rankedFor(query).map((result) => result.document.id))
+        ranked.length > 0
+          ? new Set(ranked.map((result) => result.document.id))
           : undefined;
       const matchesQuery = (element: SVGElement | HTMLElement, id: string) =>
         !query ||
@@ -892,8 +896,8 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       }
       if (count) {
         count.textContent =
-          query.length >= 3
-            ? `${visible.size} of ${rankedFor(query).length} ranked matches shown`
+          ranked.length > 0
+            ? `${visible.size} of ${ranked.length} ranked matches shown`
             : `${visible.size} published entries shown`;
       }
       renderResults(query, types, showHistory);

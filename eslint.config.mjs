@@ -22,4 +22,10 @@ export default [
       sourceType: "module",
     },
   },
+  {
+    // Browser specs run their page callbacks inside the browser, where the
+    // DOM globals are the whole point.
+    files: ["tests/browser/**/*.mjs"],
+    languageOptions: { globals: { document: "readonly", window: "readonly" } },
+  },
 ];

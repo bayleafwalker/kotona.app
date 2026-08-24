@@ -44,10 +44,36 @@ test("a natural-language question ranks results and drives the other views", asy
     shownInIndex,
   );
 
-  // The grouped index remains the complete text alternative.
+  // The grouped index remains the complete text alternative: one entry per
+  // document the page knows about, whatever the corpus size is today.
+  const corpusSize = await page.evaluate(
+    () =>
+      JSON.parse(
+        document.querySelector("[data-knowledge-search-index]").textContent,
+      ).length,
+  );
+  expect(corpusSize).toBeGreaterThan(20);
   expect(
     await page.locator(".knowledge-clusters [data-index-id]").count(),
-  ).toBe(59);
+  ).toBe(corpusSize);
+});
+
+test("a query that ranks nothing leaves the map and index reachable", async ({
+  page,
+}) => {
+  await page.goto("/explore/");
+  await page.getByRole("searchbox").fill("the");
+
+  // "the" is a stop word, so the ranking returns nothing. An empty ranking
+  // used to hide every node and every index entry while the page went on
+  // saying the grouped index below was complete.
+  await expect(page.locator(".knowledge-result-count")).toHaveText(
+    /published entries shown/,
+  );
+  expect(await page.locator(visibleIndexItems).count()).toBeGreaterThan(0);
+  expect(
+    await page.locator("[data-node-id]:not(.is-filtered)").count(),
+  ).toBeGreaterThan(0);
 });
 
 test("the history filter governs every representation together", async ({

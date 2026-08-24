@@ -169,8 +169,31 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
     const rendered = await next(`/${collection}/${slug}/`);
 
-    if (!rendered.headers.get("Content-Type")?.startsWith("text/html")) {
-      return withoutBody(notFound(cspNonce), context.request.method);
+    // Only a successful HTML render becomes a reference representation. A 500
+    // error page converted to Markdown, wrapped in a valid prelude and served
+    // as 200, is a rendering failure that a machine client would cache and
+    // cite as the document itself.
+    if (
+      rendered.status !== 200 ||
+      !rendered.headers.get("Content-Type")?.startsWith("text/html")
+    ) {
+      const headers = new Headers({
+        "Content-Type": "text/plain; charset=utf-8",
+      });
+      headers.set("X-Kotona-Revision", __BUILD_REVISION__);
+      applySecurityHeaders(headers, cspNonce, {
+        development: import.meta.env.DEV,
+      });
+      return withoutBody(
+        new Response(
+          rendered.status === 404 ? "Not found\n" : "Unavailable\n",
+          {
+            status: rendered.status === 200 ? 502 : rendered.status,
+            headers,
+          },
+        ),
+        context.request.method,
+      );
     }
 
     const markdown = renderReferenceMarkdown(await rendered.text(), document, {

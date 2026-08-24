@@ -140,16 +140,27 @@ const fieldWeights = {
   text: 1,
 };
 
+/** Every word in the query, including the ones scoring ignores. */
+function words(value) {
+  return value.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+}
+
 /** @param {string} value */
 export function tokenize(value) {
-  return (value.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter(
+  return words(value).filter(
     (token) => token.length > 1 && !stopWords.has(token),
   );
 }
 
-/** @param {string} query */
+/**
+ * Read intent from the raw words. Several past-tense markers are also stop
+ * words, so asking the scoring tokenizer would silently ignore them and the
+ * intent list would claim to handle words it never sees.
+ *
+ * @param {string} query
+ */
 export function hasHistoricalIntent(query) {
-  return tokenize(query).some((token) => historicalIntentWords.has(token));
+  return words(query).some((word) => historicalIntentWords.has(word));
 }
 
 /** @param {ReferenceSearchDocument} document */
@@ -359,12 +370,17 @@ export function rankReferences(documents, query, options = {}) {
       }
     }
 
-    for (const [field, weight] of Object.entries(fieldWeights)) {
+    // A curated phrase match already names the phrase. Echoing its own tokens
+    // back as a second reason pushes the informative ones out of the two the
+    // interface shows.
+    const phraseMatched = reasons.length > 0;
+    for (const field of Object.keys(fieldWeights)) {
       if (field === "text") continue;
+      if (field === "discoverFor" && phraseMatched) continue;
       const matched = queryTokens.filter((token) =>
         fieldTokens[field].has(token),
       );
-      if (matched.length > 0 && weight >= fieldWeights.tags) {
+      if (matched.length > 0) {
         reasons.push({ field, value: matched.join(", ") });
       }
     }
@@ -389,12 +405,16 @@ export function rankReferences(documents, query, options = {}) {
       return left.document.id.localeCompare(right.document.id, "en");
     });
 
-  // Explicit historical intent may reverse the default preference, so
-  // succession is not enforced when the reader asked about the past.
-  const ordered = historicalIntent ? ranked : applySuccession(ranked);
-
-  return diversify(ordered, {
+  // Diversity runs first. It displaces by area alone, so applying it after
+  // succession could lift a predecessor back above its own successor and undo
+  // the authority ordering. Succession is a claim about authority; diversity
+  // is a presentation preference, and the weaker of the two goes first.
+  const spread = diversify(ranked, {
     window: options.diversityWindow ?? 5,
     maxPerArea: options.maxPerArea ?? 2,
   });
+
+  // Explicit historical intent may reverse the default preference, so
+  // succession is not enforced when the reader asked about the past.
+  return historicalIntent ? spread : applySuccession(spread);
 }

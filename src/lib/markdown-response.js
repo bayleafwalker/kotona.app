@@ -344,18 +344,30 @@ export function htmlToMarkdown(html) {
       /<span\b[^>]*\bclass=["'][^"']*\bterm-note\b[^"']*["'][^>]*>[\s\S]*?<\/span>/gi,
       "",
     )
-    // A definition list is a pairing, not two unrelated paragraphs.
+    // A definition list is a pairing, not two unrelated paragraphs. Terms and
+    // definitions are walked in document order rather than matched as strict
+    // adjacent pairs, so a term with several definitions, or one separated by
+    // other markup, degrades instead of disappearing. Silent deletion is the
+    // worst failure available to a reference representation.
     .replace(/<dl\b[^>]*>([\s\S]*?)<\/dl>/gi, (_, list) => {
-      const pairs = [
-        ...list.matchAll(
-          /<dt\b[^>]*>([\s\S]*?)<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/gi,
-        ),
-      ].map(
-        (pair) =>
-          `- **${inlineHtmlToMarkdown(pair[1])}** -- ${inlineHtmlToMarkdown(pair[2])}`,
-      );
+      const lines = [];
 
-      return pairs.length > 0 ? protect(pairs.join("\n")) : "";
+      for (const entry of list.matchAll(/<(dt|dd)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+        const content = inlineHtmlToMarkdown(entry[2]);
+        if (content.length === 0) continue;
+
+        if (entry[1].toLowerCase() === "dt") {
+          lines.push(`- **${content}**`);
+        } else if (lines.length === 0) {
+          lines.push(`- ${content}`);
+        } else if (lines.at(-1).endsWith("**")) {
+          lines[lines.length - 1] = `${lines.at(-1)} -- ${content}`;
+        } else {
+          lines.push(`  - ${content}`);
+        }
+      }
+
+      return lines.length > 0 ? protect(lines.join("\n")) : "";
     })
     .replace(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/gi, (_, preAttributes, body) => {
       const codeMatch = body.match(/<code\b([^>]*)>([\s\S]*?)<\/code>/i);

@@ -159,3 +159,19 @@ test("removes the exploration template as a whole element", () => {
 
   assert.equal(stripExplorePrompt(html), "<p>Body.</p>");
 });
+
+test("a definition list degrades rather than losing content", () => {
+  const html =
+    "<main><dl><dt>Term</dt><dd>First sense.</dd><dd>Second sense.</dd><dt>Orphan</dt></dl></main>";
+
+  assert.equal(
+    htmlToMarkdown(html),
+    "- **Term** -- First sense.\n  - Second sense.\n- **Orphan**\n",
+  );
+});
+
+test("a definition without a preceding term is still published", () => {
+  const html = "<main><dl><dd>Stray definition.</dd></dl></main>";
+
+  assert.equal(htmlToMarkdown(html), "- Stray definition.\n");
+});

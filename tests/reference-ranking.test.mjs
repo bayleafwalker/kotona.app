@@ -184,3 +184,55 @@ test("one area cannot occupy the whole leading window", () => {
   assert.equal(leading.filter((area) => area === "agent workflow").length, 2);
   assert.ok(leading.includes("gitops"));
 });
+
+test("diversity cannot lift a predecessor back above its successor", () => {
+  // Two stronger documents fill the area quota, so the successor is the third
+  // of its area in the leading window and gets displaced -- past its own
+  // predecessor, which sits in a different area.
+  const corpus = [
+    document("crowd-one", {
+      title: "binding layer",
+      summary: "binding layer",
+      area: "X",
+      tags: ["binding", "layer"],
+    }),
+    document("crowd-two", {
+      title: "binding layer",
+      summary: "binding layer",
+      area: "X",
+      tags: ["binding", "layer"],
+    }),
+    document("successor", { title: "binding layer", area: "X" }),
+    document("predecessor", {
+      title: "binding layer",
+      area: "Y",
+      lifecycle: "superseded",
+      supersededBy: ["successor"],
+    }),
+  ];
+  const order = rankReferences(corpus, "binding layer").map(
+    (result) => result.document.id,
+  );
+
+  assert.ok(
+    order.indexOf("successor") < order.indexOf("predecessor"),
+    `successor must precede its predecessor, got ${order.join(", ")}`,
+  );
+});
+
+test("past-tense stop words still signal historical intent", () => {
+  assert.equal(hasHistoricalIntent("what was the design"), true);
+  assert.equal(hasHistoricalIntent("were these used"), true);
+  assert.equal(hasHistoricalIntent("what is the design"), false);
+});
+
+test("a curated phrase reason is not echoed back as its own tokens", () => {
+  const ranked = rankReferences(
+    corpus,
+    "handing work from one agent session to another",
+  );
+  const fields = ranked[0].reasons.map((reason) => reason.field);
+
+  assert.equal(fields.filter((field) => field === "discoverFor").length, 1);
+  assert.ok(fields.includes("title") || fields.includes("area"));
+});
