@@ -45,6 +45,21 @@ terms:
     definition:
       The private GitOps repository that holds desired state, recovery rules,
       and operational evidence for the cluster.
+reference:
+  purpose: current-project-orientation
+  discoverFor:
+    - running a Kubernetes cluster from a Git repository
+    - recovery and upgrade evidence for a Talos cluster
+  establishes:
+    - that Git reconciles the live cluster and the external snapshot path passed
+      an offline restore drill
+    - the verified Talos and Kubernetes upgrade state as of the recorded
+      verification date
+  doesNotEstablish:
+    - that a disruptive production control-plane restore has been performed
+    - cluster state after the recorded verification date
+  supplementWith:
+    - the live cluster's own reconciliation status and upgrade plan
 ---
 
 ## Overview

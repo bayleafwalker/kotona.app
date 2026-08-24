@@ -833,6 +833,84 @@ async function runChecks(baseUrl) {
       "robots.txt sitemap",
     );
   });
+
+  await check("reference catalog and its advertisement", async () => {
+    const home = await request("/");
+    assertIncludes(
+      home.response.headers.get("Link") ?? "",
+      '</reference-index.json>; rel="index"',
+      "homepage advertises the reference catalog",
+    );
+
+    const catalog = await request("/reference-index.json");
+    assertEqual(catalog.response.status, 200, "reference-index status");
+    assertContentType(catalog.response, "application/json");
+    const index = JSON.parse(catalog.body);
+    assertEqual(index.version, 1, "reference-index version");
+    assert(
+      /^[0-9a-f]{40}$/.test(index.revision),
+      "reference-index revision is not a commit SHA",
+    );
+
+    // The catalog carries claim scope, not portable instructions. Prompt text
+    // must stay out of it even though prompt availability is published.
+    for (const document of index.documents) {
+      assert(!document.draft, `${document.id} publishes a draft flag`);
+      if (document.prompt) {
+        assertEqual(
+          Object.keys(document.prompt).join(","),
+          "available",
+          `${document.id} prompt projection`,
+        );
+      }
+    }
+    assert(
+      !catalog.body.includes("Explore this note"),
+      "reference-index leaks explore prompt text",
+    );
+
+    // Every public document occurs once in the catalog, in the graph, and in
+    // llms.txt. Slice 1 must not let the three surfaces disagree.
+    const catalogPaths = index.documents.map(
+      (document) => new URL(document.url).pathname,
+    );
+    assertEqual(
+      catalogPaths.length,
+      new Set(catalogPaths).size,
+      "reference-index contains a duplicate document",
+    );
+
+    const llms = await request("/llms.txt");
+    const llmsPaths = [
+      ...llms.body.matchAll(
+        /\]\(https?:\/\/[^/]+(\/(?:notes|projects)\/[^)]+)\)/g,
+      ),
+    ].map((match) => match[1]);
+    const graph = JSON.parse((await request("/knowledge.json")).body);
+    const graphPaths = new Set(graph.nodes.map((node) => node.href));
+
+    assertEqual(
+      catalogPaths.length,
+      new Set(llmsPaths).size,
+      "reference-index and llms.txt document counts differ",
+    );
+    for (const path of catalogPaths) {
+      assert(llmsPaths.includes(path), `${path} is missing from llms.txt`);
+      assert(graphPaths.has(path), `${path} is missing from knowledge.json`);
+    }
+
+    const scoped = index.documents.filter((document) => document.reference);
+    assert(
+      scoped.length >= 15,
+      `reference scope backfill is incomplete (${scoped.length} documents)`,
+    );
+    assert(
+      index.documents
+        .filter((document) => document.type === "project")
+        .every((document) => document.reference),
+      "a project is missing its reference scope",
+    );
+  });
 }
 
 async function main() {

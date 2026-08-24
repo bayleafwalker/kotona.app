@@ -38,6 +38,22 @@ terms:
     definition:
       A contract-first platform scaffold for testing a small reusable service
       kernel before implementing its runtime.
+reference:
+  purpose: current-project-orientation
+  discoverFor:
+    - fixing service boundaries before a runtime exists
+    - validating service contracts and scenario overlays locally
+  establishes:
+    - that three service contracts and two scenario packs pass local document
+      and schema validation
+    - that boundary coherence can be checked with no service implementation
+      present
+  doesNotEstablish:
+    - runtime behaviour, because service implementations and a simulator do not
+      exist
+    - that the kernel can replace an existing platform or service
+  supplementWith:
+    - the receiving system's own contracts and deployment constraints
 ---
 
 ## Overview

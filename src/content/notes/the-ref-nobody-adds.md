@@ -40,6 +40,22 @@ explorePrompt: >-
   where your constraints diverge -- human users who do search, or a capability
   with no natural placement. Produce a measurement and a convention with its
   falsifying outcome named, not a tool proposal.
+reference:
+  purpose: operating-guidance
+  discoverFor:
+    - binding planning documents to tracked work items
+    - why a shipped reference primitive never enters the working loop
+  establishes:
+    - that a reference mechanism can exist, ship, and stay unused, measured here
+      as seven document references across 831 items
+    - that the cost of the gap appears later as reconciliation work rather than
+      as a missing feature
+  doesNotEstablish:
+    - that any particular tool or schema is the right binding mechanism
+    - current reference counts in any repository after the recorded revision
+      date
+  supplementWith:
+    - the receiving project's own tracker data and planning-document locations
 ---
 
 The feeling was a disconnect: sprint items carry a one-line title, the real

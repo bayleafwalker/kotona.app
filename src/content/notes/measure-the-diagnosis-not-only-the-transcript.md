@@ -73,6 +73,24 @@ explorePrompt: >-
   controlled task comparison with predeclared quality measures, and a real-use
   pilot. Include primary outcomes, invalidity conditions, and the strongest
   claim the evidence could honestly support.
+reference:
+  purpose: evaluation-method
+  discoverFor:
+    - evaluating a context or output-reduction tool for an agent
+    - separating measured output reduction from diagnostic quality
+  establishes:
+    - that mechanism, quality, economics, and authority are separable questions
+      when evaluating such a tool
+    - an approximately 84 percent reduction in model-visible output for the
+      direct-tool topology tested
+  doesNotEstablish:
+    - that the tool earned continuation, which native programmatic tool calling
+      disproved
+    - pair-level cost or diagnostic quality, which the experiment left
+      unresolved
+  supplementWith:
+    - the declared successor note and the receiving environment's own tool
+      topology
 ---
 
 > **Update, 16 August 2026 -- disproven.** The output-reduction measurements and

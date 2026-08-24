@@ -47,6 +47,20 @@ explorePrompt: >-
   its effect. Say where your constraints diverge -- targets with no receipt, no
   policy service, irreversible actions. Produce the envelope for that one action
   and the gap that defeats it.
+reference:
+  purpose: design-rationale
+  discoverFor:
+    - what replaces the deployment boundary when an agent operates a live system
+    - separating an attempt from its durable consequence
+  establishes:
+    - that the controls once carried by a promotion boundary must attach to the
+      action itself
+    - that an attempt and its effect can diverge, so a record of intent alone is
+      insufficient
+  doesNotEstablish:
+    - an implementation, protocol, or permission model for any specific system
+  supplementWith:
+    - the receiving system's own authorization boundaries and audit records
 ---
 
 ## Question

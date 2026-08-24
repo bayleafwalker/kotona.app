@@ -12,7 +12,8 @@ implementation and deployment are separate activities.
 
 ### 0. Baseline and contract proof
 
-Status: pending
+Status: complete; receipt in
+[`docs/research/2026-08-24-reference-discovery-baseline.md`](../research/2026-08-24-reference-discovery-baseline.md)
 
 - Run `npm run validate` on the implementation branch before changing behavior.
 - Record document counts and agreement among `llms.txt` and `knowledge.json`.
@@ -24,7 +25,8 @@ Exit: a clean validation receipt and explicit baseline observations.
 
 ### 1. Reference metadata and index
 
-Status: pending
+Status: complete; evidence in
+[`docs/research/2026-08-24-reference-discovery-baseline.md`](../research/2026-08-24-reference-discovery-baseline.md)
 
 - Add the optional, bounded `reference` schema to notes and projects.
 - Build one allowlisted projection shared by public reference surfaces.
@@ -41,6 +43,8 @@ builds; prompt text and arbitrary frontmatter are absent.
 Status: pending; depends on slice 1
 
 - Add explicit note and project `.md` paths backed by the existing projection.
+- Change the catalog's Markdown representation from `content-negotiation` to the
+  explicit `.md` path, and add the `.prompt.txt` URL to `prompt`.
 - Prepend deterministic allowlisted reference metadata.
 - Remove the complete optional-prompt element before HTML-to-Markdown
   conversion.

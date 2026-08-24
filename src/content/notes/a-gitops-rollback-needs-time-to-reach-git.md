@@ -39,6 +39,22 @@ explorePrompt: >-
   who is responsible for closing the loop back to the declaration. Say where
   your constraints diverge, and produce the procedure plus the fact your
   incident record would still be missing.
+reference:
+  purpose: historical-evidence
+  discoverFor:
+    - why a live rollback alone does not end a GitOps incident
+    - historical incident reasoning about reconciliation restoring a bad
+      revision
+  establishes:
+    - that a live correction is temporary while Git still declares the failing
+      state
+  doesNotEstablish:
+    - current backup, recovery, or upgrade state of the cluster
+    - present operating procedure, since this note is retained as a historical
+      lesson
+  supplementWith:
+    - the current project record for the cluster and its live reconciliation
+      status
 ---
 
 The immediate problem was simple enough. A workload started crashlooping after a

@@ -6,6 +6,7 @@ import { applySecurityHeaders } from "./lib/security-headers.js";
 const homepageLinks = [
   '</.well-known/agent-skills/index.json>; rel="describedby"; type="application/json"',
   '</llms.txt>; rel="describedby"; type="text/markdown"',
+  '</reference-index.json>; rel="index"; type="application/json"; title="Reference catalog"',
   '</rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS"',
 ].join(", ");
 

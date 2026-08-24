@@ -42,6 +42,21 @@ explorePrompt: >-
   methods, verify factual claims against primary current sources, and finish
   with a risk-calibrated process, verification and recovery paths, and the
   limited claims my implementation can honestly support.
+reference:
+  purpose: design-rationale
+  discoverFor:
+    - which established disciplines already own the assurance questions raised
+      by coding agents
+    - deciding whether to build assurance tooling or adopt existing practice
+  establishes:
+    - that intent, authority, records, evidence, acceptance, release,
+      observation, and recovery map onto existing engineering disciplines
+  doesNotEstablish:
+    - that any specific product or implementation satisfies those disciplines
+    - conformance of the receiving system to any named standard
+  supplementWith:
+    - the cited primary sources and the receiving system's own assurance
+      obligations
 ---
 
 I arrived at software assurance backwards. I started with coding agents and

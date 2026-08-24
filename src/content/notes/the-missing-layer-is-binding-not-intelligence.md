@@ -62,6 +62,20 @@ explorePrompt: >-
   tooling. List what you have refused to build and the named pain that would
   justify each. Say where your constraints diverge, then read the successor and
   say which of your framings is already established practice under another name.
+reference:
+  purpose: historical-evidence
+  discoverFor:
+    - how an early local agent-coordination design was reasoned about
+    - why binding rather than model capability was treated as the gap
+  establishes:
+    - the April 2026 reasoning that produced the binding rule, retained as a
+      dated record
+  doesNotEstablish:
+    - current tooling, coordination boundaries, or model routing
+    - that binding is missing from the field, which established systems
+      engineering already covers
+  supplementWith:
+    - the declared successor material and current project state
 ---
 
 The agent work happens. The problem is that the system forgets.

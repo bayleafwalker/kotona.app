@@ -4,7 +4,8 @@ kotona.app is a public, read-only publication site. Agent discovery should make
 that material easier to find and consume; it should not manufacture an API or
 authentication surface that does not exist.
 
-The accepted next direction is the static reference protocol in
+Slice 1 of that direction has landed: the reference catalog below is published
+and advertised. The accepted next direction is the static reference protocol in
 [`docs/architecture/reference-discovery.md`](architecture/reference-discovery.md).
 Its ordered backlog lives in
 [`docs/plans/reference-discovery.md`](plans/reference-discovery.md). The list
@@ -12,10 +13,21 @@ below describes the currently published behavior until those slices land.
 
 ## Published from this repository
 
-- Homepage `Link` headers advertise the skills index, `llms.txt`, and RSS.
+- Homepage `Link` headers advertise the skills index, `llms.txt`, the reference
+  catalog, and RSS.
 - `/.well-known/agent-skills/index.json` points to a small, integrity-pinned
   guide for navigating the site's public material.
 - `/llms.txt` provides a compact map of the site's primary content surfaces.
+- `/reference-index.json` is the flattened reference catalog: one entry per
+  published note or project, with public identity, classification, dates,
+  representations, prompt availability, and declared reference scope where the
+  document carries it. A note publishes `role`, `claimPosture`, and `lifecycle`;
+  a project publishes `projectState` and is bounded by `dates.lastVerified`. The
+  two are named separately because a note's status is a claim posture and a
+  project's is a working state. The catalog is an allowlisted projection, so raw
+  frontmatter, repository paths, and prompt text never appear in it, and
+  `prompt.available` reports that a prompt exists without carrying its words.
+  `knowledge.json` remains the separate topology and relationship surface.
 - `/version.json` ties the deployed Worker to its source commit.
 - HTML responses negotiate to Markdown when the request prefers `text/markdown`.
   HTML remains the default when qualities tie.

@@ -66,6 +66,21 @@ explorePrompt: >-
   the design where your workspace is itself the durable source. Produce an
   authority matrix, lifecycle rules and three tests that would expose accidental
   authority capture.
+reference:
+  purpose: operating-guidance
+  discoverFor:
+    - deciding what a multi-repository workspace folder is allowed to own
+    - separating a generated working view from the systems that own state
+  establishes:
+    - that a materialized project folder is a view over existing authorities and
+      durable change must land in the owning system
+    - that unified navigation is the folder's benefit and is not a claim of
+      ownership
+  doesNotEstablish:
+    - how any specific workspace tool implements binding or materialization
+    - permissions or access policy for the receiving environment
+  supplementWith:
+    - the receiving repository's own ownership, branch, and deployment rules
 ---
 
 A project folder may present several repositories as one working surface. It

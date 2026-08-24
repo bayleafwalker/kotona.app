@@ -47,6 +47,20 @@ terms:
     definition:
       The household data and decision platform that owns long-lived semantics,
       scenarios, policies, and approvals.
+reference:
+  purpose: current-project-orientation
+  discoverFor:
+    - keeping household reporting, planning, and policy in one semantic model
+    - giving agents a narrow retrieval and proposal surface over household data
+  establishes:
+    - that operating views, scenarios, policies, approval-aware actions, and
+      agent retrieval share one semantic model
+    - that a device platform can be a device-facing partner rather than the
+      system of record
+  doesNotEstablish:
+    - that the generic adapter boundary survives a second serious integration
+  supplementWith:
+    - the receiving system's own data ownership and approval boundaries
 ---
 
 ## Overview
