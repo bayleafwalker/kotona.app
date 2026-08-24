@@ -8,6 +8,8 @@ import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, URL } from "node:url";
 
+import { rankReferences } from "../src/lib/reference-ranking.js";
+
 const rootDirectory = fileURLToPath(new URL("../", import.meta.url));
 const require = createRequire(import.meta.url);
 const astroPackagePath = require.resolve("astro/package.json");
@@ -868,6 +870,63 @@ async function runChecks(baseUrl) {
       "https://kotona.app/sitemap-index.xml",
       "robots.txt sitemap",
     );
+  });
+
+  await check("Explore ships a working ranked search", async () => {
+    const explore = await request("/explore/");
+    assertEqual(explore.response.status, 200, "explore status");
+
+    // The grouped index must remain complete without JavaScript.
+    assertIncludes(explore.body, "Grouped index", "explore grouped index");
+    assertIncludes(
+      explore.body,
+      "remains useful without JavaScript",
+      "explore no-JavaScript guarantee",
+    );
+
+    const embedded = explore.body.match(
+      /<script[^>]*data-knowledge-search-index[^>]*>([\s\S]*?)<\/script>/i,
+    );
+    assert(embedded, "explore page does not embed a search index");
+    const searchIndex = JSON.parse(
+      embedded[1].replaceAll("&quot;", '"').replaceAll("&amp;", "&"),
+    );
+    assertEqual(searchIndex.length, 59, "embedded search index document count");
+    assert(
+      !JSON.stringify(searchIndex).includes("doesNotEstablish"),
+      "the browser index must not carry claim-boundary text it does not rank",
+    );
+
+    // Rank the bytes the browser actually receives, with the module it
+    // actually loads. Curated scope alone has to carry vague intent here,
+    // because the page deliberately ships no document bodies.
+    const expectations = [
+      [
+        "binding planning documents to tracked work items",
+        "/notes/the-ref-nobody-adds/",
+      ],
+      [
+        "is a project folder allowed to own state or is it just a view",
+        "/notes/a-project-folder-is-a-view-not-an-authority/",
+      ],
+      [
+        "evaluating a tool that reduces how much output an agent sees",
+        "/notes/measure-the-diagnosis-not-only-the-transcript/",
+      ],
+    ];
+
+    for (const [question, expectedPath] of expectations) {
+      const ranked = rankReferences(searchIndex, question);
+      assertEqual(
+        ranked[0]?.document.path,
+        expectedPath,
+        `explore ranking for ${JSON.stringify(question)}`,
+      );
+      assert(
+        ranked[0].reasons.length > 0,
+        `explore ranking for ${JSON.stringify(question)} gives no match reason`,
+      );
+    }
   });
 
   await check("reference catalog and its advertisement", async () => {

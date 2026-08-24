@@ -26,7 +26,9 @@ below describes the currently published behavior until those slices land.
   two are named separately because a note's status is a claim posture and a
   project's is a working state. The catalog is an allowlisted projection, so raw
   frontmatter, repository paths, and prompt text never appear in it, and
-  `prompt.available` reports that a prompt exists without carrying its words.
+  `prompt.available` reports that a prompt exists without carrying its words. A
+  superseded document also publishes its declared successors, because a client
+  that retrieved the predecessor needs to know where current reasoning went.
   Each entry also declares how to fetch its representations: HTML and Markdown
   directly, plus negotiation on the canonical URL with the exact `Accept` value
   it needs, so the catalog is usable without site-specific knowledge.
@@ -51,6 +53,13 @@ below describes the currently published behavior until those slices land.
 - Former `/writing/` URLs with observed agent demand permanently redirect to
   their published `/notes/` equivalents. The requested articles are retained as
   archival notes rather than redirected to a generic index.
+
+Explore ranks results with the same deterministic module the retrieval
+evaluation uses. Curated `reference.discoverFor` phrases carry the most weight,
+current material leads for comparable relevance, a superseded document does not
+lead its own successor, and explicit historical intent reverses that. Each
+result states why it ranked where it did. The grouped index remains complete
+without JavaScript.
 
 Every note publishes a role, claim posture, and lifecycle. Role states whether
 the document is operating guidance, synthesis, an exploration, or project

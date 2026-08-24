@@ -42,6 +42,7 @@ type SourceEntry = {
     lastRevised: Date;
     lastVerified?: Date;
     explorePrompt?: string;
+    supersededBy?: { id: string }[];
     reference?: ReferenceScope;
   };
 };
@@ -85,6 +86,13 @@ export type ReferenceDocument = {
     /** Projects only. Project evidence is bounded by this date. */
     lastVerified?: string;
   };
+  /**
+   * Declared successors for a superseded document. This is an authority
+   * boundary rather than topology: a client that retrieves the predecessor
+   * needs to know where current reasoning went. `knowledge.json` remains the
+   * place for the full relationship graph.
+   */
+  supersededBy?: { id: string; url: string }[];
   reference?: ReferenceScope;
   /** Prompt availability and its resource, never prompt text. */
   prompt?: { available: true; url: string; mediaType: "text/plain" };
@@ -165,6 +173,14 @@ export function projectReferenceDocument(
         ? { lastVerified: isoDate(entry.data.lastVerified) }
         : {}),
     },
+    ...(entry.data.supersededBy?.length
+      ? {
+          supersededBy: entry.data.supersededBy.map((successor) => ({
+            id: successor.id,
+            url: new URL(`/notes/${successor.id}/`, baseUrl).toString(),
+          })),
+        }
+      : {}),
     ...(scope
       ? {
           reference: {

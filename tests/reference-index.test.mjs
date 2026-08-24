@@ -108,6 +108,10 @@ test("publishes only allowlisted fields", () => {
     "representations",
     "classification",
     "dates",
+    "supersededBy",
+  ]);
+  assert.deepEqual(document.supersededBy, [
+    { id: "successor", url: "https://kotona.app/notes/successor/" },
   ]);
   assert.deepEqual(document.classification, {
     area: "agent workflow",

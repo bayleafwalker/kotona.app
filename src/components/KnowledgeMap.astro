@@ -1,8 +1,12 @@
 ---
 import type { KnowledgeGraph } from "../lib/knowledge-map";
+import type { ReferenceSearchDocument } from "../lib/reference-ranking.js";
 
-type Props = { graph: KnowledgeGraph };
-const { graph } = Astro.props;
+type Props = {
+  graph: KnowledgeGraph;
+  searchDocuments: ReferenceSearchDocument[];
+};
+const { graph, searchDocuments } = Astro.props;
 const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));
 const clusterCentres = new Map<string, { x: number; y: number }>(
   graph.clusters.map((cluster) => {
@@ -97,6 +101,11 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 ---
 
 <section class="knowledge-explorer" data-knowledge-explorer>
+  <script
+    type="application/json"
+    data-knowledge-search-index
+    set:html={JSON.stringify(searchDocuments)}
+  />
   <form class="knowledge-controls" aria-label="Filter the knowledge atlas">
     <label class="knowledge-search">
       <span>Search titles, summaries, and tags</span>
@@ -114,6 +123,16 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     </fieldset>
     <p class="knowledge-result-count" aria-live="polite"></p>
   </form>
+
+  <section class="knowledge-results" data-knowledge-results hidden>
+    <h2>Ranked results</h2>
+    <p class="knowledge-results-note">
+      Ranked by curated reference scope, title, summary, and tags. Current
+      material leads unless the question asks about the past. The grouped index
+      below stays complete.
+    </p>
+    <ol data-knowledge-results-list></ol>
+  </section>
 
   <div class="knowledge-map-stage">
     <div class="knowledge-map-frame" aria-label="Visual knowledge map">
@@ -380,6 +399,11 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 </section>
 
 <script>
+  import {
+    rankReferences,
+    type ReferenceSearchDocument,
+  } from "../lib/reference-ranking.js";
+
   const explorer = document.querySelector("[data-knowledge-explorer]");
   if (explorer instanceof HTMLElement) {
     const search = explorer.querySelector('input[name="knowledge-search"]');
@@ -391,6 +415,75 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     const clusterControls = [...explorer.querySelectorAll("[data-cluster-id]")];
     const map = explorer.querySelector(".knowledge-map");
     const count = explorer.querySelector(".knowledge-result-count");
+    const resultsRegion = explorer.querySelector("[data-knowledge-results]");
+    const resultsList = explorer.querySelector("[data-knowledge-results-list]");
+    const searchIndexSource = explorer.querySelector(
+      "[data-knowledge-search-index]",
+    );
+    const searchIndex: ReferenceSearchDocument[] = searchIndexSource
+      ? JSON.parse(searchIndexSource.textContent ?? "[]")
+      : [];
+
+    const renderResults = (query: string) => {
+      if (!(resultsRegion instanceof HTMLElement)) return;
+      if (!(resultsList instanceof HTMLElement)) return;
+
+      if (query.length < 3) {
+        resultsRegion.hidden = true;
+        resultsList.replaceChildren();
+        return;
+      }
+
+      const ranked = rankReferences(searchIndex, query).slice(0, 8);
+      resultsRegion.hidden = false;
+      resultsList.replaceChildren(
+        ...ranked.map((result) => {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = result.document.path;
+          link.textContent = result.document.title;
+          item.appendChild(link);
+
+          const meta = document.createElement("span");
+          meta.className = "knowledge-result-meta";
+          meta.textContent =
+            result.document.type === "project"
+              ? "Project"
+              : [result.document.area, result.document.lifecycle]
+                  .filter(Boolean)
+                  .join(" / ");
+          item.appendChild(meta);
+
+          if (result.document.summary) {
+            const summary = document.createElement("p");
+            summary.textContent = result.document.summary;
+            item.appendChild(summary);
+          }
+
+          // Why this result, in the ranker's own terms. A reader who
+          // disagrees with the order can see what produced it.
+          const reasons = result.reasons
+            .filter((reason) => reason.field !== "tags")
+            .slice(0, 2)
+            .map((reason) => `${reason.field}: ${reason.value}`);
+          if (reasons.length > 0) {
+            const why = document.createElement("p");
+            why.className = "knowledge-result-why";
+            why.textContent = reasons.join(" -- ");
+            item.appendChild(why);
+          }
+
+          return item;
+        }),
+      );
+
+      if (ranked.length === 0) {
+        const empty = document.createElement("li");
+        empty.textContent =
+          "No ranked match. The grouped index below is complete.";
+        resultsList.appendChild(empty);
+      }
+    };
     const detail = explorer.querySelector("[data-knowledge-detail]");
     const detailKind = explorer.querySelector("[data-detail-kind]");
     const detailTitle = explorer.querySelector("[data-detail-title]");
@@ -759,6 +852,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
         closeDetail();
       }
       if (count) count.textContent = `${visible.size} published entries shown`;
+      renderResults(query);
     };
 
     explorer.addEventListener("input", refresh);

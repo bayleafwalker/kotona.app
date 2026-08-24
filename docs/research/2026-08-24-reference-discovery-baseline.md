@@ -132,3 +132,54 @@ items do not concatenate.
 The retrieval evaluation now also asserts the three-surface identity invariant
 and prompt separation, checking that the neutral representation excludes the
 prompt while the prompt resource carries it with lifecycle context.
+
+## Slice 3 result
+
+Ranking moved out of the evaluation harness and into the site.
+`src/lib/reference-ranking.js` is pure and browser-safe, and both the Explore
+page and `npm run test:retrieval` rank with it, so the harness measures the
+ranking that ships rather than a proxy for it.
+
+Scoring is tokenized, so a long question no longer needs a contiguous match.
+Curated `reference.discoverFor` phrases lead the field weights, and a phrase the
+query fully covers earns a further bonus: the author declared the document
+discoverable for exactly that intent. `doesNotEstablish` is deliberately
+unscored, because matching a claim boundary would rank a document for the thing
+it disclaims.
+
+Two policies sit on top of the lexical score, both applied as ordering rather
+than as score adjustments:
+
+- **Succession.** A superseded document does not lead its own successor when
+  both are comparably relevant, and the demoted result says so in its match
+  reasons. The rule is banded: a predecessor that is overwhelmingly the better
+  match still leads, carrying its lifecycle with it. Without the band, the
+  best-matching document for "evaluating a tool that reduces how much output an
+  agent sees" fell to rank 7 behind documents that merely shared the word
+  "agent" -- a worse answer, produced by a policy meant to improve answers.
+- **Diversity.** No more than two documents from one area may occupy the leading
+  window, so a single cluster cannot fill the visible results.
+
+Explicit historical intent reverses the default preference and disables
+succession, so a question about the past retrieves the past.
+
+Retrieval cases now support either an exact rank or an acceptable top-k set.
+Vague intent has no single correct answer, and demanding one would encode a
+claim the corpus cannot support. Coverage grew from 6 cases to 13, adding the
+five required vague-intent areas plus succession and historical-intent cases.
+`npm run test:retrieval -- "a question"` prints the ranked top ten with match
+reasons, so a new case is written against observed behaviour.
+
+The Explore page renders a ranked list above the map and keeps its complete
+no-JavaScript grouped index. Its embedded corpus is metadata only -- identity,
+classification, curated scope -- and deliberately carries no document bodies: a
+machine client retrieves those from the `.md` resources, and shipping the whole
+corpus to every reader would cost far more than the ranking it buys. A worker
+check parses the index out of the served HTML and ranks it with the module the
+browser loads, so the page's own selection quality is measured over HTTP.
+
+`npm run validate` passed: 106 unit tests, 13 worker checks, 13 retrieval cases.
+
+Not verified: the rendered result list was not exercised in a browser. The
+embedded index, the ranking over it, the bundled client script, and the markup
+are all checked, but the DOM wiring itself has no runtime test.

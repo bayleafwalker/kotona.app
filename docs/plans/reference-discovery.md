@@ -72,7 +72,8 @@ semantic boundary in the HTML may not collapse in conversion:
 
 ### 3. Lifecycle-aware ranked retrieval
 
-Status: pending; depends on slice 1
+Status: complete; evidence in
+[`docs/research/2026-08-24-reference-discovery-baseline.md`](../research/2026-08-24-reference-discovery-baseline.md)
 
 - Extract a pure browser-safe lexical ranking module.
 - Replace contiguous substring search with tokenized weighted ranking.
@@ -210,15 +211,14 @@ privacy posture the site already publishes.
 
 ## Sequencing
 
-1. Slices 0 and 1: complete.
-2. Slice 2: neutral Markdown, explicit prompts, and Markdown fidelity.
-3. Slice 3: lifecycle-aware retrieval, evaluated against the scoped cohort.
-4. Deploy slices 0 through 3 once they are independently healthy. Slice 4 does
+1. Slices 0 through 3: complete and validated locally.
+2. Independent review of the branch.
+3. Deploy slices 0 through 3 once they are independently healthy. Slice 4 does
    not change the machine contract and is not a prerequisite for it.
-5. Establish the external retrieval baseline and begin machine-surface
+4. Establish the external retrieval baseline and begin machine-surface
    measurement.
-6. Slice 4 as human ergonomics.
-7. Revisit metadata coverage, embeddings, or a search service only from an
+5. Slice 4 as human ergonomics.
+6. Revisit metadata coverage, embeddings, or a search service only from an
    observed retrieval failure, under the evidence gates already stated.
 
 ## Plan maintenance

@@ -66,9 +66,8 @@
     "expectedPath": "/notes/where-the-assurance-questions-are-already-answered/",
     "maxRank": 1,
     "requiredPhrases": [
-      "lifecycle: \"current\"",
-      "purpose: \"design-rationale\"",
-      "The same correction applies to several terms I developed locally."
+      "The same correction applies to several terms I developed locally.",
+      "either qualify a development tool"
     ],
     "forbiddenPhrases": [
       "Explore this note with AI",
@@ -80,6 +79,68 @@
       "single-operator, small-project, repository-backed",
       "Lifecycle: current",
       "is not evidence that the document is current"
-    ]
+    ],
+    "reasonFields": ["title"]
+  },
+  {
+    "id": "agent-handover-vague-intent",
+    "question": "how do I hand work from one agent session to another",
+    "acceptablePaths": [
+      "/notes/the-work-between-the-ticket-and-the-agent/",
+      "/notes/the-ref-nobody-adds/",
+      "/notes/authority-must-travel-with-the-action/",
+      "/projects/vuoro/"
+    ],
+    "topK": 3,
+    "reasonFields": ["discoverFor"]
+  },
+  {
+    "id": "planning-document-binding",
+    "question": "binding planning documents to tracked work items",
+    "expectedPath": "/notes/the-ref-nobody-adds/",
+    "maxRank": 1,
+    "requiredPhrases": ["item ref add --type doc"],
+    "reasonFields": ["discoverFor"]
+  },
+  {
+    "id": "workspace-versus-authority",
+    "question": "is a project folder allowed to own state or is it just a view",
+    "expectedPath": "/notes/a-project-folder-is-a-view-not-an-authority/",
+    "maxRank": 1,
+    "requiredPhrases": ["generated view over existing authorities"]
+  },
+  {
+    "id": "verified-migration-state",
+    "question": "how do I know a migration actually reached the verified state",
+    "acceptablePaths": [
+      "/notes/the-candidate-passed-the-upgrade-did-not/",
+      "/projects/vuoro/"
+    ],
+    "topK": 2
+  },
+  {
+    "id": "context-reduction-tool-evaluation",
+    "question": "evaluating a tool that reduces how much output an agent sees",
+    "expectedPath": "/notes/measure-the-diagnosis-not-only-the-transcript/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "disproven",
+      "A platform capability does not exist all at once"
+    ],
+    "forbiddenPhrases": ["Explore this note with AI"]
+  },
+  {
+    "id": "successor-outranks-predecessor",
+    "question": "which layer is actually missing from agent tooling today",
+    "expectedPath": "/notes/where-the-assurance-questions-are-already-answered/",
+    "maxRank": 5,
+    "mustNotPrecede": ["/notes/the-missing-layer-is-binding-not-intelligence/"]
+  },
+  {
+    "id": "historical-intent-retrieves-history",
+    "question": "what did I previously believe the missing layer in agent tooling was",
+    "expectedPath": "/notes/the-missing-layer-is-binding-not-intelligence/",
+    "maxRank": 1,
+    "requiredPhrases": ["Update, July 2026"]
   }
 ]
