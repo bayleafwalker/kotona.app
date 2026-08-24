@@ -1,7 +1,7 @@
 # Reference discovery baseline (slice 0)
 
 Date: 2026-08-24  
-Branch: `reference-discovery-slice-1`  
+Branch: `reference-discovery-slices-0-3`  
 Baseline commit: `ab0f2b1`  
 Plan: [`docs/plans/reference-discovery.md`](../plans/reference-discovery.md)
 
