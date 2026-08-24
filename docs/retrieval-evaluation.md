@@ -13,7 +13,13 @@ negotiation, and runs a deterministic BM25-style lexical baseline. The cases in
 - recover why shared Markdown stopped being sprint authority;
 - prefer current GitOps project state over an archived incident note;
 - retrieve that archived incident when history is explicitly requested; and
-- state what the contract-first Box project cannot yet prove.
+- state what the contract-first Box project cannot yet prove;
+- select a useful document from vague intent, including agent handover,
+  planning-document binding, workspace versus authority, verified migration
+  state, and the evaluation of context-reduction tools;
+- keep a current successor ahead of the note it replaced; and
+- keep the exploration template out of the neutral reference representation
+  while it stays retrievable on its own resource.
 
 Each case checks retrieval rank and the evidence that must be present in the
 public response. A failure means either discovery, retrieval language, lifecycle
@@ -26,9 +32,18 @@ is deliberately local and deterministic so it runs behind the development
 firewall and in CI. Model-assisted evaluations can be added later as a separate,
 recorded strategy without weakening this floor.
 
-The accepted next iteration keeps that public, deterministic floor and adds a
-retrieval-oriented reference index, lifecycle-aware shared ranking, and
-acceptable top-k cases for vague intent. Exact rank remains appropriate for
-precise authority questions. The architecture and ordered test changes are in
+That iteration has landed. The evaluation now builds its corpus from
+`/reference-index.json` plus the public Markdown body of each document, and
+ranks with `src/lib/reference-ranking.js` -- the same module the Explore page
+loads, so the harness measures the ranking the site ships rather than a proxy
+for it. Cases accept either an exact rank or an acceptable top-k set, because
+vague intent has no single correct answer and demanding one would encode a claim
+the corpus cannot support. `npm run test:retrieval -- "a question"` prints the
+ranked top ten with match reasons, so a new case is written against observed
+behaviour. The architecture and the ordered backlog are in
 [`docs/architecture/reference-discovery.md`](architecture/reference-discovery.md)
 and [`docs/plans/reference-discovery.md`](plans/reference-discovery.md).
+
+This measures internal selection only. Whether an outside system finds this site
+at all is a separate question with a separate instrument, in
+[`docs/external-retrieval-evaluation.md`](external-retrieval-evaluation.md).
