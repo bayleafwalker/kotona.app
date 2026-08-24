@@ -544,7 +544,7 @@ async function runChecks(baseUrl) {
     );
   });
 
-  await check("explore-prompt rendering and Markdown negotiation", async () => {
+  await check("prompt separation across representations", async () => {
     const assurancePath =
       "/notes/where-the-assurance-questions-are-already-answered/";
     const html = await request(assurancePath);
@@ -563,51 +563,87 @@ async function runChecks(baseUrl) {
       'class="explore-prompt-copy"',
       "explore-prompt copy button in HTML",
     );
-    assertIncludes(
-      html.body,
-      "Copy prompt",
-      "explore-prompt copy label in HTML",
-    );
 
+    // The neutral reference representation carries no portable task language.
     const markdown = await request(assurancePath, { accept: "text/markdown" });
     assertContentType(markdown.response, "text/markdown");
-    assertIncludes(
-      markdown.body,
-      "## Explore this note with AI",
-      "explore-prompt heading in Markdown",
-    );
-    assertIncludes(
-      markdown.body,
-      "not a reconstruction of how the note was written",
-      "explore-prompt explanation in Markdown",
-    );
-    assertIncludes(
-      markdown.body,
+    for (const forbidden of [
+      "Explore this note with AI",
       "Use this note as a worked instantiation",
-      "explore-prompt text in Markdown",
+      "not a reconstruction of how the note was written",
+      "Copy prompt",
+    ]) {
+      assert(
+        !markdown.body.includes(forbidden),
+        `Markdown must not carry ${JSON.stringify(forbidden)}`,
+      );
+    }
+    assertIncludes(
+      markdown.body,
+      "The same correction applies to several terms I developed locally.",
+      "reference Markdown still carries the body",
     );
-    assert(
-      !markdown.body.includes("Copy prompt"),
-      "Markdown must not leak the copy-button label",
+    assertIncludes(
+      markdown.body,
+      'lifecycle: "current"',
+      "reference Markdown carries its allowlisted prelude",
     );
 
-    const guide = await request(
-      "/notes/a-field-guide-to-assurance-managed-ai-development/",
-      { accept: "text/markdown" },
+    // The prompt remains retrievable, but never without its lifecycle.
+    const disprovenSlug = "measure-the-diagnosis-not-only-the-transcript";
+    const prompt = await request(`/notes/${disprovenSlug}.prompt.txt`);
+    assertEqual(prompt.response.status, 200, "prompt resource status");
+    assertContentType(prompt.response, "text/plain");
+    assertIncludes(
+      prompt.body,
+      "Lifecycle: disproven",
+      "prompt resource lifecycle context",
     );
-    const explorePromptIndex = guide.body.indexOf(
-      "## Explore this note with AI",
+    assertIncludes(
+      prompt.body,
+      `Source: https://kotona.app/notes/${disprovenSlug}/`,
+      "prompt resource source context",
     );
-    const firstBodyHeadingIndex = guide.body.indexOf(
-      "## The shortest useful route",
+    assertIncludes(
+      prompt.body,
+      "is not evidence that the document is current",
+      "prompt resource authority boundary",
+    );
+    assertIncludes(
+      prompt.body,
+      "use this note as a worked instantiation",
+      "prompt resource carries the prompt",
+    );
+  });
+
+  await check("Markdown fidelity of structured blocks", async () => {
+    const path = "/notes/measure-the-diagnosis-not-only-the-transcript.md";
+    const markdown = (await request(path)).body;
+
+    // Slice 0 regression: a term and its inline definition were concatenated.
+    assert(
+      !/OutctlA tool/.test(markdown),
+      "term and definition must keep a lexical boundary",
+    );
+    assertIncludes(
+      markdown,
+      "Outctl cut model-visible Kubernetes output",
+      "summary text must survive intact",
+    );
+    assertIncludes(
+      markdown,
+      "- **Outctl** -- A tool that captures",
+      "definition list must stay paired",
+    );
+    assertIncludes(markdown, "```text", "code fences must survive");
+    assertIncludes(
+      markdown,
+      "> **Update, 16 August 2026",
+      "lifecycle blockquote must survive",
     );
     assert(
-      explorePromptIndex > -1 && firstBodyHeadingIndex > -1,
-      "explore-prompt and body heading must both be present",
-    );
-    assert(
-      explorePromptIndex < firstBodyHeadingIndex,
-      "explore-prompt block must precede the table of contents and body",
+      /\n- \[The platform can retrieve/.test(markdown),
+      "list items must stay separate",
     );
   });
 
@@ -859,7 +895,7 @@ async function runChecks(baseUrl) {
       if (document.prompt) {
         assertEqual(
           Object.keys(document.prompt).join(","),
-          "available",
+          "available,url,mediaType",
           `${document.id} prompt projection`,
         );
       }
@@ -899,22 +935,96 @@ async function runChecks(baseUrl) {
       assert(graphPaths.has(path), `${path} is missing from knowledge.json`);
     }
 
-    // The declared representation must be exercisable from the catalog alone:
-    // a client that has only this JSON should be able to fetch Markdown.
-    const sample = index.documents.find((document) => document.type === "note");
-    const negotiated = sample.representations.find(
+    // Every declared representation must be exercisable from the catalog
+    // alone. The index is the test driver: nothing here hard-codes a route.
+    const sample = index.documents.find(
+      (document) => document.type === "note" && document.prompt,
+    );
+    const markdownRepresentations = sample.representations.filter(
       (representation) => representation.mediaType === "text/markdown",
     );
     assertEqual(
-      negotiated.access,
-      "content-negotiation",
-      "markdown representation access",
+      markdownRepresentations
+        .map((representation) => representation.access)
+        .join(","),
+      "direct,content-negotiation",
+      "markdown representations",
     );
-    const declared = await request(new URL(negotiated.url).pathname, {
-      accept: negotiated.accept,
-    });
-    assertEqual(declared.response.status, 200, "declared markdown status");
-    assertContentType(declared.response, "text/markdown");
+
+    const [directRepresentation, negotiatedRepresentation] =
+      markdownRepresentations;
+    const direct = await request(new URL(directRepresentation.url).pathname);
+    assertEqual(direct.response.status, 200, "direct markdown status");
+    assertContentType(direct.response, "text/markdown");
+
+    const negotiated = await request(
+      new URL(negotiatedRepresentation.url).pathname,
+      { accept: negotiatedRepresentation.accept },
+    );
+    assertEqual(negotiated.response.status, 200, "negotiated markdown status");
+    assertContentType(negotiated.response, "text/markdown");
+    assertEqual(
+      direct.body,
+      negotiated.body,
+      "direct and negotiated Markdown must be byte-identical",
+    );
+
+    // A representation is not a competing canonical document.
+    assertIncludes(
+      direct.response.headers.get("Link") ?? "",
+      `<${sample.url}>; rel="canonical"`,
+      "direct Markdown declares its canonical HTML",
+    );
+
+    const directHead = await request(
+      new URL(directRepresentation.url).pathname,
+      {
+        method: "HEAD",
+      },
+    );
+    assertEqual(directHead.response.status, 200, "direct markdown HEAD status");
+    assertContentType(directHead.response, "text/markdown");
+    assertEqual(directHead.body, "", "direct markdown HEAD body");
+    assertEqual(
+      directHead.response.headers.get("Link"),
+      direct.response.headers.get("Link"),
+      "HEAD must mirror GET discovery headers",
+    );
+
+    const promptResource = await request(new URL(sample.prompt.url).pathname);
+    assertEqual(promptResource.response.status, 200, "prompt resource status");
+    assertContentType(promptResource.response, sample.prompt.mediaType);
+    assertIncludes(
+      promptResource.body,
+      `Source: ${sample.url}`,
+      "prompt resource names its source",
+    );
+
+    // The canonical page advertises the same representations the index does.
+    const canonical = await request(new URL(sample.url).pathname);
+    const advertised = canonical.response.headers.get("Link") ?? "";
+    assertIncludes(
+      advertised,
+      `<${new URL(directRepresentation.url).pathname}>; rel="alternate"; type="text/markdown"`,
+      "content page advertises its Markdown alternate",
+    );
+    assertIncludes(
+      advertised,
+      `<${new URL(sample.prompt.url).pathname}>; rel="alternate"; type="text/plain"`,
+      "content page advertises its prompt alternate",
+    );
+
+    // Boundaries stay boring: unknown, prompt-less, and draft resources are
+    // one indistinguishable 404.
+    const missing = await request("/notes/does-not-exist.md");
+    assertEqual(missing.response.status, 404, "unknown Markdown resource");
+    const promptless = await request("/projects/vuoro.prompt.txt");
+    assertEqual(promptless.response.status, 404, "prompt-less prompt resource");
+    assertEqual(
+      missing.response.headers.get("Content-Type"),
+      promptless.response.headers.get("Content-Type"),
+      "404 boundaries must not be distinguishable",
+    );
 
     const scoped = index.documents.filter((document) => document.reference);
     assert(

@@ -80,7 +80,11 @@ test("publishes prompt availability without prompt text", () => {
     baseUrl,
   );
 
-  assert.deepEqual(document.prompt, { available: true });
+  assert.deepEqual(document.prompt, {
+    available: true,
+    url: "https://kotona.app/notes/prompted.prompt.txt",
+    mediaType: "text/plain",
+  });
   assert.ok(!JSON.stringify(document).includes("Explore this note"));
 });
 
@@ -114,13 +118,18 @@ test("publishes only allowlisted fields", () => {
   });
 });
 
-test("says how to exercise the negotiated markdown representation", () => {
+test("publishes a direct markdown path and keeps negotiation as compatibility", () => {
   const document = projectReferenceDocument(note("shape"), baseUrl);
 
   assert.deepEqual(document.representations, [
     {
       mediaType: "text/html",
       url: "https://kotona.app/notes/shape/",
+      access: "direct",
+    },
+    {
+      mediaType: "text/markdown",
+      url: "https://kotona.app/notes/shape.md",
       access: "direct",
     },
     {

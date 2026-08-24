@@ -224,6 +224,33 @@ async function loadPublicCorpus(baseUrl) {
     `knowledge.json and llms.txt disagree: ${graphPaths.size} graph nodes, ${paths.length} documents`,
   );
 
+  // The three public surfaces project one identity set.
+  const indexResponse = await globalThis.fetch(
+    new URL("/reference-index.json", baseUrl),
+  );
+  assert(
+    indexResponse.ok,
+    `reference-index.json returned HTTP ${indexResponse.status}`,
+  );
+  const index = await indexResponse.json();
+  const indexPaths = new Set(
+    index.documents.map((document) => new URL(document.url).pathname),
+  );
+  assert(
+    indexPaths.size === index.documents.length,
+    "reference-index.json contains duplicate documents",
+  );
+  assert(
+    indexPaths.size === paths.length,
+    `reference-index.json and llms.txt disagree: ${indexPaths.size} entries, ${paths.length} documents`,
+  );
+  for (const documentPath of paths) {
+    assert(
+      indexPaths.has(documentPath),
+      `reference-index.json omitted public document ${documentPath}`,
+    );
+  }
+
   return Promise.all(
     paths.map(async (documentPath) => {
       const response = await globalThis.fetch(new URL(documentPath, baseUrl), {
@@ -280,6 +307,33 @@ async function main() {
           expected.text.toLowerCase().includes(phrase.toLowerCase()),
           `${evaluationCase.id}: expected public response to include ${JSON.stringify(phrase)}`,
         );
+      }
+      // Prompt separation: portable task language must not reach the neutral
+      // reference representation, and must remain retrievable on its own
+      // resource with the lifecycle that bounds it.
+      for (const phrase of evaluationCase.forbiddenPhrases ?? []) {
+        assert(
+          !expected.text.toLowerCase().includes(phrase.toLowerCase()),
+          `${evaluationCase.id}: reference Markdown must not include ${JSON.stringify(phrase)}`,
+        );
+      }
+      if (evaluationCase.promptPhrases) {
+        const promptUrl = new URL(
+          `${evaluationCase.expectedPath.replace(/\/$/, "")}.prompt.txt`,
+          preview.baseUrl,
+        );
+        const promptResponse = await globalThis.fetch(promptUrl);
+        assert(
+          promptResponse.ok,
+          `${evaluationCase.id}: prompt resource returned HTTP ${promptResponse.status}`,
+        );
+        const promptText = (await promptResponse.text()).toLowerCase();
+        for (const phrase of evaluationCase.promptPhrases) {
+          assert(
+            promptText.includes(phrase.toLowerCase()),
+            `${evaluationCase.id}: prompt resource must include ${JSON.stringify(phrase)}`,
+          );
+        }
       }
       output(`PASS ${evaluationCase.id} (rank ${rank})`);
     }

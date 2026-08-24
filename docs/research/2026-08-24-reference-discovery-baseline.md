@@ -87,3 +87,48 @@ using exactly the declared header. Slice 2 migrates that entry to
 `access: "direct"` on the explicit `.md` URL and adds the `.prompt.txt` URL, so
 the catalog describes a live transport at every point rather than announcing a
 route that does not exist yet.
+
+## Slice 2 result
+
+Explicit Markdown resources, separated prompts, and the fidelity gate landed on
+the same branch.
+
+Byte-identity is structural rather than agreed. Middleware resolves
+`/notes/<slug>.md` by rewriting to the canonical page and passing the resulting
+HTML to `renderReferenceMarkdown`; the negotiated path calls the same function
+on the same HTML. There is one renderer, so the two delivery paths cannot drift.
+
+| Request                           | Result                                                  |
+| --------------------------------- | ------------------------------------------------------- |
+| `/notes/<slug>.md`                | `200 text/markdown`, byte-identical to negotiated       |
+| Note URL, `Accept: text/markdown` | `200 text/markdown`                                     |
+| `/notes/<slug>.prompt.txt`        | `200 text/plain` with source, lifecycle, revision       |
+| `/projects/<slug>.prompt.txt`     | `404 text/plain` (no project publishes a prompt)        |
+| `/notes/does-not-exist.md`        | `404 text/plain`, indistinguishable from a draft        |
+| `/notes/Not_A_Slug.md`            | ordinary `404`; malformed slugs are not reference paths |
+| `HEAD` on any of the above        | same status, content type, and `Link`; no body          |
+
+Contract details:
+
+- The prompt is removed as a complete `<details class="explore-prompt">` element
+  before conversion runs, so a paragraph that merely mentions the prompt's label
+  survives. A unit test asserts exactly that.
+- Each Markdown resource carries `Link: <canonical HTML>; rel="canonical"`, and
+  each content page advertises its Markdown alternate, its prompt alternate when
+  one exists, and the reference catalog.
+- The catalog now publishes the direct `.md` URL and retains negotiation as
+  compatibility, plus the prompt resource URL. The worker check drives every one
+  of those from the index itself rather than from a hard-coded route.
+
+Fidelity gate. The slice 0 defect is fixed at its source: the inline term
+tooltip duplicates a definition the page already publishes as a definition list,
+and adjacent inline elements carry no whitespace, so the tooltip is dropped and
+the definition list converts to paired `- **Term** -- definition` entries.
+`OutctlA tool that captures ...` is now a named regression case in the worker
+suite, alongside assertions that code fences, lifecycle blockquotes, and list
+items do not concatenate.
+
+`npm run validate` passed: 96 unit tests, 12 worker checks, 6 retrieval cases.
+The retrieval evaluation now also asserts the three-surface identity invariant
+and prompt separation, checking that the neutral representation excludes the
+prompt while the prompt resource carries it with lifecycle context.

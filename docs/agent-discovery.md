@@ -27,13 +27,25 @@ below describes the currently published behavior until those slices land.
   project's is a working state. The catalog is an allowlisted projection, so raw
   frontmatter, repository paths, and prompt text never appear in it, and
   `prompt.available` reports that a prompt exists without carrying its words.
-  Each entry also declares how to fetch its representations: HTML directly, and
-  Markdown today through content negotiation, with the exact `Accept` value a
-  client needs, so the catalog is usable without site-specific knowledge.
+  Each entry also declares how to fetch its representations: HTML and Markdown
+  directly, plus negotiation on the canonical URL with the exact `Accept` value
+  it needs, so the catalog is usable without site-specific knowledge.
   `knowledge.json` remains the separate topology and relationship surface.
 - `/version.json` ties the deployed Worker to its source commit.
+- `/notes/<slug>.md` and `/projects/<slug>.md` serve the Markdown reference
+  representation of a published document: an allowlisted metadata prelude
+  followed by the body. HTML remains canonical, and each Markdown resource says
+  so with a `Link: rel="canonical"` header.
+- `/notes/<slug>.prompt.txt` serves an exploration template when the published
+  note has one. It returns `404` for a draft, unknown, or prompt-less note, and
+  those cases are indistinguishable from each other.
 - HTML responses negotiate to Markdown when the request prefers `text/markdown`.
-  HTML remains the default when qualities tie.
+  HTML remains the default when qualities tie. For notes and projects the
+  negotiated bytes are identical to the `.md` resource: both come from one
+  renderer rather than two implementations that agree.
+- A note or project page advertises its own representations with `Link` headers:
+  the Markdown alternate, the prompt alternate when one exists, and the
+  reference catalog.
 - `robots.txt` allows search and AI input, while declining AI training:
   `ai-train=no, search=yes, ai-input=yes`.
 - Former `/writing/` URLs with observed agent demand permanently redirect to
@@ -48,17 +60,18 @@ follow declared successors, and do not silently restate a non-current note as
 present guidance.
 
 Some notes also publish `explorePrompt`: a post-hoc "Explore this note with AI"
-prompt for applying and extending the note elsewhere, currently present in both
-HTML and negotiated Markdown (see `docs/explore-prompts.md`). It is not the
-note's original generating prompt or a reconstruction of how the note was
-written, and it is not an independent surface -- lifecycle remains authoritative
-over it. A superseded or disproven note's prompt says so and points to the
-successor; do not treat a retrievable prompt as evidence that the note is
-current.
+prompt for applying and extending the note elsewhere (see
+`docs/explore-prompts.md`). It is not the note's original generating prompt or a
+reconstruction of how the note was written, and it is not an independent surface
+-- lifecycle remains authoritative over it. A superseded or disproven note's
+prompt says so and points to the successor; do not treat a retrievable prompt as
+evidence that the note is current.
 
-The accepted architecture changes that contract: default reference Markdown will
-exclude the prompt, while a deliberately selected plain-text route will preserve
-it with source and lifecycle context.
+The prompt is separated from the reference representation. HTML may show it in a
+collapsed block, and `/notes/<slug>.prompt.txt` serves it deliberately with its
+source, lifecycle, and site revision attached. Markdown reference bytes never
+carry it, so an agent that retrieved a document as evidence does not also
+receive portable task language mixed into that evidence.
 
 ## Intentionally not published
 

@@ -305,6 +305,20 @@ function tableToMarkdown(html) {
 }
 
 /**
+ * Remove the optional exploration template as a complete element, before any
+ * conversion runs. Matching the rendered prompt text afterwards would
+ * eventually delete an innocent paragraph that happened to resemble it.
+ *
+ * @param {string} html
+ */
+export function stripExplorePrompt(html) {
+  return html.replace(
+    /<details\b[^>]*\bclass=["'][^"']*\bexplore-prompt\b[^"']*["'][^>]*>[\s\S]*?<\/details>/gi,
+    "",
+  );
+}
+
+/**
  * Project the document's main region into readable Markdown. The HTML remains
  * canonical; this intentionally covers semantic content rather than every
  * possible presentation-only element.
@@ -323,6 +337,26 @@ export function htmlToMarkdown(html) {
   let markdown = main
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<(script|style|svg|template|button)\b[\s\S]*?<\/\1>/gi, "")
+    // The inline term tooltip repeats a definition the page also publishes as
+    // a definition list. Adjacent inline elements carry no whitespace of their
+    // own, so leaving it in place concatenates a term with its definition.
+    .replace(
+      /<span\b[^>]*\bclass=["'][^"']*\bterm-note\b[^"']*["'][^>]*>[\s\S]*?<\/span>/gi,
+      "",
+    )
+    // A definition list is a pairing, not two unrelated paragraphs.
+    .replace(/<dl\b[^>]*>([\s\S]*?)<\/dl>/gi, (_, list) => {
+      const pairs = [
+        ...list.matchAll(
+          /<dt\b[^>]*>([\s\S]*?)<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/gi,
+        ),
+      ].map(
+        (pair) =>
+          `- **${inlineHtmlToMarkdown(pair[1])}** -- ${inlineHtmlToMarkdown(pair[2])}`,
+      );
+
+      return pairs.length > 0 ? protect(pairs.join("\n")) : "";
+    })
     .replace(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/gi, (_, preAttributes, body) => {
       const codeMatch = body.match(/<code\b([^>]*)>([\s\S]*?)<\/code>/i);
       const codeAttributes = codeMatch?.[1] ?? "";

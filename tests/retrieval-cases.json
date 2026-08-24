@@ -61,14 +61,25 @@
     ]
   },
   {
-    "id": "assurance-explore-prompt-with-conclusion",
+    "id": "assurance-neutral-reference-and-separated-prompt",
     "question": "Where the assurance questions behind AI-assisted software development are already answered by established engineering disciplines and the generator decision rule",
     "expectedPath": "/notes/where-the-assurance-questions-are-already-answered/",
     "maxRank": 1,
     "requiredPhrases": [
+      "lifecycle: \"current\"",
+      "purpose: \"design-rationale\"",
+      "The same correction applies to several terms I developed locally."
+    ],
+    "forbiddenPhrases": [
       "Explore this note with AI",
       "generator decision rule",
       "single-operator, small-project, repository-backed"
+    ],
+    "promptPhrases": [
+      "generator decision rule",
+      "single-operator, small-project, repository-backed",
+      "Lifecycle: current",
+      "is not evidence that the document is current"
     ]
   }
 ]

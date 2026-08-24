@@ -40,7 +40,8 @@ builds; prompt text and arbitrary frontmatter are absent.
 
 ### 2. Neutral Markdown and explicit prompts
 
-Status: pending; depends on slice 1
+Status: complete; evidence in
+[`docs/research/2026-08-24-reference-discovery-baseline.md`](../research/2026-08-24-reference-discovery-baseline.md)
 
 - Add explicit note and project `.md` paths backed by the existing projection.
 - Migrate the catalog's Markdown representation from the negotiated form to

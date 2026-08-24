@@ -86,8 +86,8 @@ export type ReferenceDocument = {
     lastVerified?: string;
   };
   reference?: ReferenceScope;
-  /** Prompt availability, never prompt text. */
-  prompt?: { available: true };
+  /** Prompt availability and its resource, never prompt text. */
+  prompt?: { available: true; url: string; mediaType: "text/plain" };
 };
 
 export type ReferenceIndex = {
@@ -128,6 +128,13 @@ export function projectReferenceDocument(
     url,
     representations: [
       { mediaType: "text/html", url, access: "direct" },
+      {
+        mediaType: "text/markdown",
+        url: new URL(`/${entry.collection}/${entry.id}.md`, baseUrl).toString(),
+        access: "direct",
+      },
+      // Negotiation on the canonical URL is retained as compatibility for
+      // clients that already use it. Both paths serve the same bytes.
       {
         mediaType: "text/markdown",
         url,
@@ -172,7 +179,16 @@ export function projectReferenceDocument(
         }
       : {}),
     ...(entry.data.explorePrompt
-      ? { prompt: { available: true as const } }
+      ? {
+          prompt: {
+            available: true as const,
+            url: new URL(
+              `/${entry.collection}/${entry.id}.prompt.txt`,
+              baseUrl,
+            ).toString(),
+            mediaType: "text/plain" as const,
+          },
+        }
       : {}),
   };
 }
