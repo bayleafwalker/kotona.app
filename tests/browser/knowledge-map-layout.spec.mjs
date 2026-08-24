@@ -56,5 +56,53 @@ for (const width of widths) {
     );
 
     expect(collisions).toEqual([]);
+
+    // Zero clearance is not a pass worth keeping: the boxes merely fail to
+    // intersect, and any font or wrapping change puts them back in contact.
+    const gaps = clusters.flatMap((cluster) =>
+      nodes
+        .filter(
+          (node) =>
+            node.x < cluster.x + cluster.width &&
+            cluster.x < node.x + node.width,
+        )
+        .map((node) =>
+          node.y > cluster.y
+            ? node.y - (cluster.y + cluster.height)
+            : cluster.y - (node.y + node.height),
+        ),
+    );
+    expect(Math.min(...gaps, Infinity)).toBeGreaterThanOrEqual(4);
   });
 }
+
+/**
+ * The ranking harness scores richer documents than the Explore index ships, so
+ * a successor could score zero here and vanish while every other suite passed.
+ * This asserts the seam directly, in the UI, with the default controls.
+ */
+test("a question about a superseded claim offers its successor", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1363, height: 936 });
+  await page.goto("/explore/");
+  await page
+    .getByRole("searchbox")
+    .fill(
+      "Is the claim that the missing layer is binding, not intelligence still current, or has it been superseded?",
+    );
+
+  const results = page.locator("[data-knowledge-results-list] li");
+  await expect(results.first()).toBeVisible();
+
+  const hrefs = await results
+    .locator("a")
+    .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+
+  expect(hrefs).toContain(
+    "/notes/where-the-assurance-questions-are-already-answered/",
+  );
+  expect(
+    hrefs.indexOf("/notes/where-the-assurance-questions-are-already-answered/"),
+  ).toBeLessThan(6);
+});

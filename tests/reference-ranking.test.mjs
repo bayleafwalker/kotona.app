@@ -217,6 +217,40 @@ test("a leading superseded document carries its successor into view", () => {
   );
 });
 
+test("a successor with no lexical overlap at all is still surfaced", () => {
+  // The Explore index carries leaner documents than the retrieval harness, so
+  // a successor can score exactly zero and be filtered out before ranking.
+  // Reading successors from the ranked list alone silently failed there.
+  const corpus = [
+    document("predecessor", {
+      title: "The missing layer is binding",
+      summary: "binding layer reasoning",
+      lifecycle: "superseded",
+      supersededBy: ["successor"],
+    }),
+    document("successor", {
+      title: "Where the questions were answered",
+      summary: "Established assurance practice.",
+      lifecycle: "current",
+    }),
+  ];
+
+  const scoredAlone = rankReferences(
+    corpus.filter((entry) => entry.id !== "predecessor"),
+    "the missing layer is binding",
+  );
+  assert.deepEqual(
+    scoredAlone,
+    [],
+    "the successor must score zero for this to prove anything",
+  );
+
+  const ids = rankReferences(corpus, "the missing layer is binding").map(
+    (result) => result.document.id,
+  );
+  assert.deepEqual(ids, ["predecessor", "successor"]);
+});
+
 test("a successor is not lifted for a predecessor nobody asked about", () => {
   const buried = [
     ...["a", "b", "c", "d", "e"].map((id) =>

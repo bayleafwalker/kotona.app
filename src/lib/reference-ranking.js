@@ -303,10 +303,20 @@ function applySuccession(ranked) {
  * obligation rather than a relevance claim: succession is asserted by the
  * corpus, not inferred from the query, and the predecessor keeps its own rank.
  *
+ * The successor is taken from `pool`, the full scored set, not from `ranked`.
+ * A successor can score exactly zero -- it shares no token with a query that
+ * names its predecessor almost verbatim -- and zero-score documents are
+ * filtered out before ranking. Reading only from `ranked` therefore worked on
+ * corpora rich enough to give the successor some incidental overlap and failed
+ * on leaner ones, which is precisely the seam between the retrieval harness
+ * and the Explore index. Only a declared successor of a leading predecessor is
+ * admitted this way; nothing else re-enters on a zero score.
+ *
  * @param {RankedReference[]} ranked
- * @param {{ window: number }} options
+ * @param {{ window: number, pool: Map<string, RankedReference> }} options
  */
 function surfaceSuccessors(ranked, options) {
+  const present = new Set(ranked.map((result) => result.document.id));
   const lifted = new Set();
   const ordered = [];
 
@@ -316,11 +326,13 @@ function surfaceSuccessors(ranked, options) {
     if (index >= options.window) continue;
 
     for (const id of result.document.supersededBy ?? []) {
-      const successor = ranked.find(
-        (candidate, position) =>
-          candidate.document.id === id && position > index,
+      if (lifted.has(id)) continue;
+      const alreadyAbove = ranked.findIndex(
+        (candidate) => candidate.document.id === id,
       );
-      if (!successor || lifted.has(id)) continue;
+      if (alreadyAbove > -1 && alreadyAbove <= index) continue;
+      const successor = options.pool.get(id);
+      if (!successor) continue;
       lifted.add(id);
       ordered.push({
         ...successor,
@@ -332,7 +344,9 @@ function surfaceSuccessors(ranked, options) {
     }
   }
 
-  return ordered.length === ranked.length ? ordered : ranked;
+  // Every ranked entry is kept, plus any successor admitted from the pool.
+  const admitted = [...lifted].filter((id) => !present.has(id)).length;
+  return ordered.length === ranked.length + admitted ? ordered : ranked;
 }
 
 /**
@@ -470,5 +484,6 @@ export function rankReferences(documents, query, options = {}) {
   const authoritative = historicalIntent ? spread : applySuccession(spread);
   return surfaceSuccessors(authoritative, {
     window: options.successorWindow ?? 3,
+    pool: new Map(scored.map((result) => [result.document.id, result])),
   });
 }
