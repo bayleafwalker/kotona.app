@@ -114,19 +114,20 @@ test("publishes only allowlisted fields", () => {
   });
 });
 
-test("advertises html as a path and markdown through negotiation", () => {
+test("says how to exercise the negotiated markdown representation", () => {
   const document = projectReferenceDocument(note("shape"), baseUrl);
 
   assert.deepEqual(document.representations, [
     {
       mediaType: "text/html",
       url: "https://kotona.app/notes/shape/",
-      access: "path",
+      access: "direct",
     },
     {
       mediaType: "text/markdown",
       url: "https://kotona.app/notes/shape/",
       access: "content-negotiation",
+      accept: "text/markdown",
     },
   ]);
 });

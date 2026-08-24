@@ -80,7 +80,10 @@ and `/reference-index.json`.
 - `npm run validate` passed, including the new worker check
   `reference catalog and its advertisement` and 9 new projection unit tests.
 
-The catalog currently declares the Markdown representation with
-`access: "content-negotiation"`, which is what the site actually serves today.
-Slice 2 replaces that entry with the explicit `.md` path and adds the
-`.prompt.txt` URL, so the catalog never advertises a route that does not exist.
+The catalog declares HTML as `access: "direct"` and Markdown as
+`access: "content-negotiation"` with `accept: "text/markdown"`, which is what
+the site actually serves today; a worker check fetches the sampled document
+using exactly the declared header. Slice 2 migrates that entry to
+`access: "direct"` on the explicit `.md` URL and adds the `.prompt.txt` URL, so
+the catalog describes a live transport at every point rather than announcing a
+route that does not exist yet.

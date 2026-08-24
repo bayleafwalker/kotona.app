@@ -27,6 +27,9 @@ below describes the currently published behavior until those slices land.
   project's is a working state. The catalog is an allowlisted projection, so raw
   frontmatter, repository paths, and prompt text never appear in it, and
   `prompt.available` reports that a prompt exists without carrying its words.
+  Each entry also declares how to fetch its representations: HTML directly, and
+  Markdown today through content negotiation, with the exact `Accept` value a
+  client needs, so the catalog is usable without site-specific knowledge.
   `knowledge.json` remains the separate topology and relationship surface.
 - `/version.json` ties the deployed Worker to its source commit.
 - HTML responses negotiate to Markdown when the request prefers `text/markdown`.

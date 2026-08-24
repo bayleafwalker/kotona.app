@@ -899,6 +899,23 @@ async function runChecks(baseUrl) {
       assert(graphPaths.has(path), `${path} is missing from knowledge.json`);
     }
 
+    // The declared representation must be exercisable from the catalog alone:
+    // a client that has only this JSON should be able to fetch Markdown.
+    const sample = index.documents.find((document) => document.type === "note");
+    const negotiated = sample.representations.find(
+      (representation) => representation.mediaType === "text/markdown",
+    );
+    assertEqual(
+      negotiated.access,
+      "content-negotiation",
+      "markdown representation access",
+    );
+    const declared = await request(new URL(negotiated.url).pathname, {
+      accept: negotiated.accept,
+    });
+    assertEqual(declared.response.status, 200, "declared markdown status");
+    assertContentType(declared.response, "text/markdown");
+
     const scoped = index.documents.filter((document) => document.reference);
     assert(
       scoped.length >= 15,

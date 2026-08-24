@@ -43,8 +43,10 @@ builds; prompt text and arbitrary frontmatter are absent.
 Status: pending; depends on slice 1
 
 - Add explicit note and project `.md` paths backed by the existing projection.
-- Change the catalog's Markdown representation from `content-negotiation` to the
-  explicit `.md` path, and add the `.prompt.txt` URL to `prompt`.
+- Migrate the catalog's Markdown representation from the negotiated form to
+  `access: "direct"` on the explicit `.md` URL, retain negotiated Markdown as
+  compatibility, and add the `.prompt.txt` URL to `prompt`.
+- Preserve semantic boundaries in the HTML-to-Markdown conversion.
 - Prepend deterministic allowlisted reference metadata.
 - Remove the complete optional-prompt element before HTML-to-Markdown
   conversion.
@@ -55,6 +57,17 @@ Status: pending; depends on slice 1
 Exit: explicit and negotiated Markdown are byte-identical; default Markdown has
 no optional prompt; representative prompt and prompt-less routes return the
 expected 200 and 404 responses without redirect loops.
+
+Fidelity gate. Byte-identity between two representations is not sufficient if
+both are lossy. The Markdown representation is the stable reference form, so a
+semantic boundary in the HTML may not collapse in conversion:
+
+- A term and its definition keep a lexical boundary. The recorded slice 0
+  defect, in which `/notes/measure-the-diagnosis-not-only-the-transcript/`
+  converts to `OutctlA tool that captures ...`, is the named regression case.
+- Representative structured blocks -- definition lists, blockquote lifecycle
+  notices, code fences, and list items -- round-trip without concatenating
+  adjacent elements.
 
 ### 3. Lifecycle-aware ranked retrieval
 
@@ -111,6 +124,13 @@ Each implemented slice runs `npm run validate`. Worker coverage must include:
 /notes/measure-the-diagnosis-not-only-the-transcript.prompt.txt
 ```
 
+The published surfaces project one identity set. Agreement is checked as an
+invariant rather than by inspecting each output on its own:
+
+```text
+llms.txt identity set = reference-index identity set = knowledge.json node set
+```
+
 The retrieval evaluation continues to exercise only public HTTP surfaces. It
 must test reference-index, `llms.txt`, and graph agreement, vague top-k
 selection, lifecycle interpretation, and prompt separation. Fresh-session trials
@@ -122,10 +142,90 @@ negotiation, draft exclusion, revision and security headers, and the existing
 graph. No slice changes Cloudflare bindings or domains, deploys with Wrangler,
 or makes a private tier a source or build dependency.
 
+## Post-deployment evaluation
+
+These are standing evidence loops around the protocol, not implementation
+slices. Neither gates a revision and neither belongs in `npm run validate`: both
+depend on external systems and on time, so a poor result is a trend signal
+rather than a defect. Run them after slices 0 through 3 are deployed.
+
+Their purpose is to separate two questions the internal tests cannot tell apart:
+
+```text
+Internal retrieval   Does the site itself select the right reference?
+External visibility  Given only the public web, does an outside system find
+                     this site and choose the right reference from it?
+```
+
+### A. External retrieval corpus
+
+Freeze 15 to 20 natural-language questions in source control, spanning:
+
+- an exact distinctive concept;
+- the same concept paraphrased;
+- vague domain intent;
+- current-versus-historical authority;
+- a query this site should probably not dominate;
+- a project current-state lookup.
+
+Record per question and run: date, provider or retrieval system, whether the
+site surfaced, rank or prominence where observable, the selected URL, whether it
+was the correct document, whether lifecycle was respected, whether a citation or
+link was present, and notes.
+
+Do not optimize against individual misses. A control question that this site
+correctly fails to dominate is a working result, not a gap. This complements the
+fresh-session trials described above, which already start from only a question,
+the site root, and ordinary web access.
+
+### B. Machine-surface analytics
+
+The question is narrow: are agents actually walking the discovery paths this
+architecture publishes? Browser-side page analytics cannot answer it, because
+agent retrieval usually runs no JavaScript. Measurement therefore belongs at the
+Worker or CDN request layer.
+
+Surfaces worth counting:
+
+```text
+/llms.txt
+/reference-index.json
+/knowledge.json
+/.well-known/agent-skills/*
+/notes/<slug>.md and /projects/<slug>.md
+/notes/<slug>.prompt.txt
+HTML requests carrying Accept: text/markdown
+```
+
+Retain only the dimensions that answer the question: requests by surface, status
+class, bot or client family where identifiable, direct Markdown versus
+negotiated Markdown, and aggregate correlation between a discovery index and
+subsequent content paths where that is feasible.
+
+This is deliberately not per-client behavioral measurement. Raw addresses, full
+user-agent strings, query strings, and reconstructed per-client journeys are out
+of scope. Aggregate machine consumption answers the question and keeps the
+privacy posture the site already publishes.
+
+## Sequencing
+
+1. Slices 0 and 1: complete.
+2. Slice 2: neutral Markdown, explicit prompts, and Markdown fidelity.
+3. Slice 3: lifecycle-aware retrieval, evaluated against the scoped cohort.
+4. Deploy slices 0 through 3 once they are independently healthy. Slice 4 does
+   not change the machine contract and is not a prerequisite for it.
+5. Establish the external retrieval baseline and begin machine-surface
+   measurement.
+6. Slice 4 as human ergonomics.
+7. Revisit metadata coverage, embeddings, or a search service only from an
+   observed retrieval failure, under the evidence gates already stated.
+
 ## Plan maintenance
 
-Update status here when a slice lands and link the implementation evidence.
-Change the architecture document when direction or a public contract changes; do
-not quietly rewrite this backlog around an incompatible implementation. Deferred
+Update status here when a slice lands and link the implementation evidence. The
+post-deployment loops are maintained the same way: record each run's evidence
+rather than rewriting the frozen questions to match a better outcome. Change the
+architecture document when direction or a public contract changes; do not
+quietly rewrite this backlog around an incompatible implementation. Deferred
 capabilities require their stated evidence gate and, where they add a service or
 authority boundary, a separate architecture decision.

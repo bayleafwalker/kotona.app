@@ -50,11 +50,14 @@ export type ReferenceRepresentation = {
   mediaType: "text/html" | "text/markdown";
   url: string;
   /**
-   * `path` means the URL serves this media type directly. `content-negotiation`
-   * means the client must ask for it with an `Accept` header. Explicit Markdown
-   * paths replace the negotiated entry when they are published.
+   * `direct` means the URL serves this media type as it is. `content-negotiation`
+   * means the client must ask for it, and `accept` carries the exact header
+   * value that does so, since a generic client cannot otherwise know how to
+   * exercise the representation. Explicit Markdown paths replace the negotiated
+   * entry when they are published.
    */
-  access: "path" | "content-negotiation";
+  access: "direct" | "content-negotiation";
+  accept?: string;
 };
 
 export type ReferenceDocument = {
@@ -124,8 +127,13 @@ export function projectReferenceDocument(
     ...(entry.data.summary ? { summary: entry.data.summary } : {}),
     url,
     representations: [
-      { mediaType: "text/html", url, access: "path" },
-      { mediaType: "text/markdown", url, access: "content-negotiation" },
+      { mediaType: "text/html", url, access: "direct" },
+      {
+        mediaType: "text/markdown",
+        url,
+        access: "content-negotiation",
+        accept: "text/markdown",
+      },
     ],
     classification: {
       ...(entry.data.area ? { area: entry.data.area } : {}),
