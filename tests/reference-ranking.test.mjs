@@ -164,6 +164,89 @@ test("a far better predecessor still leads a barely relevant successor", () => {
   );
 });
 
+test("a leading superseded document carries its successor into view", () => {
+  // The predecessor is named almost verbatim, so no relevance signal will lift
+  // the successor anywhere near it -- on its own tokens it ranks last. A
+  // lifecycle notice pointing at a document the ranking never offers is not a
+  // usable authority boundary, so succession carries it into view instead.
+  const succession = [
+    document("predecessor", {
+      title: "Measuring output reduction",
+      summary: "Evaluating a tool that reduces visible output.",
+      lifecycle: "superseded",
+      supersededBy: ["successor"],
+      discoverFor: ["evaluating an output reduction tool"],
+    }),
+    document("successor", {
+      title: "A platform capability",
+      summary: "Platform reasoning about output.",
+      lifecycle: "current",
+    }),
+    ...["a", "b", "c", "d", "e"].map((id) =>
+      document(`filler-${id}`, {
+        title: `output reduction tool notes ${id}`,
+        summary: `evaluating output reduction ${id}`,
+        area: `area ${id}`,
+      }),
+    ),
+  ];
+
+  const unaided = rankReferences(
+    succession.filter((entry) => entry.id !== "predecessor"),
+    "evaluating an output reduction tool",
+  ).map((result) => result.document.id);
+  assert.equal(
+    unaided.at(-1),
+    "successor",
+    "the successor must be genuinely uncompetitive for this to prove anything",
+  );
+
+  const ranked = rankReferences(
+    succession,
+    "evaluating an output reduction tool",
+  );
+  const ids = ranked.map((result) => result.document.id);
+
+  assert.equal(ids[0], "predecessor");
+  assert.equal(ids[1], "successor");
+  assert.ok(
+    ranked[1].reasons.some(
+      (reason) => reason.value === "supersedes predecessor",
+    ),
+    "the lifted successor should say why it is there",
+  );
+});
+
+test("a successor is not lifted for a predecessor nobody asked about", () => {
+  const buried = [
+    ...["a", "b", "c", "d", "e"].map((id) =>
+      document(`filler-${id}`, {
+        title: `output reduction notes ${id}`,
+        summary: `output reduction reasoning ${id}`,
+        area: `area ${id}`,
+      }),
+    ),
+    document("predecessor", {
+      title: "Measuring reduction elsewhere",
+      lifecycle: "superseded",
+      supersededBy: ["successor"],
+    }),
+    document("successor", {
+      title: "Platform reasoning about output",
+      lifecycle: "current",
+    }),
+  ];
+
+  const ids = rankReferences(buried, "output reduction notes").map(
+    (result) => result.document.id,
+  );
+
+  // The predecessor never reaches the leading window, so nothing is lifted and
+  // the successor keeps whatever rank its own relevance earned.
+  assert.ok(ids.indexOf("predecessor") > 2);
+  assert.ok(ids.indexOf("successor") !== ids.indexOf("predecessor") + 1);
+});
+
 test("one area cannot occupy the whole leading window", () => {
   const crowded = [
     ...["a", "b", "c", "d"].map((id) =>

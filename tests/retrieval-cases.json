@@ -142,5 +142,16 @@
     "expectedPath": "/notes/the-missing-layer-is-binding-not-intelligence/",
     "maxRank": 1,
     "requiredPhrases": ["Update, July 2026"]
+  },
+  {
+    "id": "superseded-title-currentness",
+    "question": "Is the claim that the missing layer is binding, not intelligence still current, or has it been superseded?",
+    "expectedPath": "/notes/the-missing-layer-is-binding-not-intelligence/",
+    "maxRank": 1,
+    "alsoWithin": {
+      "topK": 6,
+      "paths": ["/notes/where-the-assurance-questions-are-already-answered/"]
+    },
+    "requiredPhrases": ["superseded"]
   }
 ]

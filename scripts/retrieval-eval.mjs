@@ -231,8 +231,11 @@ async function main() {
     // does with one query, so a new case is written against observed behaviour
     // rather than guessed at.
     if (explain) {
+      // `EXPLAIN_LIMIT` widens the window when a case is about a document the
+      // default ten results do not reach.
+      const limit = Number(process.env.EXPLAIN_LIMIT ?? 10);
       for (const [index, result] of rankReferences(documents, explain)
-        .slice(0, 10)
+        .slice(0, limit)
         .entries()) {
         const reasons = result.reasons
           .map((reason) => `${reason.field}=${reason.value}`)
@@ -288,6 +291,21 @@ async function main() {
           position === -1 || position + 1 > rank,
           `${evaluationCase.id}: ${path} outranked the expected document`,
         );
+      }
+
+      // A question about whether a superseded claim still holds is only
+      // answered if the successor is retrievable too. The predecessor leading
+      // is correct -- it is the document named -- but a reader who stops at
+      // the visible window must still be handed where the reasoning went.
+      if (evaluationCase.alsoWithin) {
+        const window = paths.slice(0, evaluationCase.alsoWithin.topK);
+        for (const required of evaluationCase.alsoWithin.paths) {
+          assert(
+            window.includes(required),
+            `${evaluationCase.id}: ${required} was not in the top ${evaluationCase.alsoWithin.topK}; ` +
+              `got: ${window.join(", ")}`,
+          );
+        }
       }
 
       const text = selected.document.text;

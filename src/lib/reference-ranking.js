@@ -288,6 +288,54 @@ function applySuccession(ranked) {
 }
 
 /**
+ * Surface the declared successors of a superseded document that leads.
+ *
+ * `applySuccession` only reorders documents that are already comparably
+ * relevant to each other, which is right when both answer the same question.
+ * It cannot help the case where the query names a superseded document
+ * directly: the predecessor is overwhelmingly the best match by every lexical
+ * signal, and the successor -- written later, in different words -- scores far
+ * below the visible window. The reader is then shown a lifecycle notice
+ * pointing at a document the ranking never offers.
+ *
+ * So when a superseded document appears in the leading window, its declared
+ * successors are lifted to sit directly beneath it. This is a discovery
+ * obligation rather than a relevance claim: succession is asserted by the
+ * corpus, not inferred from the query, and the predecessor keeps its own rank.
+ *
+ * @param {RankedReference[]} ranked
+ * @param {{ window: number }} options
+ */
+function surfaceSuccessors(ranked, options) {
+  const lifted = new Set();
+  const ordered = [];
+
+  for (const [index, result] of ranked.entries()) {
+    if (lifted.has(result.document.id)) continue;
+    ordered.push(result);
+    if (index >= options.window) continue;
+
+    for (const id of result.document.supersededBy ?? []) {
+      const successor = ranked.find(
+        (candidate, position) =>
+          candidate.document.id === id && position > index,
+      );
+      if (!successor || lifted.has(id)) continue;
+      lifted.add(id);
+      ordered.push({
+        ...successor,
+        reasons: [
+          ...successor.reasons,
+          { field: "lifecycle", value: `supersedes ${result.document.id}` },
+        ],
+      });
+    }
+  }
+
+  return ordered.length === ranked.length ? ordered : ranked;
+}
+
+/**
  * Move excess same-area entries out of the leading window so one cluster of
  * closely related documents cannot occupy every visible result. Displaced
  * entries keep their relative order immediately after the window.
@@ -415,6 +463,12 @@ export function rankReferences(documents, query, options = {}) {
   });
 
   // Explicit historical intent may reverse the default preference, so
-  // succession is not enforced when the reader asked about the past.
-  return historicalIntent ? spread : applySuccession(spread);
+  // succession is not enforced when the reader asked about the past. The
+  // successor is still surfaced either way: knowing where the reasoning went
+  // is useful to a historical reading too, and it never displaces the
+  // predecessor the reader asked for.
+  const authoritative = historicalIntent ? spread : applySuccession(spread);
+  return surfaceSuccessors(authoritative, {
+    window: options.successorWindow ?? 3,
+  });
 }
