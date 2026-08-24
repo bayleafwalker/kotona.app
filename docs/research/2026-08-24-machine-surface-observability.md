@@ -89,6 +89,10 @@ observability API rejects:
   `edgeResponseStatus` on this zone's Free plan.
 - A query may span at most one day. A longer window is refused outright, so a
   multi-day reading is several queries, not one.
+- Retention is eight days (`cannot request data older than 1w1d`). A window six
+  days back returns data; twenty days back is refused. This is a separate limit
+  from the query span, and it is the one that constrains when a multi-day
+  baseline can still be collected.
 - The zone reports `Free Website`.
 
 This needs no code change, no binding, and no deploy, and it is the only
@@ -141,6 +145,13 @@ functional reason.
 question, and cost is not the reason: a binding, application instrumentation,
 and a deliberately stored dataset are a larger commitment than the question
 currently justifies.
+
+## This reading is a commissioning receipt
+
+It is not a baseline and must not be cited as one. The measurement protocol
+frozen in [`docs/plans/reference-discovery.md`](../plans/reference-discovery.md)
+excludes 2026-08-24 for exactly this reason, and sets the first real window at
+2026-08-25 to 2026-08-31.
 
 ## A calibration point
 
