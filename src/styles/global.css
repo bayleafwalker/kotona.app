@@ -318,7 +318,10 @@ main {
   line-height: 1.45;
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, 0.2rem);
+  /* Centred on the term, then nudged back inside the viewport. The shift is
+     measured at reveal time; without scripting it stays 0 and the tooltip is
+     merely centred, as before. */
+  transform: translate(calc(-50% + var(--term-note-shift, 0px)), 0.2rem);
   visibility: hidden;
   transition:
     opacity 120ms ease,
@@ -329,7 +332,7 @@ main {
 .term-hint:hover .term-note,
 .term-hint:focus-within .term-note {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translate(calc(-50% + var(--term-note-shift, 0px)), 0);
   visibility: visible;
 }
 

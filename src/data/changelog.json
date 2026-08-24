@@ -1,5 +1,9 @@
 [
   {
+    "date": "2026-08-24",
+    "entry": "Machine-surface repairs: the Agent Skills index digest is now generated from the artifact and drift-checked in CI, a superseded note carries its declared successor into Explore results, and the browser suite became a CI gate. Term tooltips no longer clip outside the viewport, acronyms render with their real casing, and note metadata distinguishes a note's role from its claim posture."
+  },
+  {
     "date": "2026-08-08",
     "entry": "Added the Explore knowledge atlas and public graph endpoint; revised the editorial guide and core notes toward operationally grounded prose."
   },

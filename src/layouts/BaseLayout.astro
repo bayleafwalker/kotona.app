@@ -193,6 +193,65 @@ const cspNonce = Astro.locals.cspNonce;
     </main>
 
     <SiteFooter />
+
+    {
+      /*
+      Term tooltips are centred on their term, so one near a viewport edge
+      renders partly offscreen -- `max-width` bounds the size but not the
+      position. Measure at reveal time and nudge it back inside. Inline with a
+      nonce because the CSP admits no unnonced inline script; without scripting
+      the tooltip stays centred, which is the behaviour this replaces.
+    */
+    }
+    <script is:inline nonce={cspNonce}>
+      (function () {
+        const margin = 8;
+
+        function align(hint) {
+          const note = hint.querySelector(".term-note");
+          if (!note) return;
+
+          note.style.setProperty("--term-note-shift", "0px");
+          const box = note.getBoundingClientRect();
+          const anchor = hint.getBoundingClientRect();
+          // A statically positioned tooltip (narrow viewports) is not centred
+          // and must not be nudged.
+          if (box.width === 0 || anchor.width === 0) return;
+
+          // Derive the centred position from the term rather than trusting the
+          // tooltip's currently rendered box, which is mid-transition while the
+          // reveal transform runs.
+          const viewport = document.documentElement.clientWidth;
+          const centred = anchor.left + anchor.width / 2 - box.width / 2;
+          const clamped = Math.max(
+            margin,
+            Math.min(centred, viewport - margin - box.width),
+          );
+          const shift = clamped - centred;
+
+          if (shift !== 0) {
+            note.style.setProperty(
+              "--term-note-shift",
+              Math.round(shift) + "px",
+            );
+          }
+        }
+
+        ["pointerenter", "focusin"].forEach(function (event) {
+          document.addEventListener(
+            event,
+            function (nativeEvent) {
+              const target = nativeEvent.target;
+              if (!target || !target.closest) return;
+              const hint = target.closest(".term-hint");
+              if (hint) align(hint);
+            },
+            true,
+          );
+        });
+      })();
+    </script>
+
     <!-- Cloudflare Web Analytics -->
     <script
       type="module"

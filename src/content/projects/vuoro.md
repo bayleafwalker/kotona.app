@@ -1,12 +1,12 @@
 ---
 title: "Vuoro: governed work without a cockpit-shaped monolith"
 summary: >-
-  A working family of sprint, queue, dispatch, knowledge, audit, and cockpit
-  tools is becoming one served composition layer without giving up explicit
-  state ownership or machine-local execution.
+  A working family of sprint, queue, knowledge, audit, and cockpit tools now
+  composes into one served layer, without giving up explicit state ownership or
+  machine-local execution.
 published: 2026-04-09
-lastRevised: 2026-08-08
-lastVerified: 2026-08-08
+lastRevised: 2026-08-24
+lastVerified: 2026-08-24
 draft: false
 project: vuoro
 kind: engineering
@@ -23,13 +23,15 @@ repoUrls:
 externalUrl: https://bayleafwalker.github.io/agentops/
 evidence:
   capability: >-
-    Public tools own sprint, knowledge, queue, dispatch, audit, and cockpit
-    state through separate contracts, with local and shared operating modes.
+    Public tools own sprint, knowledge, queue, audit, and cockpit state through
+    separate contracts, with local and shared operating modes. Dispatch is no
+    longer a separate authority: product-native runtimes execute work directly.
   latest: >-
-    Served composition through v0.1.35 binds component and schema compatibility
-    to migration admissibility: four capability gates passed, production
-    preflight rejected an unsafe schema-5 rollout, and the maintenance bridge
-    was staged without claiming the schema had migrated.
+    Served composition v0.1.52 completed the schema transition the previous
+    slice could only stage: managed ActionQ schema v12 is validated under the
+    composition, and sprintctl 0.3.x reservations are pinned into it. The v4
+    design freeze then rebuilt composition around explicit capabilities, landing
+    uniform construction, the validator, and the migration itself.
   proofLinks:
     - label: Vuoro composition repository
       href: https://github.com/bayleafwalker/vuoro
@@ -43,10 +45,14 @@ evidence:
     - agent-cockpit
   knownLimitation: >-
     kctl and auditctl have less operational mileage than sprintctl and the
-    cockpit, while cross-repository version drift remains a recovery risk.
+    cockpit, while cross-repository version drift remains a recovery risk. The
+    v5 measurement work is not yet trustworthy either: whether its oracle is
+    attainable at all is the open question, so the loop runs green without that
+    result meaning much.
   nextProof: >-
-    Complete the live schema transition and retain recovery evidence showing
-    that the version-bound composition can advance or restore safely.
+    Settle whether the v5 oracle is attainable, then produce the two-way
+    telemetry comparison it gates. Until that holds, the composition can show
+    that it advances safely but not that the work it governs got better.
 tags:
   - agents
   - workflow

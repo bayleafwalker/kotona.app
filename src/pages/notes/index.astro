@@ -6,6 +6,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   getVisibleEntries,
   humanizeLabel,
+  roleLabel,
+  claimPostureLabel,
   sortByDateAndTitle,
 } from "../../lib/content";
 
@@ -21,10 +23,10 @@ const notes = sortByDateAndTitle(
 const visibleNotes = getVisibleEntries(notes);
 const noteContext = (entry: (typeof visibleNotes)[number]) =>
   [
-    humanizeLabel(entry.data.role),
+    roleLabel(entry.data.role),
     entry.data.status === entry.data.role
       ? null
-      : humanizeLabel(entry.data.status),
+      : claimPostureLabel(entry.data.status),
     humanizeLabel(entry.data.lifecycle),
     humanizeLabel(entry.data.area),
   ]

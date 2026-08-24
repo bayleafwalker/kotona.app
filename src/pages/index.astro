@@ -6,13 +6,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   getVisibleEntries,
   humanizeLabel,
+  roleLabel,
   sortByDateAndTitle,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
 import { siteConfig } from "../site";
 
 const startHereOrder = [
-  "the-coordinator-never-touches-the-repo",
+  "governance-for-a-team-of-one",
   "a-field-guide-to-assurance-managed-ai-development",
   "moving-a-live-cluster-to-a-new-subnet",
   "schema-on-split",
@@ -75,7 +76,7 @@ const recentNotes = visibleNotes
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
-              context={`${humanizeLabel(entry.data.role)} · ${humanizeLabel(entry.data.area)}`}
+              context={`${roleLabel(entry.data.role)} · ${humanizeLabel(entry.data.area)}`}
               tags={entry.data.tags}
               date={entry.data.published}
               draft={entry.data.draft}
