@@ -898,8 +898,8 @@ async function runChecks(baseUrl) {
     );
 
     // Rank the bytes the browser actually receives, with the module it
-    // actually loads. Curated scope alone has to carry vague intent here,
-    // because the page deliberately ships no document bodies.
+    // actually loads. Curated scope carries vague intent; distinctive body
+    // terms carry the named ones, because the page ships those and no more.
     const expectations = [
       [
         "binding planning documents to tracked work items",
@@ -925,6 +925,93 @@ async function runChecks(baseUrl) {
       assert(
         ranked[0].reasons.length > 0,
         `explore ranking for ${JSON.stringify(question)} gives no match reason`,
+      );
+    }
+
+    // Distinctive body terms are recall underneath the curated ranking, and
+    // the probes assert properties rather than whole result lists: a golden
+    // snapshot of every rank would fail on any editorial change and teach
+    // nothing about which property broke. `tests/explore-probes.json` carries
+    // the classes -- body-only terms, technology names, multi-token prose,
+    // metadata leaders, common vocabulary, and known limitations.
+    const probes = JSON.parse(
+      await readFile(
+        new URL("../tests/explore-probes.json", import.meta.url),
+        "utf8",
+      ),
+    );
+
+    // The same index with its prose extracts removed: what the page ranked
+    // before body terms existed, and the reference for what must not move.
+    const curatedOnly = searchIndex.map((document) => {
+      const curated = { ...document };
+      delete curated.terms;
+      return curated;
+    });
+
+    for (const probe of probes) {
+      const ranked = rankReferences(searchIndex, probe.query);
+      const paths = ranked.map((result) => result.document.path);
+      const where = `explore probe ${probe.id}`;
+
+      if (probe.expectNoResults) {
+        assertEqual(paths.length, 0, `${where} must retrieve nothing`);
+      }
+      for (const expected of probe.expectPaths ?? []) {
+        const rank = paths.indexOf(expected) + 1;
+        assert(
+          rank > 0 && rank <= (probe.withinTop ?? 5),
+          `${where}: ${expected} ranked ${rank || "nowhere"}, wanted within ${probe.withinTop ?? 5}`,
+        );
+      }
+      if (probe.minResults !== undefined) {
+        assert(
+          paths.length >= probe.minResults,
+          `${where}: ${paths.length} results, wanted at least ${probe.minResults}`,
+        );
+      }
+      if (probe.maxResults !== undefined) {
+        assert(
+          paths.length <= probe.maxResults,
+          `${where}: ${paths.length} results, wanted at most ${probe.maxResults}`,
+        );
+      }
+      if (probe.leadersUnchanged) {
+        assertEqual(
+          paths.slice(0, 3).join(" "),
+          rankReferences(curatedOnly, probe.query)
+            .slice(0, 3)
+            .map((result) => result.document.path)
+            .join(" "),
+          `${where}: prose extracts moved the curated leaders`,
+        );
+      }
+    }
+
+    // The same invariant over every question the retrieval harness asks. Prose
+    // extracts are priced against the whole corpus while curated fields are
+    // priced among themselves, precisely so that indexing prose cannot
+    // re-rank editorial authority. Measured the other way, a note lost its
+    // lead because the term its author declared it discoverable for had turned
+    // common in other documents' prose.
+    const intentQuestions = JSON.parse(
+      await readFile(
+        new URL("../tests/retrieval-cases.json", import.meta.url),
+        "utf8",
+      ),
+    ).map((evaluationCase) => evaluationCase.question);
+
+    for (const question of intentQuestions) {
+      assertEqual(
+        rankReferences(searchIndex, question)
+          .slice(0, 3)
+          .map((result) => result.document.path)
+          .join(" "),
+        rankReferences(curatedOnly, question)
+          .slice(0, 3)
+          .map((result) => result.document.path)
+          .join(" "),
+        `explore leaders for ${JSON.stringify(question.slice(0, 48))}`,
       );
     }
   });

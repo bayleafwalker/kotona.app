@@ -1,0 +1,145 @@
+[
+  {
+    "id": "body-only-togaf",
+    "class": "body-only rare term",
+    "query": "togaf",
+    "note": "Named in two notes' prose and in no metadata field anywhere.",
+    "expectPaths": [
+      "/notes/a-reference-architecture-is-a-hypothesis-library/",
+      "/notes/the-target-state-is-not-the-plan/"
+    ],
+    "withinTop": 2
+  },
+  {
+    "id": "body-only-embeddings",
+    "class": "body-only rare term",
+    "query": "embeddings",
+    "expectPaths": [
+      "/notes/the-platform-can-retrieve-the-application-still-has-to-decide/"
+    ],
+    "withinTop": 1
+  },
+  {
+    "id": "technology-prometheus",
+    "class": "technology named in prose",
+    "query": "prometheus",
+    "expectPaths": ["/projects/acceptance-lab/"],
+    "withinTop": 2,
+    "minResults": 2
+  },
+  {
+    "id": "technology-sqlite",
+    "class": "technology named in prose",
+    "query": "sqlite",
+    "expectPaths": ["/projects/acceptance-lab/"],
+    "withinTop": 3,
+    "minResults": 3
+  },
+  {
+    "id": "technology-notion",
+    "class": "technology named in prose",
+    "query": "notion",
+    "expectPaths": ["/notes/measure-the-diagnosis-not-only-the-transcript/"],
+    "withinTop": 1
+  },
+  {
+    "id": "multi-token-mcp-server",
+    "class": "multi-token prose combination",
+    "query": "mcp server",
+    "note": "Only `mcp` is distinctive; `server` is common vocabulary and unindexed.",
+    "expectPaths": ["/projects/household-operating-platform/"],
+    "withinTop": 3,
+    "minResults": 3
+  },
+  {
+    "id": "multi-token-flux-helmrelease",
+    "class": "multi-token prose combination",
+    "query": "flux helmrelease",
+    "note": "The document matching both terms must lead those matching one.",
+    "expectPaths": ["/notes/the-target-state-is-not-the-plan/"],
+    "withinTop": 1,
+    "minResults": 3
+  },
+  {
+    "id": "metadata-and-body-talos",
+    "class": "metadata leader with prose tail",
+    "query": "talos",
+    "expectPaths": ["/projects/gitops-cluster/"],
+    "withinTop": 1,
+    "leadersUnchanged": true,
+    "minResults": 4
+  },
+  {
+    "id": "broad-metadata-kubernetes",
+    "class": "metadata leader with prose tail",
+    "query": "kubernetes",
+    "expectPaths": ["/projects/gitops-cluster/"],
+    "withinTop": 1,
+    "leadersUnchanged": true,
+    "minResults": 5
+  },
+  {
+    "id": "intent-planning-document-binding",
+    "class": "curated intent",
+    "query": "how do I stop planning documents from drifting from the work",
+    "expectPaths": ["/notes/the-ref-nobody-adds/"],
+    "withinTop": 1,
+    "leadersUnchanged": true
+  },
+  {
+    "id": "intent-box-absence-of-proof",
+    "class": "curated intent",
+    "query": "what can the box project not prove yet",
+    "expectPaths": ["/projects/contract-first-box/"],
+    "withinTop": 2,
+    "leadersUnchanged": true
+  },
+  {
+    "id": "intent-verified-migration-state",
+    "class": "curated intent",
+    "query": "how do I know a migration actually reached the verified state",
+    "expectPaths": ["/notes/the-candidate-passed-the-upgrade-did-not/"],
+    "withinTop": 1,
+    "leadersUnchanged": true
+  },
+  {
+    "id": "common-prose-server",
+    "class": "common vocabulary",
+    "query": "server",
+    "note": "Above the term-frequency cutoff, so it is not indexed at all. A word this common is not retrieval evidence in this corpus.",
+    "expectNoResults": true
+  },
+  {
+    "id": "common-prose-commit",
+    "class": "common vocabulary",
+    "query": "commit",
+    "expectNoResults": true
+  },
+  {
+    "id": "common-prose-discovery",
+    "class": "common vocabulary",
+    "query": "discovery",
+    "expectNoResults": true
+  },
+  {
+    "id": "common-prose-protocol",
+    "class": "common vocabulary",
+    "query": "protocol",
+    "note": "Just under the cutoff, so it is indexed. It must not answer with a large share of the corpus.",
+    "maxResults": 15
+  },
+  {
+    "id": "known-miss-wardley",
+    "class": "known limitation",
+    "query": "wardley",
+    "note": "No document names Wardley. Nothing to retrieve, and nothing here can invent it.",
+    "expectNoResults": true
+  },
+  {
+    "id": "known-miss-wardley-mapping",
+    "class": "known limitation",
+    "query": "wardley mapping",
+    "note": "The first known phrase-level miss. A document-frequency filter cannot know that `wardley mapping` is one concept while `mapping` is generic, so the query answers on its generic half. Distinctive adjacent phrases would fix this class; widening the term cutoff would not. If this probe starts returning a document about Wardley mapping, the corpus gained one and the fixture is stale.",
+    "maxResults": 6
+  }
+]

@@ -44,6 +44,16 @@ behaviour. The architecture and the ordered backlog are in
 [`docs/architecture/reference-discovery.md`](architecture/reference-discovery.md)
 and [`docs/plans/reference-discovery.md`](plans/reference-discovery.md).
 
+The Explore page is measured separately, because it ships a different corpus:
+metadata plus a distinctive-term extract of each body, rather than whole bodies.
+`tests/explore-probes.json` runs inside `npm run test:worker`, against the index
+parsed out of the served HTML, and asserts properties -- an expected document
+within a window, a floor or ceiling on breadth, curated leaders unmoved -- so a
+probe failure names the property that broke instead of a rank that drifted. The
+same check holds every question in `tests/retrieval-cases.json` to unchanged
+leading results, which is the guarantee that indexing prose adds recall without
+re-ranking editorial authority.
+
 This measures internal selection only. Whether an outside system finds this site
 at all is a separate question with a separate instrument, in
 [`docs/external-retrieval-evaluation.md`](external-retrieval-evaluation.md).

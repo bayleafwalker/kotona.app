@@ -6,6 +6,7 @@ import { knowledgeClusters } from "../data/knowledge-clusters";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { buildKnowledgeGraph } from "../lib/knowledge-map";
 import { buildReferenceIndex } from "../lib/reference-index";
+import { buildSearchTerms } from "../lib/search-terms";
 import { buildRevision } from "../build";
 import { siteConfig } from "../site";
 
@@ -17,9 +18,12 @@ const entries = [
 ];
 const graph = buildKnowledgeGraph(entries, knowledgeClusters);
 // The in-page ranker scores the same fields the public catalog publishes, from
-// the same projection. It deliberately omits document bodies: a machine client
-// retrieves those from the `.md` resources, and shipping the whole corpus to
-// every reader would cost far more than the ranking it buys.
+// the same projection, plus each document's distinctive body terms. Whole
+// bodies stay out of the page -- a machine client retrieves those from the
+// `.md` resources, and shipping the corpus to every reader would cost far more
+// than the ranking it buys -- but a term a document is *about* has to be
+// rankable even when no metadata field happens to name it.
+const searchTerms = buildSearchTerms(entries);
 const searchDocuments = buildReferenceIndex(entries, {
   baseUrl: Astro.site ?? new URL(siteConfig.siteUrl),
   revision: buildRevision,
@@ -37,6 +41,7 @@ const searchDocuments = buildReferenceIndex(entries, {
   supersededBy: document.supersededBy?.map((successor) => successor.id),
   discoverFor: document.reference?.discoverFor,
   establishes: document.reference?.establishes,
+  terms: searchTerms.get(new URL(document.url).pathname),
 }));
 ---
 
