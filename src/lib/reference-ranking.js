@@ -20,6 +20,7 @@
  *   discoverFor?: string[],
  *   establishes?: string[],
  *   text?: string,
+ *   terms?: string,
  * }} ReferenceSearchDocument
  *
  * @typedef {{ field: string, value: string }} MatchReason
@@ -129,6 +130,13 @@ const historicalIntentWords = new Set([
  * Field weights. `discoverFor` is curated for exactly this purpose and leads.
  * `doesNotEstablish` is deliberately unscored: it is a claim boundary, and
  * matching it would rank a document for the very thing it disclaims.
+ *
+ * `text` and `terms` are two ways to carry the same prose evidence, and a
+ * corpus supplies whichever it can afford. `text` is a whole document body,
+ * which the retrieval harness holds because it fetches every public Markdown
+ * resource. `terms` is a distinctive-term extract, which is what a page can
+ * ship to a browser. They score alike and differ only in how term rarity is
+ * measured; see `inverseDocumentFrequency`.
  */
 const fieldWeights = {
   discoverFor: 12,
@@ -138,6 +146,7 @@ const fieldWeights = {
   establishes: 3,
   tags: 2,
   text: 1,
+  terms: 1,
 };
 
 /** Every word in the query, including the ones scoring ignores. */
@@ -173,6 +182,7 @@ function fieldsOf(document) {
     establishes: (document.establishes ?? []).join(" "),
     tags: (document.tags ?? []).join(" "),
     text: document.text ?? "",
+    terms: document.terms ?? "",
   };
 }
 
@@ -202,13 +212,33 @@ function lifecycleFactor(document, historicalIntent) {
   return historicalIntent ? 1.05 : 0.6;
 }
 
-/** @param {ReferenceSearchDocument[]} documents */
-function inverseDocumentFrequency(documents) {
+/**
+ * Term rarity over a chosen set of fields.
+ *
+ * A whole body is part of the corpus, so it counts towards rarity for every
+ * field: where bodies are present, a word common in them is common, and
+ * discounting it is the point of the measure.
+ *
+ * A `terms` extract is not. It has already been filtered for rarity, so it is
+ * a biased sample of the corpus -- it holds a document's rare words and drops
+ * its common ones -- and counting it would let prose re-price curated fields
+ * against a sample that cannot answer for them. Measured that way, indexing
+ * extracts cost a note its lead: the word its author declared it discoverable
+ * for appeared in a handful of other documents' extracts, its rarity fell, and
+ * a note matching commoner words on weaker fields passed it. So curated fields
+ * are priced among curated fields, while a `terms` match is priced against
+ * everything, which is the honest measure of what a prose match distinguishes.
+ *
+ * @param {ReferenceSearchDocument[]} documents
+ * @param {(field: string) => boolean} includes
+ */
+function inverseDocumentFrequency(documents, includes) {
   const frequency = new Map();
 
   for (const document of documents) {
     const seen = new Set();
-    for (const text of Object.values(fieldsOf(document))) {
+    for (const [field, text] of Object.entries(fieldsOf(document))) {
+      if (!includes(field)) continue;
       for (const token of tokenize(text)) seen.add(token);
     }
     for (const token of seen) {
@@ -392,7 +422,11 @@ export function rankReferences(documents, query, options = {}) {
   const queryTokens = [...new Set(tokenize(query))];
   if (queryTokens.length === 0) return [];
 
-  const idf = inverseDocumentFrequency(documents);
+  // Curated fields are priced among themselves; a prose extract is priced
+  // against the whole corpus. Both measures over everything let prose re-rank
+  // editorial authority.
+  const idf = inverseDocumentFrequency(documents, (field) => field !== "terms");
+  const termsIdf = inverseDocumentFrequency(documents, () => true);
   const historicalIntent = hasHistoricalIntent(query);
   const queryTokenSet = new Set(queryTokens);
 
@@ -412,7 +446,7 @@ export function rankReferences(documents, query, options = {}) {
     for (const token of queryTokens) {
       for (const [field, weight] of Object.entries(fieldWeights)) {
         if (fieldTokens[field].has(token)) {
-          score += weight * idf(token);
+          score += weight * (field === "terms" ? termsIdf(token) : idf(token));
         }
       }
     }
@@ -434,10 +468,12 @@ export function rankReferences(documents, query, options = {}) {
 
     // A curated phrase match already names the phrase. Echoing its own tokens
     // back as a second reason pushes the informative ones out of the two the
-    // interface shows.
+    // interface shows. Prose fields are last in the weight order and so are
+    // reported last: a prose match is the weakest signal here, and it is the
+    // only reason a document has when the query names something no metadata
+    // field does.
     const phraseMatched = reasons.length > 0;
     for (const field of Object.keys(fieldWeights)) {
-      if (field === "text") continue;
       if (field === "discoverFor" && phraseMatched) continue;
       const matched = queryTokens.filter((token) =>
         fieldTokens[field].has(token),

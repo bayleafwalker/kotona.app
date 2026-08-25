@@ -58,6 +58,38 @@ test("a natural-language question ranks results and drives the other views", asy
   ).toBe(corpusSize);
 });
 
+test("a term named only in prose retrieves the documents that discuss it", async ({
+  page,
+}) => {
+  // No metadata field anywhere names TOGAF. Before the page carried prose
+  // terms, this emptied the map and the ranked list while both notes that
+  // discuss it sat in the grouped index below, claiming to be complete.
+  await ask(page, "togaf");
+
+  const results = page.locator(rankedItems);
+  await expect(results).toHaveCount(2);
+  await expect(results.first().locator("a")).toHaveAttribute(
+    "href",
+    "/notes/a-reference-architecture-is-a-hypothesis-library/",
+  );
+
+  // A prose match is the only reason such a result has, so it has to reach
+  // the reader rather than leaving an unexplained entry in the list.
+  await expect(results.first().locator(".knowledge-result-why")).toContainText(
+    "terms: togaf",
+  );
+
+  // Map, index, and count agree with the ranking, as they do for a question.
+  const shownInIndex = await page.locator(visibleIndexItems).count();
+  expect(shownInIndex).toBe(2);
+  expect(await page.locator("[data-node-id]:not(.is-filtered)").count()).toBe(
+    2,
+  );
+  await expect(page.locator(".knowledge-result-count")).toContainText(
+    "2 of 2 ranked matches shown",
+  );
+});
+
 test("a query that ranks nothing leaves the map and index reachable", async ({
   page,
 }) => {

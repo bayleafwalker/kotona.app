@@ -111,6 +111,35 @@ The Explore graph remains a relationship interface and keeps its complete
 no-JavaScript index. Ranked search is also rendered as a readable list so graph
 position is never mistaken for relevance.
 
+The corpus embedded in the page is metadata plus each document's distinctive
+prose terms: the tokens it uses that few other documents use, minus the ones its
+own scored metadata already carries. Whole bodies stay out of the page -- a
+machine client retrieves those from the `.md` resources -- but a reader who
+searches a term a document discusses and never names in its title, summary,
+area, tags, or curated scope now reaches it. Metadata alone left such a query
+with an empty map and an empty ranked list beside a grouped index that claimed
+to be complete.
+
+Prose is recall underneath the curated ranking, never a re-pricing of it. It
+carries the lowest field weight, and term rarity is measured twice: curated
+fields are priced among curated fields, while a prose match is priced against
+the whole corpus. Pricing both over everything is what re-ranks authority --
+measured that way, a note lost its lead because the term its author declared it
+discoverable for had grown common in other documents' prose. A worker check
+holds the invariant directly: for every question the retrieval evaluation asks,
+the page's leading three results must be the ones curated metadata alone
+produces.
+
+Retrieval quality beyond that is asserted as properties, not golden rankings.
+`tests/explore-probes.json` holds probes by class -- prose-only terms,
+technology names, multi-token prose, metadata leaders, common vocabulary, and
+known limitations -- each asserting that an expected document ranks within a
+window, that a query returns enough or few enough results, or that curated
+leaders did not move. Known limitations are fixtures too: `wardley mapping` is
+the first recorded phrase-level miss, where a document-frequency filter cannot
+know that two words are one concept. That class is answered by distinctive
+adjacent phrases if it earns the complexity, not by widening the term cutoff.
+
 Embeddings are reconsidered only after vague-intent top-k evaluation and fresh
 sessions demonstrate a material recall failure that curated metadata and lexical
 ranking cannot correct. A search API or MCP adapter is reconsidered only when
