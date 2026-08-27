@@ -17,6 +17,7 @@ tags:
   - harness-engineering
   - devops
   - cluster-operations
+  - kubernetes
   - study-notes
 summary:
   A wrapper-derived effect-intent projection should let an application session
