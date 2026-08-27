@@ -891,7 +891,7 @@ async function runChecks(baseUrl) {
     const searchIndex = JSON.parse(
       embedded[1].replaceAll("&quot;", '"').replaceAll("&amp;", "&"),
     );
-    assertEqual(searchIndex.length, 59, "embedded search index document count");
+    assertEqual(searchIndex.length, 60, "embedded search index document count");
     assert(
       !JSON.stringify(searchIndex).includes("doesNotEstablish"),
       "the browser index must not carry claim-boundary text it does not rank",
