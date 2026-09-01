@@ -127,6 +127,24 @@ const historicalIntentWords = new Set([
 ]);
 
 /**
+ * Words that say the reader is asking which project owns something, rather
+ * than for reasoning about it. They raise current project evidence the way
+ * `historicalIntentWords` raises history: notes stay retrievable either way,
+ * and this only decides what leads.
+ *
+ * The list is deliberately short. Only words that name the artifact itself
+ * qualify -- `owns` and `authority` are the vocabulary of the whole corpus,
+ * and treating them as project intent would promote project pages over the
+ * notes that reason about ownership for almost every architectural question.
+ */
+const projectIntentWords = new Set(["project", "projects"]);
+
+/**
+ * Multiplier applied to a current project page when the query asks for one.
+ */
+const projectIntentBoost = 1.25;
+
+/**
  * Field weights. `discoverFor` is curated for exactly this purpose and leads.
  * `doesNotEstablish` is deliberately unscored: it is a claim boundary, and
  * matching it would rank a document for the very thing it disclaims.
@@ -172,6 +190,16 @@ export function hasHistoricalIntent(query) {
   return words(query).some((word) => historicalIntentWords.has(word));
 }
 
+/**
+ * Read a request for project evidence from the raw words, for the same reason
+ * `hasHistoricalIntent` does: the tokenizer would drop some of them.
+ *
+ * @param {string} query
+ */
+export function hasProjectIntent(query) {
+  return words(query).some((word) => projectIntentWords.has(word));
+}
+
 /** @param {ReferenceSearchDocument} document */
 function fieldsOf(document) {
   return {
@@ -208,8 +236,8 @@ function priorityTier(document) {
  */
 function lifecycleFactor(document, historicalIntent) {
   const lifecycle = document.lifecycle ?? "current";
-  if (lifecycle === "current") return historicalIntent ? 0.8 : 1;
-  return historicalIntent ? 1.05 : 0.6;
+  if (lifecycle === "current") return historicalIntent ? 0.65 : 1;
+  return historicalIntent ? 1.25 : 0.6;
 }
 
 /**
@@ -428,6 +456,7 @@ export function rankReferences(documents, query, options = {}) {
   const idf = inverseDocumentFrequency(documents, (field) => field !== "terms");
   const termsIdf = inverseDocumentFrequency(documents, () => true);
   const historicalIntent = hasHistoricalIntent(query);
+  const projectIntent = hasProjectIntent(query);
   const queryTokenSet = new Set(queryTokens);
 
   const scored = documents.map((document) => {
@@ -485,7 +514,12 @@ export function rankReferences(documents, query, options = {}) {
 
     return {
       document,
-      score: score * lifecycleFactor(document, historicalIntent),
+      score:
+        score *
+        lifecycleFactor(document, historicalIntent) *
+        (projectIntent && priorityTier(document) === 0
+          ? projectIntentBoost
+          : 1),
       reasons,
     };
   });

@@ -104,8 +104,19 @@ boost; titles remain strong.
 
 For equal lexical relevance, current project evidence and current operating or
 synthesis notes precede current explorations, historical material, and
-superseded or disproven notes. Explicit historical intent may reverse that
-preference. This is a discovery safety policy, not a universal truth ranking.
+superseded or disproven notes. This is a discovery safety policy, not a
+universal truth ranking.
+
+Two explicit intents read from the query's raw words may override the default
+preference. Historical intent -- `previously`, `originally`, `superseded` and
+similar -- reverses the preference for current material. Project intent, which
+is only the words `project` and `projects`, raises current project pages,
+because a reader asking which project owns something wants the evidence page
+rather than the notes reasoning about ownership. Both are deliberately narrow:
+they decide what leads, and everything stays retrievable either way. The
+vocabulary the whole corpus shares -- `owns`, `authority`, `state` -- is
+excluded from both, since a broad note matching many such ordinary words can
+otherwise outrank the document that actually answers the question.
 
 The Explore graph remains a relationship interface and keeps its complete
 no-JavaScript index. Ranked search is also rendered as a readable list so graph

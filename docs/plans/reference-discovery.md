@@ -204,7 +204,10 @@ the site root, and ordinary web access.
 
 ### B. Machine-surface analytics
 
-Status: instrument chosen 2026-08-24; findings in
+Status: instrument chosen 2026-08-24; week-one baseline v1 collected on
+2026-09-01. The accepted receipt is
+[`docs/research/2026-09-01-reference-discovery-baseline.md`](../research/2026-09-01-reference-discovery-baseline.md);
+the commissioning findings remain in
 [`docs/research/2026-08-24-machine-surface-observability.md`](../research/2026-08-24-machine-surface-observability.md).
 Zone-level GraphQL analytics is the instrument, because half the surfaces are
 static assets that never invoke the Worker. Workers Logs, already enabled and
