@@ -43,9 +43,9 @@ npm run test:browser
 
 It covers only the seam the other suites cannot reach -- whether the Explore
 page presents what the ranking decides. Run it after changing Explore, the
-knowledge map, or `src/lib/reference-ranking.js`. It is deliberately absent from
-`npm run validate`; add it there only once browser provisioning is reproducible
-in CI.
+knowledge map, or `src/lib/reference-ranking.js`. CI provisions Chromium and
+runs it as a gate; it stays out of `npm run validate` because that provisioning
+is per-machine locally, not because the suite is optional.
 
 External reachability is a weekly and manually dispatched maintenance signal,
 not a publication or deployment invariant. The `external links` workflow runs

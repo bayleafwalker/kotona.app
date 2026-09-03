@@ -431,6 +431,12 @@ main {
   max-width: 62ch;
 }
 
+.knowledge-results-scope {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-block-end: 0.75rem;
+}
+
 .knowledge-results ol {
   display: grid;
   gap: 0.85rem;
@@ -1041,6 +1047,48 @@ main {
 
 .toc-panel:not([open]) .toc-title {
   margin-bottom: 0;
+}
+
+.reference-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.5rem;
+  max-width: var(--reading-width);
+  margin: 2rem 0 1.25rem;
+  padding-block-start: 0.9rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+}
+
+.reference-actions-label {
+  font-weight: 600;
+}
+
+.reference-actions-copy {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.reference-actions-copy:hover,
+.reference-actions-copy:focus-visible {
+  color: var(--accent);
+}
+
+.reference-actions-status {
+  flex-basis: 100%;
+}
+
+.reference-actions-status[data-state="error"] {
+  color: var(--warm);
+  font-weight: 600;
 }
 
 .explore-prompt {

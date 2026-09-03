@@ -5,6 +5,14 @@ These images are concept art for
 views of one restrained Finnish mill-site retreat, not unrelated luxury-spa
 renders.
 
+Published derivatives live under
+`public/images/notes/size-the-spa-to-the-river/`; `public/` is deployed whole,
+so only the WebP files a page actually references belong there. The PNG masters
+are kept for re-derivation in
+[`archive/image-masters/size-the-spa-to-the-river/`](../../archive/image-masters/size-the-spa-to-the-river/).
+Images 4 and 5 were never placed in the note, so their derivatives are not
+published; regenerate them from the masters if the note takes them up.
+
 ## Shared visual language
 
 Use this continuity block at the start of every prompt:
@@ -124,7 +132,8 @@ Caption:
 
 Target file: `public/images/notes/size-the-spa-to-the-river/site-oblique.webp`
 
-Available derivative: 1312 × 816, WebP, about 245 kB.
+Not placed in the note; derivative removed. Master:
+`archive/image-masters/size-the-spa-to-the-river/site-oblique.png`.
 
 Prompt:
 
@@ -154,7 +163,8 @@ Caption:
 Target file:
 `public/images/notes/size-the-spa-to-the-river/summer-river-terrace.webp`
 
-Available derivative: 1500 × 1006, WebP, about 335 kB.
+Not placed in the note; derivative removed. Master:
+`archive/image-masters/size-the-spa-to-the-river/summer-river-terrace.png`.
 
 Prompt:
 

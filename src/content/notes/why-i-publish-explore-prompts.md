@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: agent workflow
 published: 2026-07-20
-lastRevised: 2026-07-20
+lastRevised: 2026-09-03
 projects: []
 relates:
   - the-aftertaste-of-resolution
@@ -55,9 +55,11 @@ wanted for notes meant to be extended.
 ## The prompt is generated after the note, not with it
 
 Every note published here can carry an `explorePrompt`: a short, portable prompt
-rendered as an "Explore this note with AI" block, present in both the HTML page
-and the negotiated Markdown version. The rule that makes it useful is when it
-gets written, not what it says. It is derived only after the note reaches its
+rendered below the note as a collapsed "Optional exploration template" block,
+and retrievable on its own at `/notes/<slug>.prompt.txt`. The note's Markdown
+representation deliberately omits it, so portable task language is never
+mistaken for the reference itself. The rule that makes it useful is when it gets
+written, not what it says. It is derived only after the note reaches its
 editorially finished state -- never during drafting, and never as a plan for
 what the note should argue.
 

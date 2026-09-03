@@ -72,19 +72,19 @@ history; it is useful evidence about the register, not a ranking of truth. Treat
 follow declared successors, and do not silently restate a non-current note as
 present guidance.
 
-Some notes also publish `explorePrompt`: a post-hoc "Explore this note with AI"
-prompt for applying and extending the note elsewhere (see
+Some notes also publish `explorePrompt`: a post-hoc "Optional exploration
+template" for applying and extending the note elsewhere (see
 `docs/explore-prompts.md`). It is not the note's original generating prompt or a
 reconstruction of how the note was written, and it is not an independent surface
 -- lifecycle remains authoritative over it. A superseded or disproven note's
 prompt says so and points to the successor; do not treat a retrievable prompt as
 evidence that the note is current.
 
-The prompt is separated from the reference representation. HTML may show it in a
-collapsed block, and `/notes/<slug>.prompt.txt` serves it deliberately with its
-source, lifecycle, and site revision attached. Markdown reference bytes never
-carry it, so an agent that retrieved a document as evidence does not also
-receive portable task language mixed into that evidence.
+The prompt is separated from the reference representation. HTML shows it in a
+collapsed block below the note, and `/notes/<slug>.prompt.txt` serves it
+deliberately with its source, lifecycle, and site revision attached. Markdown
+reference bytes never carry it, so an agent that retrieved a document as
+evidence does not also receive portable task language mixed into that evidence.
 
 ## Intentionally not published
 

@@ -1,4 +1,5 @@
 ---
+import { humanizeLabel } from "../lib/content-labels.js";
 import type { KnowledgeGraph } from "../lib/knowledge-map";
 import type { ReferenceSearchDocument } from "../lib/reference-ranking.js";
 
@@ -136,6 +137,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       material leads unless the question asks about the past. The grouped index
       below stays complete.
     </p>
+    <p class="knowledge-results-scope" data-knowledge-results-scope></p>
     <ol data-knowledge-results-list></ol>
   </section>
 
@@ -256,7 +258,11 @@ const clusterNodes = graph.clusters.map((cluster) => ({
                 data-cluster={node.cluster}
                 data-title={node.title}
                 data-summary={node.summary}
-                data-area={node.type === "project" ? "Project" : node.area}
+                data-area={
+                  node.type === "project"
+                    ? "Project"
+                    : humanizeLabel(node.area ?? "")
+                }
                 data-node-x={node.x}
                 aria-controls="knowledge-detail"
                 aria-expanded="false"
@@ -371,7 +377,11 @@ const clusterNodes = graph.clusters.map((cluster) => ({
                   data-search={`${node.title} ${node.summary} ${node.area ?? ""} ${node.tags.join(" ")}`.toLowerCase()}
                 >
                   <a href={node.href}>{node.title}</a>
-                  <span>{node.type === "project" ? "Project" : node.area}</span>
+                  <span>
+                    {node.type === "project"
+                      ? "Project"
+                      : humanizeLabel(node.area ?? "")}
+                  </span>
                   {node.summary ? <p>{node.summary}</p> : null}
                 </li>
               ))}
@@ -404,6 +414,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 </section>
 
 <script>
+  import { humanizeLabel } from "../lib/content-labels.js";
   import {
     rankReferences,
     type ReferenceSearchDocument,
@@ -422,12 +433,17 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     const count = explorer.querySelector(".knowledge-result-count");
     const resultsRegion = explorer.querySelector("[data-knowledge-results]");
     const resultsList = explorer.querySelector("[data-knowledge-results-list]");
+    const resultsScope = explorer.querySelector(
+      "[data-knowledge-results-scope]",
+    );
     const searchIndexSource = explorer.querySelector(
       "[data-knowledge-search-index]",
     );
     const searchIndex: ReferenceSearchDocument[] = searchIndexSource
       ? JSON.parse(searchIndexSource.textContent ?? "[]")
       : [];
+
+    const RANKED_RESULT_LIMIT = 8;
 
     // One ranking drives both the ranked list and what the map and index show.
     // A natural-language question used to empty the map, because the filter
@@ -458,15 +474,24 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 
       // The ranked list obeys the same controls as the map and the index.
       // A result the reader has filtered out must not reappear here.
-      const ranked = rankedFor(query)
-        .filter(
-          (result) =>
-            types.has(result.document.type) &&
-            (showHistory ||
-              !result.document.lifecycle ||
-              result.document.lifecycle === "current"),
-        )
-        .slice(0, 8);
+      const matching = rankedFor(query).filter(
+        (result) =>
+          types.has(result.document.type) &&
+          (showHistory ||
+            !result.document.lifecycle ||
+            result.document.lifecycle === "current"),
+      );
+      // The list is capped, so it has to say so. Reporting the full match
+      // count above a visibly shorter list reads as a rendering fault.
+      const ranked = matching.slice(0, RANKED_RESULT_LIMIT);
+      if (resultsScope instanceof HTMLElement) {
+        resultsScope.textContent =
+          matching.length > ranked.length
+            ? `Showing the top ${ranked.length} of ${matching.length} ranked matches.`
+            : matching.length === 1
+              ? "One ranked match."
+              : `${matching.length} ranked matches.`;
+      }
       resultsRegion.hidden = false;
       resultsList.replaceChildren(
         ...ranked.map((result) => {
@@ -483,6 +508,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
               ? "Project"
               : [result.document.area, result.document.lifecycle]
                   .filter(Boolean)
+                  .map((value) => humanizeLabel(value as string))
                   .join(" / ");
           item.appendChild(meta);
 

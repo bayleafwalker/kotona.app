@@ -4,12 +4,14 @@ import { getCollection, getEntry, render } from "astro:content";
 import AnnotatedText from "../../components/AnnotatedText.astro";
 import ContentToc from "../../components/ContentToc.astro";
 import ExplorePrompt from "../../components/ExplorePrompt.astro";
+import ReferenceActions from "../../components/ReferenceActions.astro";
 import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   formatDate,
   getVisibleEntries,
   humanizeLabel,
+  roleLabel,
   sortByDateAndTitle,
 } from "../../lib/content";
 import { generatedOgImagePath } from "../../lib/og-images.js";
@@ -74,11 +76,12 @@ const relatedNotes = sortByDateAndTitle(
     data: { ...note.data, date: note.data.published },
   })),
 );
+// The eyebrow names what the document is, which is its declared role. A
+// project connection is a relationship and is shown as one below; it does not
+// redefine a synthesis or operating note as project history.
 const noteKind = entry.data.draft
-  ? "Draft note"
-  : projectEntries.length > 0
-    ? "Project note"
-    : "System note";
+  ? `Draft ${roleLabel(entry.data.role).toLowerCase()}`
+  : roleLabel(entry.data.role);
 const formattedLifecycleDate = entry.data.lifecycleChanged
   ? formatDate(entry.data.lifecycleChanged)
   : null;
@@ -252,16 +255,6 @@ const canonicalNoteUrl = new URL(
         ) : null
       }
 
-      {
-        entry.data.explorePrompt ? (
-          <ExplorePrompt
-            prompt={entry.data.explorePrompt}
-            sourceUrl={canonicalNoteUrl}
-            kind="note"
-          />
-        ) : null
-      }
-
       <ContentToc headings={headings} />
 
       {
@@ -276,6 +269,21 @@ const canonicalNoteUrl = new URL(
       <div class="prose">
         <Content />
       </div>
+
+      <ReferenceActions
+        markdownUrl={`/notes/${entry.id}.md`}
+        downloadName={`${entry.id}.md`}
+      />
+
+      {
+        entry.data.explorePrompt ? (
+          <ExplorePrompt
+            prompt={entry.data.explorePrompt}
+            sourceUrl={canonicalNoteUrl}
+            kind="note"
+          />
+        ) : null
+      }
 
       {
         relatedNotes.length > 0 ? (

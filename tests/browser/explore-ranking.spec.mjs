@@ -153,6 +153,6 @@ test("an overwhelmingly better predecessor still leads, with its lifecycle shown
 
   // The reader must be able to see that the leading result is disproven.
   await expect(first.locator(".knowledge-result-meta")).toContainText(
-    "disproven",
+    "Disproven",
   );
 });

@@ -6,14 +6,13 @@ type Props = {
 };
 
 const { prompt, sourceUrl, kind = "note" } = Astro.props;
-const label = `Explore this ${kind} with AI`;
 ---
 
 <details class="explore-prompt">
   <summary>
-    <h2>{label}</h2>
+    <h2>Optional exploration template</h2>
     <span class="explore-prompt-hint"
-      >Apply and challenge it in your own context.</span
+      >Portable task language, not part of the {kind}.</span
     >
   </summary>
   <blockquote>
