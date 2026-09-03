@@ -38,7 +38,7 @@ test("generated social-card paths cannot escape their asset directory", () => {
   );
 });
 
-test("the note page always renders lifecycle before the explore prompt before the table of contents", async () => {
+test("the note page keeps the document primary and its machine affordances after it", async () => {
   const source = await readFile(
     fileURLToPath(new URL("../src/pages/notes/[slug].astro", import.meta.url)),
     "utf8",
@@ -46,19 +46,42 @@ test("the note page always renders lifecycle before the explore prompt before th
   const lifecycleIndex = source.indexOf(
     'class="publication-note lifecycle-note"',
   );
-  const explorePromptIndex = source.indexOf("<ExplorePrompt");
   const tocIndex = source.indexOf("<ContentToc");
+  const proseIndex = source.indexOf('<div class="prose">');
+  const referenceIndex = source.indexOf("<ReferenceActions");
+  const explorePromptIndex = source.indexOf("<ExplorePrompt");
+  const relatedIndex = source.indexOf('class="related-content"');
 
-  assert.ok(lifecycleIndex > -1, "lifecycle notice markup is missing");
-  assert.ok(explorePromptIndex > -1, "ExplorePrompt usage is missing");
-  assert.ok(tocIndex > -1, "ContentToc usage is missing");
+  for (const [index, name] of [
+    [lifecycleIndex, "lifecycle notice markup"],
+    [tocIndex, "ContentToc usage"],
+    [proseIndex, "prose region"],
+    [referenceIndex, "ReferenceActions usage"],
+    [explorePromptIndex, "ExplorePrompt usage"],
+    [relatedIndex, "related notes markup"],
+  ]) {
+    assert.ok(index > -1, `${name} is missing`);
+  }
+
+  // The reader's path from the header runs into the note itself. The prompt is
+  // an optional template for elsewhere, so it follows the document rather than
+  // interrupting the way into it.
   assert.ok(
-    lifecycleIndex < explorePromptIndex,
-    "lifecycle notice must be placed before the explore prompt in the template",
+    lifecycleIndex < tocIndex,
+    "lifecycle notice must precede the table of contents",
+  );
+  assert.ok(tocIndex < proseIndex, "table of contents must precede the prose");
+  assert.ok(
+    proseIndex < referenceIndex,
+    "reference actions must follow the prose",
   );
   assert.ok(
-    explorePromptIndex < tocIndex,
-    "explore prompt must be placed before the table of contents in the template",
+    referenceIndex < explorePromptIndex,
+    "the exploration template must follow the reference actions",
+  );
+  assert.ok(
+    explorePromptIndex < relatedIndex,
+    "the exploration template must precede related notes",
   );
 });
 

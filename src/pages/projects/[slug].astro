@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
+import ReferenceActions from "../../components/ReferenceActions.astro";
 import AnnotatedText from "../../components/AnnotatedText.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TagList from "../../components/TagList.astro";
@@ -195,6 +196,11 @@ const relatedLinks = [
       <div class="prose">
         <Content />
       </div>
+
+      <ReferenceActions
+        markdownUrl={`/projects/${entry.id}.md`}
+        downloadName={`${entry.id}.md`}
+      />
 
       {
         relatedNotes.length > 0 ? (

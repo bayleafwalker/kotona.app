@@ -1,6 +1,6 @@
 # Reference discovery implementation plan
 
-Status: planned  
+Status: slices 0 through 4 complete; slice 5 deferred  
 Architecture: [`docs/architecture/reference-discovery.md`](../architecture/reference-discovery.md)
 
 This is the maintained implementation backlog for the reference-discovery
@@ -92,7 +92,7 @@ project/note top-k expectations pass deterministically.
 
 ### 4. Compact human reference actions
 
-Status: pending; depends on slice 2
+Status: complete
 
 - Add a compact `Reference: Markdown · Copy · Download` row to notes and
   projects.
@@ -104,6 +104,13 @@ Status: pending; depends on slice 2
 
 Exit: copied and downloaded bytes match the public Markdown resource, controls
 do not dominate the page, and failure states remain usable.
+
+Landed as `ReferenceActions.astro` on notes and projects. Copy fetches the
+explicit `.md` URL and download is an ordinary `download` link to it, so neither
+can drift from the machine contract; the worker check asserts that the row's URL
+is the alternate the page advertises in its `Link` header, and that the row does
+not reappear inside the Markdown it points at. The exploration template moved
+below the prose, keeping the reader's path from the header into the document.
 
 ### 5. Bounded context packet
 

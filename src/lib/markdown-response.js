@@ -319,6 +319,20 @@ export function stripExplorePrompt(html) {
 }
 
 /**
+ * Remove the compact human reference row. It is page chrome pointing at this
+ * very representation, so leaving it in would put "Reference: Markdown ·
+ * Download" at the top of the Markdown an agent just retrieved.
+ *
+ * @param {string} html
+ */
+export function stripReferenceActions(html) {
+  return html.replace(
+    /<p\b[^>]*\bclass=["'][^"']*\breference-actions\b[^"']*["'][^>]*>[\s\S]*?<\/p>/gi,
+    "",
+  );
+}
+
+/**
  * Project the document's main region into readable Markdown. The HTML remains
  * canonical; this intentionally covers semantic content rather than every
  * possible presentation-only element.

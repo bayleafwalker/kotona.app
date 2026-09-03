@@ -1,7 +1,9 @@
 # Reference discovery architecture
 
-Status: accepted direction, not yet implemented  
+Status: accepted and implemented through slice 4; the bounded context packet
+(slice 5) remains deferred  
 Accepted: 2026-08-10  
+Implemented: 2026-09-03  
 Source baseline: `6c610a4627bd71dd2781e94d0a998db1b958e900`
 
 This document is the repository authority for the intended public reference
@@ -85,10 +87,12 @@ availability without prompt text. Project evidence remains bounded by
 ## Prompt separation
 
 `explorePrompt` remains an optional editorial artifact, but it is not part of
-the neutral default Markdown reference. HTML may show it in a collapsed
-**Optional exploration template** block. An explicit `.prompt.txt` resource is
-available only when deliberately requested and precedes the prompt with source,
-lifecycle, and revision context.
+the neutral default Markdown reference. HTML shows it in a collapsed **Optional
+exploration template** block, placed after the document and before related
+material: a template for use elsewhere does not belong on the path from a note's
+header into its own prose. An explicit `.prompt.txt` resource is available only
+when deliberately requested and precedes the prompt with source, lifecycle, and
+revision context.
 
 This separation prevents portable task language from being mistaken for source
 authority while preserving the existing editorial capability. Prompt routes must

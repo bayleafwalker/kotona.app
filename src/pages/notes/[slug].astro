@@ -4,6 +4,7 @@ import { getCollection, getEntry, render } from "astro:content";
 import AnnotatedText from "../../components/AnnotatedText.astro";
 import ContentToc from "../../components/ContentToc.astro";
 import ExplorePrompt from "../../components/ExplorePrompt.astro";
+import ReferenceActions from "../../components/ReferenceActions.astro";
 import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -254,16 +255,6 @@ const canonicalNoteUrl = new URL(
         ) : null
       }
 
-      {
-        entry.data.explorePrompt ? (
-          <ExplorePrompt
-            prompt={entry.data.explorePrompt}
-            sourceUrl={canonicalNoteUrl}
-            kind="note"
-          />
-        ) : null
-      }
-
       <ContentToc headings={headings} />
 
       {
@@ -278,6 +269,21 @@ const canonicalNoteUrl = new URL(
       <div class="prose">
         <Content />
       </div>
+
+      <ReferenceActions
+        markdownUrl={`/notes/${entry.id}.md`}
+        downloadName={`${entry.id}.md`}
+      />
+
+      {
+        entry.data.explorePrompt ? (
+          <ExplorePrompt
+            prompt={entry.data.explorePrompt}
+            sourceUrl={canonicalNoteUrl}
+            kind="note"
+          />
+        ) : null
+      }
 
       {
         relatedNotes.length > 0 ? (

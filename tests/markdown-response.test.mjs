@@ -5,6 +5,7 @@ import {
   htmlToMarkdown,
   prefersMarkdown,
   stripExplorePrompt,
+  stripReferenceActions,
 } from "../src/lib/markdown-response.js";
 
 test("Markdown must be preferred with a positive quality", () => {
@@ -158,6 +159,13 @@ test("removes the exploration template as a whole element", () => {
     '<details class="explore-prompt"><summary><h2>Explore this note with AI</h2></summary><pre><code>prompt</code></pre></details><p>Body.</p>';
 
   assert.equal(stripExplorePrompt(html), "<p>Body.</p>");
+});
+
+test("removes the compact reference row as a whole element", () => {
+  const html =
+    '<p class="reference-actions" data-reference-actions><span class="reference-actions-label">Reference:</span><a href="/notes/x.md">Markdown</a><button type="button">Copy</button><a href="/notes/x.md" download="x.md">Download</a></p><p>Body.</p>';
+
+  assert.equal(stripReferenceActions(html), "<p>Body.</p>");
 });
 
 test("a definition list degrades rather than losing content", () => {

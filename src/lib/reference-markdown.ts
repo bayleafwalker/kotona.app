@@ -7,7 +7,11 @@
  * is one renderer.
  */
 
-import { htmlToMarkdown, stripExplorePrompt } from "./markdown-response.js";
+import {
+  htmlToMarkdown,
+  stripExplorePrompt,
+  stripReferenceActions,
+} from "./markdown-response.js";
 import type { ReferenceDocument } from "./reference-index";
 
 const authorityNotice =
@@ -90,7 +94,9 @@ export function renderReferenceMarkdown(
   document: ReferenceDocument,
   options: { revision: string; promptUrl?: string },
 ) {
-  return `${referencePrelude(document, options)}${htmlToMarkdown(stripExplorePrompt(html))}`;
+  return `${referencePrelude(document, options)}${htmlToMarkdown(
+    stripReferenceActions(stripExplorePrompt(html)),
+  )}`;
 }
 
 /**

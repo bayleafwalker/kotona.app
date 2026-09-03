@@ -552,7 +552,7 @@ async function runChecks(baseUrl) {
     const html = await request(assurancePath);
     assertIncludes(
       html.body,
-      "<h2>Explore this note with AI</h2>",
+      "<h2>Optional exploration template</h2>",
       "explore-prompt heading in HTML",
     );
     assertIncludes(
@@ -570,7 +570,7 @@ async function runChecks(baseUrl) {
     const markdown = await request(assurancePath, { accept: "text/markdown" });
     assertContentType(markdown.response, "text/markdown");
     for (const forbidden of [
-      "Explore this note with AI",
+      "Optional exploration template",
       "Use this note as a worked instantiation",
       "not a reconstruction of how the note was written",
       "Copy prompt",
@@ -616,6 +616,44 @@ async function runChecks(baseUrl) {
       "use this note as a worked instantiation",
       "prompt resource carries the prompt",
     );
+  });
+
+  await check("compact human reference actions", async () => {
+    // The row must point at the same resource the machine contract advertises,
+    // because copy and download fetch that URL rather than rebuilding bytes.
+    const notePath = "/notes/the-ref-nobody-adds/";
+    const html = await request(notePath);
+    assertIncludes(
+      html.body,
+      'class="reference-actions"',
+      "reference actions row in note HTML",
+    );
+    assertIncludes(
+      html.body,
+      'href="/notes/the-ref-nobody-adds.md" download="the-ref-nobody-adds.md"',
+      "download control is an ordinary link to the Markdown resource",
+    );
+    assertIncludes(
+      html.response.headers.get("link") ?? "",
+      "</notes/the-ref-nobody-adds.md>",
+      "advertised Markdown alternate matches the row",
+    );
+
+    const projectHtml = await request("/projects/vuoro/");
+    assertIncludes(
+      projectHtml.body,
+      'href="/projects/vuoro.md" download="vuoro.md"',
+      "reference actions row on project HTML",
+    );
+
+    // The row is chrome pointing at this very representation.
+    const markdown = await request("/notes/the-ref-nobody-adds.md");
+    for (const forbidden of ["reference-actions", "Reference: Markdown"]) {
+      assert(
+        !markdown.body.includes(forbidden),
+        `Markdown must not carry ${JSON.stringify(forbidden)}`,
+      );
+    }
   });
 
   await check("Markdown fidelity of structured blocks", async () => {

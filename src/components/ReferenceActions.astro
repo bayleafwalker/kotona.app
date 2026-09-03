@@ -1,0 +1,92 @@
+---
+/**
+ * Compact human access to the document's public Markdown representation.
+ *
+ * The `.md` resource is the machine contract; these controls only fetch it.
+ * Nothing here rebuilds the Markdown in the browser, so what a reader copies
+ * or downloads is byte-identical to what an agent retrieves. The Markdown and
+ * download controls are ordinary links and keep working without JavaScript.
+ */
+type Props = {
+  markdownUrl: string;
+  downloadName: string;
+};
+
+const { markdownUrl, downloadName } = Astro.props;
+---
+
+<p class="reference-actions" data-reference-actions>
+  <span class="reference-actions-label">Reference:</span>
+  <a href={markdownUrl}>Markdown</a>
+  <span aria-hidden="true">·</span>
+  <button
+    type="button"
+    class="reference-actions-copy"
+    data-markdown-url={markdownUrl}
+  >
+    Copy
+  </button>
+  <span aria-hidden="true">·</span>
+  <a href={markdownUrl} download={downloadName}>Download</a>
+  <span class="reference-actions-status" role="status" aria-live="polite"
+  ></span>
+</p>
+
+<script>
+  function wireReferenceActions(row: Element) {
+    const button = row.querySelector<HTMLButtonElement>(
+      ".reference-actions-copy",
+    );
+    const status = row.querySelector<HTMLElement>(".reference-actions-status");
+    const markdownUrl = button?.dataset.markdownUrl;
+
+    if (!button || !status || !markdownUrl) return;
+
+    const report = (state: "success" | "error", message: string) => {
+      status.dataset.state = state;
+      status.textContent = message;
+
+      if (state === "success") {
+        window.setTimeout(() => {
+          status.textContent = "";
+          delete status.dataset.state;
+        }, 4000);
+      }
+    };
+
+    button.addEventListener("click", async () => {
+      // A failure has to stay visible and name a way forward. A silent catch
+      // here reads as a successful copy and pastes whatever the clipboard
+      // happened to hold already.
+      let markdown: string;
+
+      try {
+        const response = await fetch(markdownUrl, {
+          headers: { accept: "text/markdown" },
+        });
+        if (!response.ok) throw new Error(String(response.status));
+        markdown = await response.text();
+      } catch {
+        report(
+          "error",
+          "Could not fetch the Markdown. Open the Markdown link instead.",
+        );
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(markdown);
+        report("success", "Copied.");
+      } catch {
+        report(
+          "error",
+          "Copy was blocked. Use Download, or open the Markdown link.",
+        );
+      }
+    });
+  }
+
+  document
+    .querySelectorAll("[data-reference-actions]")
+    .forEach(wireReferenceActions);
+</script>
