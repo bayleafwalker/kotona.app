@@ -7,6 +7,7 @@ import { fileURLToPath, URL } from "node:url";
 import sharp from "sharp";
 
 import { readContentMetadata } from "./lib/content-metadata.mjs";
+import { humanizeLabel, roleLabel } from "../src/lib/content-labels.js";
 import { generatedOgImagePath } from "../src/lib/og-images.js";
 
 const rootDirectory = fileURLToPath(new URL("../", import.meta.url));
@@ -101,7 +102,7 @@ const cards = collections.flatMap(({ name, draftByDefault }) =>
       id: entry.id,
       label:
         name === "notes"
-          ? `System note · ${entry.data.area}`
+          ? `${roleLabel(entry.data.role)} · ${humanizeLabel(entry.data.area)}`
           : `Project · ${entry.data.project}`,
       title: entry.data.socialTitle ?? entry.data.title,
     })),

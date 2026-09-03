@@ -10,6 +10,7 @@ import {
   formatDate,
   getVisibleEntries,
   humanizeLabel,
+  roleLabel,
   sortByDateAndTitle,
 } from "../../lib/content";
 import { generatedOgImagePath } from "../../lib/og-images.js";
@@ -74,11 +75,12 @@ const relatedNotes = sortByDateAndTitle(
     data: { ...note.data, date: note.data.published },
   })),
 );
+// The eyebrow names what the document is, which is its declared role. A
+// project connection is a relationship and is shown as one below; it does not
+// redefine a synthesis or operating note as project history.
 const noteKind = entry.data.draft
-  ? "Draft note"
-  : projectEntries.length > 0
-    ? "Project note"
-    : "System note";
+  ? `Draft ${roleLabel(entry.data.role).toLowerCase()}`
+  : roleLabel(entry.data.role);
 const formattedLifecycleDate = entry.data.lifecycleChanged
   ? formatDate(entry.data.lifecycleChanged)
   : null;
