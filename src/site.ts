@@ -2,11 +2,11 @@ export const siteConfig = {
   siteUrl: "https://kotona.app",
   title: "kotona.app",
   description:
-    "Field notes from systems that have to keep working: data platforms, small infrastructure, software boundaries, and agent-assisted engineering.",
+    "Field notes from systems that I want to keep working: data platforms, small infrastructure, software boundaries, and agent-assisted engineering.",
   defaultOgImage: "/og-default.png",
   defaultOgImageAlt: "kotona.app — systems, decisions, and failure modes",
   home: {
-    heading: "Notes from systems that have to keep working",
+    heading: "Notes from systems that I want to keep working",
     summary:
       "I write about data platforms, small infrastructure, software boundaries, and using agents in real work. Most entries begin with a system, decision, or failure and then ask what should survive the next change.",
   },
