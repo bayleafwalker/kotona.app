@@ -12,3 +12,5 @@
 /projects/sprintctl-and-kctl/ /projects/vuoro/ 301
 /case-studies/:slug   /projects/:slug/ 301
 /case-studies/:slug/  /projects/:slug/ 301
+/tags/workflows       /tags/workflow/  301
+/tags/workflows/      /tags/workflow/  301

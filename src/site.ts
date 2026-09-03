@@ -10,12 +10,12 @@ export const siteConfig = {
     summary:
       "I write about data platforms, small infrastructure, software boundaries, and using agents in real work. Most entries begin with a system, decision, or failure and then ask what should survive the next change.",
   },
+  // Only `name` is projected (the About page heading and the site's structured
+  // data). A second, unrendered copy of the biography and location used to live
+  // here and had already drifted from the About page it was meant to describe;
+  // the page's own prose is the one statement of it.
   profile: {
     name: "Juha Huotari",
-    role: "Solution analyst",
-    about:
-      "I’m Juha Huotari, a solution analyst based in Helsinki. Day to day I work around data platforms, requirements, integration boundaries, and the awkward places where useful systems become expensive to reason about. This site holds project notes and system notes from that work and from adjacent personal systems work when the lesson transfers.",
-    location: "Helsinki",
   },
   externalLinks: {
     github: "https://github.com/bayleafwalker",

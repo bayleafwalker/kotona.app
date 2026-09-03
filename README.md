@@ -39,6 +39,9 @@ npm run lint
 npm test
 npm run audit:dependencies
 npm run check:content-freshness
+npm run check:content-shape
+npm run check:explore-prompts
+npm run check:agent-skills
 npm run check
 npm run build
 npm run test:worker
@@ -50,6 +53,19 @@ Or run the combined validation flow:
 ```bash
 npm run validate
 ```
+
+Browser coverage is a separate gate, because it needs a provisioned browser:
+
+```bash
+npx playwright install chromium   # once per machine
+npm run test:browser
+```
+
+It covers the seam between what the ranking decides and what the Explore page
+presents. CI provisions Chromium and runs it on every push and pull request;
+`npm run validate` still leaves it out, because that provisioning is per-machine
+locally. Run it after changing Explore, the knowledge map, or
+`src/lib/reference-ranking.js`.
 
 Live external-link fetching is intentionally separate from publication CI. A
 weekly and manually dispatched `external links` workflow reports third-party
@@ -150,14 +166,28 @@ Draft behavior:
 - `/notes/[slug]/` note detail pages
 - `/tags/` subject index
 - `/tags/[tag]/` projects and notes sharing a tag
+- `/explore/` relationship graph, grouped index, and ranked search over the
+  published corpus
 - `/about/` short context page
 - `/privacy/` operational disclosure for analytics, request logs, and email
 - `/version.json` deployed source revision and commit URL
 - `/log/` chronological site and project-state changelog
 - `/rss.xml` RSS feed for published notes
-- `/llms.txt` compact machine-readable site map
 - `/sitemap-index.xml` XML sitemap
 - `/404/` custom not found page
+
+Machine reference surfaces, all ordinary cacheable GETs:
+
+- `/llms.txt` compact machine-readable site map
+- `/reference-index.json` flattened catalog of documents, declared scope, and
+  representations
+- `/knowledge.json` graph topology and declared relationships
+- `/notes/<slug>.md` and `/projects/<slug>.md` stable Markdown with an
+  allowlisted metadata prelude; HTML pages advertise them as `Link` alternates
+  and negotiate to the same bytes
+- `/notes/<slug>.prompt.txt` the optional exploration template, only where a
+  published note has one
+- `/.well-known/agent-skills/` the site-guide skill and its index
 
 The old `/case-studies/` paths are compatibility redirects. Projects and notes
 are the canonical content surfaces.
@@ -167,11 +197,11 @@ reads them through public Markdown negotiation, and verifies that current
 authority, historical context, and absent evidence remain retrievable. Its cases
 and operating limits are documented in `docs/retrieval-evaluation.md`.
 
-The accepted machine-first reference-discovery direction is maintained in
+The machine-first reference-discovery direction is maintained in
 `docs/architecture/reference-discovery.md`; its independently reversible
-delivery backlog is `docs/plans/reference-discovery.md`. These documents are
-plans until their slices land, so the route list above continues to describe
-current behavior.
+delivery backlog is `docs/plans/reference-discovery.md`. Slices 0 through 4 are
+implemented and described by the route list above; the bounded context packet
+remains deferred behind its stated evidence gate.
 
 ## Deployment
 
@@ -209,7 +239,12 @@ The revision is exposed in the footer, `/version.json`, `llms.txt`, and the
 `X-Kotona-Revision` response header.
 
 CI lives in `.github/workflows/ci.yml` and runs install, dependency audit,
-format check, lint, unit tests, project freshness, Astro content and role
-checks, the production build, a local Worker integration smoke test, and an
-external-link check. The retrieval evaluation runs after the Worker build and
-requires no external model or network access.
+format check, lint, unit tests, project freshness, generated content shape,
+explore-prompt corpus checks, agent-skills digest drift, Astro content and role
+checks, the production build, a local Worker integration smoke test, the
+retrieval evaluation, and the browser presentation gate. The retrieval
+evaluation requires no external model or network access.
+
+External link checking is deliberately not part of CI. It runs in the separate
+weekly and manually dispatched `external links` workflow, because remote
+reachability is a maintenance signal rather than a publication invariant.

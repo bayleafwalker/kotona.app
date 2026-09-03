@@ -159,13 +159,15 @@ shipped behaviour that the unit tests, the worker checks, and the retrieval
 evaluation all missed: the map filtered by contiguous substring while the ranked
 list ranked, and the ranked list ignored the Show controls.
 
-It stays out of `npm run validate` until browser provisioning is reproducible in
-CI. Coverage is deliberately four cases -- natural-language ranking driving
-every representation, a query that ranks nothing leaving the page usable, filter
-composition, and the banded succession result -- because ranking policy is
-already proven by unit tests and the retrieval evaluation. The overlap in the
-third case is intentional: the unit test proves the policy, and the browser test
-proves the page presents its result.
+CI provisions Chromium and runs it on every push and pull request. It stays out
+of `npm run validate` because local browser provisioning is per-machine, not
+because the gate is optional. Coverage is deliberately four cases --
+natural-language ranking driving every representation, a query that ranks
+nothing leaving the page usable, filter composition, and the banded succession
+result -- because ranking policy is already proven by unit tests and the
+retrieval evaluation. The overlap in the third case is intentional: the unit
+test proves the policy, and the browser test proves the page presents its
+result.
 
 ## Post-deployment evaluation
 
