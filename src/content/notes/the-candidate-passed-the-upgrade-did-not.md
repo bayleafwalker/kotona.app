@@ -167,8 +167,8 @@ That unfinished walk is the next release gate.
 
 ## Outcome, added 2026-09-07
 
-The walk completed later in August. Served composition v0.1.52 finished the
-schema transition this note left open: managed ActionQ schema v12 validated
-under the composition, with sprintctl 0.3.x reservations pinned into it. The
-[Vuoro project page](/projects/vuoro/) carries the current state. The record
+The walk completed later in August. The v0.1.52 service image carried the
+sprintctl reservation-model pin and gated the work-schema v12 cutover this note
+left open, and managed ActionQ schema v12 was validated under the composition.
+The [Vuoro project page](/projects/vuoro/) carries the current state. The record
 above stands as it was written on 8 August.

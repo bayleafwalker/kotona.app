@@ -14,13 +14,13 @@ relates:
 terms:
   - term: sprintctl
     definition:
-      The CLI and schema that own sprint work, dependencies, claims, and
+      The CLI and schema that own sprint work, dependencies, reservations, and
       handoffs.
   - term: actionq-dispatcher
     definition:
       Retired (2026-08-20 tombstone release). It formerly created a bounded
-      workspace, invoked a worker, and recorded the result; product-native
-      runtimes now own execution directly.
+      workspace, invoked a worker, and recorded the result; the dispatch harness
+      now constructs the workspace and invokes product-native workers directly.
   - term: actionq
     definition:
       The PostgreSQL-backed queue that owns actions, sessions, claims, and
@@ -93,8 +93,9 @@ subprocess model deletes the time.
 
 ## Outcome, added 2026-09-07
 
-actionq-dispatcher was retired on 2026-08-20; product-native runtimes now own
-execution directly. The retirement did not reverse this note's argument — the
-unit of execution stayed a bounded, per-invocation subprocess; what changed is
-which component constructs it. The [Vuoro project page](/projects/vuoro/)
-carries the current architecture.
+actionq-dispatcher was retired on 2026-08-20; the dispatch harness now
+constructs the bounded workspace and invokes product-native workers directly.
+The retirement did not reverse this note's argument — the unit of execution
+stayed a bounded, per-invocation subprocess; what changed is which component
+constructs it. The [Vuoro project page](/projects/vuoro/) carries the current
+architecture.

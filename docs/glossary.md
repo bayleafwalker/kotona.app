@@ -14,15 +14,16 @@ body does not carry it in `terms`; the inline definition is better placed.
 
 - **Vuoro** — The public label for this family of small, separately owned
   agent-workflow tools.
-- **sprintctl** — The CLI and schema that own sprint work, dependencies, claims,
-  and handoffs.
+- **sprintctl** — The CLI and schema that own sprint work, dependencies,
+  reservations, and handoffs.
 - **kctl** — The read-only pipeline that turns reviewed sprint history into
   durable knowledge.
 - **actionq** — The PostgreSQL-backed queue that owns actions, sessions, claims,
   and outcomes.
 - **actionq-dispatcher** — Retired (2026-08-20 tombstone release). It formerly
-  created a bounded workspace, invoked a worker, and recorded the result;
-  product-native runtimes now own execution directly.
+  created a bounded workspace, invoked a worker, and recorded the result; the
+  dispatch harness now constructs the workspace and invokes product-native
+  workers directly.
 - **auditctl** — The tool that indexes audit events and emits portable daily
   evidence shards.
 - **agent-cockpit** — The operator interface that composes state from the owning

@@ -22,7 +22,7 @@ terms:
       tools.
   - term: sprintctl
     definition:
-      The CLI and schema that own sprint work, dependencies, claims, and
+      The CLI and schema that own sprint work, dependencies, reservations, and
       handoffs.
   - term: actionq
     definition:

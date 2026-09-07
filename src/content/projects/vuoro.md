@@ -25,13 +25,16 @@ evidence:
   capability: >-
     Public tools own sprint, knowledge, queue, audit, and cockpit state through
     separate contracts, with local and shared operating modes. Dispatch is no
-    longer a separate authority: product-native runtimes execute work directly.
+    longer a separate authority: the dispatch harness invokes product-native
+    workers directly.
   latest: >-
-    Served composition v0.1.52 completed the schema transition the previous
-    slice could only stage: managed ActionQ schema v12 is validated under the
-    composition, and sprintctl 0.3.x reservations are pinned into it. The v4
-    design freeze then rebuilt composition around explicit capabilities, landing
-    uniform construction, the validator, and the migration itself.
+    Served composition is at v0.1.59. The v0.1.52 image gated the work-schema
+    v12 cutover — managed ActionQ schema v12 validated under the composition,
+    with the sprintctl 0.3.0 reservation-model pin carried into the service
+    image — and the v4 design freeze then rebuilt composition around explicit
+    capabilities: uniform construction, the validator, and the migration itself.
+    The releases since are adapter repins, including sprintctl 0.3.5, which
+    closed a served authorization hole in reservation release.
   proofLinks:
     - label: Vuoro composition repository
       href: https://github.com/bayleafwalker/vuoro
@@ -45,14 +48,16 @@ evidence:
     - agent-cockpit
   knownLimitation: >-
     kctl and auditctl have less operational mileage than sprintctl and the
-    cockpit, while cross-repository version drift remains a recovery risk. The
-    v5 measurement work is not yet trustworthy either: whether its oracle is
-    attainable at all is the open question, so the loop runs green without that
-    result meaning much.
+    cockpit, and cross-repository drift is an observed condition rather than a
+    risk: the shipped skills taught the deleted claim model until the 0.3.5
+    release corrected them. The v5 measurement is still not conclusive: oracle
+    attainability is now enforced at dispatch time, and a first two-way
+    scorecard exists, but its direct arm is not packet-isolated, so the
+    comparison cannot yet attribute the difference.
   nextProof: >-
-    Settle whether the v5 oracle is attainable, then produce the two-way
-    telemetry comparison it gates. Until that holds, the composition can show
-    that it advances safely but not that the work it governs got better.
+    Produce a two-way comparison whose direct arm is packet-isolated. Until that
+    holds, the composition can show that it advances safely but not that the
+    work it governs got better.
 tags:
   - agents
   - workflow
@@ -64,7 +69,7 @@ terms:
       tools.
   - term: sprintctl
     definition:
-      The CLI and schema that own sprint work, dependencies, claims, and
+      The CLI and schema that own sprint work, dependencies, reservations, and
       handoffs.
   - term: kctl
     definition:
@@ -77,8 +82,8 @@ terms:
   - term: actionq-dispatch
     definition:
       Retired (2026-08-20 tombstone release). It formerly created a bounded
-      workspace, invoked a worker, and recorded the result; product-native
-      runtimes now own execution directly.
+      workspace, invoked a worker, and recorded the result; the dispatch harness
+      now constructs the workspace and invokes product-native workers directly.
   - term: auditctl
     definition:
       The tool that indexes audit events and emits portable daily evidence
@@ -98,8 +103,8 @@ reference:
     - that version-bound preflight can reject an unsafe schema rollout before it
       runs
   doesNotEstablish:
-    - that the v5 measurement oracle is attainable or that governed work
-      improved under the composition
+    - that the v5 two-way comparison can yet attribute cost, or that governed
+      work improved under the composition
     - operational mileage for kctl and auditctl comparable to sprintctl and the
       cockpit
   supplementWith:
@@ -145,11 +150,11 @@ system itself.
 
 Three modes describe how a request travels, not three competing sources of
 truth. In **local mode**, an agent calls the owning CLI and keeps SQLite state,
-claim recovery material, Git worktrees, and filesystem effects on its machine.
-In **remote mode**, that same domain tool uses its shared PostgreSQL authority.
-In **served mode**, the transport-only Vuoro client talks to Vuoro service,
-which authenticates the caller, checks compatibility, and invokes a pinned
-adapter for the owning tool.
+reservation and recovery material, Git worktrees, and filesystem effects on its
+machine. In **remote mode**, that same domain tool uses its shared PostgreSQL
+authority. In **served mode**, the transport-only Vuoro client talks to Vuoro
+service, which authenticates the caller, checks compatibility, and invokes a
+pinned adapter for the owning tool.
 
 The modes compose. A served request can reach a remote authority while the
 worker that receives it still performs bounded Git and filesystem work locally.
@@ -160,13 +165,19 @@ idempotency, and explicit recovery carry work across the boundaries.
 
 ## System shape
 
-sprintctl owns sprints, work items, dependencies, events, claims, and handoffs.
-It runs against repo-local SQLite or a shared PostgreSQL backend, and a declared
-backend mismatch fails rather than quietly opening a different source of truth.
-Claim ID and token prove possession of an active claim; resume and handoff
-commands turn live state into deterministic context for a new operator or agent
-session. PostgreSQL now retains expired claim rows and exposes a lineage
-`lease_epoch`. The epoch is historical structure, not downstream fencing.
+sprintctl owns sprints, work items, dependencies, events, reservations, and
+handoffs. It runs against repo-local SQLite or a shared PostgreSQL backend, and
+a declared backend mismatch fails rather than quietly opening a different source
+of truth. Live coordination is a reservation ledger: a reservation is
+session-bound and advisory, carries no bearer credential, and can be released,
+reassigned, or interrupted by a maintenance sweep after an idle policy window.
+The earlier claim/token model is gone as authority state — schema migrations
+archived the claim rows into a history table, dropped the live claim table, and
+nulled every token, so the archive records who held what and when without
+retaining proof material. Its lineage `lease_epoch` survives only as a column of
+that archive: historical structure, not downstream fencing. Resume and handoff
+commands still turn live state into deterministic context for a new operator or
+agent session.
 
 kctl reads sprintctl events and owns the extraction, review, publication, and
 rendering of knowledge artifacts. The relationship is deliberately one-way.
@@ -179,8 +190,11 @@ The sibling tools fill different gaps:
   queue contract and append-only events.
 - `actionq-dispatch` formerly owned the bounded one-action coordinator:
   worktrees, worker invocation, path ACLs, pre- and post-gates, and result
-  recording through the owning CLIs. It is retired as of 2026-08-20;
-  product-native runtimes execute work directly now.
+  recording through the owning CLIs. It is retired as of 2026-08-20. The
+  dispatch packet harness in `agentops` now constructs the bounded worktree,
+  applies path and command policy, invokes one product-native worker, and runs
+  the gates; actionq records provider references and observed status without
+  spawning or supervising the process.
 - `auditctl` owns a repo-local audit index plus durable daily NDJSON artifacts
   that can be rebuilt and read independently.
 - `agentops` owns reusable dispatch skills and schemas, cross-repository plans,
@@ -198,36 +212,44 @@ Here is the end-to-end property the system is designed to demonstrate:
 
 1. An operator creates a work item through sprintctl. Sprintctl records the item
    and event history.
-2. An agent starts a claim. Its claim ID and secret token—not the actor name,
-   branch, or hostname—prove the current ownership incarnation.
-3. Dispatch submits an action through actionq. The product-native runtime that
-   owns execution creates a bounded worktree, applies path and command policy,
-   invokes one worker, and runs its gates. Until its 2026-08-20 retirement,
-   actionq-dispatch owned this step as a separate coordinator.
+2. An agent takes a reservation. The reservation is session-bound and advisory —
+   it makes ownership visible to every other session rather than proving it with
+   a credential; the claim/token proof model it replaced survives only as
+   archived history.
+3. Dispatch submits an action through actionq. The dispatch harness creates a
+   bounded worktree, applies path and command policy, invokes one product-native
+   worker, and runs its gates; actionq records provider references and observed
+   status without spawning the process. Until its 2026-08-20 retirement,
+   actionq-dispatch owned this coordination as a separate package.
 4. If the worker fails or returns an invalid result, the result is recorded as
    failed or rejected. It is not published and does not close the work item.
-5. The same owner can resume with its private recovery record. A new owner needs
-   an explicit handoff or recovery that rotates proof, so stale proof cannot
-   settle the item.
+5. The same session can resume its reservation; reassignment and release are
+   explicit commands, and an idle reservation is interrupted by the maintenance
+   sweep after a policy window. This is a visibility discipline, not a fencing
+   guarantee — the proof-rotation rule retired with the claim model.
 6. Once a valid result clears independent verification, the owning CLI records
-   completion and releases the claim. Auditctl indexes portable evidence, and
-   the cockpit projects the sprint, claim, dispatch, and audit outcome.
+   completion and releases the reservation. Auditctl indexes portable evidence,
+   and the cockpit projects the sprint, reservation, dispatch, and audit
+   outcome.
 
 This is an acceptance walkthrough, not a claim that the six steps form one
 atomic transaction. The schema transition that was this section's next proof
-completed under served composition v0.1.52, with managed ActionQ schema v12
-validated under the composition. The open proof is now the v5 measurement
-question: whether its oracle is attainable, and the two-way telemetry comparison
-it gates.
+completed in August: the v0.1.52 image gated the cutover and managed ActionQ
+schema v12 was validated under the composition. The open proof has moved
+accordingly: oracle attainability is now checked at dispatch time and a first
+two-way scorecard exists, but its direct arm is not packet-isolated, so a
+comparison able to attribute the difference is still owed.
 
 ## Current state
 
-The tools are public and used across active repositories. sprintctl supports
-both local and remote modes, recoverable claims, provenance links, and a
-single-command resume bundle. kctl has a functioning two-stream extraction and
-review pipeline. actionq supplies the queue and session read contracts, and
-auditctl emits portable audit shards. actionq-dispatch, the former one-shot
-coordinator, is retired; product-native runtimes execute work directly.
+The tools are public and used across active repositories. sprintctl is on the
+0.3.x reservation model with local and remote modes and provenance links; the
+resume outcome is tested end to end, though the single-command bundle surface is
+still a known gap — an operator currently assembles the continuation from a few
+calls. kctl has a functioning two-stream extraction and review pipeline. actionq
+supplies the queue and session read contracts, and auditctl emits portable audit
+shards. actionq-dispatch, the former one-shot coordinator, is retired; the
+dispatch harness invokes product-native workers directly.
 
 The agent-cockpit is live and can show repository and sprint state, claims,
 session and dispatch lifecycles, audit outcomes, and bounded cost or model
@@ -252,22 +274,27 @@ compatibility made explicit. Four capability gates passed, while production
 preflight correctly rejected an unsafe schema-5 rollout. The maintenance bridge
 was staged to make the transition admissible without representing the production
 schema as already migrated. The transition staged there completed later that
-month: v0.1.52 validated managed ActionQ schema v12 under the composition and
-pinned sprintctl 0.3.x reservations into it.
+month: the v0.1.52 image carried the sprintctl 0.3.0 reservation-model pin and
+gated the work-schema v12 cutover, with managed ActionQ schema v12 validated
+under the composition. The composition has since advanced to v0.1.59 through
+adapter repins — sprintctl to 0.3.5, auditctl to 0.1.6 — verified against the
+running service on 2026-09-01.
 
 ## Open edges
 
 The substrate has enough parts that it must continually justify them. A tool
 designed to remove coordination ambiguity can recreate it through version drift,
-overlapping commands, or unclear recovery rules between repositories. Interface
-contracts and end-to-end verification matter more now than another feature in
-any one CLI.
+overlapping commands, or unclear recovery rules between repositories — and that
+is an observed condition, not a hypothetical: the shipped agent skills kept
+teaching the deleted claim model until the 0.3.5 release corrected them.
+Interface contracts and end-to-end verification matter more now than another
+feature in any one CLI.
 
 kctl and auditctl are also less exercised than sprintctl and agent-cockpit.
 Their clean ownership boundaries are promising, but durable extraction and
 recovery need more operational mileage before they should be treated as settled.
 
 The agent-cockpit write surface should stay narrow. Dispatch and explicit sprint
-operations are useful; turning the UI into a privileged backdoor around claim,
-queue, or audit rules would recreate the original Markdown problem with better
-CSS.
+operations are useful; turning the UI into a privileged backdoor around
+reservation, queue, or audit rules would recreate the original Markdown problem
+with better CSS.
