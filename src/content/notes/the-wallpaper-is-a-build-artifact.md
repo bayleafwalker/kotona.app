@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: creative tooling
 published: 2026-08-03
-lastRevised: 2026-08-04
+lastRevised: 2026-09-07
 projects: []
 relates:
   - derived-status-is-earned
@@ -148,6 +148,44 @@ The automated gates are real rejection mechanisms:
   systems that both land on 10 cycles per loop had manufactured a shared
   envelope. Measured, they had not;
 - **semantic change precision** and a **static holdout flow** check.
+
+Two of the gate inputs can simply be shown. The first image is the declared
+contract: the union mask naming where motion is permitted — the hanging orb, the
+waterfall, the pool. The second is what the render actually did: cumulative
+temporal variance over all 1152 frames, bright where pixels changed. The
+semantic-change-precision gate is the assertion that the second image stays
+inside the first, and on this build it measured 1.0 — no motion energy outside
+the declared regions. The rendered artwork itself stays out of this repository
+for the same source-license reason the media stays out of Git; the diagnostics
+carry the argument without it.
+
+<figure>
+  <img
+    src="/images/notes/wallpaper/allowed-motion-mask.png"
+    alt="A black frame with white regions marking the permitted motion areas: a small orb, a waterfall column, and a large pool ellipse."
+    width="960"
+    height="412"
+    loading="lazy"
+  />
+  <figcaption>
+    The declared contract: the allowed-motion union mask for v3b-pipeline-001,
+    in the 960x412 proof space.
+  </figcaption>
+</figure>
+
+<figure>
+  <img
+    src="/images/notes/wallpaper/cumulative-temporal-variance.png"
+    alt="A heat map of the same frame where measured motion accumulated: bright regions in the waterfall, pool, and orb, black everywhere else."
+    width="960"
+    height="412"
+    loading="lazy"
+  />
+  <figcaption>
+    The measurement: cumulative temporal variance across all 1152 frames. The
+    gate passes because this image stays inside the mask above.
+  </figcaption>
+</figure>
 
 Then the interesting one. The legacy loop-continuity metric divided the wrap
 step by `max(first_transition, last_transition)`. Those two samples have no

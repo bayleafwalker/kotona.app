@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent infrastructure
 published: 2026-08-17
-lastRevised: 2026-08-17
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -430,29 +430,28 @@ claim and retry. The PgQueuer spike proposed here hands exactly those two —
 "PgQueuer decides which worker receives that job" — to the candidate, on the
 theory that delivery ownership and execution authority are different questions.
 The ratified clause treats claim and retry as part of the authority ActionQ must
-keep. One of these positions is wrong, or the distinction this survey draws
-between delivery and authority needs to be argued to whoever owns that clause,
-not asserted past it. That's a conflict for an operator decision, not something
-this note can resolve by publishing a stronger paragraph. The evidence-corpus
-condition is also close to free: the failure scenarios this survey's spikes
-already propose testing — a worker dying mid-delivery, a lost response after an
-external effect, re-delivery, a stale runner identity, replayed settlement — are
-close to what that corpus asks for, so a spike run in that shape produces
-evidence for both purposes at once.
+keep. I wrote that clause, it is still in force, and I have not revised it. One
+of the two positions is wrong: either the clause draws its boundary too wide, or
+the delivery/authority distinction this survey leans on does not hold. I am
+deliberately not settling that here — the honest way to revise a constraint I
+set for a reason is against spike evidence, not by publishing a stronger
+paragraph a few weeks later. The evidence-corpus condition is also close to
+free: the failure scenarios this survey's spikes already propose testing — a
+worker dying mid-delivery, a lost response after an external effect,
+re-delivery, a stale runner identity, replayed settlement — are close to what
+that corpus asks for, so a spike run in that shape produces evidence for both
+purposes at once.
 
-A separate, more informal thread from recent working sessions suggests DBOS
-specifically has been discussed as something to evaluate only if a named ActionQ
-failure occurs, rather than proactively. I could not find that as a ratified,
-citable decision the way the Wave 6 clause is — it may exist somewhere I can't
-currently reach, or it may be closer to a proposal than a policy. I'm noting it
-because if it does hold as stated, it's a reactive trigger this survey's
-proactive framing sits in tension with: a market survey can find a strong
-candidate before anything breaks, but a failure-gated policy exists because
-migrating working infrastructure on spec has its own cost, independent of the
-candidate's quality. Either way, the spikes below are worth running as
-evidence-gathering. Whether they're also grounds to authorize a cutover is a
-narrower question this survey doesn't get to answer on its own, especially given
-the claim/retry conflict above.
+A separate, more informal idea has also come up in working sessions: evaluate
+DBOS only if a named ActionQ failure occurs, rather than proactively. I never
+ratified that as policy — it is a proposal, and it stays one. It is worth naming
+because it is a reactive trigger this survey's proactive framing sits in tension
+with: a market survey can find a strong candidate before anything breaks, but a
+failure-gated policy exists because migrating working infrastructure on spec has
+its own cost, independent of the candidate's quality. Either way, the spikes
+below are worth running as evidence-gathering. Whether they are also grounds to
+authorize a cutover is the narrower decision the claim/retry conflict above
+still gates.
 
 ## What to spike
 
@@ -488,10 +487,11 @@ maintained elsewhere now, competently, by more than one project.
 
 The open question is how much of ActionQ survives after the queue chassis is
 removed. The current evidence points toward a smaller answer than "ActionQ with
-a different backend," though the ratified claim/retry boundary above means that
-answer isn't mine to finalize from a survey alone. Attempt identity, scoped
-execution authority, domain accept/reject decisions, and independently
-inspectable evidence belong above and beside the execution runtime, not inside a
-queue product. The next experiment should test whether ActionQ can be deleted
-rather than assume it should be ported — which is also a reason to ask why the
-hard part has been living in a repository named `actionq`.
+a different backend," though I set the claim/retry boundary above for a reason,
+and I will not revise it on survey evidence alone — that is what the spikes are
+for. Attempt identity, scoped execution authority, domain accept/reject
+decisions, and independently inspectable evidence belong above and beside the
+execution runtime, not inside a queue product. The next experiment should test
+whether ActionQ can be deleted rather than assume it should be ported — which is
+also a reason to ask why the hard part has been living in a repository named
+`actionq`.

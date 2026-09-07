@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-07-22
-lastRevised: 2026-08-22
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -105,6 +105,51 @@ vocabulary belongs to established access control, provenance, workflow
 assurance, and reference-monitor practice;
 [_Where the assurance questions are already answered_](/notes/where-the-assurance-questions-are-already-answered/)
 maps the larger field.
+
+## One action, walked through a timeout
+
+The envelope stops being abstract at the exact moment an attempt and its effect
+diverge, so here is the dispatch system's own worst case. A runner finishes
+governed work and publishes the result as a content-addressed artifact; the
+terminal completion call to the queue then times out. Did the action complete?
+
+The design's first move is to refuse to treat that as one question. Publication
+and terminal queue mutation are separate retry boundaries. The publication
+produced a receipt — sanitized to its load-bearing fields:
+
+```text
+publication-receipt/v1
+  action_id, attempt_id
+  source_commit,    source_tree
+  candidate_commit, candidate_tree
+  records: { report: artifact:sha256:<digest> }
+```
+
+One structural detail carries most of the weight: the receipt cannot contain its
+own address. The journal reference is attached only after the receipt is hashed,
+and settlement later verifies that the recovered receipt equals the original
+with that single field removed — so the evidence cannot be quietly rewritten to
+point somewhere else.
+
+Reconciliation then resolves the timeout instead of retrying the work. After
+reclaim, the daemon recovers the completed receipt and settles it under the new
+live claim rather than rerunning the harness. If the completion response was
+lost, it reads the queue's own history and acknowledges settlement only when the
+authoritative terminal status and result reference match the receipt. The
+guarantee this buys is stated in the contract's own words: content-idempotent
+publication plus at-most-once terminal mutation under a live claim — not
+exactly-once processing. A timeout whose process state cannot be established is
+recorded as unknown, and its output is quarantined rather than treated as
+canonical publication.
+
+The unresolved case is just as instructive. The same contract admits that the
+queue's terminal complete, fail, and reject calls are not fenced — the
+claimed-by field is metadata, not claimant proof — so one edge of this envelope
+rests on an authority the target does not yet verify. And some targets can never
+produce a strong receipt at all: a sent message proves submission, not delivery.
+There the after-boundary carries everything, and where reconciliation is
+impossible the honest record is an attempt with an unknown consequence, not a
+success.
 
 ## Location is access, not authority
 

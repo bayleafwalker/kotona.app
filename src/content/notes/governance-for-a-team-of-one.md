@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: organizational systems
 published: 2026-08-19
-lastRevised: 2026-08-19
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -104,8 +104,21 @@ marginal unit of work is worth doing -- that is a different question from
 whether the process that produced it was sound. The declaring-done problem stays
 open, and it is better named than papered over.
 
-What the controls buy in the meantime is narrower and real: any past action can
-be explained, any session's work can be reviewed before it binds, and nothing
-irreversible happens without the one actor who persists. That is not
-bureaucracy. That is the minimum structure I currently need to let things I will
-not remember, and processes that never remembered, do work that matters.
+Whether a control earns its keep is also answerable case by case, and the record
+already holds one of each. The version-bound schema preflight repaid its
+maintenance cost the night it
+[rejected an unsafe rollout](/notes/the-candidate-passed-the-upgrade-did-not/)
+before a migration could run against ledgers it did not understand. The separate
+dispatch coordinator went the other way: once product-native runtimes could
+construct the same bounded workspace themselves, the standalone authority was
+retired with a tombstone release rather than defended, and its maintenance
+burden went with it. A control that cannot point at either kind of moment is the
+one to question next.
+
+What the controls buy in the meantime is narrower and real: any action that went
+through the recorded paths can be explained — work that bypassed them is
+precisely what the log cannot answer for — any session's work can be reviewed
+before it binds, and nothing irreversible happens without the one actor who
+persists. That is not bureaucracy. That is the minimum structure I currently
+need to let things I will not remember, and processes that never remembered, do
+work that matters.

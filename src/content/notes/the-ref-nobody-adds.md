@@ -7,7 +7,7 @@ status: guiding
 lifecycle: current
 area: agent workflow
 published: 2026-07-13
-lastRevised: 2026-07-19
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -105,3 +105,18 @@ to learn that before building one.
 Tooling earns its place after the convention proves there is traffic to carry.
 Build the road where the desire path already runs, not where the map says
 walking ought to occur.
+
+## Status, 2026-09-07
+
+The convention half has shipped: the shaping workflow now asks for a reference
+or an explicit no-doc note, and references render on the surfaces an agent walks
+— the next-work explanation names ready items that carry none, claiming echoes
+them, and the resume bundle lists them per active claim. The after-measurement
+has not been run. The plan that set this up names its own revisit condition —
+after a few sprints of use, if agents handed the pointer still do not read or
+update the documents, more tooling would not have helped; stop — and that test
+is still open. When the number is published it needs the same denominator as the
+baseline (references per work item, all repositories), plus the half the
+baseline could not see: whether attached references were actually read by the
+sessions that received them. A rising link count alone would only prove the form
+got filled in.

@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: release engineering
 published: 2026-08-03
-lastRevised: 2026-08-08
+lastRevised: 2026-09-07
 draft: false
 projects:
   - vuoro
@@ -164,3 +164,11 @@ been applied to the live ledgers. The transition has been proved state by state
 in disposable databases; it has not yet been walked end to end in production.
 
 That unfinished walk is the next release gate.
+
+## Outcome, added 2026-09-07
+
+The walk completed later in August. Served composition v0.1.52 finished the
+schema transition this note left open: managed ActionQ schema v12 validated
+under the composition, with sprintctl 0.3.x reservations pinned into it. The
+[Vuoro project page](/projects/vuoro/) carries the current state. The record
+above stands as it was written on 8 August.

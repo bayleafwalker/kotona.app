@@ -5,7 +5,7 @@ status: prospective
 lifecycle: current
 area: software assurance
 published: 2026-08-27
-lastRevised: 2026-08-27
+lastRevised: 2026-09-07
 projects: []
 relates:
   - where-the-assurance-questions-are-already-answered
@@ -20,9 +20,10 @@ tags:
   - kubernetes
   - study-notes
 summary:
-  A wrapper-derived effect-intent projection should let an application session
-  correlate instability during the next Talos control-plane upgrade; if it still
-  escalates without correlation, the hypothesis fails.
+  One session upgrades a control-plane node while another watches the API flap,
+  unable to tell failure from maintenance. Instead of a new cluster-wide lock, a
+  wrapper-derived maintenance notice should let the next Talos upgrade be
+  correlated — if it cannot, the hypothesis fails.
 explorePrompt: >-
   Use this note as a worked correction, not an architecture to repeat. Map your
   harness's coordination vocabulary onto the DevOps mechanism that already

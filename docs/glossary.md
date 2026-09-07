@@ -20,8 +20,9 @@ body does not carry it in `terms`; the inline definition is better placed.
   durable knowledge.
 - **actionq** — The PostgreSQL-backed queue that owns actions, sessions, claims,
   and outcomes.
-- **actionq-dispatcher** — The one-action coordinator that creates a bounded
-  workspace, invokes a worker, and records the result.
+- **actionq-dispatcher** — Retired (2026-08-20 tombstone release). It formerly
+  created a bounded workspace, invoked a worker, and recorded the result;
+  product-native runtimes now own execution directly.
 - **auditctl** — The tool that indexes audit events and emits portable daily
   evidence shards.
 - **agent-cockpit** — The operator interface that composes state from the owning

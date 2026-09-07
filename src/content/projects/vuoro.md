@@ -5,8 +5,8 @@ summary: >-
   composes into one served layer, without giving up explicit state ownership or
   machine-local execution.
 published: 2026-04-09
-lastRevised: 2026-08-24
-lastVerified: 2026-08-24
+lastRevised: 2026-09-07
+lastVerified: 2026-09-07
 draft: false
 project: vuoro
 kind: engineering
@@ -98,7 +98,8 @@ reference:
     - that version-bound preflight can reject an unsafe schema rollout before it
       runs
   doesNotEstablish:
-    - that the live schema transition is complete
+    - that the v5 measurement oracle is attainable or that governed work
+      improved under the composition
     - operational mileage for kctl and auditctl comparable to sprintctl and the
       cockpit
   supplementWith:
@@ -133,9 +134,10 @@ the ecosystem with AgentOps.ai without churning implementation names.
 ## Interactive system map
 
 [Explore the interactive Vuoro system map](https://bayleafwalker.github.io/agentops/)
-to follow the wider lifecycle across sprintctl, kctl, actionq, actionq-dispatch,
-auditctl, deployment, and agent-cockpit. It focuses on state ownership and the
-handoffs between tools rather than treating the cockpit as the system itself.
+to follow the wider lifecycle across sprintctl, kctl, actionq, the retired
+actionq-dispatch, auditctl, deployment, and agent-cockpit. It focuses on state
+ownership and the handoffs between tools rather than treating the cockpit as the
+system itself.
 
 ## Architecture and communication paths
 
@@ -198,9 +200,10 @@ Here is the end-to-end property the system is designed to demonstrate:
    and event history.
 2. An agent starts a claim. Its claim ID and secret token—not the actor name,
    branch, or hostname—prove the current ownership incarnation.
-3. Dispatch submits an action through actionq. Actionq-dispatch creates a
-   bounded worktree, applies path and command policy, invokes one worker, and
-   runs its gates.
+3. Dispatch submits an action through actionq. The product-native runtime that
+   owns execution creates a bounded worktree, applies path and command policy,
+   invokes one worker, and runs its gates. Until its 2026-08-20 retirement,
+   actionq-dispatch owned this step as a separate coordinator.
 4. If the worker fails or returns an invalid result, the result is recorded as
    failed or rejected. It is not published and does not close the work item.
 5. The same owner can resume with its private recovery record. A new owner needs
@@ -211,9 +214,11 @@ Here is the end-to-end property the system is designed to demonstrate:
    the cockpit projects the sprint, claim, dispatch, and audit outcome.
 
 This is an acceptance walkthrough, not a claim that the six steps form one
-atomic transaction. The next proof is the completed live schema transition,
-including recovery evidence that the version-bound composition can advance or
-restore without bypassing its compatibility gates.
+atomic transaction. The schema transition that was this section's next proof
+completed under served composition v0.1.52, with managed ActionQ schema v12
+validated under the composition. The open proof is now the v5 measurement
+question: whether its oracle is attainable, and the two-way telemetry comparison
+it gates.
 
 ## Current state
 
@@ -246,7 +251,9 @@ By 8 August, served composition had reached v0.1.35 with component and schema
 compatibility made explicit. Four capability gates passed, while production
 preflight correctly rejected an unsafe schema-5 rollout. The maintenance bridge
 was staged to make the transition admissible without representing the production
-schema as already migrated.
+schema as already migrated. The transition staged there completed later that
+month: v0.1.52 validated managed ActionQ schema v12 under the composition and
+pinned sprintctl 0.3.x reservations into it.
 
 ## Open edges
 

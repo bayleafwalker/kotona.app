@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: model evaluation
 published: 2026-08-03
-lastRevised: 2026-08-22
+lastRevised: 2026-09-07
 projects: []
 relates:
   - judge-agents-by-the-next-prompt
@@ -94,7 +94,10 @@ subject model's report — and was asked what would plausibly have influenced it
 This was not a scored, preregistered, blind-evaluator design. There was no
 predeclared endpoint, no numeric matching score, and no power calculation. The
 reconstruction comparison was read qualitatively, which bounds how much the
-result can carry.
+result can carry. The raw completions were not retained, so the per-condition
+counts published here and in the sections below are the record — a
+prompt-by-prompt comparison cannot be reconstructed after the fact, and a rerun
+would be a new experiment, not a recovery of this one.
 
 Isolation was the point. A long session accumulates its own context and makes
 "what influenced this" answerable from the transcript by anyone. Single

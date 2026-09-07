@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-08-15
-lastRevised: 2026-08-15
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -22,16 +22,19 @@ explorePrompt: >-
   that merging a change is a policy decision about a repository rather than a
   design decision about a system; that change acceptability, system coherence,
   and composed behaviour are three distinct reviews that answer different
-  questions and cannot substitute for one another; and that a decision exercised
-  inside the cheapest of them must not be recorded as a constraint binding the
-  others. Its constraints are a single operator, agents holding far more
-  situational context than the approver, and a merge gate kept deliberately
-  casual because a repository delta is cheap to revert. Apply the question to
-  your own setting. Name where your constraints diverge -- regulated change
-  control, many reviewers, changes whose consequences cannot be reverted -- and
-  say which conclusions stop holding there. Produce a routing rule for your
-  change stream, a provenance rule stating what each review's decisions may
-  bind, and the observation that would show either rule is wrong.
+  questions and cannot substitute for one another; and that what a decision
+  binds is set by its declared scope and the review that actually examined it,
+  never by the interface it passed through -- routine assent given at merge
+  depth must not be silently promoted into an architectural constraint, while a
+  change that deliberately carries a decision record and explicit architectural
+  review can bind what that record names. Its constraints are a single operator,
+  agents holding far more situational context than the approver, and a merge
+  gate kept deliberately casual because a repository delta is cheap to revert.
+  Apply the question to your own setting. Name where your constraints diverge --
+  regulated change control, many reviewers, changes whose consequences cannot be
+  reverted -- and say which conclusions stop holding there. Produce a routing
+  rule for your change stream, a provenance rule stating what each review's
+  decisions may bind, and the observation that would show either rule is wrong.
 draft: false
 tags:
   - agents
@@ -73,11 +76,11 @@ request does not reach. Nobody was negligent. The record is still false.
 
 ## What a pull request gate is actually for
 
-A pull request is a convenient unit of change. Merging one is a policy decision
-about a repository, not a design decision about a system. On my projects the
-policy is roughly: casual review passes, tests are aligned and pass, no
-outstanding notices block it. Sometimes a pull request passes that does not meet
-even these.
+A pull request is a convenient unit of change. Merging one is, by default, a
+policy decision about a repository rather than a design decision about a system.
+On my projects the policy is roughly: casual review passes, tests are aligned
+and pass, no outstanding notices block it. Sometimes a pull request passes that
+does not meet even these.
 
 That gate can be cheap because of one property: the repository delta of a pull
 request is cheap to reverse. Whatever a single pull request did to the tree, a
@@ -194,14 +197,53 @@ coheres, and whether the composed thing works well. They answer different
 questions and they are not substitutable — a project can score well on the first
 and badly on the other two, which is the ordinary case rather than a pathology.
 
-One rule follows from keeping them separate: a decision made inside the
-pull-request review cannot be recorded as a constraint binding the other two.
+One rule follows from keeping them separate, and it needs narrower scoping than
+I first gave it. The interface a decision arrives through is an unreliable proxy
+for what it may bind: a pull request can deliberately carry an architecture
+decision record and an explicit architectural review, and that decision binds
+what its declared scope names, because the matching authority was actually
+exercised. The failure this note is about is silent promotion — routine
+implementation assent, given at merge depth, recorded afterwards as if it bound
+system coherence or product behaviour. So the rule: what a decision binds is
+determined by its declared scope and by the review that actually examined it,
+never by the surface it happened to pass through. On my projects the merge gate
+is deliberately casual, so decisions made inside it default to implementation
+scope unless they are explicitly routed as something more. That default is a
+local operating policy, not a law about pull requests.
 
 Concretely, when an agent asks me something mid-implementation and I answer,
 that answer is a delegated implementation choice with an audit trail. It is not
 an architectural decision record, later agents are not entitled to treat it as
 settled, and a planner discovering it should see what it actually is: an
 operator unblocking work, not an operator setting direction.
+
+The difference is easiest to see as two records of the same week. The first is
+the failure mode — routine assent promoted by its own wording:
+
+```text
+DECISION 2026-07-30
+  Retry handling: operator approved option B (settle at the queue).
+  Status: ratified.
+```
+
+Nothing in that entry is technically false, and everything downstream reads it
+as direction. The honest version of the same event, and the deliberate version
+of the same choice two days later:
+
+```text
+UNBLOCK 2026-07-30
+  Operator accepted B to unblock #142, at pull-request depth.
+  Scope: this implementation. Revisit if retry semantics change.
+
+ADR-014 2026-08-02
+  Retries settle at the queue, not the caller.
+  Reviewed as architecture; supersedes the 07-30 unblock note.
+```
+
+The unblock note binds nothing beyond its pull request. The decision record
+binds exactly what it names, because the architectural review it claims actually
+happened. Same operator, same week, different authority — and the record now
+says so.
 
 This is the same shape as
 [authority must travel with the action](/notes/authority-must-travel-with-the-action/).

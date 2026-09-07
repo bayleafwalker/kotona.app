@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: data architecture
 published: 2026-05-15
-lastRevised: 2026-05-15
+lastRevised: 2026-09-07
 projects:
   - household-operating-platform
 relates:
@@ -163,6 +163,44 @@ record.lineage = {
 
 Content-addressed snapshots are the audit-grade form. Version strings are a
 weaker but often acceptable form.
+
+## Worked example, synthetic
+
+Three purchase payloads land in bronze on 2026-05-02. Splitter v1 has a real
+bug: it drops the decimal comma, so `12,50` parses as `1250`. v2 fixes decimal
+commas and space grouping. Enrichment converts to EUR from a snapshotted rate
+table.
+
+```text
+bronze, landed 2026-05-02:
+  p-101  {"amount": "12,50",    "currency": "SEK"}
+  p-102  {"amount": "9.90",     "currency": "EUR"}
+  p-103  {"amount": "1 299,00", "currency": "SEK"}
+
+fx snapshots (EUR per SEK):
+  fx@2026-05-02  0.0871
+  fx@2026-09-07  0.0912
+```
+
+The same three inputs then support three recomputations that are meant to
+disagree:
+
+| Record | Original replay (v1 + fx@05-02) | Corrected recomputation (v2 + fx@05-02) | Current state (v2 + fx@09-07) |
+| ------ | ------------------------------- | --------------------------------------- | ----------------------------- |
+| p-101  | €108.88                         | €1.09                                   | €1.14                         |
+| p-102  | €9.90                           | €9.90                                   | €9.90                         |
+| p-103  | €11,314.29                      | €113.14                                 | €118.47                       |
+
+Each column answers a different question. The original replay reproduces what
+the system actually said in May, bug included — that is what an audit asks for,
+and it is only possible because bronze kept the bytes, the splitter digest was
+recorded, and the fx snapshot survived. The corrected recomputation is the
+backfill: what the records should have said at their own point in time, new
+splitter against the historical snapshot. The current-state column is what a
+pipeline without snapshots silently produces — plausible, internally consistent,
+and not what happened. p-102 changes in none of them, which is the other half of
+the point: a well-drawn boundary leaves the unaffected records provably
+unaffected.
 
 ## Apply When
 

@@ -58,6 +58,38 @@ const searchDocuments = buildReferenceIndex(entries, {
     </p>
   </section>
   <section class="page-section">
+    <h2>Reading paths</h2>
+    <p class="page-copy">
+      The map shows relationships; these are short, ordered routes for a reader
+      arriving with a question.
+    </p>
+    <p class="page-copy">
+      <strong>Why did a release fail after passing its checks?</strong>
+      <a href="/notes/the-candidate-passed-the-upgrade-did-not/"
+        >The candidate passed. The upgrade did not.</a
+      > → <a href="/notes/the-node-remembers-what-git-does-not/"
+        >Account for node-local state in GitOps recovery</a
+      > → <a href="/notes/the-target-state-is-not-the-plan/"
+        >Plan migrations through verified intermediate states</a
+      >
+    </p>
+    <p class="page-copy">
+      <strong>What do I need around a coding agent?</strong>
+      <a href="/notes/where-agent-tooling-fits/">Where agent tooling fits</a> →
+      <a href="/notes/the-ref-nobody-adds/">The ref nobody adds</a> →
+      <a href="/notes/authority-must-travel-with-the-action/"
+        >Authority must travel with the action</a
+      >
+    </p>
+    <p class="page-copy">
+      <strong>How do records stay useful after the world changes?</strong>
+      <a href="/notes/schema-on-split/">Schema on split</a> →
+      <a href="/notes/the-recommendation-does-not-need-authority/"
+        >The recommendation does not need authority</a
+      > → <a href="/notes/log-as-system/">Log as system</a>
+    </p>
+  </section>
+  <section class="page-section">
     <KnowledgeMap graph={graph} searchDocuments={searchDocuments} />
   </section>
 </BaseLayout>

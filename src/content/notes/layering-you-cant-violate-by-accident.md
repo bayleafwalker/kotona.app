@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: software architecture
 published: 2026-06-10
-lastRevised: 2026-06-10
+lastRevised: 2026-09-07
 projects:
   - household-operating-platform
 relates:
@@ -19,8 +19,9 @@ tags:
   - architecture
   - contracts
 summary:
-  homelab-analytics enforces its layer boundaries with pytest. A documented
-  architecture is a request; a tested one is a constraint.
+  homelab-analytics enforces its named layer seams with pytest. A documented
+  architecture is a request; a tested one is a constraint — and the note now
+  shows a violation failing, plus where the check stops.
 explorePrompt: >-
   Use this note as a worked instantiation, not a rule to copy. The transferable
   question: which architectural constraints in your system survive being edited
@@ -65,6 +66,70 @@ test is the reviewer that never gets tired and never decides the violation is
 probably fine this once. The agent gets immediate, mechanical feedback inside
 its own session, which is also the cheapest possible place to fix the mistake.
 
+## What a violation looks like
+
+The checks are ordinary pytest, reading imports off the AST of named modules.
+The rule that the pipeline layer must not reach up into the applications is one
+assertion:
+
+```python
+def test_transformation_service_does_not_import_application_or_reporting_modules():
+    imports = _import_names(ROOT / "packages" / "pipelines" / "transformation_service.py")
+    assert not any(name.startswith("apps") for name in imports)
+```
+
+Add one wrong-direction import — the pipeline module borrowing a function that
+happens to live in an API route:
+
+```python
+# packages/pipelines/transformation_service.py
+from apps.api.routes.report_routes import build_monthly_report
+```
+
+and the suite fails in red, before review, in exactly this form:
+
+```text
+>       assert not any(name.startswith("apps") for name in imports)
+E       assert not True
+
+FAILED test_architecture_contract.py::test_transformation_service_does_not_import_application_or_reporting_modules
+```
+
+The corrected dependency points the other way: the route calls the reporting
+service the pipeline layer already publishes, and the pipeline module never
+learns the route exists. The failure message is not eloquent, but it does not
+need to be — the module name and the rule name say which seam was crossed and in
+which direction.
+
+## Where the check stops
+
+The suite is not a generic import linter over the whole tree, and saying so
+plainly is part of the contract. A handful of directory-wide direction rules are
+enforced everywhere they apply — product packs must not import from the
+applications or adapters, the kernel must not import from the packs. Everything
+else is a named seam: the imports of one specific module, one forbidden prefix
+list, one string-level contract in one application file. A module pair nobody
+wrote a test for is still only a convention — the one known sibling-pack
+violation is recorded in the stratum map's prose, not asserted in code — the
+transitional pipeline layer has no directory-wide rule at all, and a boundary
+that is semantic rather than structural (which data a query may touch, which
+service may perform an effect) is outside what an import scan can see. The green
+run proves the tested seams hold; the strata diagram beyond them is still a
+request.
+
+The checks catch real drift, not only injected examples: one read-path function
+returning a platform type from inside the pipeline layer forced the kernel to
+import downward, failed the direction rule, and moved to the platform package —
+with the extracted placement rule written down beside the fix.
+
+A deliberate architectural change is therefore not a test failure to suppress
+but one edit with several parts: the move itself, the same change updating the
+contract test, and the classification doc that records why the boundary sits
+where it does — reclassifications require at minimum a decision record. The
+suite's own comment trail shows the pattern: when asset pipelines moved into the
+finance domain, the assertions moved with them, and one kernel-adjacent helper
+is recorded as deliberately mixed rather than silently tolerated.
+
 This is the executable version of a line from the about page — boundaries that
 can survive iteration. Surviving iteration turns out to mean surviving iteration
 by actors with no memory of why the boundary exists. A human contributor might
@@ -73,6 +138,6 @@ and shouldn't have to: the constraint is in CI, where it binds regardless of who
 is editing or what they understood.
 
 The evidence requirement is satisfied the same way everything else here is
-supposed to be: by repo output. The claim that the layering holds is not an
-assertion in a README. It's a green test run, and any future violation arrives
-pre-announced, in red.
+supposed to be: by repo output. The claim that the tested seams hold is not an
+assertion in a README. It's a green test run, and a future violation of any
+inspected boundary arrives pre-announced, in red.

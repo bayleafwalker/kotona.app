@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: agent workflow
 published: 2026-06-10
-lastRevised: 2026-06-10
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -18,8 +18,9 @@ terms:
       handoffs.
   - term: actionq-dispatcher
     definition:
-      The one-action coordinator that creates a bounded workspace, invokes a
-      worker, and records the result.
+      Retired (2026-08-20 tombstone release). It formerly created a bounded
+      workspace, invoked a worker, and recorded the result; product-native
+      runtimes now own execution directly.
   - term: actionq
     definition:
       The PostgreSQL-backed queue that owns actions, sessions, claims, and
@@ -89,3 +90,11 @@ agent state to reconstruct because no agent state survives an invocation.
 
 The service model asks how to keep an agent trustworthy over time. The
 subprocess model deletes the time.
+
+## Outcome, added 2026-09-07
+
+actionq-dispatcher was retired on 2026-08-20; product-native runtimes now own
+execution directly. The retirement did not reverse this note's argument — the
+unit of execution stayed a bounded, per-invocation subprocess; what changed is
+which component constructs it. The [Vuoro project page](/projects/vuoro/)
+carries the current architecture.

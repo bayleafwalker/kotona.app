@@ -5,7 +5,7 @@ status: prospective
 lifecycle: current
 area: hardware contracts
 published: 2026-06-10
-lastRevised: 2026-06-10
+lastRevised: 2026-09-07
 projects: []
 tags:
   - hardware
@@ -29,12 +29,14 @@ explorePrompt: >-
   each reader's local config. The failure mode designed against is a keepsake
   whose function depends on a link staying alive, so readers cache
   last-known-good resolutions. One fork is left open: keying on factory UID
-  makes tokens unforgeable but requires enrolment, while written keys make them
-  interchangeable and reskinnable. Apply the question to an artifact you are
-  building that stands for something remote. Name the indirection layer, where
-  it is versioned, and what the object does when the far side is gone. Say where
-  your constraints differ, and produce the contract plus the fork you are
-  leaving open.
+  identifies an enrolled tag but requires enrolment and is identification rather
+  than authenticity -- emulators can present a chosen UID -- while written keys
+  make tokens interchangeable and reskinnable, and cryptographic authenticity is
+  a separate requirement an application may not need at all. Apply the question
+  to an artifact you are building that stands for something remote. Name the
+  indirection layer, where it is versioned, and what the object does when the
+  far side is gone. Say where your constraints differ, and produce the contract
+  plus the fork you are leaving open.
 ---
 
 A cluster of retro media projects in progress: a cassette shell with decoder
@@ -65,11 +67,17 @@ so the physical object outlives the playlist, the server, and if necessary the
 curator's infrastructure.
 
 One fork deliberately left open per project: key on the tag's factory UID, or on
-a value written to tag memory. UID keying makes tokens unforgeable but requires
-enrolling every physical tag into the manifest; written keys make tokens
-interchangeable and freely reskinnable. Tamper-resistance points one way,
-reskinnability the other, and a game cartridge and a gifted diskette can
-reasonably choose differently.
+a value written to tag memory. UID keying identifies a specific enrolled tag but
+requires enrolling every physical tag into the manifest; written keys make
+tokens interchangeable and freely reskinnable. What UID keying does not buy is
+authenticity: a factory-programmed identifier only shows that a reader saw that
+identifier, and commodity emulators can present a chosen UID — NXP's own
+[system-security guidance](https://www.nxp.com/docs/en/application-note/AN10969.pdf)
+discusses exactly this. If an application ever needs proof that the object is
+the original, that is a separate cryptographic requirement on the tag, not a
+property of the UID. A family music token needs none of it. Enrolment friction
+points one way, reskinnability the other, and a game cartridge and a gifted
+diskette can reasonably choose differently.
 
 This sits in a different register from the rest of the site, but it's the same
 instinct in a toy shell: a thin, versioned contract between the thing you hold

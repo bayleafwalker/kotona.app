@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: organizational systems
 published: 2026-08-22
-lastRevised: 2026-08-22
+lastRevised: 2026-09-07
 projects:
   - vuoro
 relates:
@@ -184,9 +184,35 @@ any assurance claim I could make about the setup in the abstract.
 
 Nothing about the underlying tools moved yet; the events and the projection that
 would make the hotspots joinable in real time still have to be built. What moved
-is ordering: this note fixes six dated, ranked absences in the current
-operational event model before any packaging work starts on top of them. That is
-the small-scale test
+is the plan. A second pass over the long-term direction document, run against
+the board the same day, sorted its own items into validated, corrected,
+reprioritized, and reframed — and the sharpest single chain from sticky note to
+decision looks like this:
+
+```text
+observation   78 cross-session "what did this look like before the fix"
+              lookups; 43 hit transient infrastructure state with no
+              surviving record, 31 recoverable from git, 4 from artifacts
+hotspot       state dies at the session boundary (ranked 2 of 6)
+plan change   refuted a standing critique that Git already supplies
+              portable checkpoints -- the 43 irrecoverable cases were live
+              infrastructure state, never committable; the direction plan
+              re-scored itself: none of the six hotspots was touched by
+              its packaging items, and all six reduce to missing events
+              plus one reconciled projection
+```
+
+That chain is also where the notation's own contribution can be separated from
+what any careful retrospective would have found. The counts are retrospective
+work; a diligent read of the logs produces them without EventStorming. The
+clustering move — pull every hotspot into one pile and rank it across systems
+before responding to any of them — is the method's specific step, and it is what
+turned tool-local complaints into the cross-tool finding that the plan had to
+answer to.
+
+The rest of the ordering claim stands: this note fixes six dated, ranked
+absences in the current operational event model before any packaging work starts
+on top of them. That is the small-scale test
 [Where the assurance questions are already answered](/notes/where-the-assurance-questions-are-already-answered/)
 committed to running, reported the way that note asked for it to be reported --
 with the failure modes named, not smoothed over.
