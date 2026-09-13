@@ -16,6 +16,9 @@ public/og/generated/
 test-results/
 playwright-report/
 
+# Local agent session state and machine-specific tool permissions.
+/.claude/
+
 # Local direnv/environment files
 .envrc
 .envrc.local

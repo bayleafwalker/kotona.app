@@ -47,11 +47,24 @@ async function startPreview() {
   const detached = process.platform !== "win32";
   const child = spawn(
     process.execPath,
-    [astroBin, "preview", "--host", "127.0.0.1", "--port", String(port)],
+    [
+      astroBin,
+      "preview",
+      "--ignore-lock",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      String(port),
+    ],
     {
       cwd: rootDirectory,
       detached,
-      env: { ...process.env, CI: process.env.CI ?? "1", NO_COLOR: "1" },
+      env: {
+        ...process.env,
+        ASTRO_PREVIEW_BACKGROUND: "0",
+        CI: process.env.CI ?? "1",
+        NO_COLOR: "1",
+      },
       stdio: ["ignore", "pipe", "pipe"],
     },
   );

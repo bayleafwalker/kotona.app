@@ -106,3 +106,28 @@ test("a question about a superseded claim offers its successor", async ({
     hrefs.indexOf("/notes/where-the-assurance-questions-are-already-answered/"),
   ).toBeLessThan(6);
 });
+
+test("a hover preview stays open while the pointer remains on its node label", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1363, height: 936 });
+  await page.goto("/explore/");
+
+  const node = page.locator(
+    '[data-node-id="simplicity-is-an-ambitious-property"]',
+  );
+  const marker = node.locator("circle, rect");
+  await marker.hover({ force: true });
+
+  const preview = page.locator("[data-knowledge-detail].is-hover-preview");
+  await expect(preview).toBeVisible({ timeout: 3_000 });
+
+  const labelBox = await node.locator(".knowledge-node-label").boundingBox();
+  expect(labelBox).not.toBeNull();
+  // Playwright's SVG box includes the painted stroke. This point sits within
+  // that visible stroke but outside getBoundingClientRect()'s fill-only box.
+  await page.mouse.move(labelBox.x + 2, labelBox.y + labelBox.height / 2);
+  await page.waitForTimeout(450);
+
+  await expect(preview).toBeVisible();
+});

@@ -3,6 +3,8 @@ import process from "node:process";
 import { defineConfig, devices } from "@playwright/test";
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 4410);
+const chromiumExecutablePath =
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
 
 /**
  * Browser coverage for the one seam the other suites cannot reach: whether the
@@ -23,9 +25,18 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${port}`,
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: { executablePath: chromiumExecutablePath },
+      },
+    },
+  ],
   webServer: {
-    command: `npm run build && npx astro preview --host 127.0.0.1 --port ${port}`,
+    command: `npm run build && npx astro preview --ignore-lock --host 127.0.0.1 --port ${port}`,
+    env: { ASTRO_PREVIEW_BACKGROUND: "0" },
     url: `http://127.0.0.1:${port}/explore/`,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,

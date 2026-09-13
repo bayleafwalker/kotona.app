@@ -61,6 +61,13 @@ npx playwright install chromium   # once per machine
 npm run test:browser
 ```
 
+On NixOS, point Playwright at a packaged Chromium when the downloaded fallback
+cannot load host libraries:
+
+```bash
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/path/to/chrome npm run test:browser
+```
+
 It covers the seam between what the ranking decides and what the Explore page
 presents. CI provisions Chromium and runs it on every push and pull request;
 `npm run validate` still leaves it out, because that provisioning is per-machine

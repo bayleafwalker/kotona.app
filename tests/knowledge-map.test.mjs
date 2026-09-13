@@ -378,10 +378,10 @@ test("progressively expands pointer hover from a title into a transient preview"
 
 test("keeps an expanded preview reachable while the pointer travels from its node", () => {
   const corridorUsesStoredOrLiveBounds =
-    /showHoverDetail[\s\S]{0,900}?hoverCorridor\s*=\s*\{[\s\S]{0,300}?from:\s*node\.getBoundingClientRect\(\)[\s\S]{0,300}?to:\s*detail\.getBoundingClientRect\(\)/.test(
+    /showHoverDetail[\s\S]{0,900}?hoverCorridor\s*=\s*\{[\s\S]{0,300}?from:\s*nodeHoverBounds\(node\)[\s\S]{0,300}?to:\s*detail\.getBoundingClientRect\(\)/.test(
       knowledgeMapSource,
     ) ||
-    /const\s+isPointerInHoverCorridor\s*=\s*\([^)]*PointerEvent[^)]*\)\s*=>\s*\{[\s\S]{0,800}?hoveredNode\.getBoundingClientRect\(\)[\s\S]{0,800}?detail\.getBoundingClientRect\(\)/.test(
+    /const\s+isPointerInHoverCorridor\s*=\s*\([^)]*PointerEvent[^)]*\)\s*=>\s*\{[\s\S]{0,800}?nodeHoverBounds\(hoveredNode\)[\s\S]{0,800}?detail\.getBoundingClientRect\(\)/.test(
       knowledgeMapSource,
     );
   assert.ok(

@@ -86,6 +86,7 @@
     "id": "agent-handover-vague-intent",
     "question": "how do I hand work from one agent session to another",
     "acceptablePaths": [
+      "/notes/the-context-window-is-not-the-continuity-boundary/",
       "/notes/the-work-between-the-ticket-and-the-agent/",
       "/notes/the-ref-nobody-adds/",
       "/notes/authority-must-travel-with-the-action/",
@@ -153,5 +154,52 @@
       "paths": ["/notes/where-the-assurance-questions-are-already-answered/"]
     },
     "requiredPhrases": ["superseded"]
+  },
+  {
+    "id": "utilization-routing-boundary",
+    "question": "What should model utilization and remaining allowance be allowed to change when routing agent work?",
+    "expectedPath": "/notes/utilization-is-a-signal-not-a-limit/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "a lasting constraint on how the work itself is defined",
+      "currently feasible choices and routing preference"
+    ]
+  },
+  {
+    "id": "context-handoff-continuity",
+    "question": "Why should long-running agent work continue through a validated handoff instead of relying only on compacted working context?",
+    "expectedPath": "/notes/the-context-window-is-not-the-continuity-boundary/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "full transcript by session ID",
+      "explicit, validated resumption record"
+    ]
+  },
+  {
+    "id": "context-handoff-plain-language",
+    "question": "The conversation is getting huge. How can a fresh attempt pick up safely?",
+    "expectedPath": "/notes/the-context-window-is-not-the-continuity-boundary/",
+    "maxRank": 6,
+    "requiredPhrases": ["precise state from which to act"]
+  },
+  {
+    "id": "repository-context-composition",
+    "question": "How should a repository compose shared agent instructions without copying every global rule into local history?",
+    "expectedPath": "/notes/a-repository-should-not-contain-everything-its-agents-know/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "versioned binding record",
+      "resolver binds each reference to a concrete version"
+    ]
+  },
+  {
+    "id": "architectural-simplicity-without-minimalism",
+    "question": "How can architecture pursue simplicity without becoming minimalism or multiplying independent mechanisms?",
+    "expectedPath": "/notes/simplicity-is-an-ambitious-property/",
+    "maxRank": 1,
+    "requiredPhrases": [
+      "Vuoro gives me a concrete reason",
+      "independent mechanisms that can actually achieve it"
+    ]
   }
 ]

@@ -37,6 +37,11 @@ const clusterLabelYOverrides: Record<string, number> = {
   // contact. The other territories keep their calculated labels: their node
   // rings leave this space naturally.
   "agents-assurance": -26, // labelY coordinate
+  // Adding notes to the agent territory moved Vuoro onto its third ring. Its
+  // label now occupies the narrow band above the organizational territory, so
+  // keep that territory heading in the remaining upper gap instead of deriving
+  // it from the organizational nodes' average position.
+  "organizational-practice": 315,
 };
 const labelLines = (label: string, maxLength = 28) => {
   const words = label.split(" ");
@@ -746,6 +751,27 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       detail.hidden = false;
     };
 
+    const nodeHoverBounds = (node: SVGElement) => {
+      const markerBounds = node.getBoundingClientRect();
+      const label = node.querySelector(".knowledge-node-label");
+      if (!(label instanceof SVGElement)) return markerBounds;
+      const labelBounds = label.getBoundingClientRect();
+      // The DOM rectangle excludes the four-pixel paint-order stroke even
+      // though that stroke is visibly part of the label's hover target.
+      const labelStroke = 4;
+      const left = Math.min(markerBounds.left, labelBounds.left - labelStroke);
+      const top = Math.min(markerBounds.top, labelBounds.top - labelStroke);
+      const right = Math.max(
+        markerBounds.right,
+        labelBounds.right + labelStroke,
+      );
+      const bottom = Math.max(
+        markerBounds.bottom,
+        labelBounds.bottom + labelStroke,
+      );
+      return new DOMRect(left, top, right - left, bottom - top);
+    };
+
     const showHoverDetail = (node: SVGElement) => {
       if (selectedNodeId || selectedClusterId || hoveredNode !== node) return;
       const id = node.dataset.nodeId;
@@ -756,7 +782,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       detail.classList.add("is-hover-preview");
       renderDetail(node);
       hoverCorridor = {
-        from: node.getBoundingClientRect(),
+        from: nodeHoverBounds(node),
         to: detail.getBoundingClientRect(),
       };
     };
@@ -818,11 +844,20 @@ const clusterNodes = graph.clusters.map((cluster) => ({
         !(detail instanceof HTMLElement)
       )
         return false;
-      const from = hoveredNode.getBoundingClientRect();
+      const from = nodeHoverBounds(hoveredNode);
       const to = detail.getBoundingClientRect();
       hoverCorridor = { from, to };
       const { from: corridorStart, to: corridorEnd } = hoverCorridor;
       const { clientX: x, clientY: y } = event;
+      if (event.target instanceof Node && hoveredNode.contains(event.target))
+        return true;
+      if (
+        x >= corridorStart.left &&
+        x <= corridorStart.right &&
+        y >= corridorStart.top &&
+        y <= corridorStart.bottom
+      )
+        return true;
       if (
         x >= corridorEnd.left &&
         x <= corridorEnd.right &&
