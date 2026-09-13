@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-// Bind context.manifest.json to concrete content for one agent run. Paths come
-// from an uncommitted provider map (CONTEXT_PROVIDERS); --against <record> lists
-// what changed since that run. Exit 2: something unresolved or refused.
+// Usage: node scripts/bind-context.mjs [record.json]. Binds context.manifest.json
+// to concrete content through an uncommitted provider map (CONTEXT_PROVIDERS).
+// Exit 2 means something was unresolved or refused.
 
 import { execFileSync } from "node:child_process";
 import console from "node:console";
@@ -10,8 +10,9 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
+const ROOT = path.resolve(fileURLToPath(import.meta.url), "../..");
 const STANDINGS = new Set(["rule", "default", "knowledge", "option"]);
 
 // No linker composes prose, so outcomes are never inferred: local may narrow
@@ -33,26 +34,33 @@ function git(dir, ...args) {
   }
 }
 
+// A hash identifies content; a repository and blob id can also restore it.
 export async function bindSource(file) {
   const content = await readFile(file).catch(() => null);
   if (!content) return { path: file, status: "unavailable" };
-  const [dir, base] = [path.dirname(file), path.basename(file)];
-  const commit = git(dir, "log", "-1", "--format=%H", "--", base);
-  const dirty = commit && git(dir, "status", "--porcelain", "--", base);
   const sha256 = createHash("sha256").update(content).digest("hex");
-  const custody = commit ? (dirty ? "git-modified" : "git") : "unversioned";
-  return { path: file, status: "bound", sha256, custody, commit };
+  const [dir, base] = [path.dirname(file), path.basename(file)];
+  const blob = git(dir, "rev-parse", `HEAD:./${base}`);
+  const bound = { path: file, status: "bound", sha256, custody: "unversioned" };
+  if (!blob) return bound;
+  const modified = git(dir, "status", "--porcelain", "--", base);
+  bound.custody = modified ? "git-modified" : "git";
+  const repository = git(dir, "rev-parse", "--show-toplevel");
+  return Object.assign(bound, { repository, blob });
 }
 
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
 
 async function main(argv) {
-  const option = (name) => argv.includes(name) && argv[argv.indexOf(name) + 1];
-  const out = option("--out") || `temp/context-bindings/${Date.now()}.json`;
-  const manifest = await readJson("context.manifest.json");
-  const providers = await readJson(
-    process.env.CONTEXT_PROVIDERS ?? ".context-providers.json",
-  ).catch(() => ({}));
+  if (argv.length > 1 || argv[0]?.startsWith("-")) {
+    throw new Error("usage: bind-context.mjs [record.json]");
+  }
+  const at = (file) => path.resolve(ROOT, file);
+  const out = argv[0] ?? at(`temp/context-bindings/${Date.now()}.json`);
+  const manifest = await readJson(at("context.manifest.json"));
+  const providerMap =
+    process.env.CONTEXT_PROVIDERS ?? at(".context-providers.json");
+  const providers = await readJson(providerMap).catch(() => ({}));
   const standingOf = new Map(manifest.context.map((s) => [s.name, s.standing]));
 
   const context = await Promise.all(
@@ -62,38 +70,28 @@ async function main(argv) {
       return { name, standing, ...bound };
     }),
   );
-  const local = await Promise.all(manifest.local.map((f) => bindSource(f)));
+  const own = async (name) => ({ name, ...(await bindSource(at(name))) });
+  const local = await Promise.all(manifest.local.map(own));
   const exceptions = (manifest.exceptions ?? []).map((exception) => ({
     ...exception,
     outcome: classify(exception, standingOf),
   }));
-  const sources = [...context, ...local];
   const problems =
-    sources.filter((s) => s.status !== "bound").length +
+    [...context, ...local].filter((s) => s.status !== "bound").length +
     exceptions.filter((e) => e.outcome.startsWith("refused")).length;
-  const repository = { commit: git(".", "rev-parse", "HEAD") };
+  const repository = { commit: git(ROOT, "rev-parse", "HEAD") };
   const createdAt = new Date().toISOString();
   const record = { schema: "context-binding/v0", createdAt, repository };
   Object.assign(record, { context, local, exceptions, problems });
   await mkdir(path.dirname(out), { recursive: true });
   await writeFile(out, `${JSON.stringify(record, null, 2)}\n`);
   console.log(`${out}: ${problems} problem(s)`);
-
-  if (option("--against")) {
-    const before = await readJson(option("--against"));
-    const key = (s) => s.name ?? s.path;
-    const earlier = [...before.context, ...before.local];
-    const bound = new Map(earlier.map((s) => [key(s), s]));
-    const short = (s) => s?.sha256?.slice(0, 12) ?? s?.status ?? "absent";
-    for (const source of sources) {
-      const was = bound.get(key(source));
-      if (was?.sha256 === source.sha256) continue;
-      console.log(`${key(source)} bound: ${short(was)} now: ${short(source)}`);
-    }
-  }
   return problems ? 2 : 0;
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  process.exitCode = await main(process.argv.slice(2));
+  process.exitCode = await main(process.argv.slice(2)).catch((error) => {
+    console.error(error.message);
+    return 1;
+  });
 }

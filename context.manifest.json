@@ -10,7 +10,7 @@
     {
       "target": "workstation/agent-baseline#deployment",
       "effect": "narrow",
-      "reason": "Deploying, or changing Cloudflare bindings, needs separate deployment authority."
+      "reason": "Deploying needs separate deployment authority."
     }
   ]
 }
