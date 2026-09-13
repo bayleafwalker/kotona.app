@@ -1,0 +1,16 @@
+{
+  "context": [
+    { "name": "workstation/agent-baseline", "standing": "rule" },
+    { "name": "workstation/claude-adapter", "standing": "rule" },
+    { "name": "workstation/codex-adapter", "standing": "rule" },
+    { "name": "skill/handoff", "standing": "option" }
+  ],
+  "local": ["AGENTS.md", "docs/writing-style.md"],
+  "exceptions": [
+    {
+      "target": "workstation/agent-baseline#deployment",
+      "effect": "narrow",
+      "reason": "Deploying, or changing Cloudflare bindings, needs separate deployment authority."
+    }
+  ]
+}

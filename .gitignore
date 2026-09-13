@@ -24,3 +24,6 @@ playwright-report/
 .envrc.local
 .envrc.*
 !.envrc.example
+
+# Host-local map from context names in context.manifest.json to paths.
+.context-providers.json
