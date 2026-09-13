@@ -22,209 +22,110 @@ tags:
   - workspaces
   - workflow
 summary: >-
-  Repositories should own local instructions and explicitly bind versioned
-  enterprise, domain, workflow, and platform context whose lifecycles belong
-  elsewhere.
+  Agent context is a dependency of each run: bind shared instructions to
+  concrete versions in a per-run record, and because no linker composes prose,
+  record every conflict outcome and refuse what cannot be classified.
 explorePrompt: >-
-  Use this note as a context-composition problem, not as a proposed manifest
-  standard. The transferable question is who owns each piece of knowledge an
-  agent needs, how independently it changes, and how a repository declares that
-  it applies without copying it into local history or accepting silent global
-  injection. This note's worked model separates enterprise, domain, work-type,
-  platform, and repository layers; resolves explicit references to concrete
-  versions for each run; and preserves different standing for mandatory policy,
-  defaults, knowledge, available tools, and locally narrowable constraints.
-  Apply the model to one repository. Inventory the external context currently
-  copied, linked, or injected; name its owner and lifecycle; and design a
-  binding record that makes both selection and resolved version inspectable.
-  Include local exceptions, update review, unavailable sources, and conflicting
-  layers. Challenge the model if reproducibility requires vendoring or if the
-  repository genuinely owns the broader rule. Produce a layer table, conflict
-  semantics, and one reconstruction test rather than choosing a file format.
+  Use this note as a worked instantiation of treating an agent's context as a
+  dependency of each run. The transferable question is how a repository can use
+  shared instructions, skills, and hooks that change on their own schedule while
+  every run stays reconstructable afterwards. The worked answer: copying shared
+  guidance is vendoring and silent injection is an unpinned latest; the
+  repository commits a manifest of what it selects, and a per-run binding record
+  plays the lockfile. The analogy breaks at composition. No linker merges prose,
+  so the record must carry the outcome of every declared disagreement, a local
+  layer may narrow a permission but never broaden it, and anything
+  unclassifiable is refused rather than settled by document order. The
+  prototype's first record found most shared sources unversioned, identifiable
+  by hash but not restorable, and it binds files rather than the text a hook
+  actually injected. Apply this to one repository and agent harness you use.
+  Inventory what reaches a session, what event changes each source, and which
+  sources could be restored. Say where the dependency framing fails for you, for
+  example generated or conversational context. Produce a source table, a minimal
+  record schema, the conflict rules you would enforce, and one reconstruction
+  test against a past run.
 reference:
   purpose: exploratory-hypothesis
   discoverFor:
-    - shared agent instructions without copying global rules
-    - versioning enterprise, domain, platform, and repository context together
+    - sharing agent instructions across repositories without copying them
+    - reconstructing which shared instructions and skills an agent run received
   establishes:
-    - a model for explicit context selection, version binding, conflict
-      standing, and observable updates
+    - a per-run binding record as the lockfile for agent context, with conflict
+      outcomes as part of the record
   doesNotEstablish:
-    - a standard manifest syntax or universal context registry
-    - permission to override mandatory policy from a local repository
+    - a standard manifest syntax or context registry
+    - that disagreements between prose instructions can be detected
+      automatically
   supplementWith:
-    - the repository's local instructions and the selected context providers'
-      version and conflict contracts
+    - the repository's local instructions and the output its harness actually
+      injects at session start
 ---
 
-The workspace that contains this site already composes two instruction layers. A
-short repository `AGENTS.md` describes the public content boundary and local
-validation; broader workstation guidance supplies credential, environment, and
-workflow rules shared by many repositories. Skills add a third source when a
-task calls for one.
+On 29 August a session-start hook shared by every repository in my workspace
+gained a few lines of status output. The harness parses that hook's output as
+JSON, so the extra lines did not add a note beside the sprint context it
+injected; they discarded the context. No repository changed. A failing test
+reported the defect and was written off twice as pre-existing, and the only
+other trace was an empty directory the hook created at 15:25. Nothing recorded
+which sessions started with their context and which without it, and nothing can
+say so now.
 
-That arrangement avoids copying the whole workstation manual into this
-repository, but it creates a reconstruction question: which versions of those
-external instructions governed a particular run? This workspace's nested and
-managed instruction layers solve discovery. They do not by themselves provide a
-versioned binding record.
+## Context is a dependency
 
-The usual fix is copying. Add an `AGENTS.md`, paste the common rules, vendor a
-specialist agent, and duplicate the relevant system architecture under `docs/`.
-Everything is local and inspectable on the day it is added. Six months later,
-the repository may be carrying a plausible but obsolete copy of guidance owned
-somewhere else.
+An agent's context is a dependency of the run, with the two familiar failures.
+Copying shared guidance into `AGENTS.md` is vendoring: Git records what the
+agent could read, and a year later the copy is an obsolete fork that still looks
+local. Injecting it at session start is an unpinned `latest`: always current,
+and the repository no longer describes its own run. The hook failure was the
+second kind.
 
-Keeping all shared material outside the repository and injecting the latest
-version creates the opposite failure. The context stays current, but a run can
-change without the repository changing, and a maintainer cannot reconstruct
-which rules appeared.
+What separates the sources is the event that changes each one. Workstation
+guidance changes when a hardening pass lands, a skill when a procedure is
+learned better, the repository when the project does. No single commit can pin
+all three.
 
-The useful design question is therefore not where to put every file. It is how a
-repository selects maintained context with independent ownership and lifecycle
-without losing inspectability or local authority.
+The missing artifact is the lockfile, and it belongs to the run. The repository
+commits a manifest of what it selects; each run binds every reference to a
+concrete version and writes the record beside the session's other evidence.
+Comparing two records is `npm outdated`.
 
-## The layers do not change together
+## There is no linker
 
-A composed repository context may draw useful material from five levels:
+Code dependencies are combined by a linker with defined semantics: a symbol
+resolves or the build fails. Prose is combined by a model, which has none. When
+a workstation rule and a repository instruction disagree, nothing reports the
+collision; the model settles it and the run looks normal.
 
-```text
-enterprise
-  engineering practice · security · approved technology · shared tooling
+So the record has to carry the outcome of every disagreement, not only versions,
+and the assembler has to refuse a conflict it cannot classify rather than
+resolve it by document order. One rule does not fall out of ordinary policy
+design: a local layer may narrow a permission, never broaden it. This site may
+forbid a deployment the workstation allows; it may not allow a send the
+workstation forbids. The rest is policy for whoever builds the assembler.
 
-domain
-  shared concepts · common data · system landscape · regulation
+An assembler cannot detect a disagreement in prose either. It can require
+exceptions to be declared, classify those, and refuse the rest.
 
-work type
-  software development · data engineering · analytics
+## A record for this site
 
-platform
-  deployment · observability · data conventions · supported interfaces
+[`scripts/bind-context.mjs`](https://github.com/bayleafwalker/kotona.app/blob/05448bc162b9aaade5a089699f617d52a4daf0f7/scripts/bind-context.mjs)
+at `05448bc` is 99 lines. It reads the site's `context.manifest.json`, resolves
+names through a provider map that stays on the host, hashes what it read, notes
+whether Git holds it, classifies declared exceptions, and exits non-zero on
+anything unresolved or refused.
 
-repository
-  local architecture · tests · decisions · exceptions · commands
-```
+Its first record bound six sources. Both repository files resolved to commits,
+and the one declared exception, narrowing deployment, was recorded as narrowed.
+The four shared sources resolved to hashes with no version control behind them.
+A hash identifies what a run read but cannot restore it, so for those sources
+the record is evidence, not yet a lock.
 
-A repository may live for five years while enterprise guidance changes monthly.
-A platform can replace its deployment method without changing the business
-domain. A project can deliberately retain an exception after a default changes.
+## Three questions
 
-Flattening these layers into one local instruction tree hides their owners and
-update rhythms. It also makes staleness difficult to distinguish from a
-deliberate pin.
-
-## Copying trades discovery for synchronization
-
-A copied instruction is reliable in one important sense: Git records exactly
-what the agent could read. The synchronization problem begins as soon as its
-source changes.
-
-Now the system has two possible truths. Automation can open update pull
-requests, but it cannot answer the semantic questions by itself. Should every
-repository accept the new version? Does a local design depend on the old rule?
-Was the copy edited, pinned intentionally, or simply forgotten?
-
-Copying can still be correct when the repository must own the material or build
-without the external source. The problem is accidental vendoring: a duplicated
-file looks local even though its lifecycle remains external.
-
-## Invisible injection loses reconstruction
-
-Always injecting current shared guidance removes stale copies. It also makes the
-repository an incomplete account of its execution environment.
-
-A run on Monday and the same run on Friday may receive different instructions
-without any source change. Maintainers may not know which organization-wide
-policy, skill, tool, or documentation source entered the session. Debugging a
-decision then requires reconstructing an invisible configuration.
-
-Currency without provenance is not enough. A run needs a record of both what the
-repository selected and what concrete versions that selection resolved to.
-
-## Treat context as an explicit composition
-
-A repository can declare the maintained context that applies while retaining its
-own local sources:
-
-```yaml
-context:
-  - enterprise/engineering
-  - enterprise/agent-baseline
-  - domain/shared-language
-  - platform/data
-  - workflow/data-engineering
-
-local:
-  - ./AGENTS.md
-  - ./docs/architecture.md
-```
-
-The syntax is incidental. The declaration makes selection inspectable; a
-resolver binds each reference to a concrete version for the run. Shared material
-can evolve independently, the project states what applies, and the execution can
-still be reconstructed.
-
-This extends
-[the project-folder model](/notes/a-project-folder-is-a-view-not-an-authority/)
-rather than repeating it. A composed folder is a view over repositories and work
-systems that retain ownership of their state. A context binding answers a
-different question: which maintained instructions and knowledge those
-repositories supplied to one execution.
-
-This is closer to dependency resolution than file discovery. It also introduces
-familiar failure modes: an unavailable source, an incompatible update, a stale
-pin, or a resolver that produced different bindings under the same inputs. The
-binding record must make those failures visible rather than silently falling
-back to whatever text happens to be nearby.
-
-## Preserve the standing of each layer
-
-Composition immediately raises a conflict question. “Local always wins” would
-let a repository override an organizational security requirement with one line
-of Markdown. “Enterprise always wins” would prevent legitimate architectural
-exceptions and project-specific operating commands.
-
-Different material needs different semantics:
-
-- mandatory policy cannot be contradicted locally;
-- a default can be replaced by a declared exception;
-- knowledge contributes facts and evidence rather than commands;
-- an advertised skill or tool adds an option, not an obligation;
-- a local layer may narrow a mandatory permission but not broaden it.
-
-Merging prose without preserving this standing creates an implicit cascade whose
-output can run shell commands. The resolver should report a conflict it cannot
-interpret, not settle it through document order.
-
-## Make updates observable
-
-Explicit composition lets old projects benefit from new shared guidance without
-changing silently:
-
-```text
-enterprise/engineering
-  bound: 4.8
-  available: 4.9
-  change: updated Python packaging guidance
-
-platform/data
-  bound: 7.2
-  available: 8.0
-  change: new deployment workflow
-  compatibility: review required
-```
-
-Some sources may safely float within a compatible range. Others should require
-review. A necessary pin remains visible as debt instead of disappearing into an
-old copied file.
-
-The repository still owns what is true because it is this repository: local
-architecture, verification, decisions, exceptions, and operational commands. It
-participates in a wider execution environment without pretending to own that
-environment's history.
-
-The first useful prototype is not a universal context registry. It is a binding
-record that answers three questions after a run: what did this repository
-select, which exact material was supplied, and what happened when two sources
-disagreed? If those answers cannot be reconstructed, composition has only moved
-the synchronization problem out of sight.
+After a run, the record should answer what the repository selected, which exact
+material was supplied, and what happened where two sources disagreed. This
+site's record answers the first two for files and the third only for declared
+disagreements. It would not have caught the August failure: the hook is not in
+the manifest, and a new hash would only have shown that the script changed. What
+reaches the model is the output, so the next test is binding the injected
+preamble and replaying that failure against the record.
