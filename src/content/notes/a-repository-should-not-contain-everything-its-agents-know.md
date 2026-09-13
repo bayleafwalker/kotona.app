@@ -78,16 +78,61 @@ local. Injecting it at session start is an unpinned `latest`: always current,
 and the repository no longer describes its own run. The hook failure was the
 second kind.
 
-What separates the sources is the event that changes each one. Workstation
-guidance changes when a hardening pass lands, a skill when a procedure is
-learned better, the repository when the project does. No single commit can pin
-all three.
+What separates the sources is the event that changes each one, and those events
+do not coincide:
+
+```text
+workstation   agent baseline, harness adapters
+              changes when a hardening pass lands
+
+skill         a procedure for one kind of work, such as a handoff
+              changes when the procedure is learned better
+
+repository    local architecture, validation, exceptions
+              changes when the project does
+```
+
+No single commit can pin all three. Flattening them into one local instruction
+tree also makes a stale copy indistinguishable from a deliberate pin.
 
 The missing artifact is the lockfile, and it belongs to the run. The repository
-commits a manifest of what it selects; each run binds every reference to a
-concrete version and writes the record beside the session's other evidence. Two
-records side by side show what `npm outdated` shows: what was bound then, and
-what has changed since.
+commits a manifest of what it selects. This is the one this site now carries:
+
+```json
+{
+  "context": [
+    { "name": "workstation/agent-baseline", "standing": "rule" },
+    { "name": "workstation/claude-adapter", "standing": "rule" },
+    { "name": "workstation/codex-adapter", "standing": "rule" },
+    { "name": "skill/handoff", "standing": "option" }
+  ],
+  "local": ["AGENTS.md", "docs/writing-style.md"],
+  "exceptions": [
+    {
+      "target": "workstation/agent-baseline#deployment",
+      "effect": "narrow",
+      "reason": "Deploying needs separate deployment authority."
+    }
+  ]
+}
+```
+
+The names are symbolic. Where each one lives is host state, kept in a provider
+map that is not committed. Each run binds every reference to a concrete version
+and writes the record beside the session's other evidence. The manifest is
+committed; the record cannot be, because the same manifest resolves differently
+on different days and machines.
+
+Two records side by side show what `npm outdated` shows. If the handoff skill
+were edited after the record below was written, comparing that record with the
+next one would give:
+
+```text
+skill/handoff
+  bound:    962e2a3d00db   (13 September)
+  now:      a different hash
+  custody:  unversioned, so the bound text cannot be recovered
+```
 
 ## There is no linker
 
@@ -101,30 +146,100 @@ An assembler cannot see a disagreement in prose either: exceptions have to be
 declared, and one it cannot classify is refused rather than resolved by document
 order. One rule does not fall out of ordinary policy design: a local layer may
 narrow a permission, never broaden it. This site may forbid a deployment the
-workstation allows; it may not allow a send the workstation forbids. How
-defaults, knowledge, and optional skills rank is left to whoever builds the
-assembler.
+workstation allows; it may not allow a send the workstation forbids.
+
+The prototype's whole classification fits in a table:
+
+```text
+declared effect   on a rule   on a default   on knowledge or an option
+narrow            narrowed    narrowed       narrowed
+replace           refused     replaced       refused
+broaden           refused     refused        refused
+anything else     refused     refused        refused
+```
+
+A target without a known standing is refused too. How defaults, knowledge, and
+optional skills should rank beyond that is left to whoever builds the assembler.
 
 ## A record for this site
 
 [`scripts/bind-context.mjs`](https://github.com/bayleafwalker/kotona.app/blob/b88a4948de415df25d5e99f5a1ae5e1c39a3ce10/scripts/bind-context.mjs)
-at `b88a494` is 97 lines. It reads the site's `context.manifest.json`, resolves
-names through a provider map that stays on the host, hashes what it read,
-records the repository and blob id for anything Git holds, classifies declared
-exceptions, and exits non-zero on anything unresolved or refused.
+at `b88a494` is 97 lines. It reads the manifest, resolves names through the
+provider map, hashes what it read, records the repository and blob id for
+anything Git holds, classifies declared exceptions, and exits non-zero on
+anything unresolved or refused.
 
-Its record bound six sources. Both repository files resolved to Git blobs, and
-the one declared exception, narrowing deployment, was recorded as narrowed. The
-four shared sources resolved to hashes with no version control behind them. A
-hash identifies what a run read but cannot restore it, so for those sources the
-record is evidence, not yet a lock.
+Its record on 13 September, with host paths removed and hashes shortened:
+
+```json
+{
+  "schema": "context-binding/v0",
+  "context": [
+    {
+      "name": "workstation/agent-baseline",
+      "standing": "rule",
+      "custody": "unversioned",
+      "sha256": "51c9899a0066"
+    },
+    {
+      "name": "workstation/claude-adapter",
+      "standing": "rule",
+      "custody": "unversioned",
+      "sha256": "52920b4455ea"
+    },
+    {
+      "name": "workstation/codex-adapter",
+      "standing": "rule",
+      "custody": "unversioned",
+      "sha256": "19f4f39d18df"
+    },
+    {
+      "name": "skill/handoff",
+      "standing": "option",
+      "custody": "unversioned",
+      "sha256": "962e2a3d00db"
+    }
+  ],
+  "local": [
+    {
+      "name": "AGENTS.md",
+      "custody": "git",
+      "sha256": "6eecf07f4233",
+      "blob": "f6cfee694a3c"
+    },
+    {
+      "name": "docs/writing-style.md",
+      "custody": "git",
+      "sha256": "2a5a946ef101",
+      "blob": "6c91c0c35b5d"
+    }
+  ],
+  "exceptions": [
+    {
+      "target": "workstation/agent-baseline#deployment",
+      "effect": "narrow",
+      "outcome": "narrowed"
+    }
+  ],
+  "problems": 0
+}
+```
+
+Both repository files resolved to Git blobs, and the one declared exception was
+recorded as narrowed. The four shared sources resolved to hashes with no version
+control behind them. A hash identifies what a run read but cannot restore it, so
+for those sources the record is evidence, not yet a lock.
 
 ## Three questions
 
-After a run, the record should answer what the repository selected, which exact
-material was supplied, and what happened where two sources disagreed. This
-site's record answers the first two for files and the third only for declared
-disagreements. It would not have caught the August failure: the hook is not in
-the manifest, and a new hash would only have shown that the script changed. What
-reaches the model is the output, so the next test is binding the injected
-preamble and replaying that failure against the record.
+After a run, the record should answer:
+
+1. What did this repository select?
+2. Which exact material was supplied?
+3. What happened where two sources disagreed?
+
+This site's record answers the first two for files and the third only for
+declared disagreements. It would not have caught the August failure: the hook is
+not in the manifest, and a new hash would only have shown that the script
+changed. What reaches the model is the output, so the next test is binding the
+injected preamble and replaying that failure against the record.
