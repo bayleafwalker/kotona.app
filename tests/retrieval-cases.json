@@ -187,7 +187,7 @@
     "question": "How should a repository compose shared agent instructions without copying every global rule into local history?",
     "expectedPath": "/notes/a-repository-should-not-contain-everything-its-agents-know/",
     "maxRank": 1,
-    "requiredPhrases": ["lockfile", "There is no linker"]
+    "requiredPhrases": ["never broaden it", "There is no linker"]
   },
   {
     "id": "architectural-simplicity-without-minimalism",

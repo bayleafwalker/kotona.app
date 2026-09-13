@@ -61,14 +61,13 @@ reference:
       injects at session start
 ---
 
-On 29 August a session-start hook shared by every repository in my workspace
-gained a few lines of status output. The harness parses that hook's output as
-JSON, so the extra lines did not add a note beside the sprint context it
-injected; they discarded the context. No repository changed. A failing test
-reported the defect and was written off twice as pre-existing, and the only
-other trace was an empty directory the hook created at 15:25. Nothing recorded
-which sessions started with their context and which without it, and nothing can
-say so now.
+On 29 August a session-start hook in my agent tooling gained a few lines of
+status output. The harness parses that hook's output as JSON, so the extra lines
+did not add a note beside the sprint context it injected; they discarded the
+context. No repository changed. A failing test reported the defect and was
+written off twice as pre-existing, and the only other trace was an empty
+directory the hook created at 15:25. I found no record of which sessions started
+with their context and which started without it.
 
 ## Context is a dependency
 
@@ -86,8 +85,9 @@ all three.
 
 The missing artifact is the lockfile, and it belongs to the run. The repository
 commits a manifest of what it selects; each run binds every reference to a
-concrete version and writes the record beside the session's other evidence.
-Comparing two records is `npm outdated`.
+concrete version and writes the record beside the session's other evidence. Two
+records side by side show what `npm outdated` shows: what was bound then, and
+what has changed since.
 
 ## There is no linker
 
@@ -96,29 +96,28 @@ resolves or the build fails. Prose is combined by a model, which has none. When
 a workstation rule and a repository instruction disagree, nothing reports the
 collision; the model settles it and the run looks normal.
 
-So the record has to carry the outcome of every disagreement, not only versions,
-and the assembler has to refuse a conflict it cannot classify rather than
-resolve it by document order. One rule does not fall out of ordinary policy
-design: a local layer may narrow a permission, never broaden it. This site may
-forbid a deployment the workstation allows; it may not allow a send the
-workstation forbids. The rest is policy for whoever builds the assembler.
-
-An assembler cannot detect a disagreement in prose either. It can require
-exceptions to be declared, classify those, and refuse the rest.
+So the record has to carry the outcome of every disagreement, not only versions.
+An assembler cannot see a disagreement in prose either: exceptions have to be
+declared, and one it cannot classify is refused rather than resolved by document
+order. One rule does not fall out of ordinary policy design: a local layer may
+narrow a permission, never broaden it. This site may forbid a deployment the
+workstation allows; it may not allow a send the workstation forbids. How
+defaults, knowledge, and optional skills rank is left to whoever builds the
+assembler.
 
 ## A record for this site
 
-[`scripts/bind-context.mjs`](https://github.com/bayleafwalker/kotona.app/blob/05448bc162b9aaade5a089699f617d52a4daf0f7/scripts/bind-context.mjs)
-at `05448bc` is 99 lines. It reads the site's `context.manifest.json`, resolves
-names through a provider map that stays on the host, hashes what it read, notes
-whether Git holds it, classifies declared exceptions, and exits non-zero on
-anything unresolved or refused.
+[`scripts/bind-context.mjs`](https://github.com/bayleafwalker/kotona.app/blob/b88a4948de415df25d5e99f5a1ae5e1c39a3ce10/scripts/bind-context.mjs)
+at `b88a494` is 97 lines. It reads the site's `context.manifest.json`, resolves
+names through a provider map that stays on the host, hashes what it read,
+records the repository and blob id for anything Git holds, classifies declared
+exceptions, and exits non-zero on anything unresolved or refused.
 
-Its first record bound six sources. Both repository files resolved to commits,
-and the one declared exception, narrowing deployment, was recorded as narrowed.
-The four shared sources resolved to hashes with no version control behind them.
-A hash identifies what a run read but cannot restore it, so for those sources
-the record is evidence, not yet a lock.
+Its record bound six sources. Both repository files resolved to Git blobs, and
+the one declared exception, narrowing deployment, was recorded as narrowed. The
+four shared sources resolved to hashes with no version control behind them. A
+hash identifies what a run read but cannot restore it, so for those sources the
+record is evidence, not yet a lock.
 
 ## Three questions
 
