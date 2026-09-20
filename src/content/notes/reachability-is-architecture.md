@@ -6,7 +6,7 @@ status: exploration
 lifecycle: current
 area: agent infrastructure
 published: 2026-09-19
-lastRevised: 2026-09-19
+lastRevised: 2026-09-20
 projects:
   - vuoro
 relates:
@@ -37,18 +37,19 @@ explorePrompt: >-
   routing but authenticated access, explicit state handles but authorization on
   every call, and coordination records crossing the boundary while effect
   credentials and merge or deployment authority remain inside. The first test is
-  read-only and must prove real use before any write surface is added. Apply the
-  question to a system you operate: which actors does it claim to coordinate,
-  which of them can actually reach its authoritative interface, and which
-  omissions leave no error? Separate reachability, authorization, attestation,
-  and effect authority. Produce a reachability matrix, a boundary map of what
-  may cross, and a bounded experiment with an explicit promotion or kill
-  condition. Challenge the worked conclusion where narrowing the system's claim
-  is cheaper and more honest than making it remotely reachable.
+  read-only and must prove value beyond state already available in Git before
+  any write surface is added. Apply the question to a system you operate: which
+  actors does it claim to coordinate, which of them can actually reach its
+  authoritative interface, and which omissions leave no error? Separate service
+  health, declared-host reachability, observed participation, authorization,
+  attestation, and effect authority. Produce a reachability matrix, an external
+  observation plan, a boundary map of what may cross, and a bounded experiment
+  with an explicit promotion or kill condition. Challenge the worked conclusion
+  where narrowing the system's claim is cheaper and more honest than making it
+  remotely reachable.
 ---
 
-The coordination services behind my agent work were healthy. The missing runs
-were not.
+The first sign of failure was that nothing looked broken.
 
 I had built the system around machines I controlled: command-line tools in the
 working environment, a Postgres-backed service on a private network, and an
@@ -86,18 +87,28 @@ index can be internally complete while omitting every event produced beyond its
 network boundary. These systems fail cleanly when a known request is rejected;
 they are much less helpful when the request has no route to exist.
 
-That makes coverage a separate property from health:
+That makes two coverage properties separate from health:
 
 ```text
 service health: can the coordination service process the requests it receives?
-record coverage: can every intended runtime submit the records the system claims to own?
+reachability coverage: can every declared runtime submit the records the system claims to own?
+participation coverage: did every relevant run actually use that route?
 ```
 
-The second question needs an external denominator. If the only source for "which
-runs occurred" is the coordination service itself, the service cannot detect the
-class of run that bypassed it. At minimum, each supported runtime needs a
-reachability check or a separately observed run count. Otherwise the dashboard
-is capable of becoming more reassuring as its coverage gets worse.
+The two questions need different denominators. Reachability coverage uses the
+declared set of supported hosts and can be tested with a probe from each one.
+Participation coverage needs a run count observed outside the coordination
+service. If the service is the only source for "which runs occurred," it cannot
+detect the class of run that bypassed it.
+
+The two legs are not equally automatable. Anthropic's
+[Admin API](https://platform.claude.com/docs/en/manage-claude/admin-api) is
+unavailable to individual accounts, while its supported
+[consumer data export](https://support.claude.com/en/articles/9450526-export-your-claude-data)
+is an asynchronous account export rather than an operational feed. A manual
+interface count or an occasional export-derived count is adequate for a bounded
+experiment. It is inadequate as a standing guarantee. Otherwise the dashboard is
+capable of becoming more reassuring as its participation gets worse.
 
 ## Publicly routable is not publicly usable
 
@@ -169,19 +180,23 @@ existing contract across a missing route.
 The remote surface should carry coordination material and stop before effect
 authority.
 
-| May cross to or from a hosted runtime              | Stays inside the controlled perimeter                    |
-| -------------------------------------------------- | -------------------------------------------------------- |
-| Work references and current readiness              | Database credentials and direct table access             |
-| Run identity and external execution handle         | Cluster, production, and secret-store credentials        |
-| Bounded context selected for the work              | Unredacted operational data not required by the task     |
-| Proposed evidence and content-addressed references | The right to declare evidence sufficient                 |
-| Candidate branch, patch, or proposal metadata      | Merge, release, deployment, and reconciliation authority |
-| Status observations and explicit unknowns          | Final acceptance of a consequential effect               |
+| May cross to or from a hosted runtime                         | Stays inside the controlled perimeter                    |
+| ------------------------------------------------------------- | -------------------------------------------------------- |
+| Work references and current readiness                         | Database credentials and direct table access             |
+| Run identity and external execution handle                    | Cluster, production, and secret-store credentials        |
+| Redacted, request-scoped context from a server-side allowlist | Unredacted operational data not required by the task     |
+| Proposed evidence and content-addressed references            | The right to declare evidence sufficient                 |
+| Candidate branch, patch, or proposal metadata                 | Merge, release, deployment, and reconciliation authority |
+| Status observations and explicit unknowns                     | Final acceptance of a consequential effect               |
 
 The hosted session's best outcome is therefore often a candidate rather than an
 effect: an unmerged branch, a proposed record, or a queued change. Something
 inside the perimeter retrieves it and applies the existing review, merge,
 signature, or GitOps path.
+
+The coordination service bounds context, not the caller's self-restraint. Each
+tool exposes a typed projection with field and size limits. The caller may
+narrow that projection; it cannot widen it.
 
 This is the familiar Git-to-cluster split in a less convenient location. I
 already accept that an agent with a worktree but no cluster credential is
@@ -192,8 +207,11 @@ runtime production credentials to compensate.
 Attestation and containment should stay separate. Evidence emitted by an opaque
 host may support a claim, but it is not automatically proof of the host's
 integrity or of every command it ran. Independent checks can re-observe the
-candidate and its effects. The lack of effect authority still limits what a
-compromised or mistaken session can do.
+candidate and its effects. A recorded run manifest buys reconstruction: it
+preserves what the host claimed to do and gives independent checks something
+concrete to test. It does not prove that the claim is complete or truthful. The
+lack of effect authority still limits what a compromised or mistaken session can
+do.
 
 ## Read before writing
 
@@ -211,25 +229,38 @@ projections through a dedicated read-only identity. They cannot reserve work,
 create a run, attach evidence, settle an outcome, or alter the underlying
 records.
 
-That does not repair record coverage. It tests whether remote reachability is
-useful before I make it authoritative. For one month I can use the read surface
-from naturally occurring hosted sessions and record three things:
+That does not repair participation coverage. It tests whether remote
+reachability is useful before I make it authoritative. For one month I can use
+the read surface from naturally occurring hosted sessions and record four
+things:
 
 - which host and product surface made the call;
 - whether the retrieved state changed routing, prevented duplicate work, or
-  avoided a manual copy; and
+  avoided a manual copy;
+- whether equivalent state was absent, equivalent, stale, or unknown in the
+  repository at the start of the session; and
 - which unavailable write would have been the next justified operation.
 
-The experiment advances only if the surface is used in real work and the state
-changes a decision. The next slice is one low-authority write, probably
-registering an external run and its intent. Evidence attachment comes later;
-reservation, completion, and acceptance later still, if at all.
+The experiment advances only if all of these conditions hold within the month:
 
-If the read surface sees no meaningful use, or Git already supplies the same
-state cheaply enough, the correct result is deletion. The coordination system
-then narrows its claim to managed runtimes and remains private. An internet
-service for a team of one does not become sensible merely because OAuth can be
-configured correctly.
+- at least five naturally occurring hosted sessions use the surface;
+- at least two distinct host or product surfaces are represented;
+- at least three sessions change routing, prevent duplicate work, or avoid a
+  manual copy;
+- at least one of those decisions depends on state that was absent or stale in
+  the repository; and
+- no useful call requires widening the declared read boundary.
+
+The next slice is one low-authority write, probably registering an external run
+and its intent. Evidence attachment comes later; reservation, completion, and
+acceptance later still, if at all.
+
+If fewer than five eligible sessions occur, the result is inconclusive and the
+experiment may be extended once. If enough sessions occur but the other gates
+fail, or Git already supplies the useful state cheaply enough, the correct
+result is deletion. The coordination system then narrows its claim to managed
+runtimes and remains private. An internet service for a team of one does not
+become sensible merely because OAuth can be configured correctly.
 
 ## The failure that would remain
 
