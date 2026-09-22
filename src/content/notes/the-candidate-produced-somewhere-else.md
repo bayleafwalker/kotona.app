@@ -5,9 +5,10 @@ status: exploration
 lifecycle: current
 area: career
 published: 2026-07-20
-lastRevised: 2026-07-22
+lastRevised: 2026-09-22
 projects: []
 relates:
+  - the-deadline-was-not-the-stopping-rule
   - where-the-cohort-comes-from
   - the-junior-ladder-was-a-joint-product
   - the-person-of-record
@@ -23,27 +24,32 @@ summary:
   system yet, so the working hypothesis is to form it in place rather than wait
   for it to appear in a listing.
 explorePrompt: >-
-  Use this note as a worked instantiation, not an answer to repeat. The
-  transferable question: when a role posting bundles capabilities that no
-  institution's formation pipeline currently produces together, should someone
-  who already sits at the pressure point wait for the market to price the
-  composite, or claim the problem class directly? This note's instantiation:
-  Finnish senior data and architecture postings in regulated reporting bundle
-  implementation depth, architecture authority, domain expertise, and consulting
-  judgment; most individual proxies map to an existing formation system
-  (consultancies, regulated-engineering practices), but the newest slice --
-  AI-era automation of regulatory reporting held to supervisory evidence
-  standards -- has none, so the author commits, dated July 2026, to owning that
-  problem class from inside the organization already facing it, with named
-  falsification conditions and a 2027 deadline rather than an open-ended bet.
-  Apply the question to your own field: find a bundled requirement in current
-  senior postings, decide which components already have a formation system and
-  which don't, and for the uncovered piece, judge whether your position gives
-  you the pressure needed to form it in place or whether waiting or buying is
-  the better bet. Produce a decision with explicit falsification conditions and
-  a date, not an assessment.
+  Use this note as a worked career hypothesis, not a template for copying its
+  field or biography. The transferable question is whether a role posting
+  bundles capabilities that no formation pipeline currently produces together,
+  and whether someone already facing the problem should form the missing
+  capability in place. Here, Finnish regulated-reporting roles combine
+  architecture, domain judgment, implementation, and consulting proxies. The
+  newer demand for auditable AI automation lacks a settled training pipeline;
+  the author therefore tries to own that work where supervisory pressure already
+  exists. The July 2026 forecast said a fitting title or credible offer should
+  appear by end-2027. If it does not, the forecast fails as written. A September
+  correction separates that timing test from the decision to continue: actual
+  ownership, recognized scope, procurement, and market response govern the next
+  branch. Apply this question to your field. Identify which requirements have
+  established formation paths, which do not, and what evidence your position can
+  produce. State a dated forecast separately from observable success, failure,
+  and reassessment conditions. Explain where your constraints diverge, then
+  recommend a branch and its next test.
 draft: false
 ---
+
+**Update, 22 September 2026.** The end-2027 condition below remains a test of my
+July forecast about timing. I no longer use it as an automatic stopping rule for
+this work.
+[The deadline was not the stopping rule](/notes/the-deadline-was-not-the-stopping-rule/)
+records the correction and the events that now change the decision. The July
+text remains below as written.
 
 I recently read through the plausible next-step roles in the Finnish market:
 data architect, solution architect, AI platform architect, principal consultant,
