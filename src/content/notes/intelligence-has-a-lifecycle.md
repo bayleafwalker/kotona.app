@@ -33,8 +33,10 @@ explorePrompt: >-
   and abort conditions, and deterministic controllers execute. Its conclusion is
   that intelligence should be able to leave a layer once traces show the
   decision is stable, and that each architectural claim must become a replayable
-  contest (LLM vs semantic selector vs classifier vs rules) rather than a
-  diagram. Those conclusions depend on full state capture, bounded actions,
+  contest rather than a diagram. For generated plans, the baseline to beat is a
+  candidate-conditioned scorer, not a fixed-class classifier, and a contest must
+  include held-out plans and matched games before it says anything about
+  winning. Those conclusions depend on full state capture, bounded actions,
   measurable outcomes, and cheap replay. Apply the question to a system you run.
   Identify which of those conditions you lack, which conclusions survive without
   them, and where the note's lifecycle would fail. Produce a map of your
@@ -100,9 +102,9 @@ do so, while the LLM moves upward to problems that are still open.
 Static playbooks make the architecture easy: train a classifier over twelve
 known strategies and let it choose.
 
-I am more interested in a strategic layer that is allowed to invent plans. Mid-
-match, an LLM might decide the situation warrants something that did not exist
-when the system was built:
+I am more interested in a strategic layer that is allowed to invent plans.
+During a match, an LLM might decide the situation warrants something that did
+not exist when the system was built:
 
 ```text
 feign pressure west
@@ -115,6 +117,14 @@ abort if scouting shows anti-air transition
 
 Now the decision space is not fixed. A classifier trained yesterday cannot
 choose a class that was created five seconds ago.
+
+A fixed-class classifier is the weak baseline, though. A candidate-conditioned
+scorer -- a ranker or utility model that takes the game state and one plan's
+features and returns a score -- can evaluate a plan it has never seen, provided
+the plan can be described in features it was trained on: target, timing, unit
+mix, how much production it commits, and when it aborts. That baseline already
+handles much of the generated-plan case without a language model in the fast
+path.
 
 That opens a middle layer between generative reasoning and deterministic
 execution:
@@ -133,16 +143,21 @@ game-specific controllers
   execute the selected plan
 ```
 
-This middle layer is where something like Jev may be interesting -- not as
-another classifier, but as a test of whether a model can decide cheaply over a
-set of options that are themselves generated at run time. If it works, it fills
-the gap between "the LLM reasons every time" and "train a specialised model
-once." The system can operate while the decision space is still moving, then
-distil the stable parts later.
+This middle layer is where something like Jev may be interesting. It
+[accepts the set of choices with each request](https://docs.typesafe.ai/api), so
+it can sit in the same slot as the scorer. The useful question is not whether it
+can choose among generated plans at all -- the scorer can too -- but whether
+reading a plan's description, including the parts a feature schema flattens
+("feign pressure", "abort if scouting shows anti-air"), improves decisions
+enough to justify its cost and latency. If it does, it fills the gap between
+"the LLM reasons every time" and "train a specialised model once." The system
+can operate while the decision space is still moving, then distil the stable
+parts later.
 
 If it does not work, the fallback is known: the LLM selects directly at a slower
-cadence, and generated plans only enter the fast path after enough games to
-train on them.
+cadence, the candidate scorer carries the fast path, and plans whose
+descriptions matter more than their features wait for enough games to train on
+them.
 
 ## Why a game and not a real system
 
@@ -181,7 +196,7 @@ become an observable contest, with the traces kept. For example:
 ```text
 LLM chooses directly
   vs semantic decision model
-  vs trained classifier
+  vs candidate-conditioned scorer
   vs rules
 ```
 
@@ -211,6 +226,9 @@ An abstraction that looks elegant in an ADR but fails when moved from Red Alert
 - **The middle layer may not be needed.** If an LLM at a slower cadence plus a
   fast deterministic controller wins the contests, the bounded decision layer is
   architecture for its own sake.
+- **The language model may add nothing over features.** If a candidate scorer
+  matches Jev on generated plans, the plan description carried no decision
+  signal the features missed, and the cheaper model should hold the slot.
 - **Distillation may not stabilise.** A classifier trained on LLM traces may
   inherit the LLM's inconsistency rather than its judgement, leaving nothing
   stable enough to encode as rules.
@@ -235,9 +253,16 @@ Those boundaries do not have to be fixed. The architecture could become more
 deterministic over time without becoming less adaptive, which is almost the
 opposite of wrapping an LLM around every existing subsystem.
 
-That is still a hypothesis. The first contest that would move it is the selector
-comparison: LLM, semantic selector, classifier, and rules choosing among the
-same playbooks on the same replayed situations, scored on win rate, decision
-latency, and cost per game.
+That is still a hypothesis. The first contest that would move it has to include
+plans the selectors have not seen: generated playbooks held out from the
+scorer's training and from the rule author, offered alongside the known ones.
+Jev, a candidate-conditioned scorer, rules, and an LLM choose among them from
+the same observations. A fixed playbook set would only test fixed selection,
+which is the easy version.
+
+Replayed decision points can show agreement between selectors or with a
+reference choice, latency, and cost. They cannot show win rate. That needs
+controlled continuations from the replayed state, or complete games with matched
+seeds and opponents, so that a selector's wins are not a better map draw.
 
 And if the architecture is wrong, the tanks respawn.

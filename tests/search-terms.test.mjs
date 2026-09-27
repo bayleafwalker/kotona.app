@@ -50,6 +50,20 @@ test("drops vocabulary common across the corpus", () => {
   assert.match(terms.get("/notes/n0/"), /\brare0\b/);
 });
 
+test("the common-term cutoff never exceeds the declared corpus share", () => {
+  // 3 of 19 is above 15% and must be dropped; 3 of 20 is exactly 15% and is
+  // kept. Rounding the cutoff instead of flooring it keeps both.
+  const corpus = (length) =>
+    buildSearchTerms(
+      Array.from({ length }, (_, index) =>
+        entry(`n${index}`, index < 3 ? "boundary prose" : `filler${index}`),
+      ),
+    );
+
+  assert.doesNotMatch(corpus(19).get("/notes/n0/"), /\bboundary\b/);
+  assert.match(corpus(20).get("/notes/n0/"), /\bboundary\b/);
+});
+
 test("frontmatter is not indexed as body text", () => {
   const terms = buildSearchTerms([
     entry("one", "---\nhiddenkey: hiddenvalue\n---\nVisible prose.\n"),
