@@ -80,7 +80,7 @@ export function buildSearchTerms(entries: BodyEntry[]): Map<string, string> {
 
   const commonAbove = Math.max(
     2,
-    Math.round(documents.length * commonTermShare),
+    Math.floor(documents.length * commonTermShare),
   );
 
   return new Map(
