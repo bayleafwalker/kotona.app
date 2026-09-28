@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import EntryCard from "../components/EntryCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
+  claimPostureLabel,
   getVisibleEntries,
   humanizeLabel,
   roleLabel,
@@ -13,7 +14,7 @@ import {
 import { siteConfig } from "../site";
 
 const startHereOrder = [
-  "governance-for-a-team-of-one",
+  "the-agent-is-not-the-application",
   "a-field-guide-to-assurance-managed-ai-development",
   "moving-a-live-cluster-to-a-new-subnet",
   "schema-on-split",
@@ -33,15 +34,40 @@ const notes = sortByDateAndTitle(
     },
   })),
 );
-const visibleNotes = getVisibleEntries(notes);
-const visibleNotesById = new Map(visibleNotes.map((note) => [note.id, note]));
-const startHereNotes = startHereOrder
-  .map((id) => visibleNotesById.get(id))
-  .filter((note) => note !== undefined);
-const startHereIds = new Set(startHereNotes.map((entry) => entry.id));
-const recentNotes = visibleNotes
+// Home is a discovery surface: like Explore's default view, it presents
+// current reasoning only. Historical notes stay reachable from /notes/ and
+// Explore, where they carry their lifecycle.
+const currentNotes = getVisibleEntries(notes).filter(
+  (note) => note.data.lifecycle === "current",
+);
+const currentNotesById = new Map(currentNotes.map((note) => [note.id, note]));
+// A curated entry point that is renamed, drafted, or no longer current must
+// stop the build rather than silently shrink the list.
+const startHereNotes = startHereOrder.map((id) => {
+  const note = currentNotesById.get(id);
+  if (!note) {
+    throw new Error(
+      `Start here note "${id}" is missing, a production draft, or not current`,
+    );
+  }
+  return note;
+});
+const startHereIds = new Set<string>(startHereOrder);
+const recentNotes = currentNotes
   .filter((note) => !startHereIds.has(note.id))
   .slice(0, 5);
+// Role and claim posture are separate so an exploration does not read like a
+// current operating rule; the notes index shows both, and so does home.
+const noteContext = (entry: (typeof currentNotes)[number]) =>
+  [
+    roleLabel(entry.data.role),
+    entry.data.status === entry.data.role
+      ? null
+      : claimPostureLabel(entry.data.status),
+    humanizeLabel(entry.data.area),
+  ]
+    .filter(Boolean)
+    .join(" · ");
 ---
 
 <BaseLayout>
@@ -76,9 +102,15 @@ const recentNotes = visibleNotes
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
-              context={`${roleLabel(entry.data.role)} · ${humanizeLabel(entry.data.area)}`}
+              context={noteContext(entry)}
               tags={entry.data.tags}
-              date={entry.data.published}
+              date={entry.data.lastRevised}
+              dateLabel={
+                entry.data.lastRevised.getTime() ===
+                entry.data.published.getTime()
+                  ? undefined
+                  : "Revised"
+              }
               draft={entry.data.draft}
               terms={entry.data.terms}
             />
@@ -133,7 +165,7 @@ const recentNotes = visibleNotes
               title={entry.data.title}
               headingLevel={3}
               summary={entry.data.summary}
-              context={`${roleLabel(entry.data.role)} · ${humanizeLabel(entry.data.area)}`}
+              context={noteContext(entry)}
               tags={entry.data.tags}
               date={entry.data.published}
               draft={entry.data.draft}
