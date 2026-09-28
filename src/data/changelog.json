@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-09-28",
+    "entry": "Code and text diagrams render as written under the production content policy, which had blocked their highlighting styles and the reference and prompt Copy buttons. Aligned table columns and an exploration's working model are marked as such, lifecycle pills stand out when a note is no longer current, and the home page lists only current notes."
+  },
+  {
+    "date": "2026-09-07",
+    "entry": "Editorial correctness and evidence pass across sixteen notes and the Vuoro project page; Explore gained three question-led reading paths."
+  },
+  {
     "date": "2026-08-24",
     "entry": "Machine-surface repairs: the Agent Skills index digest is now generated from the artifact and drift-checked in CI, a superseded note carries its declared successor into Explore results, and the browser suite became a CI gate. Term tooltips no longer clip outside the viewport, acronyms render with their real casing, and note metadata distinguishes a note's role from its claim posture."
   },

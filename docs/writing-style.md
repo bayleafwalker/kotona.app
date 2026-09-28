@@ -207,7 +207,7 @@ to copy sentence by sentence.
   [`the-workshop-is-learning-my-accent.md`](../src/content/notes/the-workshop-is-learning-my-accent.md)
   retains first person, motive, ambivalence, and humour without forcing the
   tension into a verdict.
-- **Exploration:**
+- **Operating:**
   [`the-aftertaste-of-resolution.md`](../src/content/notes/the-aftertaste-of-resolution.md)
   earns a coined term through a recognizable experience and concrete examples.
 
