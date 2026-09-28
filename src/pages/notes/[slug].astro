@@ -293,6 +293,12 @@ const canonicalNoteUrl = new URL(
               {relatedNotes.map((note) => (
                 <li>
                   <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+                  {note.data.lifecycle === "current" ? null : (
+                    <span class="related-lifecycle">
+                      {" "}
+                      · {humanizeLabel(note.data.lifecycle)}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

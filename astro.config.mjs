@@ -10,6 +10,7 @@ import sitemap from "@astrojs/sitemap";
 import { readContentMetadata } from "./scripts/lib/content-metadata.mjs";
 import { siteConfig } from "./src/site";
 import { projectTags, tagSlug } from "./src/lib/tag-slug.js";
+import { markdownPresentationIntegration } from "./src/lib/markdown-presentation.js";
 
 const rootDirectory = fileURLToPath(new URL(".", import.meta.url));
 const buildRevision =
@@ -64,6 +65,7 @@ export default defineConfig({
   trailingSlash: "always",
   output: "server",
   integrations: [
+    markdownPresentationIntegration(),
     mdx(),
     sitemap({
       customPages: [...canonicalContentPages, ...canonicalTagPages],
@@ -76,14 +78,23 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    shikiConfig: {
-      themes: {
-        light: "github-light",
-        dark: "github-dark",
-      },
-    },
+    // Shiki colours code with inline style attributes, which the production
+    // CSP (`style-src 'self'`, src/lib/security-headers.js) refuses to apply.
+    // Production therefore never showed its colours, and development showed
+    // code boxes readers never saw. Plain `<pre><code class="language-*">`
+    // renders the same in both and is styled in global.css; the Markdown
+    // projection reads the language from that class.
+    syntaxHighlight: false,
   },
   vite: {
+    build: {
+      // Astro inlines small component scripts as bare <script type="module">
+      // elements. They carry no CSP nonce, so production (`script-src 'self'
+      // 'nonce-...'`) refused to run them and the reference and prompt copy
+      // buttons did nothing. Emitting every script as a same-origin file keeps
+      // them under 'self'.
+      assetsInlineLimit: 0,
+    },
     define: {
       __BUILD_REVISION__: JSON.stringify(buildRevision),
     },

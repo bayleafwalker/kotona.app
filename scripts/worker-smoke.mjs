@@ -351,6 +351,35 @@ async function runChecks(baseUrl) {
       scriptNonces.every((scriptNonce) => scriptNonce === nonce),
       "A script nonce does not match the response CSP",
     );
+
+    // The policy has no 'unsafe-inline', so an inline script without the nonce
+    // and any inline style attribute are silently refused by the browser.
+    // Check pages that carry component scripts and a working-model paragraph
+    // rather than trusting the build to avoid them.
+    for (const path of [
+      "/notes/schema-on-split/",
+      "/notes/intelligence-has-a-lifecycle/",
+      "/explore/",
+    ]) {
+      const { body } = await request(path);
+      const refusedScripts = [...body.matchAll(/<script\b([^>]*)>/gi)]
+        .map((match) => match[1])
+        .filter(
+          (attributes) =>
+            !/\bsrc=/i.test(attributes) &&
+            !/\bnonce=/i.test(attributes) &&
+            !/\btype=["']application\/(?:ld\+)?json["']/i.test(attributes),
+        );
+      assertEqual(
+        refusedScripts.length,
+        0,
+        `${path} inline scripts without a CSP nonce`,
+      );
+      assert(
+        !/<[a-z][^>]*\sstyle=/i.test(body),
+        `${path} has an inline style attribute the CSP will refuse`,
+      );
+    }
   });
 
   await check("evidence, metadata titles, and content structure", async () => {
