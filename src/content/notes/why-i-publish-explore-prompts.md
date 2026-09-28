@@ -19,7 +19,7 @@ tags:
 summary:
   A note explains what survived editing. An explorePrompt is a separate,
   deliberately post-hoc artifact that explains where the investigation should
-  continue -- for a reader, their agent, or a later version of me.
+  continue, whether for a reader, their agent, or a later version of me.
 explorePrompt: >-
   Use this note as a worked instantiation, not an answer to repeat. The
   transferable question: when you publish a finished piece of reasoning, should

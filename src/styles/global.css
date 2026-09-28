@@ -1513,6 +1513,14 @@ main {
     padding-top: 2.5rem;
   }
 
+  /* Narrower cells let a short results table fit a phone instead of
+     scrolling; wider tables still scroll inside their own box. */
+  .prose th,
+  .prose td {
+    min-width: 6rem;
+    padding: 0.5rem 0.55rem;
+  }
+
   .site-header-inner {
     padding: 0.75rem 0;
   }

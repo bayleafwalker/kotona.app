@@ -30,8 +30,8 @@ tags:
 summary:
   A prior "human perpendicular to the loop" claim only describes one interface.
   The fuller model is two coupled loops at different speeds, with a settlement
-  boundary -- not an empirical/normative split -- deciding when the slow loop
-  must be consulted.
+  boundary, rather than an empirical/normative split, deciding when the slow
+  loop must be consulted.
 explorePrompt: >-
   Use this note as one worked instantiation, not a rule to copy. The
   transferable question: once routine execution and handoff in a workflow become

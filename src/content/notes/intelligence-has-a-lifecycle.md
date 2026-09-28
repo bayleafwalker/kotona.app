@@ -22,7 +22,7 @@ tags:
 summary:
   A hobby game AI is a cheap laboratory for deciding which decisions should stay
   with an LLM, which should become learned, and which should become ordinary
-  code -- settled by replayable contests, not diagrams.
+  code, settled by replayable contests rather than diagrams.
 explorePrompt: >-
   Use this note as a worked instantiation, not a design to copy. The
   transferable question: in a system that mixes generative models, learned
