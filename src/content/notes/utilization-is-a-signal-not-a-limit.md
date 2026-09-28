@@ -20,6 +20,7 @@ tags:
   - workflow
   - infrastructure
   - planning
+  - routing
 summary: >-
   Model allowance, reset time, latency, cost, and concurrency should influence
   where agent work runs without becoming durable rules that redefine the work.

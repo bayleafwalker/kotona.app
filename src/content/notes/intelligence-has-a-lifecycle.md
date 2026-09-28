@@ -18,6 +18,7 @@ tags:
   - games
   - hierarchical control
   - experimentation
+  - jev
 summary:
   A hobby game AI is a cheap laboratory for deciding which decisions should stay
   with an LLM, which should become learned, and which should become ordinary
