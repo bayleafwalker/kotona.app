@@ -18,7 +18,7 @@ relates:
   - the-coordinator-never-touches-the-repo
   - the-human-is-in-the-slow-loop
   - what-107-isolated-completions-did-not-show
-draft: true
+draft: false
 tags:
   - agents
   - evaluation
