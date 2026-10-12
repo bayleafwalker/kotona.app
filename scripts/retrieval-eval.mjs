@@ -8,6 +8,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, URL } from "node:url";
 
 import { rankReferences } from "../src/lib/reference-ranking.js";
+import { normalizeProse } from "./retrieval-text.mjs";
 
 const rootDirectory = fileURLToPath(new URL("../", import.meta.url));
 const casesPath = path.join(rootDirectory, "tests/retrieval-cases.json");
@@ -321,10 +322,10 @@ async function main() {
         }
       }
 
-      const text = selected.document.text;
+      const text = normalizeProse(selected.document.text);
       for (const phrase of evaluationCase.requiredPhrases ?? []) {
         assert(
-          text.toLowerCase().includes(phrase.toLowerCase()),
+          text.includes(normalizeProse(phrase)),
           `${evaluationCase.id}: expected public response to include ${JSON.stringify(phrase)}`,
         );
       }
@@ -333,7 +334,7 @@ async function main() {
       // resource with the lifecycle that bounds it.
       for (const phrase of evaluationCase.forbiddenPhrases ?? []) {
         assert(
-          !text.toLowerCase().includes(phrase.toLowerCase()),
+          !text.includes(normalizeProse(phrase)),
           `${evaluationCase.id}: reference Markdown must not include ${JSON.stringify(phrase)}`,
         );
       }
@@ -356,10 +357,10 @@ async function main() {
           promptResponse.ok,
           `${evaluationCase.id}: prompt resource returned HTTP ${promptResponse.status}`,
         );
-        const promptText = (await promptResponse.text()).toLowerCase();
+        const promptText = normalizeProse(await promptResponse.text());
         for (const phrase of evaluationCase.promptPhrases) {
           assert(
-            promptText.includes(phrase.toLowerCase()),
+            promptText.includes(normalizeProse(phrase)),
             `${evaluationCase.id}: prompt resource must include ${JSON.stringify(phrase)}`,
           );
         }
