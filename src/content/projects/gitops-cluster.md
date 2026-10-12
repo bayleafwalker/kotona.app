@@ -56,7 +56,8 @@ reference:
     - current cluster health, deployed versions, or backup freshness
     - a new restore drill or disruptive production control-plane restore
   supplementWith:
-    - the live cluster's reconciliation status, upgrade plan, and recovery checks
+    - the live cluster's reconciliation status, upgrade plan, and recovery
+      checks
 ---
 
 ## Overview
@@ -90,14 +91,14 @@ an editorial update.
 ## Current verification scope
 
 The review on 12 October 2026 checked the repository's current README and its
-declared layout and operating workflow. It confirmed the source's stated role
-as a Talos/Kubernetes GitOps operations repository with Flux reconciliation and
+declared layout and operating workflow. It confirmed the source's stated role as
+a Talos/Kubernetes GitOps operations repository with Flux reconciliation and
 encrypted secrets. No live cluster query, upgrade, backup retrieval, or restore
 drill was performed for this review.
 
-The verification date above applies to that repository-scope assessment. It
-does not refresh the July operational results below. The repository is private;
-this page publishes only the bounded architectural account and already-public
+The verification date above applies to that repository-scope assessment. It does
+not refresh the July operational results below. The repository is private; this
+page publishes only the bounded architectural account and already-public
 historical evidence, not private manifests, addresses, or operational records.
 
 ## Historical operating evidence: July 2026
