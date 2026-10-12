@@ -45,14 +45,17 @@ jobs:
           }
           writeFileSync(path, source.replace('...astro.configs["flat/recommended"]',
             '...astro.configs.recommended'));
+          // Resolve the mutually constrained lint peer group together. Preserve
+          // all other lock entries; npm supplies the new versions and integrity.
+          const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
+          const group = /(?:^|\/)node_modules\/(?:typescript-eslint|eslint-plugin-astro|astro-eslint-parser|@typescript-eslint\/[^/]+)(?:\/|$)/;
+          for (const key of Object.keys(lock.packages)) {
+            if (group.test(key)) delete lock.packages[key];
+          }
+          writeFileSync('package-lock.json', JSON.stringify(lock, null, 2) + '\n');
           NODE
           npm install --ignore-scripts
-          # Report remaining advisories; the unchanged normal CI gate enforces them.
-          set +e
           npm audit fix --ignore-scripts
-          audit_status=$?
-          set -e
-          echo "Audit-fix result: ${audit_status}; normal CI still requires a clean audit."
           npx --no-install prettier --write \
             package.json package-lock.json eslint.config.mjs \
             docs/agent-systems-research.md \
