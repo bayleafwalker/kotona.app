@@ -16,6 +16,14 @@ const records = body
   .slice(1)
   .map((section) => section.split("\n## ")[0]);
 
+function evidenceDefinitions(markdown) {
+  return new Map(
+    [...markdown.matchAll(/^\[([^\]]+)\]:\s+(https:\/\/\S+)$/gm)].map(
+      ([, label, url]) => [label, url],
+    ),
+  );
+}
+
 // These checks protect the maintained record shape, not its factual accuracy.
 test("readiness records retain stable IDs and explicit judgments", () => {
   assert.ok(records.length >= 10, "the accepted baseline has ten records");
@@ -50,12 +58,16 @@ test("readiness records retain stable IDs and explicit judgments", () => {
   }
 });
 
-test("every assessment resolves its evidence references", () => {
-  const definitions = new Map(
-    [...body.matchAll(/^\[([^\]]+)\]: (https:\/\/\S+)$/gm)].map(
-      ([, label, url]) => [label, url],
-    ),
+test("evidence definitions accept formatter-wrapped URLs", () => {
+  const definitions = evidenceDefinitions(
+    "[inline]: https://example.org/a\n[wrapped]:\n  https://example.org/b\n",
   );
+  assert.equal(definitions.get("inline"), "https://example.org/a");
+  assert.equal(definitions.get("wrapped"), "https://example.org/b");
+});
+
+test("every assessment resolves its evidence references", () => {
+  const definitions = evidenceDefinitions(body);
 
   for (const record of records) {
     const evidence = record.split("**Evidence:**")[1]?.split("**Limit:**")[0];
