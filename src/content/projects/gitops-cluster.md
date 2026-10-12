@@ -83,10 +83,10 @@ organized through the desired-state tree. This describes the repository's
 responsibilities; checking that the running cluster agrees is a separate step.
 
 The recovery model recorded here separates application data from control-plane
-state. Its July evidence covered an externally written, encrypted snapshot,
-remote verification, and an independent offline restore drill. Those results
-remain useful history, but their age must not disappear when this page receives
-an editorial update.
+state. Its July evidence covered the external control-plane snapshot path:
+encrypted upload, remote verification, and an independent offline restore drill.
+Those results remain useful history, but their age must not disappear when this
+page receives an editorial update.
 
 ## Current verification scope
 
