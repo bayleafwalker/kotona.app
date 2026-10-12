@@ -23,24 +23,38 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
 
-      - name: Setup Node.js
+      - name: Setup the lint plugin's supported Node.js version
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
-          node-version-file: .node-version
+          node-version: 24.16.0
           cache: npm
 
-      - name: Resolve compatible security fixes without lifecycle scripts
+      - name: Resolve reviewed security and lint-toolchain updates
         run: |
           npm pkg set 'overrides.undici=7.30.0' 'devDependencies.sharp=^0.35.5'
+          npm pkg set 'devDependencies.eslint-plugin-astro=^3.2.1' \
+            'devDependencies.typescript-eslint=^8.61.0' 'engines.node=>=24.16.0 <25'
+          printf '24.16.0\n' > .node-version
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const path = 'eslint.config.mjs';
+          const source = readFileSync(path, 'utf8');
+          if (!source.includes('...astro.configs["flat/recommended"]') &&
+              !source.includes('...astro.configs.recommended')) {
+            throw new Error('Unexpected Astro lint configuration; refusing an inferred migration');
+          }
+          writeFileSync(path, source.replace('...astro.configs["flat/recommended"]',
+            '...astro.configs.recommended'));
+          NODE
           npm install --ignore-scripts
-          # A remaining advisory is reported, never waived in the real CI gate.
+          # Report remaining advisories; the unchanged normal CI gate enforces them.
           set +e
           npm audit fix --ignore-scripts
           audit_status=$?
           set -e
           echo "Audit-fix result: ${audit_status}; normal CI still requires a clean audit."
           npx --no-install prettier --write \
-            package.json package-lock.json \
+            package.json package-lock.json eslint.config.mjs \
             docs/agent-systems-research.md \
             src/content/notes/agent-systems-what-is-ready-to-rely-on.md \
             tests/agent-systems-readiness.test.mjs
@@ -54,6 +68,8 @@ jobs:
           node --input-type=module <<'NODE'
           import { execFileSync } from 'node:child_process';
           const allowed = new Set([
+            '.node-version',
+            'eslint.config.mjs',
             'package.json',
             'package-lock.json',
             'docs/agent-systems-research.md',
@@ -69,8 +85,8 @@ jobs:
           execFileSync('git', ['config', 'user.name', 'github-actions[bot]']);
           execFileSync('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
           execFileSync('git', ['add', '--', ...changed]);
-          execFileSync('git', ['-c', 'core.hooksPath=/dev/null', 'commit', '-m',
-            'fix: refresh compatible security dependencies and format readiness files'], { stdio: 'inherit' });
+          execFileSync('git', ['commit', '-m',
+            'fix: migrate Astro lint tooling and refresh vulnerable dependencies'], { stdio: 'inherit' });
           const authorization = Buffer.from(`x-access-token:${process.env.GH_TOKEN}`).toString('base64');
           execFileSync('git', ['-c', `http.https://github.com/.extraheader=AUTHORIZATION: basic ${authorization}`,
             'push', 'origin', 'HEAD:refs/heads/content/agent-systems-readiness-2026-10-12'], { stdio: 'inherit' });
