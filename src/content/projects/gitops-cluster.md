@@ -2,23 +2,23 @@
 title: Running a homelab cluster as a Git repository, not as muscle memory
 summary: >-
   Appservice is the operations repository for a Talos-based Kubernetes cluster.
-  Reconciliation, encrypted secrets, recovery gates, upgrades, and incident
-  evidence live with the desired state instead of in operator memory.
+  Desired state and operating procedures live in Git. Repository review and
+  dated runtime evidence are kept separate rather than implying live health.
 published: 2026-04-07
-lastRevised: 2026-07-13
-lastVerified: 2026-07-13
+lastRevised: 2026-10-12
+lastVerified: 2026-10-12
 draft: false
 project: appservice
 kind: engineering
-status: Active operations repo
+status: Operations repository; runtime evidence is separately dated
 featured: true
 repoUrls: []
 evidence:
   capability: >-
-    Git reconciles the live cluster, while the external control-plane snapshot
-    path has passed upload, checksum, encryption, remote verification, and an
-    offline restore drill.
-  latest: Talos 1.13.6 and Kubernetes 1.36.2 upgrade with post-upgrade evidence
+    The reviewed repository documents Talos and Kubernetes desired state, Flux
+    reconciliation, encrypted secrets, and operating procedures. The July 2026
+    upgrade and offline restore results remain historical evidence.
+  latest: Repository scope reviewed; July runtime results not re-verified
   proofLinks:
     - label: Rollback and reconciliation rule
       href: /notes/a-gitops-rollback-needs-time-to-reach-git/
@@ -30,12 +30,11 @@ evidence:
     - VolSync
     - external snapshot storage
   knownLimitation: >-
-    The offline drill validates the stored artifact and compatible tooling, not
-    a disruptive production control-plane restore.
+    A repository review does not verify current cluster health, deployed
+    versions, backup freshness, or a production control-plane restore.
   nextProof: >-
-    Renew the independent restore evidence on schedule and verify agreement
-    between Git, live upgrade plans, and the selected target before node
-    changes.
+    Renew the independent restore evidence and verify agreement between Git,
+    live upgrade plans, and the selected target before node changes.
 tags:
   - gitops
   - kubernetes
@@ -51,15 +50,13 @@ reference:
     - running a Kubernetes cluster from a Git repository
     - recovery and upgrade evidence for a Talos cluster
   establishes:
-    - that Git reconciles the live cluster and the external snapshot path passed
-      an offline restore drill
-    - the verified Talos and Kubernetes upgrade state as of the recorded
-      verification date
+    - the repository's declared responsibilities as reviewed in October 2026
+    - the distinction between source configuration and dated runtime evidence
   doesNotEstablish:
-    - that a disruptive production control-plane restore has been performed
-    - cluster state after the recorded verification date
+    - current cluster health, deployed versions, or backup freshness
+    - a new restore drill or disruptive production control-plane restore
   supplementWith:
-    - the live cluster's own reconciliation status and upgrade plan
+    - the live cluster's reconciliation status, upgrade plan, and recovery checks
 ---
 
 ## Overview
@@ -71,42 +68,51 @@ protocols, and sanitized incident records needed to operate the cluster after
 the bootstrap excitement has worn off.
 
 The architecture is the result of migrations rather than a pristine first draft.
-Ingress eventually settled on Envoy Gateway API after earlier controller choices
-became poor fits. Storage, DNS, database recovery, and application backups
-acquired their current rules through failures that were reproduced and written
-down. The repo is an operating surface, not a diagram of the system I once
-intended to build.
+Networking, storage, DNS, database recovery, and application backups acquired
+their rules through failures that were reproduced and written down. Controller
+choices and version pins belong in the current manifests, not in a paragraph
+that silently becomes an old inventory.
 
 ## System shape
 
-Talos and Kubernetes provide the cluster base; Flux owns reconciliation; SOPS
-and age keep committed secrets encrypted. Networking, load balancing, storage,
-application backup, databases, monitoring, and synthetic probes are composed
-through the same desired-state tree. Manual mutation is for diagnosis or
-contained recovery, and any durable fix belongs back in Git.
+The repository describes Talos and Kubernetes as the cluster base, Flux as the
+reconciliation layer, and SOPS with age for encrypted secrets. Networking,
+storage, application workloads, monitoring, and upgrade configuration are
+organized through the desired-state tree. This describes the repository's
+responsibilities; checking that the running cluster agrees is a separate step.
 
-Recovery is split by failure domain. Application data uses storage snapshots,
-VolSync, and database-native backups with scheduled restore drills. Control
-plane state is written from outside the cluster, encrypted before upload,
-validated, stored under immutable retention, and checked by an independent
-monitor. A pre-upgrade gate rejects snapshots that are missing, stale, or
-unverified.
+The recovery model recorded here separates application data from control-plane
+state. Its July evidence covered an externally written, encrypted snapshot,
+remote verification, and an independent offline restore drill. Those results
+remain useful history, but their age must not disappear when this page receives
+an editorial update.
 
-## Current state
+## Current verification scope
 
-On 13 July 2026, the old in-cluster control-plane snapshot writer was retired
-through GitOps after the external path passed upload, checksum, encryption,
-remote verification, scheduled monitoring, and an offline restore drill. The
-retired namespace and Flux resource were then verified absent. Backup recovery
-is no longer the thin edge described by the original version of this page.
+The review on 12 October 2026 checked the repository's current README and its
+declared layout and operating workflow. It confirmed the source's stated role
+as a Talos/Kubernetes GitOps operations repository with Flux reconciliation and
+encrypted secrets. No live cluster query, upgrade, backup retrieval, or restore
+drill was performed for this review.
 
-The same gate was used before a serialized upgrade to Talos 1.13.6 and
-Kubernetes 1.36.2. The upgrade finished with healthy control-plane state,
-workloads, storage, DNS, monitoring, and a new verified post-upgrade snapshot.
-The version pins and runtime compatibility fixes are now recorded in the
-repository.
+The verification date above applies to that repository-scope assessment. It
+does not refresh the July operational results below. The repository is private;
+this page publishes only the bounded architectural account and already-public
+historical evidence, not private manifests, addresses, or operational records.
 
-That sequence matters more than the version numbers. An early readiness check
+## Historical operating evidence: July 2026
+
+The 13 July 2026 version of this page recorded retirement of the old in-cluster
+control-plane snapshot writer after the external path passed upload, checksum,
+encryption, remote verification, scheduled monitoring, and an offline restore
+drill. The retired namespace and Flux resource were then verified absent.
+
+That record also described a serialized upgrade to Talos 1.13.6 and Kubernetes
+1.36.2, with healthy post-upgrade control-plane state, workloads, storage, DNS,
+monitoring, and a new verified snapshot. Those are the versions and results of
+that dated operation, not a claim about what is deployed today.
+
+The sequence matters more than the version numbers. An early readiness check
 stopped when Talos access and snapshot posture were broken. The work resumed
 only after rollback evidence existed, and the obsolete backup path was removed
 only after its replacement had survived an independent check and restore
@@ -114,22 +120,17 @@ exercise.
 
 ## Open edges
 
-The restore drill proves that an externally stored snapshot can be retrieved,
-checked, decrypted, and read with compatible tooling. It does not pretend to be
-a production control-plane restore; that remains a disruptive incident path. The
-evidence also has to be renewed on schedule rather than treated as a one-time
-achievement.
+The historical drill showed that an externally stored snapshot could be
+retrieved, checked, decrypted, and read with compatible tooling. It did not
+establish a production control-plane restore. Both the stored artifacts and the
+current recovery procedure need fresh checks before another consequential
+operation.
 
-The external backup spans this repository and a separate host-configuration
-repository, so interface drift between the two is a real maintenance risk.
-Provider-specific storage behavior remains part of the recurring validation.
-Neither is a reason to restore the retired in-cluster writer, but both belong in
-the operating backlog.
-
-The upgrade found another useful edge: an automation controller with stale
-version pins can try to undo a manual upgrade. Future runs now need both the
-backup gate and agreement between Git, live plans, and the selected target
-before the first node changes.
+The recorded design spans the cluster repository and separate host
+configuration. Interface drift, provider-specific storage behavior, and stale
+version pins remain reasons to verify the complete path rather than trust a
+previous successful run. A manual upgrade is not complete while a reconciler
+still declares the old target.
 
 Git owns desired state, but not every stateful surface involved in realizing it.
 UEFI variables, boot entries, storage-client databases, and other host-local
