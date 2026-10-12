@@ -64,11 +64,11 @@ proves availability, not maturity; two announcements do not automatically prove
 it either. Multiple implementations are not independent operational validation.
 State the remaining validation gap rather than counting citations as votes.
 
-Confidence measures support for the maturity judgment, not documentation clarity.
-High needs convergent implementation and operational evidence relevant to the
-claim. Documentation-led judgments with important validation gaps are Medium;
-unresolved or conflicting support is Low. A confidence correction is not a
-technology regression. Reuse the note's current definitions rather than
+Confidence measures support for the maturity judgment, not documentation
+clarity. High needs convergent implementation and operational evidence relevant
+to the claim. Documentation-led judgments with important validation gaps are
+Medium; unresolved or conflicting support is Low. A confidence correction is not
+a technology regression. Reuse the note's current definitions rather than
 quietly applying a different rubric in a research run.
 
 Compare like scopes. Do not require one transport to solve authorization,
@@ -82,8 +82,8 @@ protection.
 Check counterpositions that change the adoption decision, including cases where
 an ordinary CLI or existing workflow is sufficient. Include agent authorization
 standards, implemented protocol versions, untrusted-content defenses, and
-supply-chain attestation mechanisms when they affect an existing record. This
-is coverage guidance, not a quota for new records or investigations.
+supply-chain attestation mechanisms when they affect an existing record. This is
+coverage guidance, not a quota for new records or investigations.
 
 The note is the baseline to challenge, not evidence for its own claims. Trace a
 changed factual claim to a primary source. Secondary repetition and the note's
@@ -138,8 +138,8 @@ After a semantic revision, review the note's `explorePrompt` against the final
 body. Run `npm run validate`; ordinary CI also runs the browser gate. Check the
 HTML note, Markdown reference, reference index, related-note discovery, and
 anchor links after publication. A green CI run is not proof of a successful
-production deployment. Structural source-link tests do not validate the truth
-of the linked claims or the independence of their evidence.
+production deployment. Structural source-link tests do not validate the truth of
+the linked claims or the independence of their evidence.
 
 For an incorrect published change, revert the content commit through the normal
 review and CI path, then verify the public revision. Reverting content does not

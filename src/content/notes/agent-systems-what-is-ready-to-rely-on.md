@@ -25,23 +25,24 @@ summary:
 explorePrompt: >-
   Assess which capabilities a real technical workflow can adopt and which still
   require integration or evidence. The worked example reviews documented agent
-  infrastructure: execution, basic protocol exchange, policy, workflows, tracing,
-  and evaluation have reusable implementations, while delegated authority,
-  untrusted-content containment, and acceptance across replaceable runners need
-  separate judgments. It rates a narrow operation under stated conditions, not
-  an entire product. Documentation supports adoption choices without proving
-  operational reliability; signed evidence binds bytes without deciding whether
-  an old approval still applies. Apply that method to a materially different
-  workflow, such as document processing or scientific computation. State its
-  operators, consequences, hostile inputs, failure modes, and acceptance rules.
-  Identify where those conditions differ from repository coding and which
-  conclusions therefore change. Challenge the example with current primary
-  evidence and counterevidence rather than inheriting its tiers. Produce a small
-  capability register with scope, maturity, confidence, evidence type, limits,
-  and revisit conditions. Recommend the smallest viable composition. Keep
-  unknowns visible and propose at most two bounded investigations tied to live
-  decisions. Distinguish supported features from tested behavior, and missing
-  evidence from proof of absence; do not reproduce the note's prose.
+  infrastructure: execution, basic protocol exchange, policy, workflows,
+  tracing, and evaluation have reusable implementations, while delegated
+  authority, untrusted-content containment, and acceptance across replaceable
+  runners need separate judgments. It rates a narrow operation under stated
+  conditions, not an entire product. Documentation supports adoption choices
+  without proving operational reliability; signed evidence binds bytes without
+  deciding whether an old approval still applies. Apply that method to a
+  materially different workflow, such as document processing or scientific
+  computation. State its operators, consequences, hostile inputs, failure modes,
+  and acceptance rules. Identify where those conditions differ from repository
+  coding and which conclusions therefore change. Challenge the example with
+  current primary evidence and counterevidence rather than inheriting its tiers.
+  Produce a small capability register with scope, maturity, confidence, evidence
+  type, limits, and revisit conditions. Recommend the smallest viable
+  composition. Keep unknowns visible and propose at most two bounded
+  investigations tied to live decisions. Distinguish supported features from
+  tested behavior, and missing evidence from proof of absence; do not reproduce
+  the note's prose.
 reference:
   purpose: design-rationale
   discoverFor:
@@ -77,9 +78,9 @@ organization's readiness or a product as a whole. That is a useful editorial
 choice, not a claim of uniqueness: [technology radars also assess
 techniques][radar-faq].
 
-**Baseline established: 12 October 2026; evidence correction the same day.** This
-review uses public primary documentation and the identified research. It does
-not report comparative benchmarks or local deployment tests. The maturity
+**Baseline established: 12 October 2026; evidence correction the same day.**
+This review uses public primary documentation and the identified research. It
+does not report comparative benchmarks or local deployment tests. The maturity
 labels and architectural consequences are my assessment of the stated scope;
 they are not certifications supplied by the linked projects.
 
@@ -157,8 +158,8 @@ makes a record stale for a new decision, not automatically false or demoted.
 **Scope:** Inspect files, propose edits, execute development tools, and leave a
 change for review inside a repository workflow.
 
-**Evidence:** Documentation for independently maintained implementations.
-[Codex CLI][codex] documents the inspect-edit-run loop, non-interactive execution,
+**Evidence:** Documentation for independently maintained implementations. [Codex
+CLI][codex] documents the inspect-edit-run loop, non-interactive execution,
 review, and saved-session resumption. [Claude Code][claude-code] separately
 documents repository inspection, editing, and command execution. These support
 adopting the basic loop; they are not an independent comparison of its results.
@@ -186,9 +187,9 @@ harness and cannot be addressed through its supported configuration.
 
 **Evidence:** Specification and multiple host implementations. [MCP
 2026-07-28][mcp] defines tools, resources, and the base protocol. [Codex
-CLI][codex] and [Claude Code's MCP integration][claude-mcp] document host support.
-This establishes reusable basic tool connections, not identical support for
-every feature of the cited revision.
+CLI][codex] and [Claude Code's MCP integration][claude-mcp] document host
+support. This establishes reusable basic tool connections, not identical support
+for every feature of the cited revision.
 
 **Counterevidence:** Thoughtworks Radar Vol. 34 places [“MCP by
 default”][mcp-caution] in Caution. Its April 2026 assessment favors a good CLI
@@ -223,14 +224,14 @@ authorization, or the behavior required by that pair.
 services without silently widening it.
 
 **Evidence:** Standards, process records, and work in progress. [OAuth token
-exchange, RFC 8693][exchange] and [MCP authorization
-2026-07-28][mcp-auth] supply reusable mechanisms. The [OAuth charter, revision
-06][oauth-charter], approved in June 2026, explicitly includes complex delegation
-and automated agents across domains. The [3 June WIMSE interim
-minutes][wimse-minutes] record agent-authorization work, not an adopted solution.
+exchange, RFC 8693][exchange] and [MCP authorization 2026-07-28][mcp-auth]
+supply reusable mechanisms. The [OAuth charter, revision 06][oauth-charter],
+approved in June 2026, explicitly includes complex delegation and automated
+agents across domains. The [3 June WIMSE interim minutes][wimse-minutes] record
+agent-authorization work, not an adopted solution.
 
-[Identity chaining draft-17][identity-chaining] describes preserving identity and
-authorization across domains; its [tracker][identity-status] reports the RFC
+[Identity chaining draft-17][identity-chaining] describes preserving identity
+and authorization across domains; its [tracker][identity-status] reports the RFC
 Editor queue at this review, rather than a published RFC. [Credential Delegation
 for AI Agents, draft-sweeney-wimse-credential-delegation-00][agent-delegation],
 is a separate individual proposal. Its publication is not IETF consensus or
@@ -336,17 +337,18 @@ support across SDK and cloud releases. The April report itself includes expanded
 interoperability testing in the roadmap. This review does not establish the
 behavior of an arbitrary pair through cancellation, retries, or reconnects.
 
-**Limit:** Reusable task exchange does not establish compatible business meaning,
-safe repeated effects, portable acceptance, or trust in another agent's result.
-Section 7.5 leaves authorization logic to the implementation. These limits belong
-to the composition; they do not make the basic protocol unavailable. Exact
-version, transport, and extension support still need checking at both ends.
+**Limit:** Reusable task exchange does not establish compatible business
+meaning, safe repeated effects, portable acceptance, or trust in another agent's
+result. Section 7.5 leaves authorization logic to the implementation. These
+limits belong to the composition; they do not make the basic protocol
+unavailable. Exact version, transport, and extension support still need checking
+at both ends.
 
-**Consequence:** Adopt A2A rather than inventing a private task-exchange protocol
-when remote agent interoperability is required. Pilot the selected pair's
-failure paths before unattended use. Keep delegation in AS-03 and acceptance in
-AS-10; do not demand those guarantees from this narrower record, or replace an
-adequate local workflow just to add a protocol.
+**Consequence:** Adopt A2A rather than inventing a private task-exchange
+protocol when remote agent interoperability is required. Pilot the selected
+pair's failure paths before unattended use. Keep delegation in AS-03 and
+acceptance in AS-10; do not demand those guarantees from this narrower record,
+or replace an adequate local workflow just to add a protocol.
 
 **Revisit when:** A version or implementation change breaks the required task
 lifecycle, or cross-implementation tests justify a stronger reliability claim.
@@ -459,10 +461,11 @@ authority, verification, and acceptance records for a piece of work.
 **Evidence:** Adjacent standards and implementations, not an end-to-end proof.
 [LangGraph checkpoints][langgraph], [Temporal history][temporal], and [Langfuse
 evaluation records][langfuse] supply useful component records. The [in-toto
-Statement v1][in-toto] binds a predicate to artifact digests; signing its envelope
-can authenticate that statement. [SLSA v1.2 build provenance][slsa-provenance]
-and [GitHub Artifact Attestations][github-attestations] provide existing formats
-and tooling for build evidence.
+Statement v1][in-toto] binds a predicate to artifact digests; signing its
+envelope can authenticate that statement. [SLSA v1.2 build
+provenance][slsa-provenance] and [GitHub Artifact
+Attestations][github-attestations] provide existing formats and tooling for
+build evidence.
 
 [SLSA's Verification Summary Attestation, predicate v1][slsa-vsa], is a closer
 adjacent model for a decision: it records the subject, verifier, policy, and
@@ -478,17 +481,18 @@ consumer needs a trusted expected artifact and current acceptance context.
 Identical bytes can also belong to a different task, attempt, or policy version.
 Build provenance alone does not establish approval, freshness, or revocation.
 
-**Consequence:** Reuse attestation formats and verification tools before creating
-another evidence format. Verify the envelope, allowed signer and verifier,
-predicate type, expected artifact digest, policy, and decision context. Where
-acceptance depends on task or attempt identity, bind that context in a signed
-predicate or digest-bound manifest and compare it with authoritative current
-state. Retain the referenced evidence; a digest is not a backup.
+**Consequence:** Reuse attestation formats and verification tools before
+creating another evidence format. Verify the envelope, allowed signer and
+verifier, predicate type, expected artifact digest, policy, and decision
+context. Where acceptance depends on task or attempt identity, bind that context
+in a signed predicate or digest-bound manifest and compare it with authoritative
+current state. Retain the referenced evidence; a digest is not a backup.
 
-**Revisit when:** A concrete composition passes runner-replacement, wrong-digest,
-old-artifact replay, changed-policy, and revoked-acceptance tests without the old
-chat. Digest binding is already available; complete acceptance continuity is the
-unassessed claim. This is not evidence that no existing product can provide it.
+**Revisit when:** A concrete composition passes runner-replacement,
+wrong-digest, old-artifact replay, changed-policy, and revoked-acceptance tests
+without the old chat. Digest binding is already available; complete acceptance
+continuity is the unassessed claim. This is not evidence that no existing
+product can provide it.
 
 <a id="as-11"></a>
 
@@ -505,14 +509,15 @@ content, repository text, or tool output can induce, under an explicit threat
 model. This assesses consequence containment, not a guarantee that the model
 never interprets external content as instructions.
 
-**Evidence:** Bounded research, first-party operational description, and security
-guidance. [CaMeL, paper revision 2][camel], demonstrates separation of control and
-data flow with tool-access policies in an evaluated agent setting. [OpenAI's
-11 March 2026 defense account][injection-defense] describes constraining actions
-and sensitive-data transmission even when manipulation succeeds. [OWASP
-LLM01:2025][owasp-injection] recommends least privilege, approval for high-risk
-actions, and adversarial testing while identifying limits to prevention. These
-support pilotable controls, not a generally demonstrated isolation guarantee.
+**Evidence:** Bounded research, first-party operational description, and
+security guidance. [CaMeL, paper revision 2][camel], demonstrates separation of
+control and data flow with tool-access policies in an evaluated agent setting.
+[OpenAI's 11 March 2026 defense account][injection-defense] describes
+constraining actions and sensitive-data transmission even when manipulation
+succeeds. [OWASP LLM01:2025][owasp-injection] recommends least privilege,
+approval for high-risk actions, and adversarial testing while identifying limits
+to prevention. These support pilotable controls, not a generally demonstrated
+isolation guarantee.
 
 **Limit:** Input classifiers, delimiters, and model instructions do not by
 themselves establish an enforcement boundary. A permitted connector or egress
@@ -521,14 +526,14 @@ attack model, and a model-generated approval summary can itself be manipulated.
 Command containment in AS-09 does not cover every application-level action.
 
 **Consequence:** Treat retrieved content and model output as untrusted at the
-action boundary. Enforce permissions, destinations, and data-access rules outside
-the exposed model; show the actual proposed operation and recipient through a
-trusted approval path. Test malicious tool output, repository instructions, and
-allowed-channel exfiltration. A second model reviewing the same injected context
-is not an independent security boundary.
+action boundary. Enforce permissions, destinations, and data-access rules
+outside the exposed model; show the actual proposed operation and recipient
+through a trusted approval path. Test malicious tool output, repository
+instructions, and allowed-channel exfiltration. A second model reviewing the
+same injected context is not an independent security boundary.
 
-**Revisit when:** A supported control demonstrates adaptive-attack resistance and
-acceptable task utility for the actual tools, sensitive data, and permitted
+**Revisit when:** A supported control demonstrates adaptive-attack resistance
+and acceptable task utility for the actual tools, sensitive data, and permitted
 destinations, or an attack bypasses that boundary. Assess the stronger guarantee
 of instruction isolation separately rather than inferring it from containment.
 
@@ -592,16 +597,17 @@ Changed AS-06 from Edge to Commons, with Medium confidence, for its basic
 exchange scope. The stable specification, implementation path, and reported
 adoption support reuse; the original judgment demanded acceptance and recovery
 guarantees outside that scope while not demanding them from MCP. Version and
-failure-path compatibility remain explicit limits. Pinned A2A v1.0.0 and recorded
-reported adoption and AAIF hosting without treating either as independent
-conformance testing.
+failure-path compatibility remain explicit limits. Pinned A2A v1.0.0 and
+recorded reported adoption and AAIF hosting without treating either as
+independent conformance testing.
 
 Kept AS-03 Edge while adding the OAuth and WIMSE process evidence. Added the
 Thoughtworks counterposition to AS-02. Kept AS-10 Unassessed for complete
-continuity, adding in-toto, SLSA, GitHub attestations, and the distinction between
-digest mismatch and replay. AS-09 was already Edge and remains unchanged. Added
-AS-11 as Edge/Medium for containment, explicitly excluding guaranteed instruction
-isolation. No new deployment or comparative test is claimed.
+continuity, adding in-toto, SLSA, GitHub attestations, and the distinction
+between digest mismatch and replay. AS-09 was already Edge and remains
+unchanged. Added AS-11 as Edge/Medium for containment, explicitly excluding
+guaranteed instruction isolation. No new deployment or comparative test is
+claimed.
 
 [codex]: https://learn.chatgpt.com/docs/codex/cli
 [claude-code]: https://code.claude.com/docs/en/overview
