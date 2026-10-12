@@ -33,7 +33,9 @@
       "## Evidence",
       "external control-plane snapshot",
       "Talos 1.13.6 and Kubernetes 1.36.2",
-      "Known limitation"
+      "Known limitation",
+      "not a claim about what is deployed today",
+      "No live cluster query, upgrade, backup retrieval, or restore drill was performed"
     ]
   },
   {
@@ -55,8 +57,9 @@
     "maxRank": 1,
     "requiredPhrases": [
       "## Evidence",
-      "service implementations and a simulator do not exist",
-      "not a running platform or service replacement",
+      "This review did not execute the validator, pytest, or a deployment",
+      "historical evidence, not a new October test result",
+      "not an operated reference platform",
       "Next meaningful proof"
     ]
   },
