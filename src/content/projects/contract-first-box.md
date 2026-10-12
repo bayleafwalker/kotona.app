@@ -3,10 +3,10 @@ title: Freezing service boundaries before the demo platform gets ideas
 summary: >-
   Box is a contract-first platform scaffold that fixes a small service kernel
   before runtime convenience can blur its boundaries. Scenario packs stay as
-  overlays, and local validation checks their coherence before a runtime exists.
+  overlays, with validation tooling defined before a service runtime exists.
 published: 2026-04-06
-lastRevised: 2026-07-13
-lastVerified: 2026-07-13
+lastRevised: 2026-10-12
+lastVerified: 2026-10-12
 draft: false
 project: box
 kind: engineering
@@ -16,16 +16,17 @@ repoUrls:
   - https://github.com/bayleafwalker/box
 evidence:
   capability: >-
-    Three service contracts and two scenario packs pass local document and
-    schema validation; service implementations and a simulator do not exist.
-  latest: Phase 0 contract baseline
+    The source contains three service contracts, two scenario packs, validation
+    tooling, and tests. This repository review did not rerun validation or
+    establish a working service runtime.
+  latest: Phase 0 repository scope reviewed on 12 October 2026
   proofLinks:
     - label: Source repository
       href: https://github.com/bayleafwalker/box
   integrations: []
   knownLimitation: >-
-    The repository proves coherent boundaries, not a running platform or service
-    replacement.
+    The reviewed source establishes the contract scaffold, not a fresh test
+    result, running platform, or service-replacement proof.
   nextProof: >-
     Run one end-to-end slice through all three services with service-owned
     persistence and contract-valid events.
@@ -44,16 +45,14 @@ reference:
     - fixing service boundaries before a runtime exists
     - validating service contracts and scenario overlays locally
   establishes:
-    - that three service contracts and two scenario packs pass local document
-      and schema validation
-    - that boundary coherence can be checked with no service implementation
-      present
+    - the presence of three service contracts, two scenario packs, and their
+      validation tooling in the reviewed source
+    - that the repository describes a contract-first Phase 0 scaffold
   doesNotEstablish:
-    - runtime behaviour, because service implementations and a simulator do not
-      exist
-    - that the kernel can replace an existing platform or service
+    - a new validation result from the October repository review
+    - runtime behaviour or replacement of an existing platform or service
   supplementWith:
-    - the receiving system's own contracts and deployment constraints
+    - a fresh validation run and the receiving system's deployment constraints
 ---
 
 ## Overview
@@ -77,26 +76,28 @@ event schema, and example payloads under its own contract directory. The
 `hotdog-stand` and `it-consultancy` scenario packs provide seeds and policies
 without changing that kernel.
 
-Local Python tooling validates both service contracts and scenario content. A
-Compose file defines the future Postgres and NATS dependencies, while the
-Terraform, Talos, and Flux trees reserve the intended deployment boundaries.
-They are scaffolding, not a deployed platform.
+Local Python tooling is provided to validate service contracts and scenario
+content. A Compose file defines the local Postgres and NATS dependency stack,
+while the Terraform, Talos, and Flux trees reserve the intended deployment
+boundaries. They are scaffolding, not evidence of a deployed platform.
 
 ## Current state
 
-As verified on 13 July 2026, Box remains at its Phase 0 baseline. The repository
-contains the architecture decision, staged requirements, three initial service
-contracts, two scenario packs, validation tooling, and tests for the document
-and schema contracts.
+The source review on 12 October 2026 checked the repository README and tree.
+They still present the Phase 0 scaffold: architecture decisions, staged
+requirements, three initial service contracts, two scenario packs, validation
+tooling, and tests. Reference services, a simulator, and a working deployment
+path remain listed as subsequent implementation steps.
 
-There are still no service implementations or simulator runtime. The three
-service directories are boundary stubs, not running reference services. That is
-an honest limit: the repository currently shows that its definitions are
-coherent, not that the proposed platform works under load or replacement.
+This review did not execute the validator, pytest, or a deployment. The
+13 July 2026 version of this page recorded passing local document and schema
+validation; that is historical evidence, not a new October test result. The
+verification date above applies to the narrower repository-scope assessment.
 
-The project has also moved slowly since the initial scaffold. It is useful as a
-frozen architectural experiment, but it is not one of the actively operated
-systems yet.
+The useful distinction remains the same: coherent definitions do not establish
+that the proposed platform works under load or survives a service replacement.
+This is a contract-first architectural scaffold, not an operated reference
+platform.
 
 ## Open edges
 
@@ -107,4 +108,4 @@ around the public interfaces.
 
 The stronger test comes later: replace one service with another implementation
 while callers and scenarios remain unchanged. Until that works, "contract first"
-is a design constraint with good tests, not replacement proof.
+is a design constraint with validation tooling, not replacement proof.
