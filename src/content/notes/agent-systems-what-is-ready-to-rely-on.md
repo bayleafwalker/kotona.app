@@ -156,9 +156,9 @@ harness and cannot be addressed through its supported configuration.
 
 **Scope:** Discover and invoke tools through a compatible MCP host and server.
 
-**Evidence:** Specification and implementation documentation.
-[MCP 2026-07-28][mcp] defines tools, resources, and the base protocol.
-[Codex CLI][codex] documents connecting local and remote MCP servers.
+**Evidence:** Specification and implementation documentation. [MCP
+2026-07-28][mcp] defines tools, resources, and the base protocol. [Codex
+CLI][codex] documents connecting local and remote MCP servers.
 
 **Limit:** This rating does not cover universal client compatibility. The July
 revision defines stateless requests and per-request negotiation; optional
@@ -184,11 +184,10 @@ authorization, or the behavior required by that pair.
 **Scope:** Carry a user's limited authority through an agent and into downstream
 services without silently widening it.
 
-**Evidence:** Standards and protocol documentation.
-[OAuth token exchange, RFC 8693][exchange] defines delegation and impersonation
-mechanisms. [MCP's 2026-07-28 authorization specification][mcp-auth] defines HTTP
-authorization, resource binding, and scope handling. These are substantial
-reusable pieces.
+**Evidence:** Standards and protocol documentation. [OAuth token exchange, RFC
+8693][exchange] defines delegation and impersonation mechanisms. [MCP's
+2026-07-28 authorization specification][mcp-auth] defines HTTP authorization,
+resource binding, and scope handling. These are substantial reusable pieces.
 
 **Limit:** The application still has to map the user, task, downstream identity,
 resources, expiry, and revocation behavior. A valid token does not establish
@@ -242,10 +241,10 @@ the enforcement point, or policy freshness changes the decision's validity.
 
 **Scope:** Persist process progress and resume a workflow after a worker fails.
 
-**Evidence:** Implementation documentation.
-[Temporal's workflow execution model][temporal] describes durable state and
-recovery after failures. [LangGraph persistence][langgraph] documents
-checkpointed graph state and thread-based recovery within its application model.
+**Evidence:** Implementation documentation. [Temporal's workflow execution
+model][temporal] describes durable state and recovery after failures. [LangGraph
+persistence][langgraph] documents checkpointed graph state and thread-based
+recovery within its application model.
 
 **Limit:** Workflow recovery does not establish that an external effect occurred
 only once or that replaying a model step is acceptable. The effect boundary,
@@ -450,7 +449,8 @@ correction, without inferring that its conventions became more or less mature.
 
 [codex]: https://learn.chatgpt.com/docs/codex/cli
 [mcp]: https://modelcontextprotocol.io/specification/2026-07-28
-[mcp-auth]: https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization
+[mcp-auth]:
+  https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization
 [exchange]: https://www.rfc-editor.org/rfc/rfc8693.html
 [opa]: https://www.openpolicyagent.org/docs/integration
 [temporal]: https://docs.temporal.io/workflow-execution
