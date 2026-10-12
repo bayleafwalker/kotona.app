@@ -1,0 +1,76 @@
+name: verify-readiness-public
+
+on:
+  push:
+    branches:
+      - verify/agent-readiness-20261012
+    paths:
+      - .github/workflows/verify-readiness-public.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      EXPECTED_REVISION: a56118619ebb38c8e8201b93610d1c95f7be4b42
+    steps:
+      - name: Verify public HTML, Markdown, and discovery index
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { setTimeout as sleep } from 'node:timers/promises';
+          const expected = process.env.EXPECTED_REVISION;
+          const slug = 'agent-systems-what-is-ready-to-rely-on';
+          const origin = 'https://kotona.app';
+          const paths = [`/notes/${slug}/`, `/notes/${slug}.md`, '/reference-index.json'];
+          async function read(path) {
+            const response = await fetch(new URL(path, origin), {
+              headers: { 'Cache-Control': 'no-cache' },
+              signal: AbortSignal.timeout(20000),
+            });
+            assert.equal(response.status, 200, `${path}: HTTP ${response.status}`);
+            return { path, revision: response.headers.get('x-kotona-revision'), text: await response.text() };
+          }
+          let lastError;
+          for (let attempt = 1; attempt <= 35; attempt += 1) {
+            try {
+              const [html, markdown, catalog] = await Promise.all(paths.map(read));
+              assert.equal(html.revision, expected, 'HTML revision is not the reviewed merge');
+              assert.equal(markdown.revision, expected, 'Markdown revision is not the reviewed merge');
+              for (let n = 1; n <= 11; n += 1) {
+                const id = `as-${String(n).padStart(2, '0')}`;
+                assert.match(html.text, new RegExp(`id=["']${id}["']`), `missing HTML anchor ${id}`);
+              }
+              const headings = [...markdown.text.matchAll(/^### AS-\d{2}:/gm)];
+              assert.equal(headings.length, 11, 'Markdown must contain eleven capability records');
+              const a2a = markdown.text.split('### AS-06:')[1]?.split('### AS-07:')[0];
+              assert.ok(a2a, 'missing AS-06');
+              assert.match(a2a, /\*\*Maturity:\*\*\s+Commons/);
+              assert.match(markdown.text, /Evidence and scope correction/);
+              assert.match(markdown.text, /https:\/\/a2a-protocol\.org\/v1\.0\.0\/specification\//);
+              assert.ok(!markdown.text.includes('https://a2a-protocol.org/latest/specification/'));
+              assert.match(html.text, /\/notes\/where-agent-tooling-fits\//);
+              const index = JSON.parse(catalog.text);
+              assert.equal(index.revision, expected, 'discovery index revision mismatch');
+              const records = index.documents.filter((entry) => entry.id === slug && entry.type === 'note');
+              assert.equal(records.length, 1, 'discovery index must contain exactly one note');
+              assert.ok(records[0].representations.some((entry) => entry.mediaType === 'text/markdown' && entry.url.endsWith(`/notes/${slug}.md`)));
+              console.log(JSON.stringify({
+                result: 'PASS', revision: expected,
+                urls: paths.map((path) => new URL(path, origin).href),
+                httpStatus: [200, 200, 200], anchors: 11, markdownRecords: 11,
+                discoveryEntries: records.length, a2a: 'Commons / v1.0.0',
+                history: 'Evidence and scope correction', relatedNoteLink: true,
+              }, null, 2));
+              process.exit(0);
+            } catch (error) {
+              lastError = error;
+              console.log(`Attempt ${attempt}: ${error.message}`);
+              if (attempt < 35) await sleep(15000);
+            }
+          }
+          throw lastError;
+          NODE
