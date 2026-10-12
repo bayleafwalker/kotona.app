@@ -14,7 +14,7 @@ export default [
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  ...astro.configs["flat/recommended"],
+  ...astro.configs.recommended,
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx,astro}"],
     languageOptions: {

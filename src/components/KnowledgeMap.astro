@@ -28,15 +28,11 @@ const projectMapLabels: Record<string, string> = {
   "household-operating-platform": "Homelab Analytics",
 };
 const clusterLabelYOverrides: Record<string, number> = {
-  // The Vuoro node sits at y=19, directly under this heading and centred on the
-  // same x, so its own label is pushed up to y=7 -- into the heading's second
-  // line. Both cannot occupy the same band, and the label belongs to its node,
-  // so the heading moves into the margin the viewBox reserves above the map.
-  // The clearance is deliberate rather than minimal: at zero the boxes merely
-  // fail to intersect, and any font or wrapping change puts them back in
-  // contact. The other territories keep their calculated labels: their node
-  // rings leave this space naturally.
-  "agents-assurance": -26, // labelY coordinate
+  // The fourth agent ring reaches y=-15, with Vuoro's label at y=-27.
+  // Keep the two-line heading above it with deliberate clearance. The
+  // viewBox reserves extra top margin rather than clipping the heading;
+  // browser tests measure actual label clearance at each supported width.
+  "agents-assurance": -64, // labelY coordinate
   // Adding notes to the agent territory moved Vuoro onto its third ring. Its
   // label now occupies the narrow band above the organizational territory, so
   // keep that territory heading in the remaining upper gap instead of deriving
@@ -150,7 +146,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     <div class="knowledge-map-frame" aria-label="Visual knowledge map">
       <svg
         class="knowledge-map"
-        viewBox="0 -40 1000 660"
+        viewBox="0 -84 1000 704"
         aria-label="Knowledge atlas for published notes and projects"
         aria-describedby="knowledge-map-desc"
       >
