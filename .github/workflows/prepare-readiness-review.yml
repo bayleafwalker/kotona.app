@@ -1,0 +1,52 @@
+name: prepare-readiness-review
+
+on:
+  push:
+    branches:
+      - fix/agent-readiness-evidence-20261012
+    paths:
+      - .github/workflows/prepare-readiness-review.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact preparation revision
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.sha }}
+      - name: Setup repository Node version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install locked formatter dependencies
+        run: npm ci --ignore-scripts --no-audit
+      - name: Format only the reviewed files
+        run: |
+          npx --no-install prettier --write \
+            src/content/notes/agent-systems-what-is-ready-to-rely-on.md \
+            docs/agent-systems-research.md \
+            tests/agent-systems-readiness.test.mjs
+      - name: Check readiness record structure
+        run: node --test tests/agent-systems-readiness.test.mjs
+      - name: Commit formatting to this branch only
+        run: |
+          set -euo pipefail
+          files=(
+            src/content/notes/agent-systems-what-is-ready-to-rely-on.md
+            docs/agent-systems-research.md
+            tests/agent-systems-readiness.test.mjs
+          )
+          if git diff --quiet -- "${files[@]}"; then
+            exit 0
+          fi
+          git add -- "${files[@]}"
+          git -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m 'Format readiness review with the repository formatter'
+          git push origin HEAD:refs/heads/fix/agent-readiness-evidence-20261012
