@@ -94,6 +94,8 @@ terms:
 reference:
   purpose: current-project-orientation
   discoverFor:
+    - why shared Markdown sprint files gave way to schema-enforced sprintctl
+      state and CLI write authority
     - composing separately owned agent workflow tools without a monolith
     - binding component and schema compatibility to migration admissibility
   establishes:

@@ -6,7 +6,7 @@
     "maxRank": 1,
     "requiredPhrases": [
       "## Evidence",
-      "v0.1.0 operating-view release",
+      "read-only Kotiakku evidence evaluator",
       "Source repository",
       "Known limitation",
       "Next meaningful proof"
