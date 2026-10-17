@@ -1,16 +1,16 @@
 ---
 title: "Vuoro: governed work without a cockpit-shaped monolith"
 summary: >-
-  A working family of sprint, queue, knowledge, audit, and cockpit tools now
-  composes into one served layer, without giving up explicit state ownership or
-  machine-local execution.
+  Vuoro is a family of separately owned workflow tools and a planned product
+  direction for portable work, evidence, authority, and learning. The former
+  AgentOps cockpit is retired; current runtime composition is unverified.
 published: 2026-04-09
-lastRevised: 2026-09-07
-lastVerified: 2026-09-07
+lastRevised: 2026-10-17
+lastVerified: 2026-10-17
 draft: false
 project: vuoro
 kind: engineering
-status: Published and in active use
+status: Published reference; current runtime unverified
 featured: true
 repoUrls:
   - https://github.com/bayleafwalker/sprintctl
@@ -23,18 +23,14 @@ repoUrls:
 externalUrl: https://bayleafwalker.github.io/agentops/
 evidence:
   capability: >-
-    Public tools own sprint, knowledge, queue, audit, and cockpit state through
-    separate contracts, with local and shared operating modes. Dispatch is no
-    longer a separate authority: the dispatch harness invokes product-native
-    workers directly.
+    Public repositories define separate workflow contracts and a Vuoro
+    composition. The previous AgentOps cockpit application has been removed from
+    source. No current service or deployed composition was verified for this
+    revision.
   latest: >-
-    Served composition is at v0.1.59. The v0.1.52 image gated the work-schema
-    v12 cutover — managed ActionQ schema v12 validated under the composition,
-    with the sprintctl 0.3.0 reservation-model pin carried into the service
-    image — and the v4 design freeze then rebuilt composition around explicit
-    capabilities: uniform construction, the validator, and the migration itself.
-    The releases since are adapter repins, including sprintctl 0.3.5, which
-    closed a served authorization hole in reservation release.
+    The owner accepted a revised product direction on 2026-10-15 and a delivery
+    plan on 2026-10-17. Both describe planned scope and gates, not
+    implementation, provisioning, release, or deployment.
   proofLinks:
     - label: Vuoro composition repository
       href: https://github.com/bayleafwalker/vuoro
@@ -42,22 +38,25 @@ evidence:
       href: https://github.com/bayleafwalker/sprintctl
     - label: Interactive Vuoro system map
       href: https://bayleafwalker.github.io/agentops/
+    - label: Accepted Vuoro product direction (2026-10-15)
+      href: https://github.com/bayleafwalker/vuoro/blob/main/docs/direction/2026-10-15-product-direction.md
+    - label: Vuoro product delivery plan (2026-10-17)
+      href: https://github.com/bayleafwalker/vuoro/blob/main/docs/plans/2026-10-17-product-delivery-plan.md
+    - label: AgentOps source snapshot checked 2026-10-17
+      href: https://github.com/bayleafwalker/agentops/commit/b55198b25717ed542ca3e7c0d6ae7376d823ad55
   integrations:
     - SQLite
     - PostgreSQL
-    - agent-cockpit
+    - Former AgentOps cockpit (retired; historical reference)
   knownLimitation: >-
-    kctl and auditctl have less operational mileage than sprintctl and the
-    cockpit, and cross-repository drift is an observed condition rather than a
-    risk: the shipped skills taught the deleted claim model until the 0.3.5
-    release corrected them. The v5 measurement is still not conclusive: oracle
-    attainability is now enforced at dispatch time, and a first two-way
-    scorecard exists, but its direct arm is not packet-isolated, so the
-    comparison cannot yet attribute the difference.
+    Current release, deployment, and live qualification are unverified. The
+    previous public cockpit was removed from AgentOps source; old screenshots
+    and present-tense cockpit descriptions below are historical. The current
+    product direction and delivery plan remain source/planning evidence only.
   nextProof: >-
-    Produce a two-way comparison whose direct arm is packet-isolated. Until that
-    holds, the composition can show that it advances safely but not that the
-    work it governs got better.
+    Reconcile current source, release and runtime state, then qualify one
+    reference workflow under the accepted delivery plan. Do not infer deployment
+    or operating status from repository plans or former service versions.
 tags:
   - agents
   - workflow
@@ -90,16 +89,18 @@ terms:
       shards.
   - term: agent-cockpit
     definition:
-      The operator interface that composes state from the owning tools without
-      becoming their database.
+      The former AgentOps operator interface, removed from source; references on
+      this page describe historical design and screenshots only.
 reference:
   purpose: current-project-orientation
   discoverFor:
+    - why shared Markdown sprint files gave way to schema-enforced sprintctl
+      state and CLI write authority
     - composing separately owned agent workflow tools without a monolith
     - binding component and schema compatibility to migration admissibility
   establishes:
-    - that sprint, queue, dispatch, knowledge, audit, and cockpit state can stay
-      in separate contracts under one composition
+    - that separate workflow contracts and historical composition designs have
+      existed across these repositories
     - that version-bound preflight can reject an unsafe schema rollout before it
       runs
   doesNotEstablish:
@@ -108,8 +109,8 @@ reference:
     - operational mileage for kctl and auditctl comparable to sprintctl and the
       cockpit
   supplementWith:
-    - the deployed component versions and migration state of the receiving
-      environment
+    - current owner release and runtime evidence before relying on any served
+      composition or operational capability
 ---
 
 ## Overview
@@ -125,26 +126,48 @@ extracts durable and coordination candidates, and puts them through explicit
 review and publication. It does not silently turn every session note into canon,
 and it never writes work back into sprintctl.
 
+## Current source status (2026-10-17)
+
+The previous AgentOps cockpit application is absent from the current AgentOps
+source tree. The site and screenshots later on this page describe the former
+interface and are retained as historical context; they do not establish a
+currently available operator UI. The 2026-10-15 product direction and 2026-10-17
+delivery plan define accepted scope and qualification gates, but explicitly do
+not establish implementation, provisioning, release, or deployment. No current
+Vuoro runtime was reachable for this source review, so its live composition and
+status remain unknown. Source evidence checked 2026-10-17 08:27 UTC: AgentOps
+`main` at `b55198b25717ed542ca3e7c0d6ae7376d823ad55` no longer contains
+`apps/web/`; Vuoro `main` at `b433c8ffebdde81aa0d0fdf97b14182562a864f0` contains
+the accepted direction and delivery plan. A live-site request from the review
+environment could not connect, so no current runtime version or deployment
+status was observed. The verification date records this evidence review, not a
+runtime qualification.
+
 Those two tools are still useful on their own. They are no longer the whole
 story. The same state-ownership rule has grown into Vuoro: each repository owns
-one operational domain, and agent-cockpit composes their read surfaces instead
-of becoming a new database with opinions about all of them.
+one operational domain. The former agent-cockpit composed their read surfaces
+instead of becoming a new database with opinions about all of them.
 
 The names carry separate meanings. **Vuoro** is the
 [public ecosystem label](https://github.com/bayleafwalker/kctl/blob/c831aa016bdf117310fc66c12e8c2e63d2162155/docs/decisions/2026-07-19-ecosystem-public-label.md).
-`agentops` remains the repository for shared contracts, cross-repository plans,
-and the UI. `agent-cockpit` remains that UI. The public rename avoids confusing
-the ecosystem with AgentOps.ai without churning implementation names.
+`agentops` remains the repository for shared contracts and cross-repository
+plans. Its former `agent-cockpit` application was removed from source. The
+public rename avoids confusing the ecosystem with AgentOps.ai without churning
+implementation names.
 
-## Interactive system map
+## Interactive system map (historical composition)
 
 [Explore the interactive Vuoro system map](https://bayleafwalker.github.io/agentops/)
-to follow the wider lifecycle across sprintctl, kctl, actionq, the retired
-actionq-dispatch, auditctl, deployment, and agent-cockpit. It focuses on state
-ownership and the handoffs between tools rather than treating the cockpit as the
-system itself.
+for the previous lifecycle model across sprintctl, kctl, actionq, the retired
+actionq-dispatch, auditctl, deployment, and the former agent-cockpit. The map is
+a historical composition illustration; it does not establish current runtime
+availability.
 
-## Architecture and communication paths
+## Historical architecture and communication paths
+
+The following design and operating snapshot reflects the page's last runtime
+verification on 2026-09-07. It is retained for provenance and must not be read
+as current deployment, product, or operator-interface status.
 
 ![Vuoro state ownership and communication paths](/images/projects/vuoro/system-shape.svg)
 
@@ -240,7 +263,7 @@ accordingly: oracle attainability is now checked at dispatch time and a first
 two-way scorecard exists, but its direct arm is not packet-isolated, so a
 comparison able to attribute the difference is still owed.
 
-## Current state
+## Historical operating snapshot (last verified 2026-09-07)
 
 The tools are public and used across active repositories. sprintctl is on the
 0.3.x reservation model with local and remote modes and provenance links; the

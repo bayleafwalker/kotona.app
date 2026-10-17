@@ -418,7 +418,7 @@ async function runChecks(baseUrl) {
     );
     assertIncludes(
       project.body,
-      "v0.1.0 operating-view release",
+      "read-only Kotiakku evidence evaluator",
       "latest proof",
     );
     const projectMarkdown = await request(
