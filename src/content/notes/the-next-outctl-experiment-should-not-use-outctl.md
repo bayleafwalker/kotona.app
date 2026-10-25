@@ -23,8 +23,8 @@ tags:
   - context-management
 summary: >-
   Outctl remains retired. The new question is whether an evidence-linked
-  interpretation can be reused by independent consumers without displacing
-  the source record.
+  interpretation can be reused by independent consumers without displacing the
+  source record.
 explorePrompt: >-
   Treat this as a re-review of a retired implementation, not a proposal to
   restore it. The worked case is Outctl, a command wrapper that retained full
