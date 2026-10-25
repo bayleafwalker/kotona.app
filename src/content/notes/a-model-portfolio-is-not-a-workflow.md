@@ -151,6 +151,12 @@ recognizable voice that remembers prior judgments, knows which projects are
 progressing, and can explain a week's work without reading the entire session
 history again.
 
+The first version would be an independent, read-only consumer of existing work
+and evidence records, with no authority to dispatch, complete work, publish or
+apply effects. Any later permission needs an owner decision recorded through the
+[disposition register](https://github.com/bayleafwalker/vuoro/blob/cf7a07292f7df4fabc26fd1f9c839062268c625a/docs/direction/disposition-register.yaml);
+a useful narrative does not grant it.
+
 I would not run one expensive model continuously or make its conversation the
 memory store. A stable persona and an event-linked record can persist while the
 narrating model changes. Cheap models can decide which events are worth
@@ -160,10 +166,20 @@ goals, contradictions and strategy.
 The narrative must be a reading of evidence, not evidence about itself. "The
 build completed" should mean a source-owned completion record exists, not that a
 personable agent sounded pleased with the build. The proposed
-[audit-side reconciliation](/notes/the-audit-trail-can-suggest-the-next-action/)
+[work-owner completion check](/notes/the-audit-trail-can-suggest-the-next-action/)
 provides a more useful input than raw transcripts for that purpose.
 
 ## The next comparison
+
+There is already source to build on:
+[`vuoro_evidence.experiment`](https://github.com/bayleafwalker/vuoro/blob/cf7a07292f7df4fabc26fd1f9c839062268c625a/packages/vuoro-evidence/src/vuoro_evidence/experiment.py)
+retains supplied owner outcomes, run provenance, explicit case populations and
+unknown effort or cost. The
+[accepted-outcome learning docs](https://github.com/bayleafwalker/vuoro/blob/cf7a07292f7df4fabc26fd1f9c839062268c625a/docs/architecture/accepted-outcome-learning.md)
+also describe supplied owner-record intake and two-arm comparison. These are
+read-only inputs with synthetic tests, not authenticated acceptance, a qualified
+real outcome sample or evidence that one runtime is better. The caller still has
+to verify sources; the work owner still accepts work.
 
 I would run one matched coding-worker comparison, one frozen set of bounded
 decision questions, and one non-coding pilot using repeated observations. For
