@@ -33,10 +33,8 @@ const clusterLabelYOverrides: Record<string, number> = {
   // viewBox reserves extra top margin rather than clipping the heading;
   // browser tests measure actual label clearance at each supported width.
   "agents-assurance": -64, // labelY coordinate
-  // Adding notes to the agent territory moved Vuoro onto its third ring. Its
-  // label now occupies the narrow band above the organizational territory, so
-  // keep that territory heading in the remaining upper gap instead of deriving
-  // it from the organizational nodes' average position.
+  // Keep the organizational heading separate from its own nodes. The
+  // neighboring Vuoro label is lifted as the agent cluster expands.
   "organizational-practice": 315,
 };
 const labelLines = (label: string, maxLength = 28) => {
@@ -67,11 +65,16 @@ const nodeLabel = (node: (typeof graph.nodes)[number]) => {
   const goesLeft = Math.abs(deltaX) >= Math.abs(deltaY) && deltaX < 0;
   const goesRight = Math.abs(deltaX) >= Math.abs(deltaY) && deltaX >= 0;
   const goesUp = !goesLeft && !goesRight && deltaY < 0;
+  // Keep Vuoro's project label above its marker when the expanding agent
+  // cluster places it beside the organizational cluster heading. A node
+  // label must not obscure another territory's heading as notes accumulate.
+  const liftVuoro = node.id === "vuoro" && node.y > 260;
+  const defaultAnchor = goesLeft ? "end" : goesRight ? "start" : "middle";
   return {
     lines,
-    x: node.x + (goesLeft ? -12 : goesRight ? 12 : 0),
-    y: node.y + (goesUp ? -12 : 18),
-    anchor: goesLeft ? "end" : goesRight ? "start" : "middle",
+    x: liftVuoro ? node.x : node.x + (goesLeft ? -12 : goesRight ? 12 : 0),
+    y: liftVuoro ? node.y - 22 : node.y + (goesUp ? -12 : 18),
+    anchor: liftVuoro ? "middle" : defaultAnchor,
   };
 };
 const edgeCoordinates = (
