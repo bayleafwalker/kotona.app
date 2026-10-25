@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: agent infrastructure
 published: 2026-10-12
-lastRevised: 2026-10-12
+lastRevised: 2026-10-19
 projects: []
 relates:
   - where-agent-tooling-fits
@@ -25,24 +25,24 @@ summary:
 explorePrompt: >-
   Assess which capabilities a real technical workflow can adopt and which still
   require integration or evidence. The worked example reviews documented agent
-  infrastructure: execution, basic protocol exchange, policy, workflows,
-  tracing, and evaluation have reusable implementations, while delegated
-  authority, untrusted-content containment, and acceptance across replaceable
-  runners need separate judgments. It rates a narrow operation under stated
-  conditions, not an entire product. Documentation supports adoption choices
-  without proving operational reliability; signed evidence binds bytes without
-  deciding whether an old approval still applies. Apply that method to a
-  materially different workflow, such as document processing or scientific
-  computation. State its operators, consequences, hostile inputs, failure modes,
-  and acceptance rules. Identify where those conditions differ from repository
-  coding and which conclusions therefore change. Challenge the example with
-  current primary evidence and counterevidence rather than inheriting its tiers.
-  Produce a small capability register with scope, maturity, confidence, evidence
-  type, limits, and revisit conditions. Recommend the smallest viable
-  composition. Keep unknowns visible and propose at most two bounded
-  investigations tied to live decisions. Distinguish supported features from
-  tested behavior, and missing evidence from proof of absence; do not reproduce
-  the note's prose.
+  infrastructure: execution, command containment, basic protocol exchange,
+  policy, workflows, tracing, and evaluation have reusable implementations,
+  while delegated authority, untrusted-content containment, and acceptance
+  across replaceable runners need separate judgments. It rates a narrow
+  operation under stated conditions, not an entire product. Documentation
+  supports adoption choices without proving operational reliability; signed
+  evidence binds bytes without deciding whether an old approval still applies.
+  Apply that method to a materially different workflow, such as document
+  processing or scientific computation. State its operators, consequences,
+  hostile inputs, failure modes, and acceptance rules. Identify where those
+  conditions differ from repository coding and which conclusions therefore
+  change. Challenge the example with current primary evidence and
+  counterevidence rather than inheriting its tiers. Produce a small capability
+  register with scope, maturity, confidence, evidence type, limits, and revisit
+  conditions. Recommend the smallest viable composition. Keep unknowns visible
+  and propose at most two bounded investigations tied to live decisions.
+  Distinguish supported features from tested behavior, and missing evidence from
+  proof of absence; do not reproduce the note's prose.
 reference:
   purpose: design-rationale
   discoverFor:
@@ -86,11 +86,12 @@ they are not certifications supplied by the linked projects.
 
 ## Current position
 
-For a repository workflow, adopt a harness, existing checks, and reviewable Git
-changes before designing another execution layer. Use established policy,
-workflow, tracing, and evaluation components for their actual responsibilities.
-Use MCP or A2A where their interoperability contract is needed, not merely
-because an agent is involved. The records below explain the evidence and limits.
+For a repository workflow, adopt a harness, its supported command sandbox,
+existing checks, and reviewable Git changes before designing another execution
+layer. Use established policy, workflow, tracing, and evaluation components for
+their actual responsibilities. Use MCP or A2A where their interoperability
+contract is needed, not merely because an agent is involved. The records below
+explain the evidence and limits.
 
 Treat cross-system delegation, portable recovery, and independent acceptance as
 integration questions. A protocol can carry a task without deciding whether its
@@ -218,7 +219,7 @@ authorization, or the behavior required by that pair.
 
 **Confidence:** Medium
 
-**Last verified:** 2026-10-12
+**Last verified:** 2026-10-19
 
 **Scope:** Carry a user's limited authority through an agent and into downstream
 services without silently widening it.
@@ -232,10 +233,19 @@ agent-authorization work, not an adopted solution.
 
 [Identity chaining draft-17][identity-chaining] describes preserving identity
 and authorization across domains; its [tracker][identity-status] reports the RFC
-Editor queue at this review, rather than a published RFC. [Credential Delegation
-for AI Agents, draft-sweeney-wimse-credential-delegation-00][agent-delegation],
-is a separate individual proposal. Its publication is not IETF consensus or
-proof that a supported implementation meets the proposed guarantees.
+Editor queue at this review, rather than a published RFC.
+
+Two individual drafts related to WIMSE, neither adopted by the working group,
+take different routes.
+[draft-sweeney-wimse-credential-delegation-01][agent-delegation], dated 13
+October 2026, proposes a credential delegation protocol for agents; its reported
+conformance vectors exercise another draft's token format rather than its own.
+[draft-asor-wimse-agent-delegation-chain-02][delegation-chain], dated 15 October
+2026, specifies hash-linked, attenuated delegation tokens that a verifier checks
+offline. Its design relies on short lifetimes and optional, cached status lists
+for revocation, so a recently revoked token may still be honored, and it leaves
+fan-out bounds to the issuing infrastructure. Neither draft is IETF consensus or
+proof that an implementation meets its guarantees.
 
 **Limit:** Standards progress does not yet remove the application's work of
 mapping the user, task, downstream identity, resources, expiry, and revocation.
@@ -244,7 +254,8 @@ delegation must not silently become impersonation.
 
 **Consequence:** Reuse identity and credential infrastructure. Pilot the
 complete authority chain before granting unattended write access; do not invent
-a delegation format without checking the OAuth and WIMSE tracks.
+a delegation format without checking the OAuth and WIMSE tracks, and keep any
+draft format replaceable rather than a fixed dependency.
 
 **Revisit when:** These tracks change the supported delegation contract, or an
 implementation demonstrates attenuation, downstream revocation, and attribution
@@ -362,7 +373,7 @@ This Commons judgment does not promote those stronger guarantees by association.
 
 **Confidence:** Medium
 
-**Last verified:** 2026-10-12
+**Last verified:** 2026-10-19
 
 **Scope:** Collect and correlate general traces and metrics through established
 OpenTelemetry signals and a supported SDK/exporter combination.
@@ -374,13 +385,31 @@ now points to a separate repository and says the old location is no longer
 maintained. The Commons judgment concerns general telemetry, not those moving
 agent-specific conventions.
 
+Anthropic's [OpenTelemetry export][claude-otel], released in beta on 14 October
+2026, sends Messages API, Managed Agents, and SDK spans to an existing
+observability backend. That is vendor evidence for reusing the general
+infrastructure; a beta export does not make the agent-specific fields stable.
+
 **Limit:** General tracing maturity does not establish a stable schema for every
 agent event, complete cost attribution, or retention of the evidence needed to
 reconstruct an accepted result. The GenAI source move is not itself a promotion
 or demotion.
 
-**Consequence:** Reuse telemetry infrastructure. Version agent-specific fields
-and pricing assumptions, and link traces to separately retained artifacts.
+The Anthropic export documents why a trace is not a ledger. Usage attributes
+repeat across span levels, so SDK and API spans for one request must not both be
+summed, and cache and compaction usage follow separate counting rules. Spans can
+arrive more than once, one session can span several traces, delivery is best
+effort, and a caller can drop spans through sampling; the documentation points
+to its usage reporting for complete accounting. Content capture is metadata-only
+by default; full content is truncated at a configurable size and retained under
+the observability platform's own policies.
+
+**Consequence:** Reuse telemetry infrastructure, preferring a supported native
+export. Version agent-specific fields and pricing assumptions, and link traces
+to separately retained artifacts. Deduplicate spans by trace and span ID, count
+usage from one documented span level, and correlate sessions explicitly. Keep
+authoritative usage and acceptance records outside telemetry, and export prompt
+and response content only after deciding its retention.
 
 **Revisit when:** Convention or SDK changes break correlation, change field
 meaning, or make previously invisible work and cost measurable.
@@ -420,26 +449,41 @@ judge changes decisions without agreement on the relevant labeled cases.
 
 ### AS-09: Constraining command execution
 
-**Maturity:** Edge
+**Maturity:** Commons
 
 **Confidence:** Medium
 
-**Last verified:** 2026-10-12
+**Last verified:** 2026-10-19
 
 **Scope:** Apply filesystem, credential, and network restrictions to commands
 executed by a chosen coding harness.
 
-**Evidence:** Implementation documentation. [Claude Code sandboxing][sandbox]
-describes OS-enforced filesystem and network controls, credential protections,
-and settings that can exclude commands or disable part of the isolation.
+**Evidence:** Documentation for independently maintained implementations.
+[Claude Code sandboxing][sandbox] describes OS-enforced filesystem and network
+controls for shell commands, settings that can exclude commands or allow an
+unsandboxed retry, and a setting that makes an unavailable sandbox fatal at
+startup. [GitHub Copilot local sandboxing][copilot-sandbox-ga], generally
+available since 7 October 2026, applies OS-level controls on files, network, and
+Git credentials to Copilot CLI, app, and VS Code agent commands through
+[Microsoft eXecution Container][mxc], with [enterprise-managed
+settings][copilot-sandbox] that developers cannot weaken. This supports reusing
+command containment; it does not establish equivalent defaults or independently
+tested enforcement.
 
 **Limit:** The scope is the configured execution path, not every action a host
-or remote tool can perform. An excluded interpreter, accessible credential, or
-separate connector can invalidate an assumption about what is contained.
+or remote tool can perform. Both sandboxes are off by default. Copilot's
+approval-based bypass is on by default, its in-process file tools follow the
+policy only on a best-effort basis, and remote MCP servers are never sandboxed.
+An excluded interpreter, an unsandboxed retry or fallback, an accessible
+credential, or a separate connector can invalidate an assumption about what is
+contained.
 
-**Consequence:** Reuse supported isolation, then test the actual paths and
-fallbacks. Keep sensitive credentials out of the workspace and grant only the
-network and filesystem access the workload needs.
+**Consequence:** Adopt supported isolation rather than building another sandbox
+wrapper. For consequential unattended execution, enable it through managed
+configuration, fail closed when it is unavailable, disable unapproved bypass,
+then test the effective permissions on the actual paths. Keep sensitive
+credentials out of the workspace and grant only the network and filesystem
+access the workload needs.
 
 **Revisit when:** A harness, operating-system, or policy update changes
 effective permissions, fallback behavior, or a path around the intended
@@ -609,6 +653,22 @@ unchanged. Added AS-11 as Edge/Medium for containment, explicitly excluding
 guaranteed instruction isolation. No new deployment or comparative test is
 claimed.
 
+### 2026-10-19: Command containment correction and source updates
+
+Changed AS-09 from Edge to Commons, with Medium confidence. GitHub Copilot's
+local sandboxing reached general availability on 7 October, before the baseline,
+giving a second independently maintained implementation of the same scoped
+operation alongside Claude Code. This corrects the evidence base; it does not
+record new progress. Off-by-default sandboxes, bypass and fallback paths, and
+unsandboxed tool paths are recorded as limits, and AS-11 is unchanged.
+
+Kept AS-07 Commons/Medium while adding Anthropic's beta OpenTelemetry export as
+implementation evidence and its documented counting, duplication, completeness,
+and content-retention limits. Kept AS-03 Edge/Medium, replacing the credential
+delegation draft-00 reference with draft-01 and adding the offline delegation
+chain draft-02. No tier movement, adoption, or tested behavior is inferred from
+either draft.
+
 [codex]: https://learn.chatgpt.com/docs/codex/cli
 [claude-code]: https://code.claude.com/docs/en/overview
 [claude-mcp]: https://code.claude.com/docs/en/mcp
@@ -626,7 +686,9 @@ claimed.
 [identity-status]:
   https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-chaining/
 [agent-delegation]:
-  https://www.ietf.org/archive/id/draft-sweeney-wimse-credential-delegation-00.html
+  https://www.ietf.org/archive/id/draft-sweeney-wimse-credential-delegation-01.html
+[delegation-chain]:
+  https://www.ietf.org/archive/id/draft-asor-wimse-agent-delegation-chain-02.html
 [opa]: https://www.openpolicyagent.org/docs/integration
 [cedar]: https://docs.cedarpolicy.com/
 [temporal]: https://docs.temporal.io/workflow-execution
@@ -639,11 +701,17 @@ claimed.
 [a2a-aaif]: https://aaif.io/blog/a2a-joins-aaif
 [otel-status]: https://opentelemetry.io/docs/specs/status/
 [otel-genai]: https://opentelemetry.io/docs/specs/semconv/gen-ai/
+[claude-otel]: https://platform.claude.com/docs/en/manage-claude/opentelemetry
 [langfuse]: https://langfuse.com/docs/evaluation/overview
 [promptfoo-assertions]:
   https://www.promptfoo.dev/docs/configuration/expected-outputs/
 [promptfoo-ci]: https://www.promptfoo.dev/docs/integrations/ci-cd/
 [sandbox]: https://code.claude.com/docs/en/sandboxing
+[copilot-sandbox-ga]:
+  https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available/
+[copilot-sandbox]:
+  https://docs.github.com/en/copilot/concepts/about-cloud-and-local-sandboxes
+[mxc]: https://github.com/microsoft/mxc
 [in-toto]: https://in-toto.io/Statement/v1
 [slsa-provenance]: https://slsa.dev/spec/v1.2/build-provenance
 [slsa-vsa]: https://slsa.dev/spec/v1.2/verification_summary
