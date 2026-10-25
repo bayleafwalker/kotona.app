@@ -71,11 +71,12 @@ const nodeLabel = (node: (typeof graph.nodes)[number]) => {
   // cluster places it beside the organizational cluster heading. A node
   // label must not obscure another territory's heading as notes accumulate.
   const liftVuoro = node.id === "vuoro" && node.y > 260;
+  const defaultAnchor = goesLeft ? "end" : goesRight ? "start" : "middle";
   return {
     lines,
     x: liftVuoro ? node.x : node.x + (goesLeft ? -12 : goesRight ? 12 : 0),
     y: liftVuoro ? node.y - 22 : node.y + (goesUp ? -12 : 18),
-    anchor: liftVuoro ? "middle" : goesLeft ? "end" : goesRight ? "start" : "middle",
+    anchor: liftVuoro ? "middle" : defaultAnchor,
   };
 };
 const edgeCoordinates = (
