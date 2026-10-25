@@ -33,10 +33,8 @@ const clusterLabelYOverrides: Record<string, number> = {
   // viewBox reserves extra top margin rather than clipping the heading;
   // browser tests measure actual label clearance at each supported width.
   "agents-assurance": -64, // labelY coordinate
-  // Adding notes to the agent territory moved Vuoro onto its third ring. Its
-  // label now occupies the narrow band above the organizational territory, so
-  // keep that territory heading in the remaining upper gap instead of deriving
-  // it from the organizational nodes' average position.
+  // Keep the organizational heading separate from its own nodes. The
+  // neighboring Vuoro label is lifted as the agent cluster expands.
   "organizational-practice": 315,
 };
 const labelLines = (label: string, maxLength = 28) => {
