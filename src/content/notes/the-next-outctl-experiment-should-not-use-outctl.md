@@ -59,6 +59,8 @@ reference:
 
 Outctl is retired. That is the starting condition, not a problem to fix.
 
+Its repository remains a frozen discovery artifact, not a required runtime.
+
 I built it to keep large command results out of a coding agent's ordinary
 context. It retained the complete output and returned a small view that the
 agent could expand later. In the original Kubernetes diagnosis comparison,
