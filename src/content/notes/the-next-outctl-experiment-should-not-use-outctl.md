@@ -59,7 +59,9 @@ reference:
 
 Outctl is retired. That is the starting condition, not a problem to fix.
 
-Its repository remains a frozen discovery artifact, not a required runtime.
+Its repository remains a
+[frozen discovery artifact](https://github.com/bayleafwalker/outctl/blob/1c2bb034204765cba891d080a3dc2df045e744d5/docs/DISCOVERY_KILL_2026-08-16.md),
+not a required runtime.
 
 I built it to keep large command results out of a coding agent's ordinary
 context. It retained the complete output and returned a small view that the
@@ -68,11 +70,10 @@ model-visible output fell by about 84%. The experiment did not prove equal
 diagnostic quality: two agents could both report a degraded cluster while
 identifying substantially different failures.
 
-A later A/B snapshot reduced exposed `kubectl` bytes by about 94.9%, but
-recorded 16.7% more input tokens, 5.4% more cost and 36.9% more elapsed time.
-These are different experiments, not a pooled benchmark. They make the same
-point: a mechanism can meet its narrow metric and still fail to improve the
-work.
+I also quoted a later A/B snapshot here. I have not traced its byte, token, cost
+or timing figures to reproducible primary evidence, so I have removed them. That
+snapshot was a separate experiment from the roughly 84% comparison above, not
+another result to pool with it.
 
 Then native programmatic tool calling moved filtering, aggregation and
 intermediate tool processing closer to the harness. The original argument for a
@@ -95,7 +96,8 @@ independent consumers can reuse.
 Imagine a failed CI run. Its logs and test reports are already available. Three
 later consumers may ask different questions:
 
-- The work reconciler asks which acceptance requirement lacks evidence.
+- The work owner's completion check asks which acceptance requirement lacks
+  evidence.
 - The periodic analyst asks whether this failure repeats across projects.
 - A personal work narrator asks what changed since the last useful update.
 
@@ -142,8 +144,18 @@ that saves a few cents while requiring a weekly repair session is not a win.
 
 This does **not** justify restoring Outctl, putting another daemon on every tool
 call, or intercepting all shell output. The smallest trial is an out-of-process
-consumer of existing evidence. If most observations are read once, stop. Native
-filtering and ordinary source retrieval already cover that case.
+consumer of existing evidence, sponsored by the existing work/evidence owner
+(Sprintctl today), with
+[Agentops guidance](https://github.com/bayleafwalker/agentops/blob/5bbad1002858f42c3a0fe6faffbba5a16d7510b9/AGENTS.md)
+for the cross-repository workflow. The
+[S4 evidence-home proposal](https://github.com/bayleafwalker/agentops/blob/5bbad1002858f42c3a0fe6faffbba5a16d7510b9/docs/plans/2026-10-03-s4-evidence-home-preparation.md)
+extends that owner rather than creating another writable evidence home; it is
+not a completed cutover. This trial belongs neither in `vuoro-service`, Outctl
+nor synchronous harness middleware. It reads existing records and leaves
+acceptance with its owner.
+
+If most observations are read once, stop. Native filtering and ordinary source
+retrieval already cover that case.
 
 The question is whether later agents can avoid reconstructing the same facts
 without inheriting someone else's unsupported conclusions. That has not been

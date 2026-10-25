@@ -77,19 +77,23 @@ those rules cannot decide.
 ## A record is not a transition
 
 The existing
-[Auditctl contract](https://github.com/bayleafwalker/auditctl/blob/main/docs/contracts/central-observation-ingest.md)
+[Auditctl contract](https://github.com/bayleafwalker/auditctl/blob/a3fe8de10fbfbfc4eacc842a9e26bcfc126820f6/docs/contracts/central-observation-ingest.md)
 deliberately distinguishes an `observation` from a recorded `decision`. Its
 append and receipt path does not settle work, issue grants or apply the
 judgment. The
-[Vuoro target state](https://github.com/bayleafwalker/agentops/blob/main/docs/plans/2026-09-17-target-state.md)
+[Vuoro target state](https://github.com/bayleafwalker/agentops/blob/5bbad1002858f42c3a0fe6faffbba5a16d7510b9/docs/plans/2026-09-17-target-state.md)
 also keeps release acceptance and protected effects with their owners. Those are
-design constraints, not a claim that the planned evidence-home migration is
-complete.
+design constraints. The
+[S4 preparation](https://github.com/bayleafwalker/agentops/blob/5bbad1002858f42c3a0fe6faffbba5a16d7510b9/docs/plans/2026-10-03-s4-evidence-home-preparation.md)
+proposes extending Sprintctl's existing work/evidence authority. Verified
+import, production cutover and soak remain open there; existing committed
+Auditctl shards retain historical source authority until verified import. A
+source contract or an isolated rehearsal does not establish deployed migration.
 
 Kctl historically extracted lessons and handoffs from execution events. It is
-retiring in favor of the current Workspace and evidence direction. I would not
-put a new classifier or knowledge lifecycle inside Kctl; the consumer should use
-the surviving evidence interfaces.
+retiring under the Workspace and evidence direction; that is not a completed S4
+migration. I would not put a new classifier or knowledge lifecycle inside Kctl;
+the consumer should use the surviving evidence interfaces.
 
 A short chain describes the proposal:
 
@@ -132,7 +136,12 @@ actual outcomes. Those requirements transfer here.
 
 ## Completion and further work are different answers
 
-A reconciler reads the current work revision, acceptance criteria, already
+Here, **completion reconciliation** means a proposed acceptance-side check for
+the work owner. The existing
+[`vuoro-reconciler`](https://github.com/bayleafwalker/vuoro/blob/cf7a07292f7df4fabc26fd1f9c839062268c625a/packages/vuoro-reconciler/README.md)
+handles protected effect intents; it does not own assessment of work completion.
+
+The proposed check reads the current work revision, acceptance criteria, already
 recorded decisions and source-linked evidence. Three outcomes are particularly
 important.
 
@@ -149,19 +158,21 @@ verifier notices an improvement or unrelated risk. Record a separate,
 deduplicated follow-up rather than retroactively reopening the accepted work.
 
 An actual contract may require an independent judgment for a particular effect.
-In that case, the reconciler must obtain it. The rule is not "never review"; it
-is "do not manufacture reviews for work whose acceptance conditions are already
-met."
+In that case, the completion check must obtain it. The rule is not "never
+review"; it is "do not manufacture reviews for work whose acceptance conditions
+are already met."
 
 ## Keep the observers cheap to lose
 
 The older
-[session mechanization work](https://github.com/bayleafwalker/agentops/blob/main/docs/plans/agentops/session-mechanization-plan.md)
+[session mechanization work](https://github.com/bayleafwalker/agentops/blob/5bbad1002858f42c3a0fe6faffbba5a16d7510b9/docs/plans/agentops/session-mechanization-plan.md)
 already explored mechanical capsules, an immediate reconciler and a periodic
-scribe. Its implementation path was retired under the later estate direction.
-The useful inheritance is its failure model: a recorder can miss a session, a
-fast reconciliation can fail, and a periodic pass must still recover the
-available evidence without replaying external effects.
+scribe. The current disposition is
+[retiring at S4](https://github.com/bayleafwalker/vuoro/blob/cf7a07292f7df4fabc26fd1f9c839062268c625a/docs/direction/disposition-register.yaml),
+not proof that the retirement has occurred. The useful inheritance is its
+failure model: a recorder can miss a session, a fast reconciliation can fail,
+and a periodic pass must still recover the available evidence without replaying
+external effects.
 
 I would test this in shadow mode on previously completed and interrupted
 sessions. Seed cases with missing audit delivery, an outdated work revision,
