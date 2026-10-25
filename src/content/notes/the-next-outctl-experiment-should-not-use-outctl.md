@@ -1,6 +1,6 @@
 ---
 title: The next Outctl experiment should not use Outctl
-seoTitle: Reconsidering output reduction as reusable agent evidence
+seoTitle: Reusing evidence after the Outctl retirement
 role: exploration
 status: exploration
 lifecycle: current
@@ -21,11 +21,10 @@ tags:
   - evaluation
   - evidence
   - context-management
-  - tool-use
 summary: >-
-  Outctl saved visible bytes but did not establish cheaper or better sessions.
-  Cheap semantic models reopen a different question: whether an interpretation
-  made once can serve several later consumers without replacing its source.
+  Outctl remains retired. The new question is whether an evidence-linked
+  interpretation can be reused by independent consumers without displacing
+  the source record.
 explorePrompt: >-
   Treat this as a re-review of a retired implementation, not a proposal to
   restore it. The worked case is Outctl, a command wrapper that retained full
@@ -45,14 +44,12 @@ explorePrompt: >-
 reference:
   purpose: exploratory-hypothesis
   discoverFor:
-    - reconsidering a retired output-filtering tool after cheaper semantic
-      models
-    - evaluating reusable semantic observations against native tool processing
+    - reusing provenance-linked semantic observations across several consumers
+    - measuring repeated source reads in an interpretation pipeline
   establishes:
-    - the distinction between shortening one tool result and reusing evidence
-      across consumers
-    - the proposed replay test for semantic observations with provenance and
-      invalidation
+    - the distinction between single-use filtering and reusable evidence
+      projections
+    - the proposed replay test for shared observations and invalidation
   doesNotEstablish:
     - that a semantic observation pipeline has saved money or operator attention
     - that the retired Outctl wrapper should be restarted or required
