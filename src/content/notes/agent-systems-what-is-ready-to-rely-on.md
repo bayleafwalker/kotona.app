@@ -5,7 +5,7 @@ status: guiding
 lifecycle: current
 area: agent infrastructure
 published: 2026-10-12
-lastRevised: 2026-10-19
+lastRevised: 2026-10-26
 projects: []
 relates:
   - where-agent-tooling-fits
@@ -182,7 +182,7 @@ harness and cannot be addressed through its supported configuration.
 
 **Confidence:** Medium
 
-**Last verified:** 2026-10-12
+**Last verified:** 2026-10-26
 
 **Scope:** Discover and invoke tools through a compatible MCP host and server.
 
@@ -203,10 +203,23 @@ revision defines stateless requests and per-request negotiation; optional
 extensions require explicit support. Basic tool support does not prove support
 for long-running tasks, apps, skills, or a particular authorization extension.
 
+Failure behavior also depends on the implementation and version. [Claude Code
+v2.1.307][claude-code-307] corrected duplicate HTTP MCP tool calls after
+mid-call connection loss and restricted automatic retries to read-only or
+idempotent tools. This is maintainer-reported failure evidence, not a test of
+other hosts or their tool classifications. Basic exchange does not establish
+safe retries or whether a disconnected write completed.
+
 **Consequence:** Use an adequate CLI for local execution. Prefer MCP over a
 private host-specific tool protocol when protocol interoperability or its
 supported governance features are required. Pin and test the actual host-server
 pair rather than assuming that both implement every current extension.
+
+For consequential mutating tools, define recovery from connection loss. Use
+receiver-enforced idempotency or reconciliation where repeated effects are
+unsafe. Treat an interrupted call's outcome as unknown until target state or a
+durable receipt resolves it. Client retries do not supply an exactly-once
+guarantee; no custom MCP transport is implied.
 
 **Revisit when:** A protocol or SDK migration changes cancellation, errors,
 authorization, or the behavior required by that pair.
@@ -453,7 +466,7 @@ judge changes decisions without agreement on the relevant labeled cases.
 
 **Confidence:** Medium
 
-**Last verified:** 2026-10-19
+**Last verified:** 2026-10-26
 
 **Scope:** Apply filesystem, credential, and network restrictions to commands
 executed by a chosen coding harness.
@@ -470,6 +483,15 @@ settings][copilot-sandbox] that developers cannot weaken. This supports reusing
 command containment; it does not establish equivalent defaults or independently
 tested enforcement.
 
+Claude Code's [v2.1.309 release notes][claude-code-309] supply implementation
+counterevidence: fixes cover shell startup files running outside the sandbox,
+macOS symlink write-denial gaps, writable protected MCP configuration, Bash
+permission checks, and Linux write restrictions lifting for background processes
+that outlived a session. The same release corrected PowerShell hook failures;
+[v2.1.310][claude-code-310] corrected another Windows hook bypass. Hook
+permission enforcement is distinct from OS sandbox isolation. These are
+maintainer-reported fixes, not independent post-fix security validation.
+
 **Limit:** The scope is the configured execution path, not every action a host
 or remote tool can perform. Both sandboxes are off by default. Copilot's
 approval-based bypass is on by default, its in-process file tools follow the
@@ -478,12 +500,26 @@ An excluded interpreter, an unsandboxed retry or fallback, an accessible
 credential, or a separate connector can invalidate an assumption about what is
 contained.
 
+Enforcement depends on the version and execution path, including shell startup,
+symlink resolution, hooks, and background-process lifetime. The opt-in Linux
+setting `sandbox.allowNestedUserNamespaces`, introduced in
+[v2.1.305][claude-code-305], explicitly permits bypassing filesystem
+protections. A configured deny rule alone does not establish effective
+containment.
+
 **Consequence:** Adopt supported isolation rather than building another sandbox
 wrapper. For consequential unattended execution, enable it through managed
 configuration, fail closed when it is unavailable, disable unapproved bypass,
 then test the effective permissions on the actual paths. Keep sensitive
 credentials out of the workspace and grant only the network and filesystem
 access the workload needs.
+
+For Claude Code, use a supported release incorporating the v2.1.309 fixes and,
+where Windows hooks enforce permissions, the v2.1.310 correction. This is a
+floor for these known fixes, not a security certification. Validate the actual
+denial paths after installation. Leave nested user namespaces disabled unless
+the resulting loss of filesystem isolation is separately accepted; treat
+unverified paths as outside the granted boundary.
 
 **Revisit when:** A harness, operating-system, or policy update changes
 effective permissions, fallback behavior, or a path around the intended
@@ -546,7 +582,7 @@ product can provide it.
 
 **Confidence:** Medium
 
-**Last verified:** 2026-10-12
+**Last verified:** 2026-10-26
 
 **Scope:** Constrain the unauthorized actions and data disclosure that retrieved
 content, repository text, or tool output can induce, under an explicit threat
@@ -563,11 +599,32 @@ approval for high-risk actions, and adversarial testing while identifying limits
 to prevention. These support pilotable controls, not a generally demonstrated
 isolation guarantee.
 
+Anthropic's [20 October 2026 update][claude-platform-oct20] makes Managed Agents
+`web_fetch` follow organizational domain restrictions, including redirect
+destinations, alongside per-tool lists. Its [web-tool
+documentation][managed-web] also describes inherited subagent restrictions:
+allowed lists intersect and blocked lists accumulate, so a nested agent cannot
+widen its caller's permitted destinations. In cloud environments with limited
+networking, `allowed_hosts` also applies. These are documented controls for
+supported web tools; the October 20 change does not date every part of that
+composition.
+
 **Limit:** Input classifiers, delimiters, and model instructions do not by
 themselves establish an enforcement boundary. A permitted connector or egress
 route can still carry an unauthorized disclosure. Benchmark results cover their
 attack model, and a model-generated approval summary can itself be manipulated.
 Command containment in AS-09 does not cover every application-level action.
+
+The web-tool lists govern `web_search` results and `web_fetch` destinations;
+they do not establish equivalent controls for shell networking, arbitrary HTTP
+clients, custom tools, or remote MCP connectors. Search-domain filtering does
+not stop the query reaching the search provider. An allowed destination can
+still receive inappropriate content. Anthropic's [web-fetch guidance][web-fetch]
+warns of residual exfiltration risk with untrusted input and sensitive data,
+including cases where disabling fetch is appropriate. Mid-session list updates
+apply to each thread from its next turn, making policy version and enforcement
+timing relevant to recorded actions. No independent adaptive-attack containment
+test is established here.
 
 **Consequence:** Treat retrieved content and model output as untrusted at the
 action boundary. Enforce permissions, destinations, and data-access rules
@@ -575,6 +632,12 @@ outside the exposed model; show the actual proposed operation and recipient
 through a trusted approval path. Test malicious tool output, repository
 instructions, and allowed-channel exfiltration. A second model reviewing the
 same injected context is not an independent security boundary.
+
+Adopt available organizational and tool restrictions before adding custom web
+filtering. Apply separate network and connector policy to other execution paths,
+and verify the combined restrictions at the actual action boundary, including
+nested agents and redirects. Adding a host to a cloud environment's
+`allowed_hosts` also opens it to sandbox code; review that grant as well.
 
 **Revisit when:** A supported control demonstrates adaptive-attack resistance
 and acceptable task utility for the actual tools, sensitive data, and permitted
@@ -669,6 +732,34 @@ delegation draft-00 reference with draft-01 and adding the offline delegation
 chain draft-02. No tier movement, adoption, or tested behavior is inferred from
 either draft.
 
+### 2026-10-26: AS-09 enforcement counterevidence (W43)
+
+Retained Commons/Medium for supported command containment. Added Claude Code
+v2.1.309 sandbox and permission fixes and v2.1.310's Windows hook correction as
+evidence that enforcement depends on version and execution path. Distinguished
+hooks from OS sandboxing and recorded the filesystem-isolation consequence of
+nested user namespaces. The operating advice now names the known-fix floor and
+requires actual denial-path checks. No independent post-fix validation or
+product-wide demotion is claimed.
+
+### 2026-10-26: AS-02 retry-semantics correction (W43)
+
+Retained Commons/Medium for basic MCP interoperability. Added v2.1.307's
+correction of duplicate HTTP MCP calls after connection loss. Clarified that
+safe retries and recovery from unknown effect outcomes require application
+handling beyond basic exchange, consistent with AS-05's external-effect limit.
+
+### 2026-10-26: AS-11 managed web-tool containment (W43)
+
+Retained Edge/Medium. Added the 20 October organizational web-fetch restrictions
+and the documented composition with subagent, redirect, and applicable cloud
+environment controls. Recorded scope, policy-update timing, and residual
+exfiltration limits. This supports adopting built-in controls without inferring
+general delegation, connector containment, or independent attack resistance. The
+review covers W43 evidence through 25 October; these dates record the
+publication source review on 26 October. Other records and the responsibility
+map retain their own verification dates.
+
 [codex]: https://learn.chatgpt.com/docs/codex/cli
 [claude-code]: https://code.claude.com/docs/en/overview
 [claude-mcp]: https://code.claude.com/docs/en/mcp
@@ -707,6 +798,14 @@ either draft.
   https://www.promptfoo.dev/docs/configuration/expected-outputs/
 [promptfoo-ci]: https://www.promptfoo.dev/docs/integrations/ci-cd/
 [sandbox]: https://code.claude.com/docs/en/sandboxing
+[claude-code-305]:
+  https://github.com/anthropics/claude-code/releases/tag/v2.1.305
+[claude-code-307]:
+  https://github.com/anthropics/claude-code/releases/tag/v2.1.307
+[claude-code-309]:
+  https://github.com/anthropics/claude-code/releases/tag/v2.1.309
+[claude-code-310]:
+  https://github.com/anthropics/claude-code/releases/tag/v2.1.310
 [copilot-sandbox-ga]:
   https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available/
 [copilot-sandbox]:
@@ -721,3 +820,9 @@ either draft.
 [injection-defense]:
   https://openai.com/index/designing-agents-to-resist-prompt-injection/
 [owasp-injection]: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+[claude-platform-oct20]:
+  https://platform.claude.com/docs/en/release-notes/overview#october-20-2026
+[managed-web]:
+  https://platform.claude.com/docs/en/managed-agents/tools-web-restrictions
+[web-fetch]:
+  https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool
