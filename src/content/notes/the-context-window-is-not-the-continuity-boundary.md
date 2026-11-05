@@ -5,7 +5,7 @@ status: exploration
 lifecycle: current
 area: agent workflow
 published: 2026-09-13
-lastRevised: 2026-09-13
+lastRevised: 2026-11-05
 projects: []
 relates:
   - the-agent-is-not-the-application
@@ -14,6 +14,8 @@ relates:
   - a-project-folder-is-a-view-not-an-authority
   - utilization-is-a-signal-not-a-limit
   - a-repository-should-not-contain-everything-its-agents-know
+  - an-idempotency-key-is-not-a-business-invariant
+  - a-supported-workflow-includes-its-operating-environment
 draft: false
 tags:
   - agents
@@ -22,24 +24,28 @@ tags:
   - workflow
   - state
 summary: >-
-  Long-running agent work should continue through a validated handoff and an
-  addressable predecessor, rather than depending on a compacted conversation as
-  its only memory.
+  A successor needs retrievable candidate bytes, owner records, current access
+  and explicit unknown effects. A validated handoff can preserve that work
+  across hosts and harnesses without requiring private predecessor logs.
 explorePrompt: >-
-  Use this note to test a continuity boundary, not to argue that every long
-  conversation should restart. The transferable question is what a successor
-  execution attempt actually needs to continue work correctly, and which of
-  those facts currently exist only in conversation history. This note separates
-  compaction, which keeps a lossy summary in the active working context, from a
-  handoff, which records objective, current state, decisions, evidence,
-  revisions, changed artifacts, unresolved questions, completion criteria, and
-  the next executable step while referencing the stored predecessor. Apply the
-  question to one consequential agent workflow. Choose a coherent boundary,
-  draft the smallest handoff that would let a fresh session resume, and identify
-  the authoritative home of every claim it carries. Challenge the model where
-  work is genuinely conversational, no durable workflow exists, or retrieval of
-  the predecessor is impossible. Produce a handoff schema, its validation test,
-  and the condition under which ordinary compaction remains the better choice.
+  Test what a fresh execution attempt needs to continue consequential work
+  across a host or harness boundary. The worked design preserves a semantic
+  handoff with retrievable candidate bytes, owner records, verification,
+  completion criteria and next actions, while mechanical capture carries its own
+  source intervals and gaps. A hash without available bytes is not a portable
+  checkpoint, an empty gap list does not prove complete capture, and historical
+  release permission does not supply current access. Native resume and successor
+  continuation are separate capabilities. Apply this to a different workflow,
+  identifying where its conversational, data-retention or resource constraints
+  diverge. Produce the smallest authorized handoff packet and a qualification
+  scenario using another harness on a clean host with the predecessor and
+  private raw logs unavailable. Require exact candidate retrieval, current
+  authority, explicit unknown effects and either a safe next step or a precise
+  missing prerequisite. Challenge the design where those facts have no durable
+  owner or ordinary compaction is sufficient. Keep delivery, admission,
+  execution and acceptance distinct; replacing a worker does not prove its
+  remote requests stopped. State what a failed continuation would teach you to
+  preserve next.
 reference:
   purpose: exploratory-hypothesis
   discoverFor:
@@ -49,6 +55,8 @@ reference:
   establishes:
     - why stored transcripts, active context, and durable handoff state serve
       different continuity needs
+    - requirements for portable evidence, declared capture gaps and current
+      access
   doesNotEstablish:
     - that every long conversation should become a durable workflow
     - a universal handoff schema or automatic transition threshold
@@ -90,24 +98,9 @@ authoritative home for any of them.
 ## A handoff preserves a resumption point
 
 A successor does not need every joke, dead end, duplicated log, or abandoned
-plan. It needs a precise state from which to act:
-
-```text
-session A
-   │
-   ├─ objective and current state
-   ├─ decisions and evidence references
-   ├─ source revision and changed artifacts
-   ├─ unresolved questions
-   ├─ completion criteria
-   └─ next executable step
-           │
-           ▼
-     validated handoff
-           │
-           ▼
-       session B
-```
+plan. It needs the objective, current state, decisions, evidence references,
+source revision, candidate artifacts, unresolved questions, completion criteria
+and next executable step. A validated handoff binds those facts to their owners.
 
 The preceding session becomes history rather than working memory. Work
 continuity survives because the successor receives the state needed to resume,
@@ -141,14 +134,68 @@ predecessor:
   session-id: ...
 ```
 
-If a conclusion looks suspicious, the successor can retrieve the relevant piece
-of the predecessor. The old transcript does not need to enter the new context
-wholesale. It remains available as evidence.
+If a conclusion looks suspicious, a successor with current permission can
+retrieve the relevant retained predecessor evidence. Retention and access are
+conditions of that retrieval. A private native session handle is useful on its
+own provider; it is not a portable promise that another host can open it.
 
-Large command output benefits from the same treatment: preserve the complete
-source, project the useful portion into the working set, and retrieve omitted
-detail when a question requires it. The active context then carries what matters
-now while the complete record remains elsewhere.
+Large command output benefits from keeping permitted source evidence separately
+from its bounded working projection. Where source bytes were never captured or
+have expired, the reference must retain that limitation. The successor cannot
+recover omitted detail by trusting a more confident summary.
+
+## Make the packet usable outside the original host
+
+The
+[30 October integration plan](https://github.com/bayleafwalker/vuoro/blob/95ee8b38d2b0d4ba8ff9c636e34228e0e4b7257e/docs/plans/2026-10-30-agent-substrate-integration.md)
+turns the September proposal into sharper implementation requirements. It is a
+plan and contract refinement, with no runtime qualification claim.
+
+A local path and a hash do not make a checkpoint portable. The successor needs
+the exact committed candidate or immutable artifact bytes, or an owner reference
+it can actually resolve and verify. Successful publication and successful
+retrieval are separate observations. A dirty worktree flag cannot substitute for
+the missing diff.
+
+Mechanical capture and the semantic handoff also answer different questions. The
+handoff explains the work; captured source segments support particular claims.
+Capture needs an identified source and version, observed intervals and
+frontiers, and explicit gaps. A clean process exit can leave an unknown tail. An
+empty gap list means no gaps were detected within the observation boundary. It
+does not establish that every expected source was observed.
+
+The
+[capture-integrity profile](https://github.com/bayleafwalker/agentops/blob/1739beb696d92304efb2f7e8b550aa5ef7914a63/docs/plans/agentops/2026-10-30-capture-integrity-and-export.md)
+likewise separates raw captures from sanitized exports. They have different
+digests and a recorded derivation. An internally consistent hash chain cannot
+establish that its producer observed an omitted tail without independent
+frontier or closure evidence.
+
+Release applies to the exact export, including attachments and metadata, for a
+reader, destination and purpose under current policy. A scan with zero findings
+does not grant that permission. An old allow decision remains historical
+evidence; the receiver still needs current access. These checks can run under
+commissioned automatic policy.
+
+## A delivered handoff has not necessarily started execution
+
+Delivery, message handling, admission of an attempt, process outcome, target
+effects and acceptance are distinct facts. A packet that reached an inbox may
+still lack an eligible executor. A process that exited successfully may still
+have an unresolved target operation.
+
+The successor must obtain current work and execution authority from the owning
+systems. Copied permissions in a packet do not issue a new grant. Native resume
+continues a provider-specific session when that capability is supported;
+successor continuation reconstructs the permitted work state. The latter need
+not restore private conversation or process state.
+
+Worker disconnection or lease loss does not prove that remote requests stopped.
+Reconcile outstanding effects or use a destination retry contract that is safe
+across their possible outcomes. The
+[effect-recovery models](/notes/an-idempotency-key-is-not-a-business-invariant/)
+show why a fresh attempt ID alone supplies neither destination deduplication nor
+protection against an obsolete write.
 
 ## Session boundaries become operational choices
 
@@ -165,11 +212,17 @@ when:
 The trigger does not need perfect automation. The more important capability is a
 cheap, testable transition to a successor.
 
-That test should be concrete. Start a fresh session with only the handoff and
-access to its declared sources. It should be able to identify the current
-revision, explain what remains open, reproduce the relevant verification state,
-and perform the next step without guessing at authority. Any fact it can obtain
-only by asking the predecessor to remember better belongs somewhere else.
+That test should be concrete. Use a different native harness on a clean host,
+with only the authorized handoff and permitted owner records. Hide the original
+host, predecessor chat and private raw logs. Ask the successor to retrieve the
+exact candidate, identify the current revision and authority, reproduce the
+relevant verification state and name the capture limits and outstanding effects.
+
+It should then perform the next permitted step or identify a precise missing
+prerequisite and stop safely. A retained predecessor must not regain settlement
+or resource authority merely by sending a late result. Native resume and
+cross-harness continuation receive separate results. No successful replay is
+claimed here; these are the proposed qualification conditions.
 
 ## Compaction still has a role
 

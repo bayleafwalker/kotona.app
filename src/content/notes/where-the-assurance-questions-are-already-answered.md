@@ -45,6 +45,8 @@ explorePrompt: >-
 reference:
   purpose: design-rationale
   discoverFor:
+    - whether agent tooling has a missing assurance layer or established
+      engineering methods already address it
     - which established disciplines already own the assurance questions raised
       by coding agents
     - deciding whether to build assurance tooling or adopt existing practice

@@ -2,15 +2,23 @@
 title: Subprocess, not service
 role: operating
 status: guiding
-lifecycle: current
+lifecycle: superseded
+lifecycleChanged: 2026-10-29
+lifecycleReason: >-
+  The operated-service architecture accepted on 29 October 2026 brings back a
+  resident control plane. The per-attempt worker survives, but a short process
+  lifetime no longer supplies the security properties this note relied on.
+supersededBy:
+  - what-the-subprocess-was-doing-for-free
 area: agent workflow
 published: 2026-06-10
-lastRevised: 2026-09-07
+lastRevised: 2026-11-05
 projects:
   - vuoro
 relates:
   - the-missing-layer-is-binding-not-intelligence
   - the-coordinator-never-touches-the-repo
+  - what-the-subprocess-was-doing-for-free
 terms:
   - term: sprintctl
     definition:
@@ -29,29 +37,25 @@ tags:
   - agents
   - workflow
 summary:
-  actionq-dispatcher runs agent work as subprocesses inside a per-invocation
-  coordinator. The rejected alternative was a long-running agent service, and
-  the rejection is most of the design.
+  The June dispatch design used a per-invocation coordinator and rejected a
+  resident agent service. Retained as historical guidance; the October service
+  decision and its replacement controls are recorded in the successor.
 explorePrompt: >-
-  Use this note as a worked instantiation, not a design to copy. The
-  transferable question: for autonomous work in your environment, what should
-  the unit of execution be, and which properties does a resident process
-  accumulate that a per-invocation one cannot? The worked case runs agent work
-  as a subprocess inside a coordinator invoked once per action: it wakes, claims
-  one action, creates a worktree, takes a claim, renders the prompt, invokes the
-  worker under a per-action-type ACL, runs post-flight gates, transitions state,
-  and exits, leaving no process behind. A resident agent service was rejected on
-  security posture rather than capability, because it accumulates standing
-  credentials, broad reach, and state that exists nowhere reviewable. The
-  coordinator is deliberately deterministic, with no model in the loop;
-  authority to merge or send stays with the operator. Failure handling falls out
-  of the shape: a crashed subprocess is a failed queue entry with its events
-  attached, and recovery is to claim it again. Apply the question to autonomous
-  work you run. Name what your long-lived component holds that would disappear
-  if its lifetime were one unit of work, and what genuinely needs to persist.
-  Say where your constraints diverge -- work that cannot be bounded, startup
-  cost that dominates, state that must survive. Produce the execution unit you
-  would choose and what it costs you.
+  This note is superseded by "What the subprocess was doing for free", which
+  records the October service decision; read that successor first. Use the June
+  note as a historical case of choosing one-action worker lifetimes. Its
+  per-invocation coordinator limited surviving local state and credential
+  exposure, kept judgment in the worker and reserved merging or sending for the
+  operator. The later design retained disposable workers while replacing the
+  coordinator's lifetime guarantees with explicit service controls and allowing
+  routine standing authorization. Apply the historical question to a component
+  you operate: what would disappear if its lifetime were one unit of work, and
+  what must persist? Challenge the assumption that process exit alone revokes
+  copied credentials or stops remote effects. Produce a short inventory of
+  properties supplied by lifetime, properties needing another owner, and the
+  evidence required before choosing a resident coordinator. Keep the obsolete
+  operator-only rule and retired component names out of current implementation
+  advice; use the successor to assess the changed boundary.
 ---
 
 An earlier post argued that the missing layer in solo agent work is binding, not
