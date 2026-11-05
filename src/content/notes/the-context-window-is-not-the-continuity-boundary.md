@@ -24,9 +24,10 @@ tags:
   - workflow
   - state
 summary: >-
-  A successor needs retrievable candidate bytes, owner records, current access
-  and explicit unknown effects. A validated handoff can preserve that work
-  across hosts and harnesses without requiring private predecessor logs.
+  Long-running agent work can move to a fresh attempt through a validated
+  handoff with retrievable candidates, owner records, current access and
+  explicit unknowns. Continuity across hosts and harnesses need not expose
+  private logs.
 explorePrompt: >-
   Test what a fresh execution attempt needs to continue consequential work
   across a host or harness boundary. The worked design preserves a semantic
@@ -49,6 +50,8 @@ explorePrompt: >-
 reference:
   purpose: exploratory-hypothesis
   discoverFor:
+    - replacing an overgrown conversation with a fresh attempt that can continue
+      safely
     - how to hand work from one agent session to another
     - continuing long-running agent work after context compaction
     - designing a validated handoff between agent sessions
@@ -98,9 +101,10 @@ authoritative home for any of them.
 ## A handoff preserves a resumption point
 
 A successor does not need every joke, dead end, duplicated log, or abandoned
-plan. It needs the objective, current state, decisions, evidence references,
-source revision, candidate artifacts, unresolved questions, completion criteria
-and next executable step. A validated handoff binds those facts to their owners.
+plan. It needs a precise state from which to act: the objective, current state,
+decisions, evidence references, source revision, candidate artifacts, unresolved
+questions, completion criteria and next executable step. A validated handoff
+binds those facts to their owners.
 
 The preceding session becomes history rather than working memory. Work
 continuity survives because the successor receives the state needed to resume,
