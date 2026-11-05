@@ -24,3 +24,17 @@ destination permits harmless repetition, the baseline is already valid, mixed
 fallback is the product, raw evidence cannot be released, or a local workflow
 needs no managed composition. Structural coverage, length and uniqueness are
 checked separately by the site's prompt validator.
+
+## Corpus probe maintenance
+
+The Worker test initially rejected the unchanged `discovery` query because its
+probe expected zero results. The five new published notes increased the public
+corpus from 75 to 80 documents; the term still appears in 12 bodies. The
+unchanged 15% indexing rule therefore moved its integer inclusion ceiling from
+11 to 12. The term is now indexed by the intended rule and returns 12 results.
+
+The query is retained. Its expectation now bounds the result set at 15, matching
+the existing nearby `protocol` boundary probe. The `server` and `commit` probes
+still require zero results and exercise common-word exclusion. Ranking code and
+frequency thresholds are unchanged. This is an explicit corpus-fixture update,
+not a claim that the original empty result and the new result are equivalent.
