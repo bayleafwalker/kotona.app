@@ -151,7 +151,7 @@ recover omitted detail by trusting a more confident summary.
 ## Make the packet usable outside the original host
 
 The
-[30 October integration plan](https://github.com/bayleafwalker/vuoro/blob/95ee8b38d2b0d4ba8ff9c636e34228e0e4b7257e/docs/plans/2026-10-30-agent-substrate-integration.md)
+[30 October integration plan](https://github.com/bayleafwalker/vuoro/blob/e9f0b207655f444d41e6e78cc0adfcbfd9e6f0a0/docs/plans/2026-10-30-agent-substrate-integration.md)
 turns the September proposal into sharper implementation requirements. It is a
 plan and contract refinement, with no runtime qualification claim.
 
@@ -169,7 +169,7 @@ empty gap list means no gaps were detected within the observation boundary. It
 does not establish that every expected source was observed.
 
 The
-[capture-integrity profile](https://github.com/bayleafwalker/agentops/blob/1739beb696d92304efb2f7e8b550aa5ef7914a63/docs/plans/agentops/2026-10-30-capture-integrity-and-export.md)
+[capture-integrity profile](https://github.com/bayleafwalker/agentops/blob/8d2f89f8fa9ee1b6820e4e6918048d730efc89dd/docs/plans/agentops/2026-10-30-capture-integrity-and-export.md)
 likewise separates raw captures from sanitized exports. They have different
 digests and a recorded derivation. An internally consistent hash chain cannot
 establish that its producer observed an omitted tail without independent
