@@ -1,0 +1,2288 @@
+{
+  "all_expected_results_observed": true,
+  "assumptions": [
+    "Positive cases use one atomic, durable destination transaction for its new effect and successful receipt.",
+    "All modeled effects pass through the destination; request namespace, explicit slot, and authority are trusted inputs.",
+    "Digest labels are collision-free abstractions; semantic equality is not inferred from text.",
+    "Receipts and installed authority persist unless a scenario explicitly enables their loss.",
+    "Destination fence checks and installation serialize at the effect commitment point.",
+    "Returning an existing receipt is a read and does not constitute a new effect.",
+    "Rejections are permitted request outcomes and are never labeled successful work completion.",
+    "No fairness, progress, liveness, general business correctness, or unbounded proof is claimed."
+  ],
+  "bounds": {
+    "authority_generations": [0, 1],
+    "destinations": 1,
+    "explicit_publication_slots": 1,
+    "intent_digests": ["p0", "p1"],
+    "maximum_deliveries_per_request": 1,
+    "maximum_queries": 1,
+    "maximum_receipt_forgetting_events": 1,
+    "maximum_timeout_replacements": 1,
+    "request_attempts": 2,
+    "request_keys": ["k0", "k1"]
+  },
+  "claim": "Safety results apply only to the stated finite abstraction; no liveness or unbounded proof.",
+  "method": "Breadth-first exhaustive reachable-state exploration of each finite scenario.",
+  "model_version": "1.0.0",
+  "out_of_scope": [
+    "More than two attempts, transport duplication beyond modeled resends, multiple destinations or slots.",
+    "Adversarial authority forgery, data confidentiality, credential distribution, clocks, lease expiry.",
+    "Preparation correctness, semantic acceptance, compound workflows, external nontransactional side effects.",
+    "Causal ordering between different approved operations, full snapshot restoration, fence rollback."
+  ],
+  "scenarios": [
+    {
+      "expected_outcome": "state_space_exhausted",
+      "expected_result_observed": true,
+      "expected_violation": null,
+      "frontier_remaining_when_stopped": 0,
+      "full_reachable_finite_space_exhausted": true,
+      "id": "01_atomic_same_key",
+      "invariants_at_counterexample": null,
+      "outcome": "state_space_exhausted",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "state_space_exhausted",
+        "expected_violation": null,
+        "id": "01_atomic_same_key",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "Timeout can precede delivery; requests and replies can arrive in either order.",
+        "retry_gate": "any",
+        "title": "Atomic destination, stable-key retries"
+      },
+      "shortest_witness_transition_count": null,
+      "states_discovered": 25,
+      "states_explored": 25,
+      "title": "Atomic destination, stable-key retries",
+      "transitions_checked": 38,
+      "violated_invariant": null,
+      "witness": []
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "slot_uniqueness",
+      "frontier_remaining_when_stopped": 0,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "02_fresh_key_same_slot",
+      "invariants_at_counterexample": {
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": false,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": true,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": true,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": true,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k1",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "counterexample",
+        "expected_violation": "slot_uniqueness",
+        "id": "02_fresh_key_same_slot",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k1"],
+        "note": "First commit and lost reply precede the fresh-key retry. Per-key deduplication still holds.",
+        "retry_gate": "first_reply_lost",
+        "title": "Fresh key repeats the same approved slot"
+      },
+      "shortest_witness_transition_count": 6,
+      "states_discovered": 11,
+      "states_explored": 10,
+      "title": "Fresh key repeats the same approved slot",
+      "transitions_checked": 12,
+      "violated_invariant": "slot_uniqueness",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "timeout; replace worker; leave outstanding request unchanged",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 1",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 3
+        },
+        {
+          "action": "lose response for attempt 1",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["lost", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 4
+        },
+        {
+          "action": "send attempt 2: key=k1, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "in_flight"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["lost", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 5
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 2",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              },
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k1",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "finished"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              {
+                "digest": "p0",
+                "key": "k1",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "replaced": true,
+            "reply_phases": ["lost", "pending"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k1",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              }
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 6
+        }
+      ]
+    },
+    {
+      "expected_outcome": "state_space_exhausted",
+      "expected_result_observed": true,
+      "expected_violation": null,
+      "frontier_remaining_when_stopped": 0,
+      "full_reachable_finite_space_exhausted": true,
+      "id": "03_changed_digest_rejected",
+      "invariants_at_counterexample": null,
+      "outcome": "state_space_exhausted",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p1",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p1"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "state_space_exhausted",
+        "expected_violation": null,
+        "id": "03_changed_digest_rejected",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "The initial digest is durably bound before the changed request can be submitted.",
+        "retry_gate": "first_receipt_exists",
+        "title": "Changed digest under an existing key is rejected"
+      },
+      "shortest_witness_transition_count": null,
+      "states_discovered": 21,
+      "states_explored": 21,
+      "title": "Changed digest under an existing key is rejected",
+      "transitions_checked": 30,
+      "violated_invariant": null,
+      "witness": []
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "successful_reply_matches_request",
+      "frontier_remaining_when_stopped": 2,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "04_changed_digest_ignored",
+      "invariants_at_counterexample": {
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": true,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": false,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": true,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p1",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p1"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "counterexample",
+        "expected_violation": "successful_reply_matches_request",
+        "id": "04_changed_digest_ignored",
+        "ignore_digest_mismatch": true,
+        "invariants": [
+          "successful_reply_matches_request",
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "The first binding exists; the receiver omits digest validation and returns its old success.",
+        "retry_gate": "first_receipt_exists",
+        "title": "Faulty receiver returns success for a mismatched request"
+      },
+      "shortest_witness_transition_count": 6,
+      "states_discovered": 16,
+      "states_explored": 13,
+      "title": "Faulty receiver returns success for a mismatched request",
+      "transitions_checked": 21,
+      "violated_invariant": "successful_reply_matches_request",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "timeout; replace worker; leave outstanding request unchanged",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 1",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 3
+        },
+        {
+          "action": "send attempt 2: key=k0, digest=p1, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "in_flight"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 4
+        },
+        {
+          "action": "destination returns stored receipt for attempt 2 (BUG: digest mismatch ignored)",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "finished"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "pending"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              }
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 5
+        },
+        {
+          "action": "deliver response for attempt 2",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "finished"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "received"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              }
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 6
+        }
+      ]
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "per_key_uniqueness",
+      "frontier_remaining_when_stopped": 3,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "05_effect_before_receipt",
+      "invariants_at_counterexample": {
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": false,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": false,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": true,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": true,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": true,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "effect_before_receipt",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "counterexample",
+        "expected_violation": "per_key_uniqueness",
+        "id": "05_effect_before_receipt",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "per_key_uniqueness",
+          "slot_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "Independently durable effect is followed by a separate receipt write; a crash can separate them.",
+        "retry_gate": "first_handler_finished",
+        "title": "Crash between effect and receipt permits a duplicate"
+      },
+      "shortest_witness_transition_count": 6,
+      "states_discovered": 19,
+      "states_explored": 15,
+      "title": "Crash between effect and receipt permits a duplicate",
+      "transitions_checked": 24,
+      "violated_invariant": "per_key_uniqueness",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "timeout; replace worker; leave outstanding request unchanged",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "destination persists effect for attempt 1; receipt not yet written",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["effect_only", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 3
+        },
+        {
+          "action": "crash handler for attempt 1; lose volatile continuation, retain prior durable write",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 4
+        },
+        {
+          "action": "send attempt 2: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "in_flight"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 5
+        },
+        {
+          "action": "destination persists effect for attempt 2; receipt not yet written",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              },
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "effect_only"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 6
+        }
+      ]
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "successful_receipt_has_effect",
+      "frontier_remaining_when_stopped": 4,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "06_receipt_before_effect",
+      "invariants_at_counterexample": {
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": false,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": true,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": true,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "receipt_before_effect",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "counterexample",
+        "expected_violation": "successful_receipt_has_effect",
+        "id": "06_receipt_before_effect",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "successful_receipt_has_effect",
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "The separately written receipt claims committed success, not merely accepted/pending.",
+        "retry_gate": "first_handler_finished",
+        "title": "Crash between successful receipt and effect permits false success"
+      },
+      "shortest_witness_transition_count": 7,
+      "states_discovered": 24,
+      "states_explored": 19,
+      "title": "Crash between successful receipt and effect permits false success",
+      "transitions_checked": 31,
+      "violated_invariant": "successful_receipt_has_effect",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "timeout; replace worker; leave outstanding request unchanged",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "destination persists successful receipt for attempt 1; effect not yet written",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["receipt_only", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 3
+        },
+        {
+          "action": "crash handler for attempt 1; lose volatile continuation, retain prior durable write",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 4
+        },
+        {
+          "action": "send attempt 2: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "in_flight"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 5
+        },
+        {
+          "action": "destination returns stored receipt for attempt 2",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "finished"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["none", "pending"],
+            "responses": [
+              null,
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              }
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 6
+        },
+        {
+          "action": "deliver response for attempt 2",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "finished"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["none", "received"],
+            "responses": [
+              null,
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              }
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 7
+        }
+      ]
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "terminal_nonexecution_is_closed",
+      "frontier_remaining_when_stopped": 12,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "07_absence_is_not_closure",
+      "invariants_at_counterexample": {
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": true,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": true,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": false,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": true,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": true,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "counterexample",
+        "expected_violation": "terminal_nonexecution_is_closed",
+        "id": "07_absence_is_not_closure",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "terminal_nonexecution_is_closed",
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "The lookup is linearizable. The faulty client promotes its absent result to terminal nonexecution.",
+        "retry_gate": "any",
+        "title": "Linearizable absence does not close an in-flight request"
+      },
+      "shortest_witness_transition_count": 4,
+      "states_discovered": 22,
+      "states_explored": 9,
+      "title": "Linearizable absence does not close an in-flight request",
+      "transitions_checked": 26,
+      "violated_invariant": "terminal_nonexecution_is_closed",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "linearizable receipt lookup for k0 returns absent",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "absent",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "declare terminal nonexecution from the earlier absent lookup",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "absent",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": true
+          },
+          "step": 3
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 1",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "absent",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": false,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": true
+          },
+          "step": 4
+        }
+      ]
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "claimed_immediate_remote_revocation",
+      "frontier_remaining_when_stopped": 3,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "08_remote_allocation_not_revocation",
+      "invariants_at_counterexample": {
+        "claimed_immediate_remote_revocation": {
+          "holds": false,
+          "meaning": "Intentionally stronger claim: every commit immediately reflects remote authority allocation."
+        },
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": true,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": true,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": true,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": true,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 1,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": true,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 1],
+        "expected": "counterexample",
+        "expected_violation": "claimed_immediate_remote_revocation",
+        "id": "08_remote_allocation_not_revocation",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "claimed_immediate_remote_revocation",
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "The claimed remote-revocation property is intentionally stronger than the implemented installed fence.",
+        "retry_gate": "any",
+        "title": "Remote allocation does not install target revocation"
+      },
+      "shortest_witness_transition_count": 3,
+      "states_discovered": 8,
+      "states_explored": 4,
+      "title": "Remote allocation does not install target revocation",
+      "transitions_checked": 8,
+      "violated_invariant": "claimed_immediate_remote_revocation",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "allocate authority epoch 1 remotely; destination fence unchanged",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 1,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 1",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 1,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 1,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": false,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 3
+        }
+      ]
+    },
+    {
+      "expected_outcome": "state_space_exhausted",
+      "expected_result_observed": true,
+      "expected_violation": null,
+      "frontier_remaining_when_stopped": 0,
+      "full_reachable_finite_space_exhausted": true,
+      "id": "09_installed_fence",
+      "invariants_at_counterexample": null,
+      "outcome": "state_space_exhausted",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 1,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": true,
+        "allow_fence_installation": true,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 1],
+        "expected": "state_space_exhausted",
+        "expected_violation": null,
+        "id": "09_installed_fence",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "installed_fence_at_commit",
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "An old effect committed before installation remains historically valid. Rejected work need not progress.",
+        "retry_gate": "any",
+        "title": "Installed fence serializes with destination commitment"
+      },
+      "shortest_witness_transition_count": null,
+      "states_discovered": 150,
+      "states_explored": 150,
+      "title": "Installed fence serializes with destination commitment",
+      "transitions_checked": 274,
+      "violated_invariant": null,
+      "witness": []
+    },
+    {
+      "expected_outcome": "counterexample",
+      "expected_result_observed": true,
+      "expected_violation": "per_key_uniqueness",
+      "frontier_remaining_when_stopped": 4,
+      "full_reachable_finite_space_exhausted": false,
+      "id": "10_forgotten_receipt",
+      "invariants_at_counterexample": {
+        "effect_intent_integrity": {
+          "holds": true,
+          "meaning": "Committed effects under one key never use different intent digests."
+        },
+        "installed_fence_at_commit": {
+          "holds": true,
+          "meaning": "Every new effect used the destination-installed epoch at the instant of commitment."
+        },
+        "per_key_uniqueness": {
+          "holds": false,
+          "meaning": "At most one committed effect per destination-scoped operation key."
+        },
+        "slot_uniqueness": {
+          "holds": false,
+          "meaning": "At most one committed publication for the explicitly supplied approved slot."
+        },
+        "successful_receipt_has_effect": {
+          "holds": true,
+          "meaning": "Every received successful receipt has a matching actual committed effect."
+        },
+        "successful_reply_matches_request": {
+          "holds": true,
+          "meaning": "Every received success is bound to that request's key, digest, and approved slot."
+        },
+        "terminal_nonexecution_is_closed": {
+          "holds": true,
+          "meaning": "An operation declared terminally unexecuted has no past or subsequent committed effect."
+        }
+      },
+      "outcome": "counterexample",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": true,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": false,
+        "epochs": [0, 0],
+        "expected": "counterexample",
+        "expected_violation": "per_key_uniqueness",
+        "id": "10_forgotten_receipt",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "per_key_uniqueness",
+          "slot_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k0"],
+        "note": "One explicit forget transition removes destination deduplication while preserving the effect.",
+        "retry_gate": "first_receipt_forgotten",
+        "title": "Receipt loss with surviving effect defeats same-key deduplication"
+      },
+      "shortest_witness_transition_count": 6,
+      "states_discovered": 19,
+      "states_explored": 14,
+      "title": "Receipt loss with surviving effect defeats same-key deduplication",
+      "transitions_checked": 26,
+      "violated_invariant": "per_key_uniqueness",
+      "witness": [
+        {
+          "action": "initial state",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["unsent", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 0
+        },
+        {
+          "action": "send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": false,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 1
+        },
+        {
+          "action": "timeout; replace worker; leave outstanding request unchanged",
+          "state": {
+            "effects": [],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["in_flight", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["none", "none"],
+            "responses": [null, null],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 2
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 1",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": false,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 3
+        },
+        {
+          "action": "forget destination receipt; retain committed external effect",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "unsent"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": true,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 4
+        },
+        {
+          "action": "send attempt 2: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "in_flight"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": true,
+            "receipts": [null, null],
+            "replaced": true,
+            "reply_phases": ["pending", "none"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              null
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 5
+        },
+        {
+          "action": "destination atomically commits effect and receipt for attempt 2",
+          "state": {
+            "effects": [
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              },
+              {
+                "digest": "p0",
+                "epoch": 0,
+                "fence_at_commit": 0,
+                "issued_epoch_at_commit": 0,
+                "key": "k0",
+                "slot": "approved-publication-slot-S"
+              }
+            ],
+            "installed_fence": 0,
+            "issued_epoch": 0,
+            "phases": ["finished", "finished"],
+            "query_observation": "not_queried",
+            "receipt_forgotten": true,
+            "receipts": [
+              {
+                "digest": "p0",
+                "key": "k0",
+                "result": "published:p0",
+                "slot": "approved-publication-slot-S"
+              },
+              null
+            ],
+            "replaced": true,
+            "reply_phases": ["pending", "pending"],
+            "responses": [
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              },
+              {
+                "kind": "committed",
+                "reason": null,
+                "receipt": {
+                  "digest": "p0",
+                  "key": "k0",
+                  "result": "published:p0",
+                  "slot": "approved-publication-slot-S"
+                }
+              }
+            ],
+            "slot_publication": null,
+            "terminal_no_effect": false
+          },
+          "step": 6
+        }
+      ]
+    },
+    {
+      "expected_outcome": "state_space_exhausted",
+      "expected_result_observed": true,
+      "expected_violation": null,
+      "frontier_remaining_when_stopped": 0,
+      "full_reachable_finite_space_exhausted": true,
+      "id": "11_explicit_slot_constraint",
+      "invariants_at_counterexample": null,
+      "outcome": "state_space_exhausted",
+      "requests": [
+        {
+          "attempt": 0,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k0",
+          "slot": "approved-publication-slot-S"
+        },
+        {
+          "attempt": 1,
+          "digest": "p0",
+          "epoch": 0,
+          "key": "k1",
+          "slot": "approved-publication-slot-S"
+        }
+      ],
+      "scenario_configuration": {
+        "allow_epoch_allocation": false,
+        "allow_fence_installation": false,
+        "allow_query": false,
+        "allow_receipt_forgetting": false,
+        "allow_terminal_claim": false,
+        "atomicity": "atomic",
+        "digests": ["p0", "p0"],
+        "enforce_slot_uniqueness": true,
+        "epochs": [0, 0],
+        "expected": "state_space_exhausted",
+        "expected_violation": null,
+        "id": "11_explicit_slot_constraint",
+        "ignore_digest_mismatch": false,
+        "invariants": [
+          "slot_uniqueness",
+          "per_key_uniqueness",
+          "effect_intent_integrity",
+          "successful_reply_matches_request",
+          "successful_receipt_has_effect",
+          "installed_fence_at_commit",
+          "terminal_nonexecution_is_closed"
+        ],
+        "keys": ["k0", "k1"],
+        "note": "The supplied approved slot has an atomic destination uniqueness guard. A conflicting new key is rejected.",
+        "retry_gate": "any",
+        "title": "Destination slot constraint handles two different request IDs"
+      },
+      "shortest_witness_transition_count": null,
+      "states_discovered": 34,
+      "states_explored": 34,
+      "title": "Destination slot constraint handles two different request IDs",
+      "transitions_checked": 50,
+      "violated_invariant": null,
+      "witness": []
+    }
+  ],
+  "state_budget_per_scenario": 200000
+}

@@ -1,0 +1,446 @@
+[
+  {
+    "assumptions": [
+      "B is authorized after the first A commit; no later intended C exists.",
+      "Every modeled target write is atomic and durable; no restoration occurs.",
+      "The version control retains A's original expected version; it never rebases.",
+      "The remembered-operation control retains A's identity and receipt permanently.",
+      "Idempotence of a setter does not imply commutativity with a different setter."
+    ],
+    "bounds": {
+      "A_deliveries": 2,
+      "B_deliveries": 1,
+      "intended_operations": 2
+    },
+    "expectation_met": true,
+    "expected_property_holds": false,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "setter_plain",
+    "property": "After later B commits, retrying old A cannot regress it.",
+    "property_holds": false,
+    "shortest_counterexample": [
+      {
+        "action": "initial",
+        "state": {
+          "a_deliveries": 0,
+          "a_receipt": false,
+          "b_authorized": false,
+          "b_committed": false,
+          "b_delivered": false,
+          "b_expected_version": -1,
+          "value": "initial",
+          "version": 0
+        },
+        "step": 0
+      },
+      {
+        "action": "commit A",
+        "state": {
+          "a_deliveries": 1,
+          "a_receipt": false,
+          "b_authorized": false,
+          "b_committed": false,
+          "b_delivered": false,
+          "b_expected_version": -1,
+          "value": "A",
+          "version": 1
+        },
+        "step": 1
+      },
+      {
+        "action": "authorize later B against current version",
+        "state": {
+          "a_deliveries": 1,
+          "a_receipt": false,
+          "b_authorized": true,
+          "b_committed": false,
+          "b_delivered": false,
+          "b_expected_version": 1,
+          "value": "A",
+          "version": 1
+        },
+        "step": 2
+      },
+      {
+        "action": "commit later B",
+        "state": {
+          "a_deliveries": 1,
+          "a_receipt": false,
+          "b_authorized": true,
+          "b_committed": true,
+          "b_delivered": true,
+          "b_expected_version": 1,
+          "value": "B",
+          "version": 2
+        },
+        "step": 3
+      },
+      {
+        "action": "retry A: set value to A",
+        "state": {
+          "a_deliveries": 2,
+          "a_receipt": false,
+          "b_authorized": true,
+          "b_committed": true,
+          "b_delivered": true,
+          "b_expected_version": 1,
+          "value": "A",
+          "version": 3
+        },
+        "step": 4
+      }
+    ],
+    "states_discovered": 8,
+    "states_explored": 8,
+    "transitions_explored": 8,
+    "violation": "Old A overwrote an already committed, later authorized B."
+  },
+  {
+    "assumptions": [
+      "B is authorized after the first A commit; no later intended C exists.",
+      "Every modeled target write is atomic and durable; no restoration occurs.",
+      "The version control retains A's original expected version; it never rebases.",
+      "The remembered-operation control retains A's identity and receipt permanently.",
+      "Idempotence of a setter does not imply commutativity with a different setter."
+    ],
+    "bounds": {
+      "A_deliveries": 2,
+      "B_deliveries": 1,
+      "intended_operations": 2
+    },
+    "expectation_met": true,
+    "expected_property_holds": true,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "setter_version_conditional",
+    "property": "After later B commits, retrying old A cannot regress it.",
+    "property_holds": true,
+    "shortest_counterexample": null,
+    "states_discovered": 7,
+    "states_explored": 7,
+    "transitions_explored": 8,
+    "violation": null
+  },
+  {
+    "assumptions": [
+      "B is authorized after the first A commit; no later intended C exists.",
+      "Every modeled target write is atomic and durable; no restoration occurs.",
+      "The version control retains A's original expected version; it never rebases.",
+      "The remembered-operation control retains A's identity and receipt permanently.",
+      "Idempotence of a setter does not imply commutativity with a different setter."
+    ],
+    "bounds": {
+      "A_deliveries": 2,
+      "B_deliveries": 1,
+      "intended_operations": 2
+    },
+    "expectation_met": true,
+    "expected_property_holds": true,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "setter_remembered_operation",
+    "property": "After later B commits, retrying old A cannot regress it.",
+    "property_holds": true,
+    "shortest_counterexample": null,
+    "states_discovered": 7,
+    "states_explored": 7,
+    "transitions_explored": 8,
+    "violation": null
+  },
+  {
+    "assumptions": [
+      "Without reservation, both replicas initially observe one available unit.",
+      "Merge is set union of distinct allocation records; it does not undo acceptance.",
+      "Reservation is one authoritative atomic allocation of a unique, nonduplicable right.",
+      "The right is not transferred, restored, forged, or consumed twice in this model.",
+      "This is a specific nonconfluent-invariant example, not a general confluence checker."
+    ],
+    "bounds": {
+      "allocations_per_replica": 1,
+      "global_budget": 1,
+      "merges": 1,
+      "replicas": 2
+    },
+    "expectation_met": true,
+    "expected_property_holds": false,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "budget_independent_local_checks",
+    "property": "The merged allocation set contains at most one allocation.",
+    "property_holds": false,
+    "shortest_counterexample": [
+      {
+        "action": "initial",
+        "state": {
+          "a_allocated": false,
+          "b_allocated": false,
+          "merged": false,
+          "right_owner": "none"
+        },
+        "step": 0
+      },
+      {
+        "action": "A accepts one allocation locally",
+        "state": {
+          "a_allocated": true,
+          "b_allocated": false,
+          "merged": false,
+          "right_owner": "none"
+        },
+        "step": 1
+      },
+      {
+        "action": "B accepts one allocation locally",
+        "state": {
+          "a_allocated": true,
+          "b_allocated": true,
+          "merged": false,
+          "right_owner": "none"
+        },
+        "step": 2
+      },
+      {
+        "action": "merge the allocation records",
+        "state": {
+          "a_allocated": true,
+          "b_allocated": true,
+          "merged": true,
+          "right_owner": "none"
+        },
+        "step": 3
+      }
+    ],
+    "states_discovered": 8,
+    "states_explored": 8,
+    "transitions_explored": 8,
+    "violation": "Two locally valid allocations merge into a total above the global limit 1."
+  },
+  {
+    "assumptions": [
+      "Without reservation, both replicas initially observe one available unit.",
+      "Merge is set union of distinct allocation records; it does not undo acceptance.",
+      "Reservation is one authoritative atomic allocation of a unique, nonduplicable right.",
+      "The right is not transferred, restored, forged, or consumed twice in this model.",
+      "This is a specific nonconfluent-invariant example, not a general confluence checker."
+    ],
+    "bounds": {
+      "allocations_per_replica": 1,
+      "global_budget": 1,
+      "merges": 1,
+      "replicas": 2
+    },
+    "expectation_met": true,
+    "expected_property_holds": true,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "budget_reserved_right",
+    "property": "The merged allocation set contains at most one allocation.",
+    "property_holds": true,
+    "shortest_counterexample": null,
+    "states_discovered": 10,
+    "states_explored": 10,
+    "transitions_explored": 9,
+    "violation": null
+  },
+  {
+    "assumptions": [
+      "The operation ID survives restoration and is identical on both deliveries.",
+      "Effect and receipt are committed or restored together in one destination database.",
+      "Restoration happens after an external observer saw a publication and completion was recorded.",
+      "The outside observer is not restored and has no independent operation deduplication.",
+      "No other publisher, forged receipt, partial database transaction, or third delivery exists.",
+      "The claimed property concerns historical visibility, not uniqueness of current stored rows."
+    ],
+    "bounds": {
+      "deliveries": 2,
+      "logical_operations": 1,
+      "restorations": 1
+    },
+    "expectation_met": true,
+    "expected_property_holds": false,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "rollback_target_and_coordinator",
+    "property": "One operation produces at most one externally observed publication.",
+    "property_holds": false,
+    "shortest_counterexample": [
+      {
+        "action": "initial",
+        "state": {
+          "coordinator_done": false,
+          "deliveries": 0,
+          "external_observations": 0,
+          "observations_pending": 0,
+          "reply_pending": false,
+          "rollback_used": false,
+          "target_published": false,
+          "target_receipt": false
+        },
+        "step": 0
+      },
+      {
+        "action": "atomically commit publication and receipt",
+        "state": {
+          "coordinator_done": false,
+          "deliveries": 1,
+          "external_observations": 0,
+          "observations_pending": 1,
+          "reply_pending": true,
+          "rollback_used": false,
+          "target_published": true,
+          "target_receipt": true
+        },
+        "step": 1
+      },
+      {
+        "action": "external observer records a committed publication",
+        "state": {
+          "coordinator_done": false,
+          "deliveries": 1,
+          "external_observations": 1,
+          "observations_pending": 0,
+          "reply_pending": true,
+          "rollback_used": false,
+          "target_published": true,
+          "target_receipt": true
+        },
+        "step": 2
+      },
+      {
+        "action": "coordinator records completion",
+        "state": {
+          "coordinator_done": true,
+          "deliveries": 1,
+          "external_observations": 1,
+          "observations_pending": 0,
+          "reply_pending": false,
+          "rollback_used": false,
+          "target_published": true,
+          "target_receipt": true
+        },
+        "step": 3
+      },
+      {
+        "action": "restore coordinator AND target before publication",
+        "state": {
+          "coordinator_done": false,
+          "deliveries": 1,
+          "external_observations": 1,
+          "observations_pending": 0,
+          "reply_pending": false,
+          "rollback_used": true,
+          "target_published": false,
+          "target_receipt": false
+        },
+        "step": 4
+      },
+      {
+        "action": "atomically commit publication and receipt",
+        "state": {
+          "coordinator_done": false,
+          "deliveries": 2,
+          "external_observations": 1,
+          "observations_pending": 1,
+          "reply_pending": true,
+          "rollback_used": true,
+          "target_published": true,
+          "target_receipt": true
+        },
+        "step": 5
+      },
+      {
+        "action": "external observer records a committed publication",
+        "state": {
+          "coordinator_done": false,
+          "deliveries": 2,
+          "external_observations": 2,
+          "observations_pending": 0,
+          "reply_pending": true,
+          "rollback_used": true,
+          "target_published": true,
+          "target_receipt": true
+        },
+        "step": 6
+      }
+    ],
+    "states_discovered": 15,
+    "states_explored": 15,
+    "transitions_explored": 18,
+    "violation": "Outside observer saw two committed publications for the same operation."
+  },
+  {
+    "assumptions": [
+      "The operation ID survives restoration and is identical on both deliveries.",
+      "Effect and receipt are committed or restored together in one destination database.",
+      "Restoration happens after an external observer saw a publication and completion was recorded.",
+      "The outside observer is not restored and has no independent operation deduplication.",
+      "No other publisher, forged receipt, partial database transaction, or third delivery exists.",
+      "The claimed property concerns historical visibility, not uniqueness of current stored rows."
+    ],
+    "bounds": {
+      "deliveries": 2,
+      "logical_operations": 1,
+      "restorations": 1
+    },
+    "expectation_met": true,
+    "expected_property_holds": true,
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "rollback_coordinator_only",
+    "property": "One operation produces at most one externally observed publication.",
+    "property_holds": true,
+    "shortest_counterexample": null,
+    "states_discovered": 13,
+    "states_explored": 13,
+    "transitions_explored": 15,
+    "violation": null
+  },
+  {
+    "assumptions": [
+      "Dispatch is enabled continuously in the initial state, but is not required to occur.",
+      "The idle transition is always enabled; no scheduling fairness is assumed.",
+      "Successful dispatch and completion are collapsed into one atomic step in this tiny example."
+    ],
+    "bounds": {
+      "operations": 1,
+      "states": 2
+    },
+    "expectation_met": true,
+    "expected_property_holds": true,
+    "explicit_progress_counterexample": {
+      "claim": "Every admitted operation eventually completes.",
+      "cycle": [
+        {
+          "action": "idle",
+          "state": {
+            "admitted": true,
+            "completed": false,
+            "publications": 0
+          }
+        }
+      ],
+      "explanation": "Repeating the exhibited idle self-loop forever is an allowed run. It never completes and never violates safety. Weak fairness for the continuously enabled dispatch transition would exclude this run. This is an explicit liveness witness, not a general liveness model check.",
+      "prefix": [
+        {
+          "action": "initial",
+          "state": {
+            "admitted": true,
+            "completed": false,
+            "publications": 0
+          }
+        }
+      ]
+    },
+    "finite_state_space_exhausted": true,
+    "kind": "bounded_safety_exploration",
+    "model": "safety_without_dispatch_fairness",
+    "property": "At most one publication occurs.",
+    "property_holds": true,
+    "shortest_counterexample": null,
+    "states_discovered": 2,
+    "states_explored": 2,
+    "transitions_explored": 3,
+    "violation": null
+  }
+]

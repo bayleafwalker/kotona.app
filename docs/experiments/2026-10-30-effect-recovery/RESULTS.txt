@@ -1,0 +1,92 @@
+RECORDED FINITE-MODEL RESULTS
+2026-10-30
+
+Models: 19
+Negative protocols with safety counterexamples: 10
+Controls exhausted without a safety violation: 8
+Additional safety model with explicit infinite-idle progress counterexample: 1
+States discovered across the separate explorations: 419
+Transitions checked across the separate explorations: 617
+
+Counts sum different finite models, not a single combined system. Protocol negative
+searches stop at the first BFS counterexample. Positive searches and all ordering
+graphs are fully exhausted. All expected outcomes were observed.
+
+PROTOCOL MODELS
+01_atomic_same_key | state_space_exhausted | 25 states discovered | 38 transitions
+02_fresh_key_same_slot | counterexample | 11 states discovered | 12 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. timeout; replace worker; leave outstanding request unchanged
+  3. destination atomically commits effect and receipt for attempt 1
+  4. lose response for attempt 1
+  5. send attempt 2: key=k1, digest=p0, slot=approved-publication-slot-S, epoch=0
+  6. destination atomically commits effect and receipt for attempt 2
+03_changed_digest_rejected | state_space_exhausted | 21 states discovered | 30 transitions
+04_changed_digest_ignored | counterexample | 16 states discovered | 21 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. timeout; replace worker; leave outstanding request unchanged
+  3. destination atomically commits effect and receipt for attempt 1
+  4. send attempt 2: key=k0, digest=p1, slot=approved-publication-slot-S, epoch=0
+  5. destination returns stored receipt for attempt 2 (BUG: digest mismatch ignored)
+  6. deliver response for attempt 2
+05_effect_before_receipt | counterexample | 19 states discovered | 24 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. timeout; replace worker; leave outstanding request unchanged
+  3. destination persists effect for attempt 1; receipt not yet written
+  4. crash handler for attempt 1; lose volatile continuation, retain prior durable write
+  5. send attempt 2: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  6. destination persists effect for attempt 2; receipt not yet written
+06_receipt_before_effect | counterexample | 24 states discovered | 31 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. timeout; replace worker; leave outstanding request unchanged
+  3. destination persists successful receipt for attempt 1; effect not yet written
+  4. crash handler for attempt 1; lose volatile continuation, retain prior durable write
+  5. send attempt 2: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  6. destination returns stored receipt for attempt 2
+  7. deliver response for attempt 2
+07_absence_is_not_closure | counterexample | 22 states discovered | 26 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. linearizable receipt lookup for k0 returns absent
+  3. declare terminal nonexecution from the earlier absent lookup
+  4. destination atomically commits effect and receipt for attempt 1
+08_remote_allocation_not_revocation | counterexample | 8 states discovered | 8 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. allocate authority epoch 1 remotely; destination fence unchanged
+  3. destination atomically commits effect and receipt for attempt 1
+09_installed_fence | state_space_exhausted | 150 states discovered | 274 transitions
+10_forgotten_receipt | counterexample | 19 states discovered | 26 transitions
+  1. send attempt 1: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  2. timeout; replace worker; leave outstanding request unchanged
+  3. destination atomically commits effect and receipt for attempt 1
+  4. forget destination receipt; retain committed external effect
+  5. send attempt 2: key=k0, digest=p0, slot=approved-publication-slot-S, epoch=0
+  6. destination atomically commits effect and receipt for attempt 2
+11_explicit_slot_constraint | state_space_exhausted | 34 states discovered | 50 transitions
+
+ORDERING / RESTORE / PROGRESS MODELS
+setter_plain | safety counterexample | 8 states | 8 transitions
+  1. commit A
+  2. authorize later B against current version
+  3. commit later B
+  4. retry A: set value to A
+setter_version_conditional | finite safety invariant holds | 7 states | 8 transitions
+setter_remembered_operation | finite safety invariant holds | 7 states | 8 transitions
+budget_independent_local_checks | safety counterexample | 8 states | 8 transitions
+  1. A accepts one allocation locally
+  2. B accepts one allocation locally
+  3. merge the allocation records
+budget_reserved_right | finite safety invariant holds | 10 states | 9 transitions
+rollback_target_and_coordinator | safety counterexample | 15 states | 18 transitions
+  1. atomically commit publication and receipt
+  2. external observer records a committed publication
+  3. coordinator records completion
+  4. restore coordinator AND target before publication
+  5. atomically commit publication and receipt
+  6. external observer records a committed publication
+rollback_coordinator_only | finite safety invariant holds | 13 states | 15 transitions
+safety_without_dispatch_fairness | finite safety invariant holds | 2 states | 3 transitions
+  Allowed progress counterexample: initial -> idle -> idle -> ... forever.
+
+Interpretation: these are executable finite abstractions. They are not a formal
+proof for unbounded executions, a general liveness check, or validation of any
+deployed application. Read each model and its scenario-specific assumptions.

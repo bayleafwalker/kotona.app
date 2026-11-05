@@ -117,9 +117,10 @@
   },
   {
     "id": "common-prose-discovery",
-    "class": "common vocabulary",
+    "class": "prose frequency boundary",
     "query": "discovery",
-    "expectNoResults": true
+    "note": "The November corpus grew from 75 to 80 documents while this word remained in 12 bodies. It now meets the unchanged 15% inclusion threshold (12, previously 11). Keep the query and bound its breadth; server and commit still cover common-word exclusion.",
+    "maxResults": 15
   },
   {
     "id": "common-prose-protocol",
