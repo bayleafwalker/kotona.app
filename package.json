@@ -57,6 +57,7 @@
     "yaml": "^2.9.0"
   },
   "overrides": {
+    "minimatch": "11.0.1",
     "sharp": "$sharp",
     "undici": "7.30.1"
   },
