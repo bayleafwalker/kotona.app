@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "repo_id": "kotona.app",
+  "authority_repo_uuid": "8ba5cfc2-dc3b-52c2-87c9-d94a0fab587a",
+  "adoption_level": "guidance-only",
+  "routing": {
+    "default_harness": "caller",
+    "default_model_alias": "fast-build",
+    "action_classes": {
+      "plan": {
+        "enabled": true
+      },
+      "build": {
+        "enabled": true,
+        "review_required": true
+      },
+      "review": {
+        "enabled": true
+      },
+      "verify": {
+        "enabled": true,
+        "review_required": true
+      }
+    }
+  },
+  "skills": {
+    "template_root": "/projects/dev/agentops/templates/dispatch/skills",
+    "selected": [
+      "dispatch-plan",
+      "dispatch-build",
+      "dispatch-review",
+      "code-change-verification"
+    ]
+  },
+  "verification": {
+    "command_families": [
+      "unit"
+    ]
+  },
+  "hooks": {
+    "level": "none",
+    "publishers": []
+  }
+}
