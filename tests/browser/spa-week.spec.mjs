@@ -64,7 +64,9 @@ test("the no-script explanation retains the checked hourly result", async ({
   try {
     const page = await context.newPage();
     await page.goto("/notes/size-the-spa-to-the-river/");
-    const explanation = page.locator("[data-spa-week] noscript");
+    // Playwright excludes NOSCRIPT itself from text matching even in a
+    // JavaScript-disabled context. Its rendered paragraph is the assertion target.
+    const explanation = page.locator("[data-spa-week] noscript p");
     await expect(explanation).toBeVisible();
     for (const key of ["gridImportKwh", "gridExportKwh", "directUseKwh"])
       await expect(explanation).toContainText(

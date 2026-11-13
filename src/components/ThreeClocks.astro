@@ -18,9 +18,9 @@ const timeLabel = (value: string) =>
 >
   <p class="scope">Synthetic purchase records · all times UTC</p>
   <div class="clock-controls">
-    <label>
-      <span>Valid time</span>
-      <select data-clock-valid>
+    <div class="clock-control">
+      <label for="three-clocks-valid">Valid time</label>
+      <select id="three-clocks-valid" data-clock-valid>
         {
           fixture.validTimeOptions.map((value) => (
             <option
@@ -32,10 +32,10 @@ const timeLabel = (value: string) =>
           ))
         }
       </select>
-    </label>
-    <label>
-      <span>Record time cutoff</span>
-      <select data-clock-record>
+    </div>
+    <div class="clock-control">
+      <label for="three-clocks-record">Record time cutoff</label>
+      <select id="three-clocks-record" data-clock-record>
         {
           fixture.recordTimeOptions.map((value) => (
             <option
@@ -47,10 +47,10 @@ const timeLabel = (value: string) =>
           ))
         }
       </select>
-    </label>
-    <label class="interpretation-control">
-      <span>Interpretation version</span>
-      <select data-clock-interpretation>
+    </div>
+    <div class="clock-control interpretation-control">
+      <label for="three-clocks-interpretation">Interpretation version</label>
+      <select id="three-clocks-interpretation" data-clock-interpretation>
         {
           fixture.input.interpretations.map((entry) => (
             <option
@@ -62,7 +62,7 @@ const timeLabel = (value: string) =>
           ))
         }
       </select>
-    </label>
+    </div>
   </div>
   <label class="history-control">
     <input type="checkbox" data-clock-overwrite />
@@ -248,7 +248,7 @@ const timeLabel = (value: string) =>
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.85rem;
   }
-  .clock-controls label {
+  .clock-control {
     display: grid;
     gap: 0.3rem;
     font-size: 0.9rem;

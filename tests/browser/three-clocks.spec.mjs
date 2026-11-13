@@ -48,6 +48,15 @@ test("both time controls select the correct assertion and its explicit labels", 
 }) => {
   const exhibit = await openExhibit(page);
   const first = exhibit.locator('[data-record="p-101"]');
+  await expect(exhibit.locator("[data-clock-valid]")).toHaveAccessibleName(
+    "Valid time",
+  );
+  await expect(exhibit.locator("[data-clock-record]")).toHaveAccessibleName(
+    "Record time cutoff",
+  );
+  await expect(
+    exhibit.locator("[data-clock-interpretation]"),
+  ).toHaveAccessibleName("Interpretation version");
   await exhibit.getByLabel("Interpretation version").selectOption("corrected");
   await exhibit
     .getByLabel("Valid time", { exact: true })

@@ -1,6 +1,12 @@
 ---
 import { humanizeLabel } from "../lib/content-labels.js";
 import type { KnowledgeGraph } from "../lib/knowledge-map";
+import {
+  clusterHeadingLineHeight,
+  knowledgeMapViewBox,
+  nodeLabelBaseline,
+  reserveClusterHeading,
+} from "../lib/knowledge-map-layout";
 import type { ReferenceSearchDocument } from "../lib/reference-ranking.js";
 
 type Props = {
@@ -28,11 +34,9 @@ const projectMapLabels: Record<string, string> = {
   "household-operating-platform": "Homelab Analytics",
 };
 const clusterLabelYOverrides: Record<string, number> = {
-  // The fourth agent ring reaches y=-15, with Vuoro's label at y=-27.
-  // Keep the two-line heading above it with deliberate clearance. The
-  // viewBox reserves extra top margin rather than clipping the heading;
-  // browser tests measure actual label clearance at each supported width.
-  "agents-assurance": -64, // labelY coordinate
+  // Preferred baseline only: the expanding agent ring also reserves space
+  // for its actual markers and persistent labels below the whole heading.
+  "agents-assurance": -64,
   // Keep the organizational heading separate from its own nodes. The
   // neighboring Vuoro label is lifted as the agent cluster expands.
   "organizational-practice": 315,
@@ -77,6 +81,27 @@ const nodeLabel = (node: (typeof graph.nodes)[number]) => {
     anchor: liftVuoro ? "middle" : defaultAnchor,
   };
 };
+const clusterLabels = graph.clusters.map((cluster) => {
+  const nodes = graph.nodes.filter((node) => node.cluster === cluster.id);
+  const { x, y } = clusterCentres.get(cluster.id)!;
+  const lines = labelLines(cluster.label, 31);
+  const preferredY = clusterLabelYOverrides[cluster.id] ?? Math.max(20, y - 95);
+  const labelY =
+    cluster.id === "agents-assurance"
+      ? reserveClusterHeading(
+          preferredY,
+          lines.length,
+          nodes.map((node) => ({
+            y: node.y,
+            label: node.type === "project" ? nodeLabel(node) : undefined,
+          })),
+        )
+      : preferredY;
+  return { cluster, x, lines, labelY };
+});
+const mapViewBox = knowledgeMapViewBox(
+  clusterLabels.map(({ labelY }) => labelY),
+);
 const edgeCoordinates = (
   source: (typeof graph.nodes)[number],
   target: (typeof graph.nodes)[number],
@@ -149,7 +174,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     <div class="knowledge-map-frame" aria-label="Visual knowledge map">
       <svg
         class="knowledge-map"
-        viewBox="0 -84 1000 704"
+        viewBox={mapViewBox}
         aria-label="Knowledge atlas for published notes and projects"
         aria-describedby="knowledge-map-desc"
       >
@@ -172,19 +197,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           </marker>
         </defs>
         {
-          graph.clusters.map((cluster) => {
-            const clusterConfig = graph.nodes.filter(
-              (node) => node.cluster === cluster.id,
-            );
-            const x =
-              clusterConfig.reduce((sum, node) => sum + node.x, 0) /
-              clusterConfig.length;
-            const y =
-              clusterConfig.reduce((sum, node) => sum + node.y, 0) /
-              clusterConfig.length;
-            const lines = labelLines(cluster.label, 31);
-            const labelY =
-              clusterLabelYOverrides[cluster.id] ?? Math.max(20, y - 95);
+          clusterLabels.map(({ cluster, x, lines, labelY }) => {
             return (
               <g
                 class="knowledge-cluster-control"
@@ -201,7 +214,10 @@ const clusterNodes = graph.clusters.map((cluster) => ({
                   text-anchor="middle"
                 >
                   {lines.map((line, index) => (
-                    <tspan x={x} dy={index === 0 ? 0 : 15}>
+                    <tspan
+                      x={x}
+                      dy={index === 0 ? 0 : clusterHeadingLineHeight}
+                    >
                       {line}
                     </tspan>
                   ))}
@@ -292,7 +308,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
                         "is-persistent": node.type === "project",
                       }}
                       x={label.x}
-                      y={label.y - (label.lines.length - 1) * 6}
+                      y={nodeLabelBaseline(label)}
                       text-anchor={label.anchor}
                     >
                       {label.lines.map((line, index) => (
