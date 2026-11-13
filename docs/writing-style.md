@@ -79,6 +79,22 @@ observed, the fix or decision, and the lesson or remaining uncertainty. Keep
 dates, commands, counts, and inconvenient details when they establish the
 record.
 
+### Exhibit
+
+Use for a claim that can be inspected by running a bounded example. Start with
+the claim and the smallest case that can disprove it. Bind the same
+implementation to the page and its test fixtures, or present a reproducible
+trace exported by an implementation at an immutable revision. Expected results
+must be independent assertions; include a deliberately wrong behavior that the
+checks reject. Browser checks must verify that the displayed state matches the
+checked result.
+
+Name synthetic data, interpretation versions, units, and time axes explicitly.
+State what the checks establish and which hardware, deployment, or recovery
+behavior remains untested. Attach the exhibit to a note using its `exhibit`
+frontmatter binding. A prose note can keep its own role when it contains a small
+exhibit, as the spa exploration does. No new section is needed.
+
 ## Shared checks
 
 - Ground the first use of a local abstraction in one concrete sentence. For

@@ -1,13 +1,21 @@
 ---
 title: Size the spa to the river
 role: exploration
+exhibit:
+  id: spa-week
+  implementation: src/lib/exhibits/spa-week.js
+  fixtures: src/data/exhibits/spa-week.json
+  presentation: src/components/SpaWeek.astro
+  tests:
+    - tests/spa-week.test.mjs
+    - tests/browser/spa-week.spec.mjs
 seoTitle: A river-powered hydro spa retreat in Finland
 socialTitle: Size the spa to the river
 status: exploration
 lifecycle: current
 area: energy systems
 published: 2026-07-19
-lastRevised: 2026-07-19
+lastRevised: 2026-11-13
 projects: []
 relates:
   - delivered-energy
@@ -50,6 +58,8 @@ explorePrompt: >-
   seasonality, a permitting regime with different gates. Produce a
   disproof-ordered build sequence with its clean failure mode named.
 ---
+
+import SpaWeek from "../../components/SpaWeek.astro";
 
 Size the spa to the river, not the river to the spa.
 
@@ -148,6 +158,8 @@ The useful operating envelope is:
 These are scenario averages, not design guarantees. The weakest river period can
 overlap the coldest weather, and pools, water treatment, frost protection, and
 ventilation do not accept an annual renewable certificate in place of power.
+
+<SpaWeek />
 
 The control hierarchy is:
 

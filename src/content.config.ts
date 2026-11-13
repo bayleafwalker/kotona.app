@@ -42,6 +42,28 @@ const sharedProjectSchema = {
   reference: referenceScope,
 };
 
+const exhibitPath = z
+  .string()
+  .regex(/^(?:src|tests)\/[A-Za-z0-9_./-]+$/)
+  .refine((value) => !value.split("/").includes(".."));
+
+const exhibitBinding = z
+  .object({
+    id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    implementation: exhibitPath,
+    fixtures: exhibitPath,
+    presentation: exhibitPath.optional(),
+    tests: z.array(exhibitPath).min(2),
+    upstream: z
+      .object({
+        repository: z.string().regex(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/),
+        revision: z.string().regex(/^[a-f0-9]{40}$/),
+        source: z.string().regex(/^[A-Za-z0-9_./-]+$/),
+      })
+      .optional(),
+  })
+  .optional();
+
 const notes = defineCollection({
   loader: glob({
     base: "./src/content/notes",
@@ -61,7 +83,9 @@ const notes = defineCollection({
         "synthesis",
         "exploration",
         "project-history",
+        "exhibit",
       ]),
+      exhibit: exhibitBinding,
       status: z.enum(["guiding", "prospective", "exploration", "archival"]),
       lifecycle: z.enum(["current", "superseded", "archived", "disproven"]),
       lifecycleChanged: z.coerce.date().optional(),
@@ -97,6 +121,14 @@ const notes = defineCollection({
       draft: z.boolean().default(false),
     })
     .superRefine((note, context) => {
+      if (note.role === "exhibit" && !note.exhibit) {
+        context.addIssue({
+          code: "custom",
+          path: ["exhibit"],
+          message:
+            "An exhibit requires implementation, fixture, and check bindings.",
+        });
+      }
       for (const issue of noteLifecycleIssues(note)) {
         context.addIssue({
           code: "custom",

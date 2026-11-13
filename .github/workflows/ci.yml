@@ -23,6 +23,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Read pinned Decimal Iron revision
+        id: decimal
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const trace = JSON.parse(fs.readFileSync("src/data/exhibits/decimal-iron-replay.json", "utf8"));
+            const revision = trace.implementation.revision;
+            if (!/^[a-f0-9]{40}$/.test(revision)) throw new Error("An immutable upstream revision is required");
+            console.log(`revision=${revision}`);
+          ' >> "$GITHUB_OUTPUT"
+
+      - name: Checkout pinned Decimal Iron implementation
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          repository: bayleafwalker/decimal-iron
+          ref: ${{ steps.decimal.outputs.revision }}
+          path: temp/decimal-iron
+
+      - name: Regenerate and compare Decimal Iron trace
+        working-directory: temp/decimal-iron
+        run: python -m decimal_iron replay --check "$GITHUB_WORKSPACE/src/data/exhibits/decimal-iron-replay.json"
+
       - name: Audit dependencies
         run: npm run audit:dependencies
 
@@ -46,6 +68,9 @@ jobs:
 
       - name: Agent-skills index digest drift
         run: npm run check:agent-skills
+
+      - name: Exhibit implementation and fixture bindings
+        run: npm run check:exhibits
 
       - name: Type, content, and editorial-role checks
         run: npm run check

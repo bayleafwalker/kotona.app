@@ -7,9 +7,9 @@
     "node": ">=24.16.0 <25"
   },
   "scripts": {
-    "predev": "npm run generate:og && npm run generate:agent-skills",
+    "predev": "npm run generate:og && npm run generate:agent-skills && npm run generate:exhibits",
     "dev": "astro dev",
-    "prebuild": "npm run generate:og && npm run generate:agent-skills",
+    "prebuild": "npm run generate:og && npm run generate:agent-skills && npm run generate:exhibits",
     "build": "astro build",
     "preview": "npm run build && astro preview",
     "deploy": "npm run build && wrangler deploy",
@@ -20,6 +20,7 @@
     "check:content-shape": "node scripts/check-content-shape.mjs",
     "check:explore-prompts": "node scripts/check-explore-prompts.mjs",
     "check:agent-skills": "node scripts/generate-agent-skills-index.mjs --check",
+    "check:exhibits": "node scripts/check-exhibits.mjs",
     "check:links": "node scripts/check-external-links.mjs",
     "context:bind": "node scripts/bind-context.mjs",
     "lint": "eslint .",
@@ -31,7 +32,8 @@
     "format:write": "prettier --write .",
     "generate:og": "node scripts/generate-og-images.mjs",
     "generate:agent-skills": "node scripts/generate-agent-skills-index.mjs",
-    "validate": "npm run format && npm run lint && npm test && npm run audit:dependencies && npm run check:content-freshness && npm run check:content-shape && npm run check:explore-prompts && npm run check:agent-skills && npm run check && npm run build && npm run test:worker && npm run test:retrieval",
+    "generate:exhibits": "node scripts/check-exhibits.mjs --write",
+    "validate": "npm run format && npm run lint && npm test && npm run audit:dependencies && npm run check:content-freshness && npm run check:content-shape && npm run check:explore-prompts && npm run check:agent-skills && npm run check:exhibits && npm run check && npm run build && npm run test:worker && npm run test:retrieval",
     "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {

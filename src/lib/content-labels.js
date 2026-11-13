@@ -25,6 +25,7 @@ const displayLabels = new Map([
  * carries the kind of thing it describes.
  */
 const roleLabels = new Map([
+  ["exhibit", "Exhibit"],
   ["exploration", "Exploration note"],
   ["operating", "Operating note"],
   ["project-history", "Project history"],

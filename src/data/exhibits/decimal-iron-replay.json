@@ -1,0 +1,2798 @@
+{
+  "fixture": {
+    "path": "decimal_iron/fixtures/replay-scenarios.json",
+    "schema": "decimal-iron-scenarios/v1",
+    "sha256": "3a91f4dd3a8f24a9080b6e5e2b63401d27ddbcd45f96b972a870531a5fe893cb"
+  },
+  "implementation": {
+    "clean": true,
+    "repository": "https://github.com/bayleafwalker/decimal-iron",
+    "revision": "76d5e70f9b43c6de57deb7ea8ee30349bf39c93c",
+    "source_digest": "fcec5d41b452b1e1e757f6238fd05f6803f50e36dcaa6f3a2d892306fe4d5ff4",
+    "source_files": {
+      "decimal_iron/__init__.py": "bc41c2bc47ff62e0b2a220d747d6f88fcddda013c2bd7ade0409aa798c37b5cb",
+      "decimal_iron/__main__.py": "fc3188e41b8b05d9a618efb0f10d200fb8e6389e74a43d13befacbcd1842b857",
+      "decimal_iron/adapter.py": "5c71d6dedcc6599694e92c0dc738b535871bcef995c4e70711252236bd7cf25b",
+      "decimal_iron/bank.py": "5927384e8e2b92478a9802f0ac81efeff499110488710df2d260cde74eb469d9",
+      "decimal_iron/conversion.py": "afb04aa88ee8c44478616857aca28b8ce355934c61f28d81cf3271f5322216aa",
+      "decimal_iron/cpu.py": "f22a352354588bcf7fbf1c99f35ade1d4cd11f6faa134a58b48e4af6ed08a614",
+      "decimal_iron/demo.py": "3549ee8368070d102b8ff2fda4ba41fb75e935a49b29dd5c1e48167a6c4e67df",
+      "decimal_iron/fixtures/replay-scenarios.json": "3a91f4dd3a8f24a9080b6e5e2b63401d27ddbcd45f96b972a870531a5fe893cb",
+      "decimal_iron/gateway.py": "938b76879402b965c41655c8ed39034359ba8fdbb88d3fc68405512401cbb142",
+      "decimal_iron/journal.py": "d7b683e0eb0b5b42440c5ca68565529dbc643de17b716895e82fae171502acdb",
+      "decimal_iron/machine.py": "cef647cc635d33eae8982eff09a0d4c039b3f7e59c1dff6c683d76b0c200954d",
+      "decimal_iron/panel.py": "3d06ce127cbb6766cc4e95395a4e9f3b24712ad4ad8e2136c38fd0bff9a7abf1",
+      "decimal_iron/protocol.py": "6a765ddeec39f66e47e690817a4d9f612ecdc3387c374e21c679a0e4befa96cd",
+      "decimal_iron/replay.py": "94a36a13503e7a081ec6bd3d6465235e270af7ff77bf921d06f456accc2af68b",
+      "decimal_iron/strata.py": "713da2a297550c88395bc748c9c7670e5c95cbe5b68e443525aaec1bcc659f86",
+      "decimal_iron/terminal.py": "d3cb5bf77f77ec750e88ddde7cf2823b2c4654d09eabde8c459177e367953762",
+      "decimal_iron/web.py": "6595d528da066b705f7339ff3a2e90efc3bd1b2ceb78e89efc0ce1c9eba29ec4",
+      "decimal_iron/websocket_client.py": "bc93eed225455ec0a4940ec10943733aaec6f369a858b41c53ac9f94ddb7d290",
+      "pyproject.toml": "5a40018cc102a61fed601c2151a3516e25bead537196de212666d26e603388bb"
+    },
+    "uncommitted_files": []
+  },
+  "scenarios": [
+    {
+      "id": "lost-acknowledgement",
+      "replay": {
+        "journal_events": 10,
+        "journal_head": "8d727749d1d472f3f9e2cfcb4018f0290cc2e04aea8cf3776e8bfdf43f3858ab",
+        "journal_sha256": "12a1d88324b5dfda6a76622efc80235c1e65a806fa227c5fad3d35e3fff6c922",
+        "report_matches": true,
+        "report_sha256": "30cb5c423f211bdbd171fa095faf9e12a7c8b263e4cd4ed2e98be63ee50f3e04",
+        "state_matches": true,
+        "status": "passed"
+      },
+      "status": "passed",
+      "steps": [
+        {
+          "action": {
+            "command": "KEY OPEN",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "OPEN",
+              "observed": "OPEN",
+              "path": "state.key_position",
+              "status": "passed"
+            },
+            {
+              "expected": "CLOSED",
+              "observed": "CLOSED",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-open",
+          "id": "key-open",
+          "label": "Move the business-day key",
+          "state": {
+            "beacon_on": false,
+            "business_date": "---- -- --",
+            "conversion_statement": null,
+            "journal_events": 1,
+            "journal_head": "1010e64126974ad8fb7c743f7d4d5de78fccd20ab3ce5de83d54abc8e8713847",
+            "key_position": "OPEN",
+            "phase": "CLOSED",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "OPEN 1982-10-01",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "OPEN",
+              "observed": "OPEN",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT OPENED",
+              "observed": "RESULT OPENED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "open",
+          "id": "open",
+          "label": "Open the synthetic business day",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 2,
+            "journal_head": "8708f711ef16b64bab43f2a03b9752695e8c7b712005e6c5e01d6698d5b4a1f0",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT OPENED"
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "after-commit-before-ack",
+            "kind": "payment",
+            "payment_id": "T001",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": -1200,
+              "observed": -1200,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 1200,
+              "observed": 1200,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            },
+            {
+              "expected": null,
+              "observed": null,
+              "path": "terminal_result",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "payment",
+          "id": "payment.committed-unacknowledged",
+          "label": "The journal commit exists; the client has no acknowledgement.",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "80c90402846372c45daeb0037808be0b7e6d3d3c3758aa32f135e410e00c582a",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": null
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "after-commit-before-ack",
+            "kind": "payment",
+            "payment_id": "T001",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": null,
+              "observed": null,
+              "path": "terminal_result",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "payment",
+          "id": "payment.reply-lost",
+          "label": "The transport discards the reply after the commit.",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "80c90402846372c45daeb0037808be0b7e6d3d3c3758aa32f135e410e00c582a",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": null
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "after-commit-before-ack",
+            "kind": "payment",
+            "payment_id": "T001",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT INQUIRY POSTED T001 SEQ",
+              "observed": "RESULT INQUIRY POSTED T001 SEQ 000003",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "payment",
+          "id": "payment.inquiry-result",
+          "label": "Inquiry resolves the original payment identity through the terminal.",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "80c90402846372c45daeb0037808be0b7e6d3d3c3758aa32f135e410e00c582a",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT INQUIRY POSTED T001 SEQ 000003"
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "after-commit-before-ack",
+            "kind": "payment",
+            "payment_id": "T001",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": "RECOVERED_BY_INQUIRY",
+              "observed": "RECOVERED_BY_INQUIRY",
+              "path": "receipt_resolution",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": -1200,
+              "observed": -1200,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 1200,
+              "observed": 1200,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            },
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "transport.payment_writes",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "transport.inquiries",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "transport.lost_replies",
+              "status": "passed"
+            },
+            {
+              "expected": [
+                "committed-unacknowledged",
+                "inquiry-result",
+                "reply-lost"
+              ],
+              "observed": [
+                "committed-unacknowledged",
+                "inquiry-result",
+                "reply-lost"
+              ],
+              "path": "checkpoints_executed",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "payment",
+          "id": "payment",
+          "label": "Resolve the missing acknowledgement",
+          "receipt": {
+            "journal_sequence": 3,
+            "payment_id": "T001",
+            "resolution": "RECOVERED_BY_INQUIRY"
+          },
+          "receipt_resolution": "RECOVERED_BY_INQUIRY",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "80c90402846372c45daeb0037808be0b7e6d3d3c3758aa32f135e410e00c582a",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT INQUIRY POSTED T001 SEQ 000003",
+          "transport": {
+            "inquiries": 1,
+            "lost_replies": 1,
+            "payment_writes": 1
+          }
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "none",
+            "kind": "payment",
+            "payment_id": "T001",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": "IDEMPOTENT_DUPLICATE",
+              "observed": "IDEMPOTENT_DUPLICATE",
+              "path": "receipt_resolution",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": -1200,
+              "observed": -1200,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 1200,
+              "observed": 1200,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "duplicate",
+          "id": "duplicate",
+          "label": "Retry the same identity and payload",
+          "receipt": {
+            "journal_sequence": 3,
+            "payment_id": "T001",
+            "resolution": "IDEMPOTENT_DUPLICATE"
+          },
+          "receipt_resolution": "IDEMPOTENT_DUPLICATE",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "80c90402846372c45daeb0037808be0b7e6d3d3c3758aa32f135e410e00c582a",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT DUPLICATE T001 SEQ 000003",
+          "transport": {
+            "inquiries": 0,
+            "lost_replies": 0,
+            "payment_writes": 1
+          }
+        },
+        {
+          "action": {
+            "command": "KEY CUT-OFF",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-cutoff",
+          "id": "key-cutoff",
+          "label": "Move the key to cut-off",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 4,
+            "journal_head": "857d4771e467e2923c83c8798b0fc15370e7e0fbcd13fb3b243b1e14db3bfb19",
+            "key_position": "CUT-OFF",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "CUTOFF",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "CUT-OFF",
+              "observed": "CUT-OFF",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT CUTOFF",
+              "observed": "RESULT CUTOFF",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "cutoff",
+          "id": "cutoff",
+          "label": "Close ordinary posting",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 5,
+            "journal_head": "1807325410c88c99122b5d9626259a80c4afadc7d5e3cfb621c98413404f17d1",
+            "key_position": "CUT-OFF",
+            "phase": "CUT-OFF",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT CUTOFF"
+        },
+        {
+          "action": {
+            "command": "KEY SETTLE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-settle",
+          "id": "key-settle",
+          "label": "Move the key to settlement",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 6,
+            "journal_head": "7f9ed08c836dd5e663165495b5dbae8818d77b84c0d05157204f61dbfca2d38f",
+            "key_position": "SETTLE",
+            "phase": "CUT-OFF",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "SETTLE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "SETTLED",
+              "observed": "SETTLED",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT SETTLED",
+              "observed": "RESULT SETTLED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "settle",
+          "id": "settle",
+          "label": "Settle the participant positions",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 7,
+            "journal_head": "a15fe1ce05ef7299eeea35178bb595623aa7cf6bd3eaaf254cb2b4e49c777c56",
+            "key_position": "SETTLE",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT SETTLED"
+        },
+        {
+          "action": {
+            "command": "RECONCILE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.reconciliation_scopes.FIM.current",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.reconciliation_scopes.FIM.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT RECONCILED",
+              "observed": "RESULT RECONCILED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "reconcile",
+          "id": "reconcile",
+          "label": "Reconcile the FIM ledger",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 8,
+            "journal_head": "345b702cb9f742842da25475da8d93a53ad27a3a6ee20f16f74cf7d393ee3d64",
+            "key_position": "SETTLE",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT RECONCILED"
+        },
+        {
+          "action": {
+            "command": "KEY CLOSED",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-close",
+          "id": "key-close",
+          "label": "Move the key to closed",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 9,
+            "journal_head": "431db226d6e3946c88069253b89001f32aae0ba6db224139b82aa3cc5e315058",
+            "key_position": "CLOSED",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "CLOSE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "CLOSED",
+              "observed": "CLOSED",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT CLOSED",
+              "observed": "RESULT CLOSED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "close",
+          "id": "close",
+          "label": "Close the reconciled business day",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 10,
+            "journal_head": "8d727749d1d472f3f9e2cfcb4018f0290cc2e04aea8cf3776e8bfdf43f3858ab",
+            "key_position": "CLOSED",
+            "phase": "CLOSED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT CLOSED"
+        }
+      ],
+      "summary": "The processor posts once. Its reply is lost. The terminal-only adapter inquires using the original payment identity.",
+      "title": "Committed, but not acknowledged"
+    },
+    {
+      "id": "interrupted-before-delivery",
+      "replay": {
+        "journal_events": 3,
+        "journal_head": "f60c7c071a6c8b9ec2457ca87cfb7e37c83a291850e229e3b18ebfe560acffc7",
+        "journal_sha256": "e19165ba97b74cfecc76f8e396a66bb7e5c9f4554d6de7051ed2674354c17fd5",
+        "report_matches": true,
+        "report_sha256": "a1f2a20b53eb0893119a6e06301016adb15d7d02f0ea499e69e31203a87aa2b1",
+        "state_matches": true,
+        "status": "passed"
+      },
+      "status": "passed",
+      "steps": [
+        {
+          "action": {
+            "command": "KEY OPEN",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-open",
+          "id": "key-open",
+          "label": "Move the business-day key",
+          "state": {
+            "beacon_on": false,
+            "business_date": "---- -- --",
+            "conversion_statement": null,
+            "journal_events": 1,
+            "journal_head": "1010e64126974ad8fb7c743f7d4d5de78fccd20ab3ce5de83d54abc8e8713847",
+            "key_position": "OPEN",
+            "phase": "CLOSED",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "OPEN 1982-10-01",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT OPENED",
+              "observed": "RESULT OPENED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "open",
+          "id": "open",
+          "label": "Open the synthetic business day",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 2,
+            "journal_head": "8708f711ef16b64bab43f2a03b9752695e8c7b712005e6c5e01d6698d5b4a1f0",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT OPENED"
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "before-delivery",
+            "kind": "payment",
+            "payment_id": "T002",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": null,
+              "observed": null,
+              "path": "terminal_result",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "payment",
+          "id": "payment.request-interrupted",
+          "label": "The write is interrupted before delivery; the client cannot assume that.",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 2,
+            "journal_head": "8708f711ef16b64bab43f2a03b9752695e8c7b712005e6c5e01d6698d5b4a1f0",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": null
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "before-delivery",
+            "kind": "payment",
+            "payment_id": "T002",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT INQUIRY NOT_FOUND T002",
+              "observed": "RESULT INQUIRY NOT_FOUND T002",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "payment",
+          "id": "payment.inquiry-result",
+          "label": "Inquiry resolves the original payment identity through the terminal.",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 2,
+            "journal_head": "8708f711ef16b64bab43f2a03b9752695e8c7b712005e6c5e01d6698d5b4a1f0",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT INQUIRY NOT_FOUND T002"
+        },
+        {
+          "action": {
+            "amount_minor": 1200,
+            "destination": "FI02",
+            "fault": "before-delivery",
+            "kind": "payment",
+            "payment_id": "T002",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": "RETRIED_AFTER_NOT_FOUND",
+              "observed": "RETRIED_AFTER_NOT_FOUND",
+              "path": "receipt_resolution",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": -1200,
+              "observed": -1200,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 1200,
+              "observed": 1200,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            },
+            {
+              "expected": 2,
+              "observed": 2,
+              "path": "transport.payment_writes",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "transport.inquiries",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "transport.lost_replies",
+              "status": "passed"
+            },
+            {
+              "expected": ["inquiry-result", "request-interrupted"],
+              "observed": ["inquiry-result", "request-interrupted"],
+              "path": "checkpoints_executed",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "payment",
+          "id": "payment",
+          "label": "Inquire, then retry the same payment",
+          "receipt": {
+            "journal_sequence": 3,
+            "payment_id": "T002",
+            "resolution": "RETRIED_AFTER_NOT_FOUND"
+          },
+          "receipt_resolution": "RETRIED_AFTER_NOT_FOUND",
+          "state": {
+            "beacon_on": false,
+            "business_date": "1982-10-01",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "f60c7c071a6c8b9ec2457ca87cfb7e37c83a291850e229e3b18ebfe560acffc7",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -1200,
+              "FI02": 1200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT POSTED T002 SEQ 000003",
+          "transport": {
+            "inquiries": 1,
+            "lost_replies": 0,
+            "payment_writes": 2
+          }
+        }
+      ],
+      "summary": "The adapter cannot assume whether an interrupted write reached the processor. Inquiry returns not found; the retry keeps its original identity.",
+      "title": "The request did not arrive"
+    },
+    {
+      "id": "euro-rounding-residue",
+      "replay": {
+        "journal_events": 16,
+        "journal_head": "786a70ddaed6496b0cd79217eb9e4015ff6c156b7cb1dff9787469d7413ebe88",
+        "journal_sha256": "ca8b73324b5064f2c2f72e73d8d5aa2fa615c60e7399a26867036c7cc697b272",
+        "report_matches": true,
+        "report_sha256": "a422b817cee0e2525c9605f84babd708353791083532293c7cf7b3490c21c85d",
+        "state_matches": true,
+        "status": "passed"
+      },
+      "status": "passed",
+      "steps": [
+        {
+          "action": {
+            "command": "KEY OPEN",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-open",
+          "id": "key-open",
+          "label": "Move the business-day key",
+          "state": {
+            "beacon_on": false,
+            "business_date": "---- -- --",
+            "conversion_statement": null,
+            "journal_events": 1,
+            "journal_head": "1010e64126974ad8fb7c743f7d4d5de78fccd20ab3ce5de83d54abc8e8713847",
+            "key_position": "OPEN",
+            "phase": "CLOSED",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "OPEN 2002-01-02",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT OPENED",
+              "observed": "RESULT OPENED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "open",
+          "id": "open",
+          "label": "Open the fictional conversion-era business day",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 2,
+            "journal_head": "f4c417d04998f9b17c1f8f28872b5a389eb61546ea2b2acc634cd001d0c076be",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {},
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 0
+          },
+          "status": "passed",
+          "terminal_result": "RESULT OPENED"
+        },
+        {
+          "action": {
+            "amount_minor": 100,
+            "destination": "FI02",
+            "fault": "none",
+            "kind": "payment",
+            "payment_id": "E001",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": "ACKNOWLEDGED",
+              "observed": "ACKNOWLEDGED",
+              "path": "receipt_resolution",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.transaction_count",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "item-one",
+          "id": "item-one",
+          "label": "Post the first FIM 1.00 item",
+          "receipt": {
+            "journal_sequence": 3,
+            "payment_id": "E001",
+            "resolution": "ACKNOWLEDGED"
+          },
+          "receipt_resolution": "ACKNOWLEDGED",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 3,
+            "journal_head": "882cec81e7980f428b6b099d694ae4e86cdcdffc02b028737b9eac8f7999862f",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -100,
+              "FI02": 100
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 1
+          },
+          "status": "passed",
+          "terminal_result": "RESULT POSTED E001 SEQ 000003",
+          "transport": {
+            "inquiries": 0,
+            "lost_replies": 0,
+            "payment_writes": 1
+          }
+        },
+        {
+          "action": {
+            "amount_minor": 100,
+            "destination": "FI02",
+            "fault": "none",
+            "kind": "payment",
+            "payment_id": "E002",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": "ACKNOWLEDGED",
+              "observed": "ACKNOWLEDGED",
+              "path": "receipt_resolution",
+              "status": "passed"
+            },
+            {
+              "expected": 2,
+              "observed": 2,
+              "path": "state.transaction_count",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "item-two",
+          "id": "item-two",
+          "label": "Post the second FIM 1.00 item",
+          "receipt": {
+            "journal_sequence": 4,
+            "payment_id": "E002",
+            "resolution": "ACKNOWLEDGED"
+          },
+          "receipt_resolution": "ACKNOWLEDGED",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 4,
+            "journal_head": "e311a6e3538866cad5c4fefe6ec46a709a625b647b659a8df47d906d32df046c",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -200,
+              "FI02": 200
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 2
+          },
+          "status": "passed",
+          "terminal_result": "RESULT POSTED E002 SEQ 000004",
+          "transport": {
+            "inquiries": 0,
+            "lost_replies": 0,
+            "payment_writes": 1
+          }
+        },
+        {
+          "action": {
+            "amount_minor": 100,
+            "destination": "FI02",
+            "fault": "none",
+            "kind": "payment",
+            "payment_id": "E003",
+            "source": "FI01"
+          },
+          "assertions": [
+            {
+              "expected": "ACKNOWLEDGED",
+              "observed": "ACKNOWLEDGED",
+              "path": "receipt_resolution",
+              "status": "passed"
+            },
+            {
+              "expected": 3,
+              "observed": 3,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": -300,
+              "observed": -300,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 300,
+              "observed": 300,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "item-three",
+          "id": "item-three",
+          "label": "Post the third FIM 1.00 item",
+          "receipt": {
+            "journal_sequence": 5,
+            "payment_id": "E003",
+            "resolution": "ACKNOWLEDGED"
+          },
+          "receipt_resolution": "ACKNOWLEDGED",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 5,
+            "journal_head": "17e19cd492562da1ea93cc52f64216dfe542d076f13065017e7927660516d724",
+            "key_position": "OPEN",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -300,
+              "FI02": 300
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT POSTED E003 SEQ 000005",
+          "transport": {
+            "inquiries": 0,
+            "lost_replies": 0,
+            "payment_writes": 1
+          }
+        },
+        {
+          "action": {
+            "command": "KEY CUT-OFF",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-cutoff",
+          "id": "key-cutoff",
+          "label": "Move the key to cut-off",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 6,
+            "journal_head": "01a87404482f63d355cac513d668cfd42e1c5ed065e6a82f21fcf45e3a5bdbdf",
+            "key_position": "CUT-OFF",
+            "phase": "OPEN",
+            "positions": {
+              "FI01": -300,
+              "FI02": 300
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "CUTOFF",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT CUTOFF",
+              "observed": "RESULT CUTOFF",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "cutoff",
+          "id": "cutoff",
+          "label": "Close ordinary posting",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 7,
+            "journal_head": "b65ab24a1a0bb08cd44f251fb7fe36871c50f6e7671f64835b3ad7b6fd78b171",
+            "key_position": "CUT-OFF",
+            "phase": "CUT-OFF",
+            "positions": {
+              "FI01": -300,
+              "FI02": 300
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT CUTOFF"
+        },
+        {
+          "action": {
+            "command": "KEY SETTLE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-settle",
+          "id": "key-settle",
+          "label": "Move the key to settlement",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 8,
+            "journal_head": "1481ad2f43aa01ae13861a4cfebf3145e75820d161d2b1361de1f9eb4c543cd8",
+            "key_position": "SETTLE",
+            "phase": "CUT-OFF",
+            "positions": {
+              "FI01": -300,
+              "FI02": 300
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "SETTLE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "SETTLED",
+              "observed": "SETTLED",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.positions.FI01",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.positions.FI02",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT SETTLED",
+              "observed": "RESULT SETTLED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "settle",
+          "id": "settle",
+          "label": "Settle the FIM ledger",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 9,
+            "journal_head": "a143d8305d5d70e79d5f2d8da47ea41575e55523a76ab203607cb34791c29bbb",
+            "key_position": "SETTLE",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": false,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": false,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT SETTLED"
+        },
+        {
+          "action": {
+            "command": "RECONCILE FIM",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.reconciliation_scopes.FIM.current",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.reconciliation_scopes.FIM.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT RECONCILED",
+              "observed": "RESULT RECONCILED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "reconcile-fim",
+          "id": "reconcile-fim",
+          "label": "Verify the FIM ledger is clear",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": null,
+            "journal_events": 10,
+            "journal_head": "db1d4bfda88db93b0dfcb4d8d4840c042b0b9fc733558c59feb077ce7e9632ff",
+            "key_position": "SETTLE",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": false,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": null,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT RECONCILED"
+        },
+        {
+          "action": {
+            "command": "CONVERT EUR OMIT",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": "EUR",
+              "observed": "EUR",
+              "path": "state.conversion_statement.currency",
+              "status": "passed"
+            },
+            {
+              "expected": [100, 100, 100],
+              "observed": [100, 100, 100],
+              "path": "state.conversion_statement.source_amounts_minor",
+              "status": "passed"
+            },
+            {
+              "expected": [17, 17, 17],
+              "observed": [17, 17, 17],
+              "path": "state.conversion_statement.item_amounts_minor",
+              "status": "passed"
+            },
+            {
+              "expected": 51,
+              "observed": 51,
+              "path": "state.conversion_statement.item_total_minor",
+              "status": "passed"
+            },
+            {
+              "expected": 50,
+              "observed": 50,
+              "path": "state.conversion_statement.aggregate_total_minor",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.conversion_statement.rounding_adjustment_minor",
+              "status": "passed"
+            },
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.reconciliation_scopes.EUR.active",
+              "status": "passed"
+            },
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.reconciliation_scopes.EUR.current",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT EUR_STATEMENT",
+              "observed": "RESULT EUR_STATEMENT",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "switch-era",
+          "id": "switch-era",
+          "label": "Prepare the EUR statement without a rounding adjustment",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "OMIT",
+              "rounding_adjustment_minor": 0,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "db1d4bfda88db93b0dfcb4d8d4840c042b0b9fc733558c59feb077ce7e9632ff",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 11,
+            "journal_head": "7e453711ec186ea55ad24837518be97dd56ad7f151cdbd8004fbcf2683a0ce12",
+            "key_position": "SETTLE",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 0,
+                "statement_sequence": 11,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT EUR_STATEMENT"
+        },
+        {
+          "action": {
+            "command": "RECONCILE EUR",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": "EUR",
+              "observed": "EUR",
+              "path": "state.reconciliation_scopes.EUR.currency",
+              "status": "passed"
+            },
+            {
+              "expected": "cent",
+              "observed": "cent",
+              "path": "state.reconciliation_scopes.EUR.unit",
+              "status": "passed"
+            },
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.reconciliation_scopes.EUR.current",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.reconciliation_scopes.EUR.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.reconciliation_scopes.FIM.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT EUR_RECONCILED",
+              "observed": "RESULT EUR_RECONCILED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "detect-residue",
+          "id": "detect-residue",
+          "label": "Reconciliation exposes the omitted cent",
+          "state": {
+            "beacon_on": true,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "OMIT",
+              "rounding_adjustment_minor": 0,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "db1d4bfda88db93b0dfcb4d8d4840c042b0b9fc733558c59feb077ce7e9632ff",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 12,
+            "journal_head": "d7ac76baab40c03cb507f8189237202dd3bf5467756bfbfdac2f3e76c55d256a",
+            "key_position": "SETTLE",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": true,
+                "difference_minor": 1,
+                "statement_sequence": 11,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT EUR_RECONCILED"
+        },
+        {
+          "action": {
+            "command": "KEY CLOSED",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "RESULT KEY",
+              "observed": "RESULT KEY",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "key-close",
+          "id": "key-close",
+          "label": "Move the key to closed",
+          "state": {
+            "beacon_on": true,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "OMIT",
+              "rounding_adjustment_minor": 0,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "db1d4bfda88db93b0dfcb4d8d4840c042b0b9fc733558c59feb077ce7e9632ff",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 13,
+            "journal_head": "022b08b38ed481cc5157b6b705ea2d2759d95983beea6d39106def0a377ba3c6",
+            "key_position": "CLOSED",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": true,
+                "difference_minor": 1,
+                "statement_sequence": 11,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT KEY"
+        },
+        {
+          "action": {
+            "command": "CLOSE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "SETTLED",
+              "observed": "SETTLED",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT ERROR EUR_RECONCILIATION_BREAK",
+              "observed": "RESULT ERROR EUR_RECONCILIATION_BREAK",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "refuse-close",
+          "id": "refuse-close",
+          "label": "The clear FIM scope cannot hide an EUR break",
+          "state": {
+            "beacon_on": true,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "OMIT",
+              "rounding_adjustment_minor": 0,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "db1d4bfda88db93b0dfcb4d8d4840c042b0b9fc733558c59feb077ce7e9632ff",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 13,
+            "journal_head": "022b08b38ed481cc5157b6b705ea2d2759d95983beea6d39106def0a377ba3c6",
+            "key_position": "CLOSED",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": true,
+                "difference_minor": 1,
+                "statement_sequence": 11,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT ERROR EUR_RECONCILIATION_BREAK"
+        },
+        {
+          "action": {
+            "command": "CONVERT EUR ACCOUNT",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": -1,
+              "observed": -1,
+              "path": "state.conversion_statement.rounding_adjustment_minor",
+              "status": "passed"
+            },
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.reconciliation_scopes.EUR.current",
+              "status": "passed"
+            },
+            {
+              "expected": 1,
+              "observed": 1,
+              "path": "state.reconciliation_scopes.EUR.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT EUR_STATEMENT",
+              "observed": "RESULT EUR_STATEMENT",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": true,
+          "fixture_step": "account-residue",
+          "id": "account-residue",
+          "label": "Declare the minus-one-cent rounding adjustment",
+          "state": {
+            "beacon_on": true,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "ACCOUNT",
+              "rounding_adjustment_minor": -1,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "022b08b38ed481cc5157b6b705ea2d2759d95983beea6d39106def0a377ba3c6",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 14,
+            "journal_head": "1551f19e29b5490cb15eef600560860bf4d1b6d19c66b3d7ea78d1a8a4189a33",
+            "key_position": "CLOSED",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": false,
+                "difference_minor": 1,
+                "statement_sequence": 14,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT EUR_STATEMENT"
+        },
+        {
+          "action": {
+            "command": "RECONCILE EUR",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": false,
+              "observed": false,
+              "path": "state.beacon_on",
+              "status": "passed"
+            },
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.reconciliation_scopes.EUR.current",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.reconciliation_scopes.EUR.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": true,
+              "observed": true,
+              "path": "state.reconciliation_scopes.FIM.current",
+              "status": "passed"
+            },
+            {
+              "expected": 0,
+              "observed": 0,
+              "path": "state.reconciliation_scopes.FIM.difference_minor",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT EUR_RECONCILED",
+              "observed": "RESULT EUR_RECONCILED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "reconcile-corrected",
+          "id": "reconcile-corrected",
+          "label": "Reconcile the corrected EUR statement",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "ACCOUNT",
+              "rounding_adjustment_minor": -1,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "022b08b38ed481cc5157b6b705ea2d2759d95983beea6d39106def0a377ba3c6",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 15,
+            "journal_head": "14937f1852733cb2fa966d14eefdf70ba98aea6d9530cef71d1f92f8de784699",
+            "key_position": "CLOSED",
+            "phase": "SETTLED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": true,
+                "difference_minor": 0,
+                "statement_sequence": 14,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT EUR_RECONCILED"
+        },
+        {
+          "action": {
+            "command": "CLOSE",
+            "kind": "command"
+          },
+          "assertions": [
+            {
+              "expected": "CLOSED",
+              "observed": "CLOSED",
+              "path": "state.phase",
+              "status": "passed"
+            },
+            {
+              "expected": 3,
+              "observed": 3,
+              "path": "state.transaction_count",
+              "status": "passed"
+            },
+            {
+              "expected": "RESULT CLOSED",
+              "observed": "RESULT CLOSED",
+              "path": "terminal_prefix",
+              "status": "passed"
+            }
+          ],
+          "checkpoint": false,
+          "fixture_step": "close",
+          "id": "close",
+          "label": "Close with both declared scopes current and clear",
+          "state": {
+            "beacon_on": false,
+            "business_date": "2002-01-02",
+            "conversion_statement": {
+              "aggregate_total_minor": 50,
+              "basis": "business-day-posting-turnover",
+              "business_date": "2002-01-02",
+              "currency": "EUR",
+              "item_amounts_minor": [17, 17, 17],
+              "item_total_minor": 51,
+              "rate_fim_per_eur": "5.94573",
+              "residue_minor": 1,
+              "residue_treatment": "ACCOUNT",
+              "rounding_adjustment_minor": -1,
+              "rounding_policy": "nearest-cent-half-away-from-zero-v1",
+              "source_amounts_minor": [100, 100, 100],
+              "source_currency": "FIM",
+              "source_journal_head": "022b08b38ed481cc5157b6b705ea2d2759d95983beea6d39106def0a377ba3c6",
+              "source_posting_sequences": [3, 4, 5],
+              "source_unit": "penni",
+              "unit": "cent"
+            },
+            "journal_events": 16,
+            "journal_head": "786a70ddaed6496b0cd79217eb9e4015ff6c156b7cb1dff9787469d7413ebe88",
+            "key_position": "CLOSED",
+            "phase": "CLOSED",
+            "positions": {
+              "FI01": 0,
+              "FI02": 0,
+              "SETTLEMENT": 0
+            },
+            "reconciliation_break_minor": 0,
+            "reconciliation_current": true,
+            "reconciliation_scopes": {
+              "EUR": {
+                "active": true,
+                "currency": "EUR",
+                "current": true,
+                "difference_minor": 0,
+                "statement_sequence": 14,
+                "unit": "cent"
+              },
+              "FIM": {
+                "active": true,
+                "currency": "FIM",
+                "current": true,
+                "difference_minor": 0,
+                "unit": "penni"
+              }
+            },
+            "transaction_count": 3
+          },
+          "status": "passed",
+          "terminal_result": "RESULT CLOSED"
+        }
+      ],
+      "summary": "A fictional 2002 integration converts the real day's FIM posting records. Individually rounded EUR items differ from the rounded aggregate. Both reconciliation scopes must be current and clear before closing.",
+      "title": "The euro statement leaves one cent unaccounted"
+    }
+  ],
+  "schema": "decimal-iron-replay/v1",
+  "verification": {
+    "negative_controls": [
+      {
+        "failed_assertions": [
+          {
+            "expected": 1,
+            "observed": 2,
+            "path": "state.transaction_count",
+            "status": "failed"
+          },
+          {
+            "expected": -1200,
+            "observed": -2400,
+            "path": "state.positions.FI01",
+            "status": "failed"
+          },
+          {
+            "expected": 1200,
+            "observed": 2400,
+            "path": "state.positions.FI02",
+            "status": "failed"
+          },
+          {
+            "expected": 1,
+            "observed": 2,
+            "path": "transport.payment_writes",
+            "status": "failed"
+          },
+          {
+            "expected": 1,
+            "observed": 0,
+            "path": "transport.inquiries",
+            "status": "failed"
+          },
+          {
+            "expected": [
+              "committed-unacknowledged",
+              "inquiry-result",
+              "reply-lost"
+            ],
+            "observed": ["committed-unacknowledged", "reply-lost"],
+            "path": "checkpoints_executed",
+            "status": "failed"
+          }
+        ],
+        "id": "new-identity-after-lost-ack",
+        "mutation_rejected": true,
+        "rejected_at": "payment",
+        "scenario": "lost-acknowledgement",
+        "status": "passed"
+      },
+      {
+        "failed_assertions": [
+          {
+            "expected": -1,
+            "observed": 0,
+            "path": "state.conversion_statement.rounding_adjustment_minor",
+            "status": "failed"
+          }
+        ],
+        "id": "silently-omit-rounding-adjustment",
+        "mutation_rejected": true,
+        "rejected_at": "account-residue",
+        "scenario": "euro-rounding-residue",
+        "status": "passed"
+      },
+      {
+        "failed_assertions": [
+          {
+            "expected": true,
+            "observed": false,
+            "path": "state.beacon_on",
+            "status": "failed"
+          },
+          {
+            "expected": 1,
+            "observed": 0,
+            "path": "state.reconciliation_scopes.EUR.difference_minor",
+            "status": "failed"
+          }
+        ],
+        "id": "suppress-eur-reconciliation-break",
+        "mutation_rejected": true,
+        "rejected_at": "detect-residue",
+        "scenario": "euro-rounding-residue",
+        "status": "passed"
+      }
+    ],
+    "status": "passed",
+    "targets": [
+      {
+        "detail": "Actual file-backed machine, byte terminal, payment adapter and journal replay",
+        "id": "python-reference",
+        "status": "passed"
+      },
+      {
+        "detail": "This scenario runner does not execute RTL; transfer-vector tests are separate",
+        "id": "rtl-scenario-adapter",
+        "status": "skipped"
+      },
+      {
+        "detail": "No physical meters, printer, UART timing or 300-baud link exercised",
+        "id": "physical-installation",
+        "status": "skipped"
+      },
+      {
+        "detail": "Fixture contract is shareable; no game adapter executed",
+        "id": "keskus-game",
+        "status": "skipped"
+      }
+    ]
+  }
+}

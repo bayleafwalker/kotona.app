@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "id": "three-clocks",
+  "description": "Synthetic purchase assertions; the initial payloads and rates reproduce Schema on split. Expected results are independently specified integer EUR cents.",
+  "defaultQuery": {
+    "validAt": "2026-05-01T12:00:00Z",
+    "recordedAsOf": "2026-05-02T09:00:00Z",
+    "interpretationId": "original",
+    "historyMode": "retained"
+  },
+  "validTimeOptions": [
+    "2026-05-01T12:00:00Z",
+    "2026-05-03T12:00:00Z",
+    "2026-05-04T12:00:00Z"
+  ],
+  "recordTimeOptions": [
+    "2026-05-02T09:00:00Z",
+    "2026-05-05T09:00:00Z",
+    "2026-05-08T09:00:00Z"
+  ],
+  "input": {
+    "recordIds": ["p-101", "p-102", "p-103"],
+    "assertions": [
+      {
+        "id": "p-101-original",
+        "recordId": "p-101",
+        "validFrom": "2026-05-01T00:00:00Z",
+        "validTo": null,
+        "recordedAt": "2026-05-02T09:00:00Z",
+        "payload": { "amount": "12,50", "currency": "SEK" }
+      },
+      {
+        "id": "p-102-original",
+        "recordId": "p-102",
+        "validFrom": "2026-05-01T00:00:00Z",
+        "validTo": null,
+        "recordedAt": "2026-05-02T09:00:00Z",
+        "payload": { "amount": "9.90", "currency": "EUR" }
+      },
+      {
+        "id": "p-103-original",
+        "recordId": "p-103",
+        "validFrom": "2026-05-01T00:00:00Z",
+        "validTo": null,
+        "recordedAt": "2026-05-02T09:00:00Z",
+        "payload": { "amount": "1 299,00", "currency": "SEK" }
+      },
+      {
+        "id": "p-101-amendment",
+        "recordId": "p-101",
+        "validFrom": "2026-05-04T00:00:00Z",
+        "validTo": null,
+        "recordedAt": "2026-05-05T09:00:00Z",
+        "payload": { "amount": "15,00", "currency": "SEK" }
+      },
+      {
+        "id": "p-101-correction",
+        "recordId": "p-101",
+        "validFrom": "2026-05-01T00:00:00Z",
+        "validTo": "2026-05-04T00:00:00Z",
+        "recordedAt": "2026-05-08T09:00:00Z",
+        "payload": { "amount": "10,00", "currency": "SEK" }
+      }
+    ],
+    "referenceSnapshots": [
+      {
+        "id": "fx@2026-05-02",
+        "label": "Historical reference snapshot: 2026-05-02",
+        "rates": {
+          "SEK": { "numerator": "871", "denominator": "10000" },
+          "EUR": { "numerator": "1", "denominator": "1" }
+        }
+      },
+      {
+        "id": "fx@2026-09-07",
+        "label": "Revised reference snapshot: 2026-09-07",
+        "rates": {
+          "SEK": { "numerator": "912", "denominator": "10000" },
+          "EUR": { "numerator": "1", "denominator": "1" }
+        }
+      }
+    ],
+    "interpretations": [
+      {
+        "id": "original",
+        "label": "Original parser + historical reference",
+        "parserId": "decimal-comma-dropped/v1",
+        "referenceSnapshotId": "fx@2026-05-02",
+        "roundingPolicy": "nonnegative-half-up-per-record/v1"
+      },
+      {
+        "id": "corrected",
+        "label": "Corrected parser + historical reference",
+        "parserId": "decimal-comma-corrected/v2",
+        "referenceSnapshotId": "fx@2026-05-02",
+        "roundingPolicy": "nonnegative-half-up-per-record/v1"
+      },
+      {
+        "id": "revised-reference",
+        "label": "Corrected parser + revised reference",
+        "parserId": "decimal-comma-corrected/v2",
+        "referenceSnapshotId": "fx@2026-09-07",
+        "roundingPolicy": "nonnegative-half-up-per-record/v1"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "published-original-replay",
+      "query": {
+        "validAt": "2026-05-01T12:00:00Z",
+        "recordedAsOf": "2026-05-02T09:00:00Z",
+        "interpretationId": "original"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["10888", "990", "1131429"],
+        "totalMinor": "1143307",
+        "p101Assertion": "p-101-original"
+      }
+    },
+    {
+      "id": "published-corrected-recomputation",
+      "query": {
+        "validAt": "2026-05-01T12:00:00Z",
+        "recordedAsOf": "2026-05-02T09:00:00Z",
+        "interpretationId": "corrected"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["109", "990", "11314"],
+        "totalMinor": "12413",
+        "p101Assertion": "p-101-original"
+      }
+    },
+    {
+      "id": "published-revised-reference",
+      "query": {
+        "validAt": "2026-05-01T12:00:00Z",
+        "recordedAsOf": "2026-05-02T09:00:00Z",
+        "interpretationId": "revised-reference"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["114", "990", "11847"],
+        "totalMinor": "12951",
+        "p101Assertion": "p-101-original"
+      }
+    },
+    {
+      "id": "amendment-not-yet-recorded",
+      "query": {
+        "validAt": "2026-05-04T12:00:00Z",
+        "recordedAsOf": "2026-05-05T08:59:59Z",
+        "interpretationId": "corrected"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["109", "990", "11314"],
+        "totalMinor": "12413",
+        "p101Assertion": "p-101-original"
+      }
+    },
+    {
+      "id": "amendment-at-record-time-boundary",
+      "query": {
+        "validAt": "2026-05-04T12:00:00Z",
+        "recordedAsOf": "2026-05-05T09:00:00Z",
+        "interpretationId": "corrected"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["131", "990", "11314"],
+        "totalMinor": "12435",
+        "p101Assertion": "p-101-amendment"
+      }
+    },
+    {
+      "id": "amendment-does-not-change-earlier-valid-time",
+      "query": {
+        "validAt": "2026-05-03T12:00:00Z",
+        "recordedAsOf": "2026-05-05T09:00:00Z",
+        "interpretationId": "corrected"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["109", "990", "11314"],
+        "totalMinor": "12413",
+        "p101Assertion": "p-101-original"
+      }
+    },
+    {
+      "id": "late-correction-of-earlier-valid-time",
+      "query": {
+        "validAt": "2026-05-03T12:00:00Z",
+        "recordedAsOf": "2026-05-08T09:00:00Z",
+        "interpretationId": "corrected"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["87", "990", "11314"],
+        "totalMinor": "12391",
+        "p101Assertion": "p-101-correction"
+      }
+    },
+    {
+      "id": "correction-excludes-valid-to-boundary",
+      "query": {
+        "validAt": "2026-05-04T00:00:00Z",
+        "recordedAsOf": "2026-05-08T09:00:00Z",
+        "interpretationId": "corrected"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["131", "990", "11314"],
+        "totalMinor": "12435",
+        "p101Assertion": "p-101-amendment"
+      }
+    },
+    {
+      "id": "overwritten-original-unavailable",
+      "query": {
+        "validAt": "2026-05-01T12:00:00Z",
+        "recordedAsOf": "2026-05-02T09:00:00Z",
+        "interpretationId": "original",
+        "historyMode": "overwrite"
+      },
+      "expected": {
+        "status": "unavailable",
+        "rows": [null, "990", "1131429"],
+        "totalMinor": null,
+        "unavailableIds": ["p-101"]
+      }
+    },
+    {
+      "id": "overwrite-loses-an-amended-valid-period-too",
+      "query": {
+        "validAt": "2026-05-04T12:00:00Z",
+        "recordedAsOf": "2026-05-08T09:00:00Z",
+        "interpretationId": "corrected",
+        "historyMode": "overwrite"
+      },
+      "expected": {
+        "status": "unavailable",
+        "rows": [null, "990", "11314"],
+        "totalMinor": null,
+        "unavailableIds": ["p-101"]
+      }
+    },
+    {
+      "id": "overwrite-retains-only-latest-applicable-payload",
+      "query": {
+        "validAt": "2026-05-01T12:00:00Z",
+        "recordedAsOf": "2026-05-08T09:00:00Z",
+        "interpretationId": "corrected",
+        "historyMode": "overwrite"
+      },
+      "expected": {
+        "status": "available",
+        "rows": ["87", "990", "11314"],
+        "totalMinor": "12391",
+        "p101Assertion": "p-101-correction"
+      }
+    }
+  ]
+}

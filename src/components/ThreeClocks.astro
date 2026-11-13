@@ -1,0 +1,364 @@
+---
+import fixture from "../data/exhibits/three-clocks.json";
+import {
+  evaluateThreeClocks,
+  formatEuro,
+  questionLabel,
+} from "../lib/exhibits/three-clocks.js";
+
+const initial = evaluateThreeClocks(fixture.input, fixture.defaultQuery);
+const timeLabel = (value: string) =>
+  value.replace("T", " ").replace(":00Z", " UTC");
+---
+
+<section
+  class="three-clocks"
+  data-three-clocks
+  aria-label="Three clocks exhibit"
+>
+  <p class="scope">Synthetic purchase records · all times UTC</p>
+  <div class="clock-controls">
+    <label>
+      <span>Valid time</span>
+      <select data-clock-valid>
+        {
+          fixture.validTimeOptions.map((value) => (
+            <option
+              value={value}
+              selected={value === fixture.defaultQuery.validAt}
+            >
+              {timeLabel(value)}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label>
+      <span>Record time cutoff</span>
+      <select data-clock-record>
+        {
+          fixture.recordTimeOptions.map((value) => (
+            <option
+              value={value}
+              selected={value === fixture.defaultQuery.recordedAsOf}
+            >
+              {timeLabel(value)}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label class="interpretation-control">
+      <span>Interpretation version</span>
+      <select data-clock-interpretation>
+        {
+          fixture.input.interpretations.map((entry) => (
+            <option
+              value={entry.id}
+              selected={entry.id === fixture.defaultQuery.interpretationId}
+            >
+              {entry.label}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+  </div>
+  <label class="history-control">
+    <input type="checkbox" data-clock-overwrite />
+    <span>Overwrite earlier payloads with each record’s latest assertion</span>
+  </label>
+  <div class="clock-result" aria-live="polite" aria-atomic="true">
+    <span class="result-label">Total of individually rounded records</span>
+    <output data-clock-total data-status={initial.status}>
+      {formatEuro(initial.totalMinor)}
+    </output>
+    <p data-clock-question>{questionLabel(fixture.defaultQuery)}</p>
+    <p class="unavailable-reason" data-clock-unavailable hidden>
+      Earlier payloads are missing. A partial sum cannot reproduce this answer.
+    </p>
+  </div>
+  <table class="clock-records">
+    <caption>Assertions selected by both time controls</caption>
+    <thead>
+      <tr><th>Record</th><th>Selected source</th><th class="amount">EUR</th></tr
+      >
+    </thead>
+    <tbody>
+      {
+        initial.rows.map((row) => (
+          <tr data-record={row.recordId}>
+            <th scope="row">{row.recordId}</th>
+            <td>
+              <span class="assertion-id" data-row-assertion>
+                {"assertionId" in row ? row.assertionId : "Unavailable"}
+              </span>
+              <span data-row-raw>
+                {"rawAmount" in row
+                  ? `Raw: ${row.rawAmount} ${row.currency}`
+                  : "Earlier payload missing"}
+              </span>
+              <span data-row-valid>
+                {"validFrom" in row
+                  ? `Valid from: ${timeLabel(row.validFrom)}; valid to: ${row.validTo === null ? "open" : timeLabel(row.validTo)} (exclusive)`
+                  : "Valid interval: unavailable"}
+              </span>
+              <span data-row-recorded>
+                {"recordedAt" in row
+                  ? `Recorded at: ${timeLabel(row.recordedAt)}`
+                  : "Record time: unavailable"}
+              </span>
+            </td>
+            <td class="amount" data-row-amount>
+              {formatEuro(row.eurMinor)}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <details>
+    <summary>Inspect the interpretation manifest</summary>
+    <dl class="clock-basis">
+      <dt>Parser identity</dt><dd data-basis-parser>
+        {initial.basis.parserId}
+      </dd>
+      <dt>Reference snapshot</dt><dd data-basis-reference>
+        {initial.basis.referenceSnapshotId}
+      </dd>
+      <dt>Rounding policy</dt><dd data-basis-rounding>
+        {initial.basis.roundingPolicy}
+      </dd>
+      <dt>Assertion selection</dt><dd>
+        Latest recorded assertion applicable at valid time
+      </dd>
+    </dl>
+  </details>
+  <noscript>
+    <p>
+      The initial computed case remains visible. JavaScript enables the
+      controls.
+    </p>
+  </noscript>
+</section>
+
+<script>
+  import fixture from "../data/exhibits/three-clocks.json";
+  import {
+    evaluateThreeClocks,
+    formatEuro,
+    questionLabel,
+  } from "../lib/exhibits/three-clocks.js";
+
+  const timeLabel = (value: string) =>
+    value.replace("T", " ").replace(":00Z", " UTC");
+
+  for (const root of document.querySelectorAll<HTMLElement>(
+    "[data-three-clocks]",
+  )) {
+    const valid = root.querySelector<HTMLSelectElement>("[data-clock-valid]");
+    const recorded = root.querySelector<HTMLSelectElement>(
+      "[data-clock-record]",
+    );
+    const interpretation = root.querySelector<HTMLSelectElement>(
+      "[data-clock-interpretation]",
+    );
+    const overwrite = root.querySelector<HTMLInputElement>(
+      "[data-clock-overwrite]",
+    );
+    if (!valid || !recorded || !interpretation || !overwrite) continue;
+
+    const setText = (selector: string, value: string) => {
+      const target = root.querySelector<HTMLElement>(selector);
+      if (!target) throw new Error(`Missing exhibit projection: ${selector}`);
+      target.textContent = value;
+    };
+    const render = () => {
+      const query = {
+        validAt: valid.value,
+        recordedAsOf: recorded.value,
+        interpretationId: interpretation.value,
+        historyMode: overwrite.checked ? "overwrite" : "retained",
+      };
+      const result = evaluateThreeClocks(fixture.input, query);
+      setText("[data-clock-total]", formatEuro(result.totalMinor));
+      const total = root.querySelector<HTMLElement>("[data-clock-total]");
+      if (total) total.dataset.status = result.status;
+      setText("[data-clock-question]", questionLabel(query));
+      setText("[data-basis-parser]", result.basis.parserId);
+      setText("[data-basis-reference]", result.basis.referenceSnapshotId);
+      setText("[data-basis-rounding]", result.basis.roundingPolicy);
+      const unavailable = root.querySelector<HTMLElement>(
+        "[data-clock-unavailable]",
+      );
+      if (unavailable) unavailable.hidden = result.status !== "unavailable";
+      for (const row of result.rows) {
+        const selector = `[data-record="${row.recordId}"]`;
+        setText(`${selector} [data-row-amount]`, formatEuro(row.eurMinor));
+        if ("assertionId" in row) {
+          setText(`${selector} [data-row-assertion]`, row.assertionId);
+          setText(
+            `${selector} [data-row-raw]`,
+            `Raw: ${row.rawAmount} ${row.currency}`,
+          );
+          setText(
+            `${selector} [data-row-valid]`,
+            `Valid from: ${timeLabel(row.validFrom)}; valid to: ${row.validTo === null ? "open" : timeLabel(row.validTo)} (exclusive)`,
+          );
+          setText(
+            `${selector} [data-row-recorded]`,
+            `Recorded at: ${timeLabel(row.recordedAt)}`,
+          );
+        } else {
+          setText(`${selector} [data-row-assertion]`, "Unavailable");
+          setText(`${selector} [data-row-raw]`, "Earlier payload missing");
+          setText(
+            `${selector} [data-row-valid]`,
+            "Valid interval: unavailable",
+          );
+          setText(
+            `${selector} [data-row-recorded]`,
+            "Record time: unavailable",
+          );
+        }
+      }
+    };
+    for (const control of [valid, recorded, interpretation, overwrite]) {
+      control.addEventListener("change", render);
+    }
+    root.dataset.initialized = "true";
+    render();
+  }
+</script>
+
+<style>
+  .three-clocks {
+    border: 1px solid var(--line-strong);
+    padding: clamp(0.7rem, 2.5vw, 1.3rem);
+    margin-block: 1.5rem;
+    background: var(--bg-strong);
+  }
+  .scope,
+  .result-label {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .clock-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+  .clock-controls label {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    min-width: 0;
+  }
+  .clock-controls select {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.2rem;
+    color: var(--text);
+    background: var(--bg);
+    font: inherit;
+    padding: 0.35rem;
+  }
+  .interpretation-control {
+    grid-column: 1 / -1;
+  }
+  .history-control {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-block: 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .history-control input {
+    margin-top: 0.3rem;
+    accent-color: var(--accent);
+  }
+  .clock-result {
+    padding-block: 0.75rem;
+    border-block: 1px solid var(--line);
+  }
+  .clock-result output {
+    display: block;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.25;
+  }
+  .clock-result p {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+  }
+  .unavailable-reason {
+    font-weight: 600;
+  }
+  .clock-records {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    overflow: visible;
+    font-size: 0.85rem;
+  }
+  .clock-records caption {
+    text-align: left;
+    margin-block: 1rem 0.3rem;
+    color: var(--muted);
+  }
+  .clock-records th,
+  .clock-records td {
+    min-width: 0;
+    padding: 0.55rem 0.3rem;
+    overflow-wrap: anywhere;
+    vertical-align: top;
+  }
+  .clock-records th:first-child {
+    width: 3.5rem;
+  }
+  .clock-records th:last-child {
+    width: 6.2rem;
+  }
+  .clock-records td span {
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .assertion-id {
+    color: var(--muted);
+  }
+  .amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .clock-basis {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+  .clock-basis dt {
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  .clock-basis dd {
+    margin-inline: 0;
+  }
+  @media (max-width: 520px) {
+    .clock-controls {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .clock-controls select {
+      font-size: 1rem;
+    }
+    .clock-records th:first-child {
+      width: 2.8rem;
+    }
+    .clock-records th:last-child {
+      width: 5.3rem;
+    }
+  }
+</style>

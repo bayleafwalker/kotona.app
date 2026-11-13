@@ -1,0 +1,435 @@
+---
+import trace from "../data/exhibits/decimal-iron-replay.json";
+import {
+  projectReplay,
+  replayScenarios,
+} from "../lib/exhibits/decimal-iron-replay.js";
+
+const choices = replayScenarios();
+const initial = projectReplay(trace, choices[0].id);
+---
+
+<section
+  class="decimal-replay"
+  data-decimal-replay
+  aria-label="Decimal Iron recorded replay"
+>
+  <p class="replay-scope">
+    Recorded Python reference trace · synthetic business days
+  </p>
+  <div class="replay-controls">
+    <label>
+      <span>Era and scenario</span>
+      <select data-replay-scenario>
+        {
+          choices.map((choice) => (
+            <option value={choice.id}>{choice.title}</option>
+          ))
+        }
+      </select>
+    </label>
+    <label>
+      <span>Recorded step</span>
+      <select data-replay-step>
+        {
+          initial.steps.map((step, index) => (
+            <option value={step.id} selected={step.id === initial.stepId}>
+              {index + 1}. {step.label}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+  </div>
+  <div class="step-buttons">
+    <button type="button" data-replay-previous>Previous step</button>
+    <button type="button" data-replay-next>Next step</button>
+    <button type="button" data-replay-interrupt>Pause at key checkpoint</button>
+  </div>
+  <div class="replay-current" aria-live="polite" aria-atomic="true">
+    <p class="step-number" data-replay-counter>
+      Step {initial.stepIndex + 1} of {initial.stepCount}
+    </p>
+    <h3 data-replay-label>{initial.stepLabel}</h3>
+    <div class="beacon" data-replay-beacon data-on={String(initial.beaconOn)}>
+      <span class="lamp" aria-hidden="true"></span>
+      <span data-replay-beacon-label
+        >Beacon {initial.beaconOn ? "ON" : "OFF"}</span
+      >
+    </div>
+    <dl class="machine-state">
+      <dt>Client acknowledgement</dt><dd data-replay-ack>
+        {initial.acknowledgement}
+      </dd>
+      <dt>Processor transaction count</dt><dd data-replay-count>
+        {initial.transactionCount}
+      </dd>
+      <dt>Synthetic business date</dt><dd data-replay-date>
+        {initial.businessDate}
+      </dd>
+      <dt>Machine phase / key</dt><dd data-replay-phase>
+        {initial.phase} / {initial.keyPosition}
+      </dd>
+    </dl>
+  </div>
+  <div class="terminal">
+    <p class="terminal-label">Recorded action and terminal result</p>
+    <p data-replay-action>{initial.action}</p>
+    <pre data-replay-terminal>{initial.terminal}</pre>
+  </div>
+  <table class="scope-table">
+    <caption>Independent reconciliation scopes</caption>
+    <thead
+      ><tr><th>Scope</th><th>Recorded status</th><th>Difference</th></tr></thead
+    >
+    <tbody>
+      {
+        initial.scopes.map((scope) => (
+          <tr data-replay-currency={scope.currency}>
+            <th scope="row">
+              {scope.currency} · {scope.unit}
+            </th>
+            <td data-scope-status>{scope.status}</td>
+            <td data-scope-difference>{scope.difference}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <div
+    class="conversion"
+    data-replay-conversion
+    hidden={initial.conversion === null}
+  >
+    <h4>Recorded EUR conversion statement</h4>
+    <dl>
+      <dt>Source items</dt><dd data-conversion-source>
+        {initial.conversion?.sourceItems}
+      </dd>
+      <dt>Individually rounded items</dt><dd data-conversion-items>
+        {initial.conversion?.convertedItems}
+      </dd>
+      <dt>Sum of rounded items</dt><dd data-conversion-total>
+        {initial.conversion?.itemTotal}
+      </dd>
+      <dt>Rounded aggregate</dt><dd data-conversion-aggregate>
+        {initial.conversion?.aggregateTotal}
+      </dd>
+      <dt>Declared adjustment</dt><dd data-conversion-adjustment>
+        {initial.conversion?.adjustment}
+      </dd>
+      <dt>Rate</dt><dd data-conversion-rate>{initial.conversion?.rate}</dd>
+      <dt>Rounding policy</dt><dd data-conversion-policy>
+        {initial.conversion?.policy}
+      </dd>
+    </dl>
+  </div>
+  <details>
+    <summary>Inspect recorded positions and journal</summary>
+    <p>Participant positions remain in FIM penni.</p>
+    <pre data-replay-positions>{initial.positions}</pre>
+    <p class="journal" data-replay-journal>{initial.journal}</p>
+    <p data-replay-checks>
+      {initial.checkCount} fixture assertions passed at this recorded step.
+    </p>
+  </details>
+  <p class="replay-scope">
+    Navigation selects recorded states. The physical installation, RTL scenario
+    adapter and KESKUS game were not exercised by this trace.
+  </p>
+  <noscript
+    ><p>
+      The commit-before-acknowledgement checkpoint is shown. JavaScript enables
+      step selection.
+    </p></noscript
+  >
+</section>
+
+<script>
+  import trace from "../data/exhibits/decimal-iron-replay.json";
+  import { projectReplay } from "../lib/exhibits/decimal-iron-replay.js";
+
+  for (const root of document.querySelectorAll<HTMLElement>(
+    "[data-decimal-replay]",
+  )) {
+    const scenario = root.querySelector<HTMLSelectElement>(
+      "[data-replay-scenario]",
+    );
+    const step = root.querySelector<HTMLSelectElement>("[data-replay-step]");
+    const previous = root.querySelector<HTMLButtonElement>(
+      "[data-replay-previous]",
+    );
+    const next = root.querySelector<HTMLButtonElement>("[data-replay-next]");
+    const interrupt = root.querySelector<HTMLButtonElement>(
+      "[data-replay-interrupt]",
+    );
+    if (!scenario || !step || !previous || !next || !interrupt) continue;
+    let current = projectReplay(trace, scenario.value);
+    const setText = (selector: string, value: string) => {
+      const target = root.querySelector<HTMLElement>(selector);
+      if (!target) throw new Error(`Missing replay projection: ${selector}`);
+      target.textContent = value;
+    };
+    const render = (rebuildSteps = false) => {
+      if (rebuildSteps) {
+        step.replaceChildren(
+          ...current.steps.map((entry, index) => {
+            const option = document.createElement("option");
+            option.value = entry.id;
+            option.textContent = `${index + 1}. ${entry.label}`;
+            return option;
+          }),
+        );
+      }
+      step.value = current.stepId;
+      root.dataset.step = current.stepId;
+      previous.disabled = current.stepIndex === 0;
+      next.disabled = current.stepIndex === current.stepCount - 1;
+      setText(
+        "[data-replay-counter]",
+        `Step ${current.stepIndex + 1} of ${current.stepCount}`,
+      );
+      setText("[data-replay-label]", current.stepLabel);
+      const beacon = root.querySelector<HTMLElement>("[data-replay-beacon]");
+      if (beacon) beacon.dataset.on = String(current.beaconOn);
+      setText(
+        "[data-replay-beacon-label]",
+        `Beacon ${current.beaconOn ? "ON" : "OFF"}`,
+      );
+      setText("[data-replay-ack]", current.acknowledgement);
+      setText("[data-replay-count]", String(current.transactionCount));
+      setText("[data-replay-date]", current.businessDate);
+      setText(
+        "[data-replay-phase]",
+        `${current.phase} / ${current.keyPosition}`,
+      );
+      setText("[data-replay-action]", current.action);
+      setText("[data-replay-terminal]", current.terminal);
+      setText("[data-replay-positions]", current.positions);
+      setText("[data-replay-journal]", current.journal);
+      setText(
+        "[data-replay-checks]",
+        `${current.checkCount} fixture assertions passed at this recorded step.`,
+      );
+      for (const scope of current.scopes) {
+        const selector = `[data-replay-currency="${scope.currency}"]`;
+        setText(`${selector} [data-scope-status]`, scope.status);
+        setText(`${selector} [data-scope-difference]`, scope.difference);
+      }
+      const conversion = root.querySelector<HTMLElement>(
+        "[data-replay-conversion]",
+      );
+      if (conversion) conversion.hidden = current.conversion === null;
+      if (current.conversion) {
+        setText("[data-conversion-source]", current.conversion.sourceItems);
+        setText("[data-conversion-items]", current.conversion.convertedItems);
+        setText("[data-conversion-total]", current.conversion.itemTotal);
+        setText(
+          "[data-conversion-aggregate]",
+          current.conversion.aggregateTotal,
+        );
+        setText("[data-conversion-adjustment]", current.conversion.adjustment);
+        setText("[data-conversion-rate]", current.conversion.rate);
+        setText("[data-conversion-policy]", current.conversion.policy);
+      }
+    };
+    scenario.addEventListener("change", () => {
+      current = projectReplay(trace, scenario.value);
+      render(true);
+    });
+    step.addEventListener("change", () => {
+      current = projectReplay(trace, scenario.value, step.value);
+      render();
+    });
+    for (const [button, delta] of [
+      [previous, -1],
+      [next, 1],
+    ] as const) {
+      button.addEventListener("click", () => {
+        const target = current.steps[current.stepIndex + delta];
+        if (target) {
+          current = projectReplay(trace, scenario.value, target.id);
+          render();
+        }
+      });
+    }
+    interrupt.addEventListener("click", () => {
+      current = projectReplay(trace, scenario.value);
+      render();
+    });
+    render();
+    root.dataset.initialized = "true";
+  }
+</script>
+
+<style>
+  .decimal-replay {
+    border: 1px solid var(--line-strong);
+    padding: clamp(0.7rem, 2.5vw, 1.3rem);
+    margin-block: 1.5rem;
+    background: var(--bg-strong);
+  }
+  .replay-scope,
+  .step-number {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .replay-controls {
+    display: grid;
+    gap: 0.8rem;
+  }
+  .replay-controls label {
+    display: grid;
+    min-width: 0;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+  }
+  .replay-controls select,
+  .step-buttons button {
+    min-height: 2.75rem;
+    min-width: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.2rem;
+    color: var(--text);
+    background: var(--bg);
+    font: inherit;
+    padding: 0.4rem;
+  }
+  .replay-controls select {
+    width: 100%;
+  }
+  .step-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .step-buttons button {
+    cursor: pointer;
+    padding-inline: 0.65rem;
+  }
+  .step-buttons button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .replay-current {
+    border-block: 1px solid var(--line);
+    padding-block: 0.75rem;
+  }
+  .replay-current h3 {
+    margin: 0.4rem 0 0.65rem;
+    font-size: 1.1rem;
+  }
+  .step-number {
+    margin: 0;
+  }
+  .beacon {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .lamp {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex: none;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .beacon[data-on="true"] .lamp {
+    background: #b74928;
+    border-color: #8a351c;
+    box-shadow: 0 0 0 3px #b7492826;
+  }
+  .machine-state,
+  .conversion dl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 0.35rem 0.75rem;
+    margin-block: 0.85rem 0.25rem;
+    font-size: 0.85rem;
+  }
+  dt {
+    color: var(--muted);
+  }
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .terminal {
+    margin-block: 1rem;
+    border-inline-start: 3px solid var(--accent);
+    padding-inline-start: 0.75rem;
+  }
+  .terminal p {
+    margin-block: 0.4rem;
+    overflow-wrap: anywhere;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .terminal-label {
+    color: var(--muted);
+  }
+  pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+    margin-block: 0.4rem;
+    font-size: 0.85rem;
+  }
+  .scope-table {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    overflow: visible;
+    font-size: 0.8rem;
+  }
+  .scope-table th,
+  .scope-table td {
+    min-width: 0;
+    padding: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+  caption {
+    text-align: left;
+    margin-bottom: 0.4rem;
+    color: var(--muted);
+  }
+  .conversion {
+    border: 1px solid var(--line);
+    margin-block: 1rem;
+    padding: 0.75rem;
+  }
+  .conversion h4 {
+    margin: 0;
+  }
+  .journal {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+  }
+  details {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  summary {
+    cursor: pointer;
+  }
+  @media (max-width: 420px) {
+    .machine-state,
+    .conversion dl {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.1rem;
+    }
+    dd {
+      margin-bottom: 0.5rem;
+    }
+    .step-buttons button {
+      flex-grow: 1;
+    }
+  }
+</style>

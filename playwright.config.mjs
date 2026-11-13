@@ -7,9 +7,9 @@ const chromiumExecutablePath =
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
 
 /**
- * Browser coverage for the one seam the other suites cannot reach: whether the
- * Explore page presents what the ranking decides. Deliberately narrow -- the
- * ranking policy itself is proven by unit tests and the retrieval evaluation.
+ * Browser coverage for the presentation seams: Explore must present the
+ * ranking, and exhibits must present their implementation's checked results.
+ * Unit tests and retrieval evaluation check the underlying decisions.
  *
  * This is a separate gate rather than part of `npm run validate`, because it
  * needs a provisioned browser (`npx playwright install chromium`) and ordinary

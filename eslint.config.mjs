@@ -9,6 +9,7 @@ export default [
       ".wrangler",
       "dist",
       "node_modules",
+      "temp/**",
       "worker-configuration.d.ts",
     ],
   },

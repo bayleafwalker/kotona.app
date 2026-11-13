@@ -4,6 +4,7 @@ import { getCollection, getEntry, render } from "astro:content";
 import AnnotatedText from "../../components/AnnotatedText.astro";
 import ContentToc from "../../components/ContentToc.astro";
 import ExplorePrompt from "../../components/ExplorePrompt.astro";
+import ExhibitEvidence from "../../components/ExhibitEvidence.astro";
 import ReferenceActions from "../../components/ReferenceActions.astro";
 import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -269,6 +270,12 @@ const canonicalNoteUrl = new URL(
       <div class="prose">
         <Content />
       </div>
+
+      {
+        entry.data.exhibit ? (
+          <ExhibitEvidence id={entry.data.exhibit.id} />
+        ) : null
+      }
 
       <ReferenceActions
         markdownUrl={`/notes/${entry.id}.md`}
