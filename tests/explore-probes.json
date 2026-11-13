@@ -111,9 +111,35 @@
   },
   {
     "id": "common-prose-commit",
-    "class": "common vocabulary",
+    "class": "common prose with intentional metadata",
     "query": "commit",
-    "expectNoResults": true
+    "note": "Commit remains above the body-term frequency cutoff. Decimal Iron now names transaction commit in its summary. Require that summary result and zero prose matches: common body vocabulary must not create hits, while an intentional metadata topic remains retrievable.",
+    "expectPaths": ["/notes/decimal-iron-replay/"],
+    "withinTop": 1,
+    "maxResults": 1,
+    "leadersUnchanged": true,
+    "expectReasons": [
+      {
+        "path": "/notes/decimal-iron-replay/",
+        "field": "summary",
+        "value": "commit"
+      }
+    ],
+    "forbidMatchFields": ["terms"]
+  },
+  {
+    "id": "exhibit-payment-acknowledgement",
+    "class": "checked replay intent",
+    "query": "payment commit acknowledgement",
+    "expectPaths": ["/notes/decimal-iron-replay/"],
+    "withinTop": 1
+  },
+  {
+    "id": "exhibit-historical-correction",
+    "class": "temporal history intent",
+    "query": "late correction overwritten history",
+    "expectPaths": ["/notes/three-clocks/"],
+    "withinTop": 1
   },
   {
     "id": "common-prose-discovery",

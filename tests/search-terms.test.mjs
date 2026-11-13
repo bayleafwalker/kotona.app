@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { buildSearchTerms } from "../src/lib/search-terms.ts";
+import { rankReferences } from "../src/lib/reference-ranking.js";
 
 const entry = (id, body, data = {}) => ({
   collection: "notes",
@@ -48,6 +49,35 @@ test("drops vocabulary common across the corpus", () => {
 
   assert.doesNotMatch(terms.get("/notes/n0/"), /vocabulary/);
   assert.match(terms.get("/notes/n0/"), /\brare0\b/);
+});
+
+test("common body vocabulary stays excluded when a summary intentionally names the topic", () => {
+  const documents = Array.from({ length: 20 }, (_, index) =>
+    entry(`n${index}`, "The commit is retained in this record.", {
+      summary:
+        index === 0
+          ? "A payment commit before acknowledgement."
+          : "Unrelated metadata.",
+    }),
+  );
+  const terms = buildSearchTerms(documents);
+  assert.ok([...terms.values()].every((value) => !/\bcommit\b/.test(value)));
+  const ranked = rankReferences(
+    documents.map((document) => ({
+      id: document.id,
+      type: "note",
+      path: `/notes/${document.id}/`,
+      title: document.data.title,
+      summary: document.data.summary,
+      terms: terms.get(`/notes/${document.id}/`),
+    })),
+    "commit",
+  );
+  assert.deepEqual(
+    ranked.map((result) => result.document.id),
+    ["n0"],
+  );
+  assert.deepEqual(ranked[0].reasons, [{ field: "summary", value: "commit" }]);
 });
 
 test("the common-term cutoff never exceeds the declared corpus share", () => {
