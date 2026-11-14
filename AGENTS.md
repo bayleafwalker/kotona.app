@@ -42,11 +42,14 @@ npx playwright install chromium   # once per machine
 npm run test:browser
 ```
 
-It covers whether Explore presents the ranking and whether exhibits present
-their checked implementation results. Run it after changing Explore, the
-knowledge map, `src/lib/reference-ranking.js`, or an exhibit. CI provisions
-Chromium and runs it as a gate; it stays out of `npm run validate` because that
-provisioning is per-machine locally, not because the suite is optional.
+It covers homepage selection and navigation, whether Explore presents the
+ranking, and whether exhibits present their checked implementation results. Run
+it after changing the homepage, shared navigation, Explore, the knowledge map,
+`src/lib/reference-ranking.js`, or an exhibit. CI provisions Chromium and runs
+it as a gate; it stays out of `npm run validate` because that provisioning is
+per-machine locally, not because the suite is optional. CI retains browser
+screenshots and failure traces for seven days so a layout change can be reviewed
+against the actual rendered build.
 
 Exhibits stay attached to notes. Each exhibit binds an implementation, JSON
 fixtures with independent expected results, a negative control, and unit and

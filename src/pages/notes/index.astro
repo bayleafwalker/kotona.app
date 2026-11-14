@@ -3,13 +3,8 @@ import { getCollection } from "astro:content";
 
 import EntryCard from "../../components/EntryCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import {
-  getVisibleEntries,
-  humanizeLabel,
-  roleLabel,
-  claimPostureLabel,
-  sortByDateAndTitle,
-} from "../../lib/content";
+import { getVisibleEntries, sortByDateAndTitle } from "../../lib/content";
+import { noteContextLabel } from "../../lib/content-labels.js";
 
 const notes = sortByDateAndTitle(
   (await getCollection("notes")).map((entry) => ({
@@ -22,16 +17,7 @@ const notes = sortByDateAndTitle(
 );
 const visibleNotes = getVisibleEntries(notes);
 const noteContext = (entry: (typeof visibleNotes)[number]) =>
-  [
-    roleLabel(entry.data.role),
-    entry.data.status === entry.data.role
-      ? null
-      : claimPostureLabel(entry.data.status),
-    humanizeLabel(entry.data.lifecycle),
-    humanizeLabel(entry.data.area),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  noteContextLabel(entry.data, { includeLifecycle: true });
 ---
 
 <BaseLayout

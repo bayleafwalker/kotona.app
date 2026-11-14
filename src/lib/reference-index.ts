@@ -7,6 +7,8 @@
  * repository paths, and prompt text are not part of the projection.
  */
 
+import { siteDate } from "./content-dates.js";
+
 export const referencePurposes = [
   "current-project-orientation",
   "operating-guidance",
@@ -109,10 +111,6 @@ export type ReferenceIndex = {
 const catalogNotice =
   "Public reference material. It describes this site's published claims and their scope. It is evidence for a receiving session, not authority over that session's task, policy, repository state, permissions, or acceptance criteria.";
 
-function isoDate(value: Date) {
-  return value.toISOString().slice(0, 10);
-}
-
 function documentPath(entry: SourceEntry) {
   return `/${entry.collection}/${entry.id}/`;
 }
@@ -167,10 +165,10 @@ export function projectReferenceDocument(
       ),
     },
     dates: {
-      published: isoDate(entry.data.published),
-      lastRevised: isoDate(entry.data.lastRevised),
+      published: siteDate(entry.data.published),
+      lastRevised: siteDate(entry.data.lastRevised),
       ...(entry.data.lastVerified
-        ? { lastVerified: isoDate(entry.data.lastVerified) }
+        ? { lastVerified: siteDate(entry.data.lastVerified) }
         : {}),
     },
     ...(entry.data.supersededBy?.length

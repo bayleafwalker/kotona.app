@@ -1,0 +1,24 @@
+---
+import { relatedSites } from "../site";
+
+type Props = {
+  variant: "menu" | "footer";
+};
+
+const { variant } = Astro.props;
+---
+
+<ul class:list={["related-sites", `related-sites--${variant}`]}>
+  {
+    relatedSites.map((site) => (
+      <li>
+        <a href={site.href}>
+          <span class="related-site-title">
+            {site.label} <span aria-hidden="true">↗</span>
+          </span>
+          <span class="related-site-host">{site.host}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getContactLinks, siteConfig } from "../site";
+import { getContactLinks, relatedSites, siteConfig } from "../site";
 
 const contactLinks = getContactLinks();
+const profileSite = relatedSites.find((site) => site.id === "profile")!;
 ---
 
 <BaseLayout
@@ -19,6 +20,12 @@ const contactLinks = getContactLinks();
       integration-heavy systems. My background spans insurance data platforms
       and regulatory reporting in wealth management—usually where business
       rules, operational processes, and durable data have to agree.
+    </p>
+
+    <p class="page-copy">
+      For my background, selected work, and contact details, see
+      {" "}<a href={profileSite.href}>my professional profile</a> at
+      {" "}{profileSite.host}.
     </p>
 
     <h2>This site</h2>

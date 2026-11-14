@@ -1,0 +1,56 @@
+---
+import { formatDate } from "../lib/content";
+import { noteContextLabel } from "../lib/content-labels.js";
+import type { HomepageChange } from "../lib/homepage";
+
+type Props = {
+  change: HomepageChange;
+  variant?: "lead" | "compact";
+};
+
+const { change, variant = "compact" } = Astro.props;
+const { entry, date, dateLabel, href } = change;
+const isExhibit = change.kind === "note" && Boolean(change.entry.data.exhibit);
+const context =
+  change.kind === "project"
+    ? change.entry.data.status
+    : noteContextLabel(change.entry.data);
+const action =
+  change.kind === "project"
+    ? "Read the project record"
+    : isExhibit
+      ? "Open the example"
+      : "Read the note";
+---
+
+<article
+  class:list={["home-entry", `home-entry--${variant}`]}
+  data-home-entry={href}
+  data-home-kind={change.kind}
+>
+  <div class="home-entry-meta">
+    <time datetime={date.toISOString()}>
+      {`${dateLabel} ${formatDate(date)}`}
+    </time>
+    {
+      isExhibit && (
+        <span class="home-entry-format">
+          <span aria-hidden="true">↔</span> Interactive
+        </span>
+      )
+    }
+    {change.kind === "project" && <span>Project reference</span>}
+  </div>
+  <h3 class="home-entry-title">
+    <a href={href}>{entry.data.title}</a>
+  </h3>
+  <p class="home-entry-context">{context}</p>
+  {entry.data.summary && <p class="home-entry-summary">{entry.data.summary}</p>}
+  {
+    variant === "lead" && (
+      <a class="home-entry-action" href={href}>
+        {action} <span aria-hidden="true">→</span>
+      </a>
+    )
+  }
+</article>

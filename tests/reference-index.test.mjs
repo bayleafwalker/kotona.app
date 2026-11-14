@@ -73,6 +73,21 @@ test("omits drafts", () => {
   );
 });
 
+test("date-only public metadata uses Helsinki's calendar for timestamped notes", () => {
+  const document = projectReferenceDocument(
+    note("after-midnight", {
+      published: new Date("2026-07-13T00:30:00+03:00"),
+      lastRevised: new Date("2026-11-13T00:30:00+02:00"),
+    }),
+    baseUrl,
+  );
+
+  assert.deepEqual(document.dates, {
+    published: "2026-07-13",
+    lastRevised: "2026-11-13",
+  });
+});
+
 test("publishes prompt availability without prompt text", () => {
   const prompt = "Explore this note with AI. ".repeat(4);
   const document = projectReferenceDocument(

@@ -1,6 +1,7 @@
 ---
 import { getBuildRevisionLink } from "../build";
 import { getContactLinks } from "../site";
+import RelatedSites from "./RelatedSites.astro";
 
 const contactLinks = getContactLinks();
 const buildLink = getBuildRevisionLink();
@@ -9,11 +10,11 @@ const footerLinks = [
     label: "Editorial model",
     href: "/notes/the-workshop-is-learning-my-accent/",
   },
+  { label: "About this site", href: "/about/" },
   { label: "Log", href: "/log/" },
   { label: "Privacy", href: "/privacy/" },
   { label: "RSS", href: "/rss.xml" },
   buildLink.href ? { label: buildLink.label, href: buildLink.href } : null,
-  ...contactLinks,
 ].filter((link): link is { label: string; href: string } => Boolean(link));
 ---
 
@@ -24,18 +25,34 @@ const footerLinks = [
       <p class="footer-copy">
         Notes arrive when the shape is clearer than the log.
       </p>
+      <ul class="footer-links" aria-label="Contact and profiles">
+        {
+          contactLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                rel={link.href.startsWith("http") ? "me noreferrer" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
 
-    <ul class="footer-links" aria-label="Site and external links">
+    <nav class="footer-elsewhere" aria-label="Related sites in footer">
+      <p class="footer-title">Elsewhere</p>
+      <RelatedSites variant="footer" />
+    </nav>
+  </div>
+
+  <div class="container footer-colophon">
+    <ul class="footer-links" aria-label="Site information">
       {
         footerLinks.map((link) => (
           <li>
-            <a
-              href={link.href}
-              rel={link.href.startsWith("http") ? "me noreferrer" : undefined}
-            >
-              {link.label}
-            </a>
+            <a href={link.href}>{link.label}</a>
           </li>
         ))
       }

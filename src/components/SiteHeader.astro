@@ -1,5 +1,6 @@
 ---
 import { siteNavigation, siteConfig } from "../site";
+import RelatedSites from "./RelatedSites.astro";
 
 type Props = {
   currentPath: string;
@@ -16,7 +17,7 @@ const isCurrentPage = (href: string) => currentPath === href;
   <div class="container site-header-inner">
     <a class="site-title" href="/">{siteConfig.title}</a>
 
-    <nav aria-label="Primary">
+    <nav class="site-primary" aria-label="Primary">
       <ul class="site-nav">
         {
           siteNavigation.map((item) => (
@@ -33,5 +34,12 @@ const isCurrentPage = (href: string) => currentPath === href;
         }
       </ul>
     </nav>
+
+    <details class="site-elsewhere">
+      <summary>Elsewhere <span aria-hidden="true">⌄</span></summary>
+      <nav aria-label="Related sites">
+        <RelatedSites variant="menu" />
+      </nav>
+    </details>
   </div>
 </header>
