@@ -4,6 +4,11 @@ import test from "node:test";
 import { URL } from "node:url";
 
 import { buildKnowledgeGraph } from "../src/lib/knowledge-map.ts";
+import {
+  knowledgeMapViewBox,
+  nodeLabelBaseline,
+  reserveClusterHeading,
+} from "../src/lib/knowledge-map-layout.ts";
 
 const knowledgeMapSource = readFileSync(
   new URL("../src/components/KnowledgeMap.astro", import.meta.url),
@@ -431,36 +436,67 @@ test("suppresses territory headings only while identifying a node without disabl
   );
 });
 
-test("keeps the Agent systems heading clear of the node it previously intercepted", () => {
-  const override = knowledgeMapSource.match(
-    /clusterLabelYOverrides[\s\S]{0,700}?"agents-assurance"\s*:\s*(-?\d+)/,
-  );
-  assert.ok(
-    override,
-    "the Agent systems territory needs an explicit label placement adjustment",
+test("reserves the whole Agent systems heading as its node rings expand", () => {
+  // Six late-sorting notes put Vuoro at the top of the last ring. The 47-node
+  // case reproduces the corpus that collided at every desktop viewport;
+  // the next ring must keep working without another hard-coded baseline.
+  for (const [count, vuoroY, expectedHeading] of [
+    [39, -15, -66],
+    [47, -49, -100],
+    [55, -83, -134],
+  ]) {
+    const entries = [
+      ...Array.from({ length: count - 7 }, (_, index) =>
+        note(`early-${index}`, { title: `Earlier ${index}` }),
+      ),
+      {
+        id: "vuoro",
+        collection: "projects",
+        data: { title: "Vuoro", area: "systems" },
+      },
+      ...Array.from({ length: 6 }, (_, index) =>
+        note(`later-${index}`, { title: `ZZZ ${index}` }),
+      ),
+    ];
+    const graph = buildKnowledgeGraph(entries, [
+      { ...clusters[0], region: { x: 190, y: 175 } },
+    ]);
+    const vuoro = graph.nodes.find((node) => node.id === "vuoro");
+    assert.equal(vuoro.y, vuoroY);
+    const label = { y: vuoro.y - 12, lines: ["Vuoro"] };
+    const labelY = reserveClusterHeading(
+      -64,
+      2,
+      graph.nodes.map((node) => ({
+        y: node.y,
+        label: node.id === "vuoro" ? label : undefined,
+      })),
+    );
+    assert.equal(labelY, expectedHeading);
+    const lastHeadingLineBottom = labelY + 15 + 4;
+    assert.ok(nodeLabelBaseline(label) - 12 - lastHeadingLineBottom >= 8);
+
+    const [, top, , height] = knowledgeMapViewBox([labelY])
+      .split(" ")
+      .map(Number);
+    assert.ok(labelY - top >= 20, "reserve ascent and top padding");
+    assert.equal(top + height, 620, "preserve the existing bottom edge");
+  }
+  assert.match(
+    knowledgeMapSource,
+    /cluster\.id === "agents-assurance"[\s\S]{0,100}reserveClusterHeading\(/,
+    "rendering must use the tested reservation",
   );
   assert.match(
     knowledgeMapSource,
-    /const\s+labelY\s*=[\s\S]{0,240}?clusterLabelYOverrides\[cluster\.id\][\s\S]{0,240}?Math\.max\(20,\s*y\s*-\s*95\)/,
-    "the override must be used when rendering territory labels",
+    /viewBox=\{mapViewBox\}/,
+    "rendering must use the expanded viewport",
   );
+});
 
-  // The heading sits above the node ring, which on this territory means above
-  // the coordinate origin. The viewBox has to reserve that margin or the
-  // heading is simply clipped instead of overlapped.
-  const viewBox = knowledgeMapSource.match(
-    /class="knowledge-map"\s+viewBox="(-?\d+) (-?\d+) (-?\d+) (-?\d+)"/,
-  );
-  assert.ok(viewBox, "the map viewBox should be readable from the source");
-  const [, , top, , height] = viewBox.map(Number);
-  const labelY = Number(override[1]);
-  assert.ok(
-    labelY > top,
-    `the Agent systems heading at y=${labelY} is outside the viewBox top edge ${top}`,
-  );
-  assert.equal(
-    height,
-    620 - top,
-    "widening the top margin must extend the viewBox rather than crop the map",
-  );
+test("heading reservation includes multiline labels and retains sufficient existing space", () => {
+  const label = { y: -61, lines: ["First", "Second", "Third"] };
+  assert.equal(nodeLabelBaseline(label), -73);
+  assert.equal(reserveClusterHeading(-64, 2, [{ y: -49, label }]), -112);
+  assert.equal(reserveClusterHeading(-160, 2, [{ y: -49, label }]), -160);
 });

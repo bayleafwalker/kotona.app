@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "spa-week",
+  "basis": "Synthetic stress week within the spa note's winter envelope; no measured river or site data.",
+  "days": 7,
+  "periods": [
+    { "label": "Night", "hours": 8, "hydroKw": 140, "loadKw": 90 },
+    { "label": "Open", "hours": 12, "hydroKw": 140, "loadKw": 180 },
+    { "label": "Peak", "hours": 4, "hydroKw": 140, "loadKw": 250 }
+  ],
+  "expected": {
+    "average": {
+      "hours": 168,
+      "hydroKwh": 23520,
+      "demandKwh": 27160,
+      "gridImportKwh": 3640,
+      "gridExportKwh": 0,
+      "directUseKwh": 23520,
+      "peakImportKw": null
+    },
+    "hourly": {
+      "hours": 168,
+      "hydroKwh": 23520,
+      "demandKwh": 27160,
+      "gridImportKwh": 6440,
+      "gridExportKwh": 2800,
+      "directUseKwh": 20720,
+      "peakImportKw": 110
+    }
+  },
+  "negativeControl": {
+    "description": "Equal total energy at different hours cannot cover demand without storage or the grid.",
+    "days": 7,
+    "periods": [
+      { "label": "Demand", "hours": 12, "hydroKw": 0, "loadKw": 100 },
+      { "label": "Generation", "hours": 12, "hydroKw": 100, "loadKw": 0 }
+    ],
+    "expectedHourlyImportKwh": 8400,
+    "incorrectAggregateImportKwh": 0
+  }
+}

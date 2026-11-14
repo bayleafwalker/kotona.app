@@ -18,11 +18,12 @@ automatic promotion. Promotion requires a separate publishability review and an
 explicit copy into this repository.
 
 Every note must declare a content `role` in frontmatter. Role selects the
-register (`operating`, `synthesis`, `exploration`, or `project-history`); it is
-separate from claim posture and lifecycle. Read `docs/writing-style.md` and use
-`docs/templates/post-template.md` when adding or substantially revising notes.
-Use lifecycle succession for replaced reasoning instead of deleting its public
-history or leaving a former framing on a discovery surface.
+register (`operating`, `synthesis`, `exploration`, `project-history`, or
+`exhibit`); it is separate from claim posture and lifecycle. Read
+`docs/writing-style.md` and use `docs/templates/post-template.md` when adding or
+substantially revising notes. Use lifecycle succession for replaced reasoning
+instead of deleting its public history or leaving a former framing on a
+discovery surface.
 
 Use Node 24 and validate ordinary changes with:
 
@@ -41,11 +42,20 @@ npx playwright install chromium   # once per machine
 npm run test:browser
 ```
 
-It covers only the seam the other suites cannot reach -- whether the Explore
-page presents what the ranking decides. Run it after changing Explore, the
-knowledge map, or `src/lib/reference-ranking.js`. CI provisions Chromium and
-runs it as a gate; it stays out of `npm run validate` because that provisioning
-is per-machine locally, not because the suite is optional.
+It covers whether Explore presents the ranking and whether exhibits present
+their checked implementation results. Run it after changing Explore, the
+knowledge map, `src/lib/reference-ranking.js`, or an exhibit. CI provisions
+Chromium and runs it as a gate; it stays out of `npm run validate` because that
+provisioning is per-machine locally, not because the suite is optional.
+
+Exhibits stay attached to notes. Each exhibit binds an implementation, JSON
+fixtures with independent expected results, a negative control, and unit and
+browser checks. `npm run check:exhibits` verifies the source bindings; the test
+suites verify behavior. The build publishes fixture bytes and binding digests
+under `/exhibits/`, without claiming those digests are a test-pass receipt. Keep
+private operational inventories outside this repository. Do not create an
+exhibit section before three completed exhibits exist; that threshold permits
+reconsidering navigation rather than requiring a new section.
 
 External reachability is a weekly and manually dispatched maintenance signal,
 not a publication or deployment invariant. The `external links` workflow runs

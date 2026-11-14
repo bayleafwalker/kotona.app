@@ -1,0 +1,125 @@
+---
+title: Three clocks
+role: exhibit
+status: guiding
+lifecycle: current
+area: data architecture
+published: 2026-11-13
+lastRevised: 2026-11-13
+projects: []
+relates:
+  - schema-on-split
+  - the-check-has-to-fail-first
+tags:
+  - temporal-data
+  - replay
+  - verification
+summary: >-
+  Reproduce three synthetic purchase records using explicit valid time, record
+  time and interpretation versions. A retained parser defect, a late correction
+  and overwritten history produce different, checked answers.
+explorePrompt: >-
+  When can a system reproduce a past calculation, and when is it answering a
+  different question? A synthetic purchase example separates valid time, record
+  time and a versioned interpretation basis containing the parser, reference
+  snapshot and rounding policy. Replaying a retained parser defect reproduces an
+  old calculation; correcting the parser or changing the reference snapshot
+  answers different questions. A late correction can change an earlier valid
+  interval without replacing a later one. If overwriting has removed the
+  selected payload, the model refuses the historical answer instead of
+  substituting a current value or returning a partial total. Apply this
+  distinction to a system you own. Identify which historical questions matter,
+  what evidence survives, and which interpretation dependencies are mutable.
+  Check where the example's assumptions diverge: some systems need only current
+  state, and some have no meaningful valid-time dimension. A date attribute
+  alone does not establish that dimension. Distinguish retrieving a retained
+  issued output from recomputing it; missing inputs can prevent recomputation
+  while the output survives. Challenge any proposed history mechanism that
+  cannot justify its cost. Produce a query-and-evidence table, the smallest
+  retention contract that supports it, and one executable fixture with
+  independently specified answers and a mutation that must fail. Mark
+  unsupported historical questions explicitly.
+exhibit:
+  id: three-clocks
+  implementation: src/lib/exhibits/three-clocks.js
+  fixtures: src/data/exhibits/three-clocks.json
+  presentation: src/components/ThreeClocks.astro
+  tests:
+    - tests/three-clocks.test.mjs
+    - tests/browser/three-clocks.spec.mjs
+---
+
+import ThreeClocks from "../../components/ThreeClocks.astro";
+
+Three purchase records can reproduce an old answer, correct an old calculation,
+or calculate with a different reference snapshot. Those are separate questions.
+This exhibit runs the same implementation that its fixture tests exercise.
+
+Start with the original interpretation, then select the corrected parser. Hold
+both time controls still while changing the reference snapshot. The EUR record
+stays unchanged; the two SEK records do not.
+
+<ThreeClocks />
+
+## What each selection means
+
+**Valid time** asks when an assertion applies to the purchase amount. **Record
+time** limits the assertions available to this system. The cutoff includes an
+assertion recorded at exactly that instant. Among assertions applicable at the
+chosen valid time, the latest recorded one takes priority.
+
+**Interpretation version** selects the parser, retained reference snapshot and
+rounding policy together. It is a versioned computational basis, rather than a
+third chronological ordering. New code can interpret old records, and doing so
+does not recreate the calculation that was originally made.
+
+The initial payloads and reference rates come from the synthetic example in
+[Schema on split](/notes/schema-on-split/). The temporal history is an
+additional fictional case:
+
+- The initial assertions are valid from **2026-05-01 00:00 UTC** and recorded at
+  **2026-05-02 09:00 UTC**.
+- A p-101 amendment to SEK 15.00 is valid from **2026-05-04 00:00 UTC** and
+  recorded at **2026-05-05 09:00 UTC**.
+- A p-101 correction to SEK 10.00 applies to the valid interval **[2026-05-01
+  00:00 UTC, 2026-05-04 00:00 UTC)** and is recorded at **2026-05-08 09:00
+  UTC**. It does not replace the later valid period.
+
+The original parser deliberately retains the decimal-comma defect. Replaying it
+establishes what that implementation calculates from the retained inputs. It
+does not establish that the amount was economically correct. Conversion uses
+integer hundredths and rational rates, with half-up rounding per record before
+the total is added.
+
+## Lose the history
+
+The overwrite control keeps only the latest assertion for each record. It keeps
+a marker that earlier payloads were discarded, but does not retain their values
+in the simulated store. An earlier query therefore reports **Unavailable** and
+withholds the total. It does not substitute the current value or sum only the
+records it can still answer.
+
+Returning to retained history restores the original fixture store. This is a
+reversible demonstration of information loss, not a recovery procedure for a
+database that has actually discarded its history.
+
+## What the checks establish
+
+The fixture carries independently specified expected cents and selected
+assertions. The implementation reads only its inputs; it does not read the
+expected results. Unit checks cover the original published amounts, record-time
+and valid-time boundaries, late correction, reference substitution, and lost
+history. Deliberately wrong cutoff, parser and snapshot choices fail the
+corresponding expectations. The browser check changes controls and checks the
+displayed amount, selected assertion and interpretation labels together.
+
+These checks establish agreement for these synthetic cases. They do not
+establish a production reporting system or correctness over arbitrary histories.
+The model covers nonnegative purchase amounts, three retained records, and a
+declared assertion precedence rule.
+
+Bitemporal history is established work. Martin Fowler's
+[Bitemporal History](https://martinfowler.com/articles/bitemporal-history.html)
+explains the valid/record distinction and its lineage in Snodgrass and SQL:2011.
+The additional control here makes the interpretation basis explicit; the exhibit
+makes that bounded claim executable.

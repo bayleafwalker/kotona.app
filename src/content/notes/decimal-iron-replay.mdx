@@ -1,0 +1,124 @@
+---
+title: Decimal Iron replay
+role: exhibit
+status: guiding
+lifecycle: current
+area: software assurance
+published: 2026-11-13
+lastRevised: 2026-11-13
+projects: []
+relates:
+  - three-clocks
+  - the-check-has-to-fail-first
+tags:
+  - replay
+  - verification
+  - financial-systems
+summary: >-
+  Pause a checked Decimal Iron reference trace after commit but before
+  acknowledgement, then inspect the EUR rounding residue that lights the beacon.
+  Every displayed state comes from the repository's scenario runner.
+explorePrompt: >-
+  How can a client recover from an interrupted operation while preserving
+  uncertainty about its outcome? In a checked payment reference, a journal
+  commit survives a lost acknowledgement. Inquiry using the original identity
+  resolves the outcome; retrying with a new identity creates a second posting
+  and fails the fixture. A separate conversion case shows why reconciliation
+  must name its units and scope: declaring an adjustment makes a previous
+  reconciliation stale until checked again. The browser displays exported
+  reference states; hardware and game adapters remain outside the executed
+  evidence. Apply these questions to an operation in a system you own. Identify
+  its commitment boundary, acknowledgement path, stable identity and available
+  inquiry mechanism. Establish inquiry authority, consistency and retention; an
+  inconclusive negative result preserves uncertainty. A queryable identity does
+  not itself establish idempotent retries. State where the example does not
+  transfer: inquiry may be unavailable, retries may lack idempotency, or there
+  may be no conversion or separate reconciliation scope. Derive an appropriate
+  recovery or compensation rule from those differences rather than copying the
+  payment sequence. Produce a bounded scenario table with interruption points,
+  independently expected outcomes, one harmful mutation that the checks reject,
+  and an evidence matrix separating implementations that ran from those only
+  represented. Bind any replay view to those same checked inputs or exported
+  states.
+exhibit:
+  id: decimal-iron-replay
+  implementation: src/lib/exhibits/decimal-iron-replay.js
+  fixtures: src/data/exhibits/decimal-iron-replay.json
+  presentation: src/components/DecimalIronReplay.astro
+  tests:
+    - tests/decimal-iron-replay.test.mjs
+    - tests/browser/decimal-iron-replay.spec.mjs
+  upstream:
+    repository: bayleafwalker/decimal-iron
+    revision: 76d5e70f9b43c6de57deb7ea8ee30349bf39c93c
+    source: decimal_iron/fixtures/replay-scenarios.json
+---
+
+import DecimalIronReplay from "../../components/DecimalIronReplay.astro";
+
+A payment has committed. The reply has not reached the client. The processor can
+show one transaction while the client still has no answer.
+
+This is a recorded run of the
+[Decimal Iron reference implementation](https://github.com/bayleafwalker/decimal-iron).
+The controls select its exported states. The browser does not contain a second
+payment engine.
+
+<DecimalIronReplay />
+
+## Stop between commit and acknowledgement
+
+The initial checkpoint is inside the payment operation. The processor's journal
+contains payment `T001`, its participant positions changed once, and the client
+has received no terminal reply. The next checkpoint discards that reply. Inquiry
+then resolves the original identity through the terminal.
+
+Select the duplicate step after the inquiry. It retains one transaction and the
+same posting sequence. The fixture's negative control retries with a new
+identity instead; the transaction count becomes two, and the expected positions
+fail. An unanswered request is not evidence that nothing happened.
+
+The export also contains an interruption before delivery. That run has no
+committed payment at its first checkpoint. Inquiry returns `NOT_FOUND`, and the
+adapter retries with the same identity. The two interruptions look uncertain to
+the client for different reasons, so the fixtures retain both.
+
+## Change the era, then inspect the cent
+
+Choosing the fictional 2002 scenario selects its first EUR reconciliation break.
+The beacon lights because that recorded reconciliation found a difference.
+**Previous step** shows the EUR statement before reconciliation, when the beacon
+was still off.
+
+Three FIM 1.00 postings become three individually rounded EUR 0.17 items. Their
+sum is EUR 0.51. Conversion of the FIM 3.00 aggregate produces EUR 0.50. The
+statement initially omits the minus-one-cent adjustment. Its FIM scope is clear;
+its EUR scope differs by one cent. The close command refuses that state.
+
+Declaring the adjustment does not immediately clear the beacon. It makes the EUR
+reconciliation stale. Only the next reconciliation establishes that both scopes
+are current and clear, after which the business day can close. The currency and
+minor unit remain attached to each scope throughout.
+
+## What ran
+
+The upstream scenario runner exercised the file-backed Python machine, its byte
+terminal, payment adapter and journal replay. It checked independent
+expectations from `decimal_iron/fixtures/replay-scenarios.json`, then exported
+the observed states, assertions, source revision and file digests. The site
+checks those recorded values against their expectations and projects them
+without recalculating the financial result. Browser checks verify the selected
+step, acknowledgement, currency scope and beacon together.
+
+Three upstream mutations must be rejected: retry with a new payment identity,
+omit the rounding adjustment, and suppress the EUR reconciliation break. The
+site's checks also reject a trace whose displayed state has been changed while
+its pass labels remain intact. A green label is cheap; the disagreement it can
+detect is the useful part.
+
+This trace does not exercise the RTL scenario adapter, physical meters, printer,
+UART timing or the 300-baud link. Those are part of the installation's evidence
+boundary. It also does not execute KESKUS. The scenario fixture provides a
+shared contract for those adapters; the export reports them as skipped until
+they run. The browser replay is one view of the checked reference, not
+completion of those other implementations.

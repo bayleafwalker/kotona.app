@@ -10,6 +10,7 @@ projects:
   - household-operating-platform
 relates:
   - log-as-system
+  - three-clocks
 terms:
   - term: Homelab Analytics
     definition:
@@ -201,6 +202,10 @@ pipeline without snapshots silently produces — plausible, internally consisten
 and not what happened. p-102 changes in none of them, which is the other half of
 the point: a well-drawn boundary leaves the unaffected records provably
 unaffected.
+
+[Three clocks](/notes/three-clocks/) makes these amounts executable with shared
+fixtures, then adds explicit valid and record times, a late correction and an
+overwrite scene. Its checks include this table as the published expectation.
 
 ## Apply When
 

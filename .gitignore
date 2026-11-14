@@ -10,6 +10,7 @@ worker-configuration.d.ts
 .DS_Store
 temp/
 public/og/generated/
+public/exhibits/
 
 # Playwright output. The browser suite is a separate gate; its browsers and
 # artifacts are machine state, not repository contract.

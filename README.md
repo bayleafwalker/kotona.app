@@ -68,11 +68,11 @@ cannot load host libraries:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/path/to/chrome npm run test:browser
 ```
 
-It covers the seam between what the ranking decides and what the Explore page
-presents. CI provisions Chromium and runs it on every push and pull request;
-`npm run validate` still leaves it out, because that provisioning is per-machine
-locally. Run it after changing Explore, the knowledge map, or
-`src/lib/reference-ranking.js`.
+It covers the seam between what the ranking decides and what Explore presents,
+plus the projection of checked results into each exhibit. CI provisions Chromium
+and runs it on every push and pull request; `npm run validate` still leaves it
+out, because that provisioning is per-machine locally. Run it after changing
+Explore, the knowledge map, or `src/lib/reference-ranking.js`, or an exhibit.
 
 Live external-link fetching is intentionally separate from publication CI. A
 weekly and manually dispatched `external links` workflow reports third-party
@@ -108,16 +108,48 @@ Frontmatter is schema-validated during `npm run check` and `npm run build`. Note
 `projects` and `relates` values are collection IDs and are validated as
 references during those checks.
 
-Every note declares a role (`operating`, `synthesis`, `exploration`, or
-`project-history`), a claim posture (`guiding`, `prospective`, `exploration`, or
-`archival`), and a publication lifecycle (`current`, `superseded`, `archived`,
-or `disproven`). Non-current notes require a dated reason. Superseded notes also
-require a successor reference, and project state that invalidated a note can be
-linked explicitly.
+Every note declares a role (`operating`, `synthesis`, `exploration`,
+`project-history`, or `exhibit`), a claim posture (`guiding`, `prospective`,
+`exploration`, or `archival`), and a publication lifecycle (`current`,
+`superseded`, `archived`, or `disproven`). Non-current notes require a dated
+reason. Superseded notes also require a successor reference, and project state
+that invalidated a note can be linked explicitly.
 
 Role selects the writing register and expected evidence; claim posture and
-lifecycle do not. See `docs/writing-style.md` for the four role-specific
-structures and `docs/templates/post-template.md` for the authoring contract.
+lifecycle do not. See `docs/writing-style.md` for the role-specific structures
+and `docs/templates/post-template.md` for the authoring contract.
+
+### Exhibits attached to notes
+
+An exhibit declares `exhibit.id`, `implementation`, `fixtures`, `presentation`,
+and `tests` in frontmatter. `role: exhibit` requires that binding; an existing
+note can retain its role when the exhibit supports its argument. Bind one
+discovered `tests/*.test.mjs` file and one `tests/browser/*.spec.mjs` file. Keep
+independent expected values and a negative control in the fixture checks. The
+browser must use the checked implementation or a reproducible, pinned trace from
+it. A test that merely compares a copied display model with itself does not
+establish the claim.
+
+`npm run check:exhibits` rejects missing source files, invalid paths, duplicate
+IDs, and incomplete bindings. `npm run generate:exhibits` runs before
+development and production builds and copies the exact public fixture bytes plus
+SHA-256 source bindings to `/exhibits/<id>/`. Notes link those artifacts below
+the body. The manifest identifies source revision and local modifications; it is
+not a test-pass or live-deployment receipt. CI separately executes unit and
+browser checks. An external implementation also declares `upstream.repository`,
+its full immutable commit `revision`, and a source fixture path.
+
+Decimal Iron's site fixture is an exported replay. CI checks out its pinned
+public revision and regenerates the trace through the real Python engine;
+semantic differences fail. To repeat that gate locally from that checkout:
+
+```bash
+python -m decimal_iron replay --check /path/to/kotona.app/src/data/exhibits/decimal-iron-replay.json
+```
+
+Keep real operational inventories in their owning private repository. Site
+builds never reach across that publication boundary. Exhibits use the existing
+note graph and discovery surfaces; no navigation section is added.
 
 Every project declares a compact evidence record: current capability, concrete
 proof links, supported integrations, the strongest known limitation, and the
@@ -247,9 +279,9 @@ The revision is exposed in the footer, `/version.json`, `llms.txt`, and the
 
 CI lives in `.github/workflows/ci.yml` and runs install, dependency audit,
 format check, lint, unit tests, project freshness, generated content shape,
-explore-prompt corpus checks, agent-skills digest drift, Astro content and role
-checks, the production build, a local Worker integration smoke test, the
-retrieval evaluation, and the browser presentation gate. The retrieval
+explore-prompt corpus checks, agent-skills digest drift, exhibit bindings, Astro
+content and role checks, the production build, a local Worker integration smoke
+test, the retrieval evaluation, and the browser presentation gate. The retrieval
 evaluation requires no external model or network access.
 
 External link checking is deliberately not part of CI. It runs in the separate

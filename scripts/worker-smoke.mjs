@@ -1047,6 +1047,27 @@ async function runChecks(baseUrl) {
           `${where}: ${expected} ranked ${rank || "nowhere"}, wanted within ${probe.withinTop ?? 5}`,
         );
       }
+      for (const expected of probe.expectReasons ?? []) {
+        const result = ranked.find(
+          (entry) => entry.document.path === expected.path,
+        );
+        assert(
+          result?.reasons.some(
+            (reason) =>
+              reason.field === expected.field &&
+              reason.value === expected.value,
+          ),
+          `${where}: ${expected.path} must match ${expected.field}: ${expected.value}`,
+        );
+      }
+      for (const field of probe.forbidMatchFields ?? []) {
+        assert(
+          ranked.every(
+            (entry) => !entry.reasons.some((reason) => reason.field === field),
+          ),
+          `${where}: ${field} must not contribute a match`,
+        );
+      }
       if (probe.minResults !== undefined) {
         assert(
           paths.length >= probe.minResults,

@@ -1,0 +1,229 @@
+---
+import fixture from "../data/exhibits/spa-week.json";
+import {
+  balanceWeek,
+  energyMwh,
+  explainWeek,
+} from "../lib/exhibits/spa-week.js";
+
+const result = balanceWeek(fixture);
+const hourlyResult = balanceWeek(fixture, "hourly");
+---
+
+<section class="spa-week" aria-labelledby="spa-week-title" data-spa-week>
+  <h3 id="spa-week-title">A worst-week check</h3>
+  <p class="scope">
+    One synthetic winter week, repeated for {result.hours} hours. This is a stress
+    case within the envelope above, not a measured worst week. The toggle changes
+    the accounting resolution; the generation and demand stay the same.
+  </p>
+  <fieldset>
+    <legend>Balance the same week using</legend>
+    <label
+      ><input type="radio" name="spa-resolution" value="average" checked /> Weekly
+      averages</label
+    >
+    <label
+      ><input type="radio" name="spa-resolution" value="hourly" /> Worst-week hours</label
+    >
+  </fieldset>
+  <div class="readout" aria-live="polite" aria-atomic="true">
+    <dl>
+      <div>
+        <dt>Generation</dt><dd data-metric="hydroKwh">
+          {energyMwh(result.hydroKwh)}
+        </dd>
+      </div>
+      <div>
+        <dt>Demand</dt><dd data-metric="demandKwh">
+          {energyMwh(result.demandKwh)}
+        </dd>
+      </div>
+      <div>
+        <dt>Grid imports</dt><dd data-metric="gridImportKwh">
+          {energyMwh(result.gridImportKwh)}
+        </dd>
+      </div>
+      <div>
+        <dt>Grid exports</dt><dd data-metric="gridExportKwh">
+          {energyMwh(result.gridExportKwh)}
+        </dd>
+      </div>
+      <div>
+        <dt>Direct hydro use</dt><dd data-metric="directUseKwh">
+          {energyMwh(result.directUseKwh)}
+        </dd>
+      </div>
+      <div>
+        <dt>Peak grid import</dt><dd data-metric="peakImportKw">
+          Not resolved
+        </dd>
+      </div>
+    </dl>
+    <p data-spa-explanation>
+      {explainWeek(result, "average")}
+    </p>
+  </div>
+  <details>
+    <summary>Inspect the assumed daily profile</summary>
+    <div class="table-wrap">
+      <table>
+        <thead
+          ><tr
+            ><th>Period</th><th>Hours/day</th><th>Hydro</th><th>Demand</th></tr
+          ></thead
+        >
+        <tbody>
+          {
+            fixture.periods.map((period) => (
+              <tr>
+                <>
+                  <th scope="row">{period.label}</th>
+                  <td>{period.hours}</td>
+                  <td>{period.hydroKw} kW</td>
+                  <td>{period.loadKw} kW</td>
+                </>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>
+      No electrical storage, outages, curtailment, or thermal load shifting is
+      modelled. Heat-pump electricity is included in the assumed site demand.
+      This checks the consequence of netting; it does not size a grid
+      connection.
+    </p>
+  </details>
+  <noscript>
+    <p>
+      At hourly resolution the same week imports {
+        energyMwh(hourlyResult.gridImportKwh)
+      }, exports {energyMwh(hourlyResult.gridExportKwh)}, uses {
+        energyMwh(hourlyResult.directUseKwh)
+      }
+      of hydro directly, and reaches a {hourlyResult.peakImportKw} kW import peak.
+    </p>
+  </noscript>
+</section>
+
+<script>
+  import fixture from "../data/exhibits/spa-week.json";
+  import {
+    balanceWeek,
+    energyMwh,
+    explainWeek,
+  } from "../lib/exhibits/spa-week.js";
+
+  for (const root of document.querySelectorAll<HTMLElement>(
+    "[data-spa-week]",
+  )) {
+    root.addEventListener("change", (event) => {
+      const input = event.target;
+      if (
+        !(input instanceof HTMLInputElement) ||
+        input.name !== "spa-resolution"
+      )
+        return;
+      const mode = input.value;
+      const result = balanceWeek(fixture, mode);
+      for (const node of root.querySelectorAll<HTMLElement>("[data-metric]")) {
+        const key = node.dataset.metric as keyof typeof result;
+        const value = result[key];
+        node.textContent =
+          key === "peakImportKw"
+            ? value === null
+              ? "Not resolved"
+              : `${value} kW`
+            : energyMwh(value);
+      }
+      const explanation = root.querySelector("[data-spa-explanation]");
+      if (explanation) explanation.textContent = explainWeek(result, mode);
+    });
+  }
+</script>
+
+<style>
+  .spa-week {
+    margin-block: 2rem;
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid var(--line-strong);
+    background: var(--bg-strong);
+    border-radius: 0.5rem;
+  }
+  .spa-week h3 {
+    margin-top: 0;
+  }
+  .scope,
+  details p {
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+  fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    border: 0;
+    padding: 0;
+    margin: 1.5rem 0;
+  }
+  legend {
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  input {
+    accent-color: var(--accent);
+  }
+  dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-block: 1rem;
+  }
+  dt {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 3vw, 1.3rem);
+  }
+  .readout p {
+    min-height: 5em;
+  }
+  details {
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+  summary {
+    cursor: pointer;
+  }
+  .table-wrap {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    font-size: 0.88rem;
+  }
+  th,
+  td {
+    padding: 0.6rem 0.4rem;
+    text-align: left;
+  }
+  @media (max-width: 380px) {
+    .spa-week {
+      padding: 0.85rem;
+    }
+    dl {
+      gap: 1rem 0.75rem;
+    }
+  }
+</style>

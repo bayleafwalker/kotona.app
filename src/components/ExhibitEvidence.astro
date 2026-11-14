@@ -1,0 +1,35 @@
+---
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+
+<aside class="exhibit-evidence" aria-label="Exhibit evidence">
+  <p>
+    <a href={`/exhibits/${id}/fixtures.json`}>Fixture data</a>
+    {" · "}
+    <a href={`/exhibits/${id}/binding.json`}
+      >Implementation and check bindings</a
+    >
+  </p>
+  <p class="exhibit-evidence-scope">
+    The bindings identify the source and cases used by this page. They do not
+    establish live deployment or behaviour outside the checked cases.
+  </p>
+</aside>
+
+<style>
+  .exhibit-evidence {
+    margin-block: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .exhibit-evidence p {
+    margin: 0.35rem 0;
+  }
+  .exhibit-evidence-scope {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

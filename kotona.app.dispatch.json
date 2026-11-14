@@ -33,9 +33,7 @@
     ]
   },
   "verification": {
-    "command_families": [
-      "unit"
-    ]
+    "command_families": ["unit"]
   },
   "hooks": {
     "level": "none",

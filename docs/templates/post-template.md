@@ -8,7 +8,17 @@ title: Replace with a concrete title
 # synthesis: question, existing material, mapping, correction, open edge
 # exploration: trigger, working model, failure case, evidence needed, confidence
 # project-history: what happened, expected result, observed result, fix, lesson
+# exhibit: claim, runnable case, independent expected result, negative control, limit
 role: exploration
+# Required for role: exhibit; optional for an exhibit embedded in another role.
+# exhibit:
+#   id: example
+#   implementation: src/lib/exhibits/example.js
+#   fixtures: src/data/exhibits/example.json
+#   presentation: src/components/Example.astro
+#   tests:
+#     - tests/example.test.mjs
+#     - tests/browser/example.spec.mjs
 status: prospective
 # Publication standing is separate from status. Non-current notes also require
 # lifecycleChanged and lifecycleReason; superseded notes require supersededBy.
