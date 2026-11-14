@@ -10,7 +10,7 @@ export const siteConfig = {
     summary:
       "Data platforms, infrastructure, and agent workflows. What changed, what failed, and what I expect to need again.",
   },
-  // `name` is shared by the homepage, About heading and structured data.
+  // `name` is confined to the About heading and its profile metadata.
   // A second, unrendered copy of the biography and location used to live
   // here and had already drifted from the About page it was meant to describe;
   // the page's own prose is the one statement of it.
@@ -35,7 +35,7 @@ export const siteNavigation = [
 export const relatedSites = [
   {
     id: "profile",
-    label: "About Juha",
+    label: "Professional profile",
     href: "https://about.kotona.app/",
     host: "about.kotona.app",
   },

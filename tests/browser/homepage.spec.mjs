@@ -33,7 +33,7 @@ const leadSelector = ".home-latest .home-entry--lead";
 const destinations = [
   {
     href: "https://about.kotona.app/",
-    name: /About Juha.*about\.kotona\.app/,
+    name: /Professional profile.*about\.kotona\.app/,
   },
   {
     href: "https://demo.vuoro.cloud/",
