@@ -7,8 +7,9 @@ const chromiumExecutablePath =
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined;
 
 /**
- * Browser coverage for the presentation seams: Explore must present the
- * ranking, and exhibits must present their implementation's checked results.
+ * Browser coverage for the presentation seams: home must show the selected
+ * changes, Explore must present the ranking, and exhibits must present their
+ * implementation's checked results.
  * Unit tests and retrieval evaluation check the underlying decisions.
  *
  * This is a separate gate rather than part of `npm run validate`, because it

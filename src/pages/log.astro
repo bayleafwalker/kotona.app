@@ -10,12 +10,12 @@ const notes = getVisibleEntries(await getCollection("notes"));
 const projects = getVisibleEntries(await getCollection("projects"));
 const generatedEntries: ChangelogEntry[] = [
   ...notes.map((note) => ({
-    date: note.data.published.toISOString().slice(0, 10),
+    date: note.data.published.toISOString(),
     entry: `Published note: ${note.data.title}.`,
     href: `/notes/${note.id}/`,
   })),
   ...projects.map((project) => ({
-    date: project.data.lastVerified.toISOString().slice(0, 10),
+    date: project.data.lastVerified.toISOString(),
     entry: `Verified project state: ${project.data.project}.`,
     href: `/projects/${project.id}/`,
   })),

@@ -65,3 +65,25 @@ export function roleLabel(value) {
 export function claimPostureLabel(value) {
   return claimPostureLabels.get(value) ?? humanizeLabel(value);
 }
+
+/**
+ * Keep discovery surfaces consistent: matching role and posture need only one
+ * label. The notes index can also include lifecycle without repeating this rule.
+ *
+ * @param {{ role: string, status: string, area?: string, lifecycle?: string }} note
+ * @param {{ includeLifecycle?: boolean }} [options]
+ * @returns {string}
+ */
+export function noteContextLabel(
+  { role, status, area, lifecycle },
+  { includeLifecycle = false } = {},
+) {
+  return [
+    roleLabel(role),
+    status === role ? null : claimPostureLabel(status),
+    includeLifecycle && lifecycle ? humanizeLabel(lifecycle) : null,
+    area ? humanizeLabel(area) : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}

@@ -1,181 +1,144 @@
 ---
 import { getCollection } from "astro:content";
 
-import EntryCard from "../components/EntryCard.astro";
+import HomeEntry from "../components/HomeEntry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
-  claimPostureLabel,
-  getVisibleEntries,
-  humanizeLabel,
-  roleLabel,
-  sortByDateAndTitle,
+  getPublishedEntries,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
+import { noteContextLabel } from "../lib/content-labels.js";
+import { getRecentChanges } from "../lib/homepage";
 import { siteConfig } from "../site";
+import "../styles/home.css";
 
-const startHereOrder = [
-  "the-agent-is-not-the-application",
-  "a-field-guide-to-assurance-managed-ai-development",
-  "moving-a-live-cluster-to-a-new-subnet",
-  "schema-on-split",
-];
+const [notes, projects] = await Promise.all([
+  getCollection("notes"),
+  getCollection("projects"),
+]);
+const changes = getRecentChanges(notes, projects);
+const [lead, ...otherChanges] = changes;
+const shownPaths = new Set(changes.map((change) => change.href));
+const currentNotesById = new Map(
+  getPublishedEntries(notes)
+    .filter((entry) => entry.data.lifecycle === "current")
+    .map((entry) => [entry.id, entry]),
+);
 
-const projectEntries = sortByLastVerifiedAndTitle(
-  await getCollection("projects"),
-);
-const visibleProjects = getVisibleEntries(projectEntries);
-const featuredProjects = visibleProjects.filter((entry) => entry.data.featured);
-const notes = sortByDateAndTitle(
-  (await getCollection("notes")).map((entry) => ({
-    ...entry,
-    data: {
-      ...entry.data,
-      date: entry.data.published,
-    },
-  })),
-);
-// Home is a discovery surface: like Explore's default view, it presents
-// current reasoning only. Historical notes stay reachable from /notes/ and
-// Explore, where they carry their lifecycle.
-const currentNotes = getVisibleEntries(notes).filter(
-  (note) => note.data.lifecycle === "current",
-);
-const currentNotesById = new Map(currentNotes.map((note) => [note.id, note]));
-// A curated entry point that is renamed, drafted, or no longer current must
-// stop the build rather than silently shrink the list.
-const startHereNotes = startHereOrder.map((id) => {
-  const note = currentNotesById.get(id);
-  if (!note) {
-    throw new Error(
-      `Start here note "${id}" is missing, a production draft, or not current`,
-    );
-  }
-  return note;
-});
-const startHereIds = new Set<string>(startHereOrder);
-const recentNotes = currentNotes
-  .filter((note) => !startHereIds.has(note.id))
-  .slice(0, 5);
-// Role and claim posture are separate so an exploration does not read like a
-// current operating rule; the notes index shows both, and so does home.
-const noteContext = (entry: (typeof currentNotes)[number]) =>
-  [
-    roleLabel(entry.data.role),
-    entry.data.status === entry.data.role
-      ? null
-      : claimPostureLabel(entry.data.status),
-    humanizeLabel(entry.data.area),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+// These are durable reading routes, not permanent occupants of the opening.
+// A missing or retired reference needs an editorial replacement, not silence.
+const readingRoutes = [
+  { id: "the-agent-is-not-the-application", label: "Agent systems" },
+  {
+    id: "a-field-guide-to-assurance-managed-ai-development",
+    label: "Software assurance",
+  },
+  { id: "moving-a-live-cluster-to-a-new-subnet", label: "Infrastructure" },
+  { id: "schema-on-split", label: "Data architecture" },
+]
+  .map((route) => {
+    const entry = currentNotesById.get(route.id);
+    if (!entry) {
+      throw new Error(
+        `Homepage reference "${route.id}" is missing, a draft, or not current`,
+      );
+    }
+    return { ...route, entry, href: `/notes/${entry.id}/` };
+  })
+  .filter((route) => !shownPaths.has(route.href));
+
+const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
+  .filter(
+    (entry) => entry.data.featured && !shownPaths.has(`/projects/${entry.id}/`),
+  )
+  .slice(0, 3);
 ---
 
 <BaseLayout>
-  <section class="intro-panel">
-    <p class="eyebrow">kotona.app</p>
-    <h1 class="page-title">{siteConfig.home.heading}</h1>
-    <p class="page-copy">{siteConfig.home.summary}</p>
-    <p class="page-copy">
-      Projects show what exists and when I last checked it. Notes record the
-      rules, mistakes, and design choices I expect to need again.
-    </p>
-  </section>
+  <div class="container home">
+    <section class="home-intro" aria-labelledby="home-title">
+      <div>
+        <p class="eyebrow">{siteConfig.profile.name} · Field notebook</p>
+        <h1 id="home-title">{siteConfig.home.heading}</h1>
+        <p class="home-description">{siteConfig.home.summary}</p>
+      </div>
+      <a class="home-explore-link" href="/explore/">
+        Find a topic <span aria-hidden="true">↗</span>
+      </a>
+    </section>
 
-  <section class="page-section">
-    <div class="section-heading">
-      <h2>Start here</h2>
-    </div>
-    <p class="page-copy">
-      Four places to begin, across agent work, software assurance, operations,
-      and data systems.
-    </p>
-    <p class="page-copy">
-      <a href="/explore/">Explore topics and relationships →</a>
-    </p>
-
-    {
-      startHereNotes.length > 0 ? (
-        <div class="entry-list start-here-list">
-          {startHereNotes.map((entry) => (
-            <EntryCard
-              href={`/notes/${entry.id}/`}
-              title={entry.data.title}
-              headingLevel={3}
-              summary={entry.data.summary}
-              context={noteContext(entry)}
-              tags={entry.data.tags}
-              date={entry.data.lastRevised}
-              dateLabel={
-                entry.data.lastRevised.getTime() ===
-                entry.data.published.getTime()
-                  ? undefined
-                  : "Revised"
-              }
-              draft={entry.data.draft}
-              terms={entry.data.terms}
-            />
-          ))}
-        </div>
-      ) : null
-    }
-  </section>
-
-  <section class="page-section">
-    <div class="section-heading">
-      <h2>Projects</h2>
-      <a href="/projects/">All projects</a>
-    </div>
+    <section class="home-section home-latest" aria-labelledby="latest-heading">
+      <div class="home-section-heading">
+        <h2 id="latest-heading">Latest changes</h2>
+        <a href="/notes/">All notes <span aria-hidden="true">→</span></a>
+      </div>
+      {
+        lead ? (
+          <div class="home-current-grid">
+            <HomeEntry change={lead} variant="lead" />
+            {otherChanges.length > 0 && (
+              <div class="home-recent-list">
+                {otherChanges.map((change) => (
+                  <HomeEntry change={change} />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <p class="empty-state">No published entries yet.</p>
+        )
+      }
+    </section>
 
     {
-      featuredProjects.length > 0 ? (
-        <div class="entry-list">
-          {featuredProjects.map((entry) => (
-            <EntryCard
-              href={`/projects/${entry.id}/`}
-              title={entry.data.title}
-              headingLevel={3}
-              summary={entry.data.summary}
-              context={entry.data.status}
-              tags={[entry.data.project, ...entry.data.tags]}
-              date={entry.data.lastVerified}
-              dateLabel="Verified"
-              draft={entry.data.draft}
-              terms={entry.data.terms}
-            />
-          ))}
-        </div>
-      ) : (
-        <p class="empty-state">No published projects yet.</p>
+      readingRoutes.length > 0 && (
+        <section class="home-section" aria-labelledby="references-heading">
+          <div class="home-section-heading">
+            <h2 id="references-heading">Useful starting points</h2>
+          </div>
+          <div class="home-reference-grid">
+            {readingRoutes.map(({ entry, href, label }) => (
+              <article class="home-reference">
+                <p class="home-route-label">{label}</p>
+                <h3>
+                  <a href={href}>{entry.data.title}</a>
+                </h3>
+                <p class="home-entry-context">{noteContextLabel(entry.data)}</p>
+                <p>{entry.data.summary}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       )
     }
-  </section>
-
-  <section class="page-section">
-    <div class="section-heading">
-      <h2>Recent notes</h2>
-      <a href="/notes/">All notes</a>
-    </div>
 
     {
-      recentNotes.length > 0 ? (
-        <div class="entry-list">
-          {recentNotes.map((entry) => (
-            <EntryCard
-              href={`/notes/${entry.id}/`}
-              title={entry.data.title}
-              headingLevel={3}
-              summary={entry.data.summary}
-              context={noteContext(entry)}
-              tags={entry.data.tags}
-              date={entry.data.published}
-              draft={entry.data.draft}
-              terms={entry.data.terms}
-            />
-          ))}
-        </div>
-      ) : (
-        <p class="empty-state">No published notes yet.</p>
+      projectRecords.length > 0 && (
+        <section class="home-section" aria-labelledby="projects-heading">
+          <div class="home-section-heading">
+            <h2 id="projects-heading">Project records</h2>
+            <a href="/projects/">
+              All projects <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <p class="home-section-copy">
+            What exists, what was checked, and what remains uncertain.
+          </p>
+          <div class="home-project-grid">
+            {projectRecords.map((entry) => (
+              <HomeEntry
+                change={{
+                  kind: "project",
+                  entry,
+                  href: `/projects/${entry.id}/`,
+                  date: entry.data.lastVerified,
+                  dateLabel: "Verified",
+                }}
+              />
+            ))}
+          </div>
+        </section>
       )
     }
-  </section>
+  </div>
 </BaseLayout>

@@ -42,13 +42,7 @@ export function getPublishedEntries<T extends { data: { draft?: boolean } }>(
   return entries.filter((entry) => !entry.data.draft);
 }
 
-export function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-}
+export { formatDate } from "./content-dates.js";
 
 export {
   claimPostureLabel,

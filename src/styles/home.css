@@ -1,0 +1,293 @@
+/* The front page is an edited view of the notebook, with dated changes first.
+   Index and reading-page typography remain in global.css. */
+main:has(> .home) {
+  padding-bottom: 0;
+}
+
+.home {
+  padding-top: 2rem;
+}
+
+.home-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 2rem;
+}
+
+.home-intro .eyebrow {
+  margin-bottom: 0.5rem;
+  font-size: 0.72rem;
+}
+
+.home-intro h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.home-description {
+  max-width: 66ch;
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.home-explore-link {
+  flex: 0 0 auto;
+  padding-block: 0.5rem;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+}
+
+.home-section {
+  margin-top: 2.5rem;
+}
+
+.home-latest {
+  margin-top: 1.75rem;
+}
+
+.home-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-display);
+}
+
+.home-section-heading h2 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.home-section-heading > a {
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.home-current-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.home-entry {
+  min-width: 0;
+}
+
+.home-entry--compact {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-recent-list .home-entry:first-child {
+  padding-top: 0.1rem;
+}
+
+.home-recent-list .home-entry:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.home-entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.85rem;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.home-entry-format {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.home-entry-title {
+  margin: 0.4rem 0;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+.home-entry-title a,
+.home-reference h3 a {
+  text-decoration: none;
+}
+
+.home-entry-title a:hover,
+.home-reference h3 a:hover {
+  text-decoration: underline;
+}
+
+.home-entry-context {
+  margin: 0.4rem 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.home-entry-summary {
+  margin: 0.5rem 0 0;
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.home-entry--lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.75rem;
+  border-top: 3px solid var(--accent);
+  background: #e9ede5;
+}
+
+.home-entry--lead .home-entry-title {
+  max-width: 20ch;
+  margin-block: 0.85rem 0.65rem;
+  font-size: clamp(2rem, 3.7vw, 2.85rem);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.home-entry--lead .home-entry-summary {
+  max-width: 46ch;
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+
+.home-entry-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-block: 0.5rem;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.home-reference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2rem;
+}
+
+.home-reference {
+  padding-block: 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-route-label {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-reference h3 {
+  margin: 0.4rem 0;
+  font-family: var(--font-display);
+  font-size: 1.17rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.home-reference > p:last-child {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.home-section-copy {
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.home-project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.home-project-grid .home-entry-title {
+  font-size: 1.15rem;
+}
+
+@media (max-width: 960px) {
+  .home-current-grid {
+    gap: 1.25rem;
+  }
+
+  .home-entry--lead {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .home {
+    padding-top: 1.4rem;
+  }
+
+  .home-intro {
+    display: block;
+  }
+
+  .home-description {
+    font-size: 0.95rem;
+  }
+
+  .home-explore-link {
+    display: inline-block;
+    margin-top: 0.35rem;
+  }
+
+  .home-latest {
+    margin-top: 1rem;
+  }
+
+  .home-current-grid,
+  .home-reference-grid,
+  .home-project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-entry--lead .home-entry-summary {
+    font-size: 1rem;
+  }
+
+  .home-entry--lead .home-entry-title {
+    font-size: 2rem;
+  }
+
+  .home-entry-action {
+    margin-top: 0.8rem;
+  }
+
+  .home-section-heading > a {
+    max-width: 12rem;
+  }
+
+  .home-project-grid {
+    gap: 0;
+  }
+}

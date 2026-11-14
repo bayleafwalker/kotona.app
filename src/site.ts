@@ -6,12 +6,12 @@ export const siteConfig = {
   defaultOgImage: "/og-default.png",
   defaultOgImageAlt: "kotona.app — systems, decisions, and failure modes",
   home: {
-    heading: "Notes from systems that I want to keep working",
+    heading: "Working notes, running examples.",
     summary:
-      "I write about data platforms, small infrastructure, software boundaries, and using agents in real work. Most entries begin with a system, decision, or failure and then ask what should survive the next change.",
+      "Data platforms, infrastructure, and agent workflows. What changed, what failed, and what I expect to need again.",
   },
-  // Only `name` is projected (the About page heading and the site's structured
-  // data). A second, unrendered copy of the biography and location used to live
+  // `name` is shared by the homepage, About heading and structured data.
+  // A second, unrendered copy of the biography and location used to live
   // here and had already drifted from the About page it was meant to describe;
   // the page's own prose is the one statement of it.
   profile: {
@@ -29,7 +29,28 @@ export const siteNavigation = [
   { href: "/explore/", label: "Explore" },
   { href: "/projects/", label: "Projects" },
   { href: "/notes/", label: "Notes" },
-  { href: "/about/", label: "About" },
+  { href: "/about/", label: "About this site" },
+] as const;
+
+export const relatedSites = [
+  {
+    id: "profile",
+    label: "About Juha",
+    href: "https://about.kotona.app/",
+    host: "about.kotona.app",
+  },
+  {
+    id: "demo",
+    label: "Interactive showcase",
+    href: "https://demo.vuoro.cloud/",
+    host: "demo.vuoro.cloud",
+  },
+  {
+    id: "vuoro",
+    label: "Vuoro Cloud",
+    href: "https://vuoro.cloud/",
+    host: "vuoro.cloud",
+  },
 ] as const;
 
 export function getContactLinks() {
