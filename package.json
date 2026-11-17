@@ -13,7 +13,7 @@
     "build": "astro build",
     "preview": "npm run build && astro preview",
     "deploy": "npm run build && wrangler deploy",
-    "audit:dependencies": "npm audit --audit-level=moderate",
+    "audit:dependencies": "node scripts/audit-dependencies.mjs",
     "cf-typegen": "wrangler types",
     "check": "astro check",
     "check:content-freshness": "node scripts/check-project-freshness.mjs",

@@ -35,6 +35,13 @@ Content frontmatter, collection references, freshness, build output, and Worker
 behavior are all part of that check. Run `npm run cf-typegen` only after
 intentional Worker binding changes.
 
+`npm run audit:dependencies` fails on any advisory at moderate severity or above
+that is not listed in `scripts/lib/audit-policy.mjs`. An entry there accepts one
+advisory on one package, with a reason and a review date; it fails the audit
+once that date passes or once the advisory is no longer reported. Add one only
+when no patched release exists and the package does not reach the deployed
+bundle, and never widen an entry to a package or severity.
+
 Browser coverage is a separate gate, because it needs a provisioned browser:
 
 ```bash
