@@ -1,12 +1,12 @@
 ---
 title: Acceptance Lab
 published: 2026-08-17
-lastRevised: 2026-08-17
-lastVerified: 2026-08-17
+lastRevised: 2026-11-17
+lastVerified: 2026-11-17
 draft: false
 project: acceptance-lab
 kind: engineering
-status: Runnable local prototype; deterministic fixtures only
+status: Runnable local prototype; fixtures and two reduced observations
 featured: false
 repoUrls:
   - https://github.com/bayleafwalker/acceptance-lab
@@ -15,15 +15,17 @@ evidence:
     Scores bounded candidate records against versioned acceptance scenarios,
     persists hash-chained events, rebuilds projections, and compares promotion
     states across mechanism, quality, authority, and economics.
-  latest: Local v0.1.0 implementation bundle
+  latest: >-
+    v0.1.0 package with a read-only trace adapter, pinned scorer revisions, and
+    one committed campaign over two reduced observations
   proofLinks:
     - label: Root synthesis note
       href: /notes/the-platform-can-retrieve-the-application-still-has-to-decide/
   integrations: []
   knownLimitation: >-
-    The current proof uses deterministic fixtures. It does not yet capture a
-    live model trace, execute an effect, or enforce an external promotion
-    policy.
+    The proof uses deterministic fixtures and two sanitized reductions of
+    already-observed runs. The harness does not capture a live model trace
+    itself, execute an effect, or enforce an external promotion policy.
   nextProof: >-
     Bind one real read-only agent run to runner-owned tool observations and show
     which trajectory details the initial candidate schema fails to preserve.
@@ -90,9 +92,17 @@ A run can be complete as evidence and still fail as an outcome.
 
 ## Current state
 
-The v0.1.0 bundle includes JSON contracts, deterministic scorers, a Python CLI,
+The v0.1.0 package includes JSON contracts, deterministic scorers, a Python CLI,
 a hash-chained SQLite event store, rebuildable projections, Markdown and JSON
-reports, comparison gates, ten unit tests, and a packaged wheel.
+reports, and comparison gates.
+
+Since the first version of this page the repository has added three things. A
+read-only adapter maps an already-observed trace record into the candidate
+contract; it does not call tools, fetch trace data, or check a receipt against
+an external system. Each run now pins the revisions of the scorers it used, so a
+recorded verdict stays interpretable after a scorer changes. And one committed
+campaign, dated 20 August 2026, scores two sanitized reductions of runner-owned
+observations without executing either candidate.
 
 Two fixture pairs demonstrate the current claim:
 
@@ -105,6 +115,20 @@ Two fixture pairs demonstrate the current claim:
 The event chain detects edits to recorded history. It is not an external
 signature or protection against a host owner rewriting both the database and the
 verification code.
+
+## Current verification scope
+
+The review on 17 November 2026 ran the repository's own validation target in a
+clean checkout of commit `fddbab2`, on Python 3.13 with the optional JSON Schema
+dependency installed. All 56 unit tests passed. The scenario and candidate
+records validated against their schemas. The deterministic demo reproduced both
+fixture pairs: each baseline failed, each candidate passed, and the event chain
+verified. The committed August campaign outputs matched a rebuild.
+
+That is a check of the repository as published. No live model trace was
+captured, no tool was executed, and no promotion decision was enforced anywhere.
+The campaign's source evidence is not public, so its reductions were checked for
+reproducibility, not for fidelity to the runs they summarize.
 
 ## Open edges
 
