@@ -64,7 +64,7 @@ test("a project enters on its verification date without changing its evidence sc
 
   assert.equal(changes[0].kind, "project");
   assert.equal(changes[0].href, "/projects/verified-project/");
-  assert.equal(changes[0].dateLabel, "Verified");
+  assert.equal(changes[0].dateLabel, "Checked");
   assert.deepEqual(changes[0].date, new Date("2026-11-14"));
   assert.equal(changes[0].entry, verified);
   assert.equal(

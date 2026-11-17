@@ -13,13 +13,15 @@ export type HomepageChange =
       entry: CollectionEntry<"projects">;
       href: string;
       date: Date;
-      dateLabel: "Verified";
+      dateLabel: "Checked";
     };
 
 /**
  * The homepage follows dated changes to published content, not build dates or
- * permanent feature flags. A verification date retains the project's stated
- * evidence scope; it does not establish live service health.
+ * permanent feature flags. A project's `lastVerified` date is shown as
+ * "Checked": the record was checked against its stated evidence scope on that
+ * day. "Verified" beside a title read as a claim about the project itself, or
+ * about live service health, which the date does not establish.
  */
 export function getRecentChanges(
   notes: readonly CollectionEntry<"notes">[],
@@ -57,7 +59,7 @@ export function getRecentChanges(
       entry,
       href: `/projects/${entry.id}/`,
       date: entry.data.lastVerified,
-      dateLabel: "Verified",
+      dateLabel: "Checked",
     });
   }
 

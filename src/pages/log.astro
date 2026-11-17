@@ -16,7 +16,7 @@ const generatedEntries: ChangelogEntry[] = [
   })),
   ...projects.map((project) => ({
     date: project.data.lastVerified.toISOString(),
-    entry: `Verified project state: ${project.data.project}.`,
+    entry: `Checked project state: ${project.data.project}.`,
     href: `/projects/${project.id}/`,
   })),
 ];

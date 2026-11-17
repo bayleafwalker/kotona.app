@@ -97,7 +97,7 @@ const relatedLinks = [
         </div>
 
         <p class="content-context">
-          Published {formattedPublishedDate} / Revised {formattedRevisedDate} / Verified{
+          Published {formattedPublishedDate} / Revised {formattedRevisedDate} / Checked{
             " "
           }
           {formattedVerifiedDate}
@@ -138,7 +138,7 @@ const relatedLinks = [
             <dd>{entry.data.status}</dd>
           </div>
           <div>
-            <dt>Verified</dt>
+            <dt>Last checked</dt>
             <dd>
               <time datetime={entry.data.lastVerified.toISOString()}>
                 {formattedVerifiedDate}

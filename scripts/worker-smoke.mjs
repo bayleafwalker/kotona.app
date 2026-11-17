@@ -390,10 +390,8 @@ async function runChecks(baseUrl) {
       "project H1 count",
     );
     assert(
-      /Verified [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(
-        normalizedText(project.body),
-      ),
-      "project metadata does not contain whitespace after Verified",
+      /Checked [A-Z][a-z]{2} \d{1,2}, \d{4}/.test(normalizedText(project.body)),
+      "project metadata does not contain whitespace after Checked",
     );
     assertIncludes(project.body, 'id="evidence-title"', "project evidence");
     assertIncludes(
