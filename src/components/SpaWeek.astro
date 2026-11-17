@@ -10,7 +10,11 @@ const result = balanceWeek(fixture);
 const hourlyResult = balanceWeek(fixture, "hourly");
 ---
 
-<section class="spa-week" aria-labelledby="spa-week-title" data-spa-week>
+<section
+  class="spa-week exhibit"
+  aria-labelledby="spa-week-title"
+  data-spa-week
+>
   <h3 id="spa-week-title">A worst-week check</h3>
   <p class="scope">
     One synthetic winter week, repeated for {result.hours} hours. This is a stress
@@ -115,6 +119,7 @@ const hourlyResult = balanceWeek(fixture, "hourly");
     energyMwh,
     explainWeek,
   } from "../lib/exhibits/spa-week.js";
+  import { writeMarked } from "../lib/exhibit-marks.js";
 
   for (const root of document.querySelectorAll<HTMLElement>(
     "[data-spa-week]",
@@ -131,12 +136,15 @@ const hourlyResult = balanceWeek(fixture, "hourly");
       for (const node of root.querySelectorAll<HTMLElement>("[data-metric]")) {
         const key = node.dataset.metric as keyof typeof result;
         const value = result[key];
-        node.textContent =
+        writeMarked(
+          node,
           key === "peakImportKw"
             ? value === null
               ? "Not resolved"
               : `${value} kW`
-            : energyMwh(value);
+            : energyMwh(value),
+          true,
+        );
       }
       const explanation = root.querySelector("[data-spa-explanation]");
       if (explanation) explanation.textContent = explainWeek(result, mode);
@@ -145,15 +153,9 @@ const hourlyResult = balanceWeek(fixture, "hourly");
 </script>
 
 <style>
-  .spa-week {
-    margin-block: 2rem;
-    padding: clamp(1rem, 3vw, 1.75rem);
-    border: 1px solid var(--line-strong);
-    background: var(--bg-strong);
-    border-radius: 0.5rem;
-  }
   .spa-week h3 {
     margin-top: 0;
+    font-weight: 500;
   }
   .scope,
   details p {
@@ -170,7 +172,12 @@ const hourlyResult = balanceWeek(fixture, "hourly");
   }
   legend {
     margin-bottom: 0.6rem;
-    font-weight: 600;
+    padding: 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   label {
     display: flex;
@@ -189,9 +196,13 @@ const hourlyResult = balanceWeek(fixture, "hourly");
   }
   dt {
     color: var(--muted);
-    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   dd {
+    width: fit-content;
     margin: 0.25rem 0 0;
     font-family: var(--font-mono);
     font-size: clamp(1rem, 3vw, 1.3rem);

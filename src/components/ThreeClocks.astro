@@ -12,11 +12,11 @@ const timeLabel = (value: string) =>
 ---
 
 <section
-  class="three-clocks"
+  class="three-clocks exhibit"
   data-three-clocks
   aria-label="Three clocks exhibit"
 >
-  <p class="scope">Synthetic purchase records · all times UTC</p>
+  <p class="scope exhibit-kicker">Synthetic purchase records · all times UTC</p>
   <div class="clock-controls">
     <div class="clock-control">
       <label for="three-clocks-valid">Valid time</label>
@@ -149,6 +149,7 @@ const timeLabel = (value: string) =>
     formatEuro,
     questionLabel,
   } from "../lib/exhibits/three-clocks.js";
+  import { writeMarked } from "../lib/exhibit-marks.js";
 
   const timeLabel = (value: string) =>
     value.replace("T", " ").replace(":00Z", " UTC");
@@ -171,7 +172,7 @@ const timeLabel = (value: string) =>
     const setText = (selector: string, value: string) => {
       const target = root.querySelector<HTMLElement>(selector);
       if (!target) throw new Error(`Missing exhibit projection: ${selector}`);
-      target.textContent = value;
+      writeMarked(target, value, root.dataset.rendered === "true");
     };
     const render = () => {
       const query = {
@@ -228,21 +229,12 @@ const timeLabel = (value: string) =>
     }
     root.dataset.initialized = "true";
     render();
+    // Only changes the reader makes after the first paint are marked.
+    root.dataset.rendered = "true";
   }
 </script>
 
 <style>
-  .three-clocks {
-    border: 1px solid var(--line-strong);
-    padding: clamp(0.7rem, 2.5vw, 1.3rem);
-    margin-block: 1.5rem;
-    background: var(--bg-strong);
-  }
-  .scope,
-  .result-label {
-    color: var(--muted);
-    font-size: 0.85rem;
-  }
   .clock-controls {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -251,19 +243,10 @@ const timeLabel = (value: string) =>
   .clock-control {
     display: grid;
     gap: 0.3rem;
-    font-size: 0.9rem;
     min-width: 0;
   }
   .clock-controls select {
     width: 100%;
-    min-width: 0;
-    min-height: 2.75rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 0.2rem;
-    color: var(--text);
-    background: var(--bg);
-    font: inherit;
-    padding: 0.35rem;
   }
   .interpretation-control {
     grid-column: 1 / -1;
@@ -284,15 +267,31 @@ const timeLabel = (value: string) =>
     padding-block: 0.75rem;
     border-block: 1px solid var(--line);
   }
+  .result-label {
+    display: block;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .clock-result output[data-status="unavailable"] {
+    color: var(--warm);
+  }
   .clock-result output {
     display: block;
     color: var(--accent);
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    justify-self: start;
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
     font-variant-numeric: tabular-nums;
     line-height: 1.25;
   }
   .clock-result p {
+    width: fit-content;
     margin: 0.35rem 0 0;
     font-size: 0.9rem;
   }
@@ -305,28 +304,33 @@ const timeLabel = (value: string) =>
     max-width: 100%;
     table-layout: fixed;
     overflow: visible;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
   .clock-records caption {
     text-align: left;
     margin-block: 1rem 0.3rem;
     color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .clock-records th,
   .clock-records td {
     min-width: 0;
-    padding: 0.55rem 0.3rem;
+    padding-block: 0.55rem;
     overflow-wrap: anywhere;
     vertical-align: top;
   }
   .clock-records th:first-child {
-    width: 3.5rem;
+    width: 4.6rem;
   }
   .clock-records th:last-child {
     width: 6.2rem;
   }
   .clock-records td span {
     display: block;
+    width: fit-content;
     margin-bottom: 0.15rem;
   }
   .assertion-id {
@@ -355,7 +359,7 @@ const timeLabel = (value: string) =>
       font-size: 1rem;
     }
     .clock-records th:first-child {
-      width: 2.8rem;
+      width: 4.2rem;
     }
     .clock-records th:last-child {
       width: 5.3rem;

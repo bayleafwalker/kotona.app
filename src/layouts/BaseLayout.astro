@@ -2,6 +2,15 @@
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { siteConfig } from "../site";
+// Self-hosted faces: the CSP's `font-src 'self'` admits nothing remote. Only
+// the weight axis is shipped; the optical-size files are more than twice the
+// bytes. The roman serif and the mono are on every page, so they are
+// preloaded; the italic loads when a page first uses it.
+import "@fontsource-variable/newsreader/wght.css";
+import "@fontsource-variable/newsreader/wght-italic.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
+import serifFontUrl from "@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url";
+import monoFontUrl from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 
 type Props = {
@@ -141,6 +150,17 @@ const cspNonce = Astro.locals.cspNonce;
     />
     {canonical ? <link rel="canonical" href={canonicalUrl} /> : null}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      [serifFontUrl, monoFontUrl].map((href) => (
+        <link
+          rel="preload"
+          href={href}
+          as="font"
+          type="font/woff2"
+          crossorigin="anonymous"
+        />
+      ))
+    }
     <link
       rel="alternate"
       type="application/rss+xml"

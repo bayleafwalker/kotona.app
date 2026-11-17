@@ -7,14 +7,22 @@ import {
 
 const choices = replayScenarios();
 const initial = projectReplay(trace, choices[0].id);
+// The rail shows the whole recorded run at once: which step is displayed,
+// which one is the scenario's key checkpoint, and where the beacon is lit.
+// Every mark is read from the same projection the readout uses.
+const initialRail = initial.steps.map((step) => ({
+  id: step.id,
+  beaconOn: projectReplay(trace, choices[0].id, step.id).beaconOn,
+}));
+const isNonZero = (difference: string) => !/^0\b/.test(difference);
 ---
 
 <section
-  class="decimal-replay"
+  class="decimal-replay exhibit"
   data-decimal-replay
   aria-label="Decimal Iron recorded replay"
 >
-  <p class="replay-scope">
+  <p class="replay-scope exhibit-kicker">
     Recorded Python reference trace · synthetic business days
   </p>
   <div class="replay-controls">
@@ -42,20 +50,54 @@ const initial = projectReplay(trace, choices[0].id);
     </label>
   </div>
   <div class="step-buttons">
-    <button type="button" data-replay-previous>Previous step</button>
-    <button type="button" data-replay-next>Next step</button>
-    <button type="button" data-replay-interrupt>Pause at key checkpoint</button>
+    <button type="button" data-replay-previous>
+      <span aria-hidden="true">←</span> Previous step
+    </button>
+    <button type="button" data-replay-next>
+      Next step <span aria-hidden="true">→</span>
+    </button>
+    <button type="button" class="checkpoint-button" data-replay-interrupt>
+      Pause at key checkpoint
+    </button>
+  </div>
+  {
+    /* A sighted shortcut over the same steps the select and buttons reach,
+       so it is hidden from assistive technology rather than duplicated. */
+  }
+  <div class="rail" aria-hidden="true">
+    <ol class="rail-steps" data-replay-rail>
+      {
+        initialRail.map((step) => (
+          <li
+            data-rail-step={step.id}
+            data-beacon={String(step.beaconOn)}
+            data-key={String(step.id === initial.stepId)}
+            data-current={String(step.id === initial.stepId)}
+          />
+        ))
+      }
+    </ol>
+    <p class="rail-legend">
+      <span class="legend-current">Shown step</span>
+      <span class="legend-key">Key checkpoint</span>
+      <span class="legend-beacon">Beacon lit</span>
+      <span class="legend-changed">Changed since the last step shown</span>
+    </p>
   </div>
   <div class="replay-current" aria-live="polite" aria-atomic="true">
-    <p class="step-number" data-replay-counter>
-      Step {initial.stepIndex + 1} of {initial.stepCount}
-    </p>
-    <h3 data-replay-label>{initial.stepLabel}</h3>
-    <div class="beacon" data-replay-beacon data-on={String(initial.beaconOn)}>
-      <span class="lamp" aria-hidden="true"></span>
-      <span data-replay-beacon-label
-        >Beacon {initial.beaconOn ? "ON" : "OFF"}</span
-      >
+    <div class="replay-head">
+      <div>
+        <p class="step-number" data-replay-counter>
+          Step {initial.stepIndex + 1} of {initial.stepCount}
+        </p>
+        <h3 data-replay-label>{initial.stepLabel}</h3>
+      </div>
+      <div class="beacon" data-replay-beacon data-on={String(initial.beaconOn)}>
+        <span class="lamp" aria-hidden="true"></span>
+        <span data-replay-beacon-label
+          >Beacon {initial.beaconOn ? "ON" : "OFF"}</span
+        >
+      </div>
     </div>
     <dl class="machine-state">
       <dt>Client acknowledgement</dt><dd data-replay-ack>
@@ -73,8 +115,9 @@ const initial = projectReplay(trace, choices[0].id);
     </dl>
   </div>
   <div class="terminal">
-    <p class="terminal-label">Recorded action and terminal result</p>
+    <p class="terminal-label">Recorded action</p>
     <p data-replay-action>{initial.action}</p>
+    <p class="terminal-label">Terminal result</p>
     <pre data-replay-terminal>{initial.terminal}</pre>
   </div>
   <table class="scope-table">
@@ -90,7 +133,12 @@ const initial = projectReplay(trace, choices[0].id);
               {scope.currency} · {scope.unit}
             </th>
             <td data-scope-status>{scope.status}</td>
-            <td data-scope-difference>{scope.difference}</td>
+            <td
+              data-scope-difference
+              data-nonzero={String(isNonZero(scope.difference))}
+            >
+              {scope.difference}
+            </td>
           </tr>
         ))
       }
@@ -148,6 +196,7 @@ const initial = projectReplay(trace, choices[0].id);
 <script>
   import trace from "../data/exhibits/decimal-iron-replay.json";
   import { projectReplay } from "../lib/exhibits/decimal-iron-replay.js";
+  import { writeMarked } from "../lib/exhibit-marks.js";
 
   for (const root of document.querySelectorAll<HTMLElement>(
     "[data-decimal-replay]",
@@ -164,14 +213,35 @@ const initial = projectReplay(trace, choices[0].id);
       "[data-replay-interrupt]",
     );
     if (!scenario || !step || !previous || !next || !interrupt) continue;
+    const rail = root.querySelector<HTMLElement>("[data-replay-rail]");
     let current = projectReplay(trace, scenario.value);
+    // Values are marked only when the reader moves between steps of one
+    // scenario. On first paint and on a scenario switch everything differs.
+    let marking = false;
     const setText = (selector: string, value: string) => {
       const target = root.querySelector<HTMLElement>(selector);
       if (!target) throw new Error(`Missing replay projection: ${selector}`);
-      target.textContent = value;
+      writeMarked(target, value, marking);
+    };
+    const buildRail = () => {
+      if (!rail) return;
+      const keyStepId = projectReplay(trace, scenario.value).stepId;
+      rail.replaceChildren(
+        ...current.steps.map((entry) => {
+          const item = document.createElement("li");
+          item.dataset.railStep = entry.id;
+          item.dataset.beacon = String(
+            projectReplay(trace, scenario.value, entry.id).beaconOn,
+          );
+          item.dataset.key = String(entry.id === keyStepId);
+          return item;
+        }),
+      );
     };
     const render = (rebuildSteps = false) => {
+      marking = root.dataset.initialized === "true" && !rebuildSteps;
       if (rebuildSteps) {
+        buildRail();
         step.replaceChildren(
           ...current.steps.map((entry, index) => {
             const option = document.createElement("option");
@@ -183,13 +253,24 @@ const initial = projectReplay(trace, choices[0].id);
       }
       step.value = current.stepId;
       root.dataset.step = current.stepId;
+      for (const item of rail?.children ?? []) {
+        if (item instanceof HTMLElement) {
+          item.dataset.current = String(
+            item.dataset.railStep === current.stepId,
+          );
+        }
+      }
       previous.disabled = current.stepIndex === 0;
       next.disabled = current.stepIndex === current.stepCount - 1;
+      // The counter and title change on every move, so they are never marked.
+      const wasMarking = marking;
+      marking = false;
       setText(
         "[data-replay-counter]",
         `Step ${current.stepIndex + 1} of ${current.stepCount}`,
       );
       setText("[data-replay-label]", current.stepLabel);
+      marking = wasMarking;
       const beacon = root.querySelector<HTMLElement>("[data-replay-beacon]");
       if (beacon) beacon.dataset.on = String(current.beaconOn);
       setText(
@@ -215,6 +296,12 @@ const initial = projectReplay(trace, choices[0].id);
         const selector = `[data-replay-currency="${scope.currency}"]`;
         setText(`${selector} [data-scope-status]`, scope.status);
         setText(`${selector} [data-scope-difference]`, scope.difference);
+        const difference = root.querySelector<HTMLElement>(
+          `${selector} [data-scope-difference]`,
+        );
+        if (difference) {
+          difference.dataset.nonzero = String(!/^0\b/.test(scope.difference));
+        }
       }
       const conversion = root.querySelector<HTMLElement>(
         "[data-replay-conversion]",
@@ -253,6 +340,16 @@ const initial = projectReplay(trace, choices[0].id);
         }
       });
     }
+    rail?.addEventListener("click", (event) => {
+      const item =
+        event.target instanceof Element
+          ? event.target.closest<HTMLElement>("[data-rail-step]")
+          : null;
+      if (item?.dataset.railStep) {
+        current = projectReplay(trace, scenario.value, item.dataset.railStep);
+        render();
+      }
+    });
     interrupt.addEventListener("click", () => {
       current = projectReplay(trace, scenario.value);
       render();
@@ -263,17 +360,6 @@ const initial = projectReplay(trace, choices[0].id);
 </script>
 
 <style>
-  .decimal-replay {
-    border: 1px solid var(--line-strong);
-    padding: clamp(0.7rem, 2.5vw, 1.3rem);
-    margin-block: 1.5rem;
-    background: var(--bg-strong);
-  }
-  .replay-scope,
-  .step-number {
-    color: var(--muted);
-    font-size: 0.85rem;
-  }
   .replay-controls {
     display: grid;
     gap: 0.8rem;
@@ -282,18 +368,6 @@ const initial = projectReplay(trace, choices[0].id);
     display: grid;
     min-width: 0;
     gap: 0.3rem;
-    font-size: 0.9rem;
-  }
-  .replay-controls select,
-  .step-buttons button {
-    min-height: 2.75rem;
-    min-width: 0;
-    border: 1px solid var(--line-strong);
-    border-radius: 0.2rem;
-    color: var(--text);
-    background: var(--bg);
-    font: inherit;
-    padding: 0.4rem;
   }
   .replay-controls select {
     width: 100%;
@@ -302,83 +376,191 @@ const initial = projectReplay(trace, choices[0].id);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-block: 0.8rem;
-    font-size: 0.85rem;
+    margin-block: 0.8rem 1rem;
   }
-  .step-buttons button {
+  .checkpoint-button {
+    margin-inline-start: auto;
+  }
+  .rail {
+    margin-block: 0 1rem;
+  }
+  .rail-steps {
+    display: flex;
+    gap: 3px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rail-steps :global(li) {
+    position: relative;
+    flex: 1 1 0;
+    height: 1.5rem;
+    margin: 0;
+    border-bottom: 4px solid var(--line-strong);
     cursor: pointer;
-    padding-inline: 0.65rem;
   }
-  .step-buttons button:disabled {
-    opacity: 0.5;
-    cursor: default;
+  .rail-steps :global(li):hover {
+    border-bottom-color: var(--muted);
+  }
+  .rail-steps :global(li)[data-beacon="true"] {
+    border-bottom-color: var(--warm);
+  }
+  .rail-steps :global(li)[data-current="true"]::before {
+    position: absolute;
+    inset: auto 0 2px;
+    height: 0.5rem;
+    background: var(--text);
+    content: "";
+  }
+  .rail-steps :global(li)[data-key="true"]::after {
+    position: absolute;
+    top: 0.05rem;
+    left: 50%;
+    width: 0.42rem;
+    height: 0.42rem;
+    border: 1.5px solid var(--accent);
+    background: var(--bg-strong);
+    content: "";
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .rail-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1.1rem;
+    margin: 0.55rem 0 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    line-height: 1.5;
+  }
+  .rail-legend span::before {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-right: 0.4rem;
+    vertical-align: -0.05rem;
+    content: "";
+  }
+  .legend-current::before {
+    background: var(--text);
+  }
+  .legend-key::before {
+    border: 1.5px solid var(--accent);
+    transform: scale(0.75) rotate(45deg);
+  }
+  .legend-beacon::before {
+    height: 4px !important;
+    background: var(--warm);
+    vertical-align: 0.1rem !important;
+  }
+  .legend-changed::before {
+    background: color-mix(in srgb, var(--accent) 24%, transparent);
   }
   .replay-current {
     border-block: 1px solid var(--line);
-    padding-block: 0.75rem;
+    padding-block: 0.9rem 0.75rem;
+  }
+  .replay-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem 1.25rem;
+  }
+  .replay-head > div:first-child {
+    flex: 1 1 16rem;
+    min-width: 0;
   }
   .replay-current h3 {
-    margin: 0.4rem 0 0.65rem;
-    font-size: 1.1rem;
+    margin: 0.25rem 0 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.2;
   }
   .step-number {
     margin: 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
   }
   .beacon {
-    display: flex;
+    display: inline-flex;
+    flex: none;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    color: var(--muted);
     font-family: var(--font-mono);
+    font-size: 0.78rem;
     font-weight: 600;
   }
   .lamp {
-    width: 0.85rem;
-    height: 0.85rem;
+    width: 0.7rem;
+    height: 0.7rem;
     flex: none;
     border: 1px solid var(--line-strong);
     border-radius: 50%;
     background: var(--line);
   }
+  .beacon[data-on="true"] {
+    border-color: var(--warm);
+    background: var(--warm);
+    color: var(--bg-strong);
+  }
   .beacon[data-on="true"] .lamp {
-    background: #b74928;
-    border-color: #8a351c;
-    box-shadow: 0 0 0 3px #b7492826;
+    border-color: var(--bg-strong);
+    background: var(--bg-strong);
   }
   .machine-state,
   .conversion dl {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-    gap: 0.35rem 0.75rem;
-    margin-block: 0.85rem 0.25rem;
-    font-size: 0.85rem;
+    gap: 0.4rem 0.75rem;
+    margin-block: 0.9rem 0.25rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
   }
   dt {
     color: var(--muted);
   }
   dd {
     margin: 0;
+    justify-self: start;
     overflow-wrap: anywhere;
   }
   .terminal {
     margin-block: 1rem;
     border-inline-start: 3px solid var(--accent);
-    padding-inline-start: 0.75rem;
+    padding-inline-start: 0.9rem;
   }
-  .terminal p {
-    margin-block: 0.4rem;
+  .terminal p,
+  .terminal pre {
+    width: fit-content;
+    margin-block: 0.25rem 0.7rem;
     overflow-wrap: anywhere;
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
-  .terminal-label {
+  .terminal .terminal-label {
+    margin-block: 0 0.2rem;
     color: var(--muted);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .terminal pre {
+    justify-self: start;
+    margin-bottom: 0;
+    padding: 0.55rem 0.75rem;
   }
   pre {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     max-width: 100%;
     margin-block: 0.4rem;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
   .scope-table {
     display: table;
@@ -386,26 +568,35 @@ const initial = projectReplay(trace, choices[0].id);
     max-width: 100%;
     table-layout: fixed;
     overflow: visible;
-    font-size: 0.8rem;
+    font-size: 0.92rem;
   }
   .scope-table th,
   .scope-table td {
     min-width: 0;
-    padding: 0.5rem;
     overflow-wrap: anywhere;
+  }
+  .scope-table [data-nonzero="true"] {
+    color: var(--warm);
+    font-weight: 600;
   }
   caption {
     text-align: left;
     margin-bottom: 0.4rem;
     color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .conversion {
     border: 1px solid var(--line);
     margin-block: 1rem;
-    padding: 0.75rem;
+    padding: 0.85rem 1rem;
   }
   .conversion h4 {
     margin: 0;
+    font-size: 1.05rem;
+    font-weight: 500;
   }
   .journal {
     font-family: var(--font-mono);
@@ -414,10 +605,16 @@ const initial = projectReplay(trace, choices[0].id);
   }
   details {
     margin-top: 1rem;
-    font-size: 0.85rem;
+    font-size: 0.92rem;
   }
   summary {
     cursor: pointer;
+  }
+  .replay-scope:last-of-type {
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
   }
   @media (max-width: 420px) {
     .machine-state,
@@ -430,6 +627,9 @@ const initial = projectReplay(trace, choices[0].id);
     }
     .step-buttons button {
       flex-grow: 1;
+    }
+    .legend-changed {
+      flex-basis: 100%;
     }
   }
 </style>
