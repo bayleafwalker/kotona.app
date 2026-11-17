@@ -9,23 +9,41 @@
 const SEVERITY_RANK = { info: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 
 /**
- * Accepted advisories. An entry is a decision, not a suppression list: it
- * fails the audit once its review date passes, and it fails the audit when
- * it no longer matches anything, so it cannot outlive its reason.
+ * Accepted advisories. An entry is a decision, not a suppression list. It
+ * names one advisory on one package and records why the deployed site is not
+ * exposed. It fails the audit once its review date passes, and when it no
+ * longer matches anything, so it cannot outlive its reason.
  *
- * @type {{ id: string, package: string, reviewBy: string, reason: string }[]}
+ * `absentFromBuild` turns the exposure claim into a check: property names and
+ * strings from the package's own source that survive minification. After a
+ * build, `scripts/check-audit-exposure.mjs` fails if any of them appears in
+ * the Worker or client output. `tests/audit-policy.test.mjs` proves each one
+ * really occurs in the installed package, so the check cannot pass vacuously.
+ *
+ * @type {{ id: string, package: string, owner: string, reviewBy: string,
+ *   reason: string, exposure: string, absentFromBuild: string[] }[]}
  */
 export const ACCEPTED_ADVISORIES = [
   {
     id: "GHSA-fc5q-39xc-vjpf",
     package: "picomatch",
-    reviewBy: "2026-12-17",
+    owner: "site maintainer",
+    reviewBy: "2026-12-01",
     reason:
-      "ReDoS through attacker-supplied extglob patterns. No patched release " +
-      "exists (every version through 4.0.7 is affected), and npm's offered " +
-      "fix downgrades Astro by two majors. picomatch is absent from the " +
-      "built Worker and client bundles; it runs only in build and lint " +
-      "tooling, against patterns from this repository's own configuration.",
+      "No patched release exists: the advisory covers every version through " +
+      "4.0.7, the latest. npm's offered fix downgrades Astro by two majors.",
+    exposure:
+      "The flaw needs an attacker-chosen glob pattern. picomatch arrives " +
+      "through astro, vite, tinyglobby, fdir, @astrojs/internal-helpers and " +
+      "anymatch (via unstorage). Its importers in this build are Astro's " +
+      "asset plugin, its content glob loader and plugin filters, which run " +
+      "at build time on patterns from this repository's configuration and " +
+      "on this repository's file paths. The one runtime importer, Astro's " +
+      "in-memory cache provider, matches request query names against " +
+      "configured patterns; this site configures no cache, and the " +
+      "provider is not in the built Worker. No picomatch code is present " +
+      "in the Worker or client output, which the build check enforces.",
+    absentFromBuild: ["noextglob", "nonegate", "POSIX_REGEX_SOURCE"],
   },
 ];
 

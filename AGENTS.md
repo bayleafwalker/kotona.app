@@ -40,7 +40,9 @@ that is not listed in `scripts/lib/audit-policy.mjs`. An entry there accepts one
 advisory on one package, with a reason and a review date; it fails the audit
 once that date passes or once the advisory is no longer reported. Add one only
 when no patched release exists and the package does not reach the deployed
-bundle, and never widen an entry to a package or severity.
+bundle, and never widen an entry to a package or severity. Each entry lists
+strings from the package's source; `npm run check:audit-exposure` fails a build
+whose Worker or client output contains them.
 
 Browser coverage is a separate gate, because it needs a provisioned browser:
 

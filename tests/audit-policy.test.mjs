@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
+import { fileURLToPath, URL } from "node:url";
 
 import {
   ACCEPTED_ADVISORIES,
@@ -18,8 +20,11 @@ const advisory = (overrides = {}) => ({
 const acceptance = {
   id: "GHSA-aaaa-bbbb-cccc",
   package: "example",
+  owner: "site maintainer",
   reviewBy: "2026-12-01",
   reason: "No patched release.",
+  exposure: "Build tooling only.",
+  absentFromBuild: ["exampleSignature"],
 };
 
 test("an advisory reaches the policy once, on the package it was filed against", () => {
@@ -103,5 +108,47 @@ test("every standing acceptance states a reason and a review date", () => {
     assert.match(entry.id, /^GHSA(-[a-z0-9]{4}){3}$/);
     assert.match(entry.reviewBy, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(entry.reason.length > 40, `${entry.id} needs a real reason`);
+    assert.ok(entry.exposure.length > 80, `${entry.id} needs an exposure`);
+    assert.ok(entry.owner.length > 0, `${entry.id} needs an owner`);
   }
+});
+
+test("the build check for an acceptance cannot pass vacuously", () => {
+  for (const entry of ACCEPTED_ADVISORIES) {
+    assert.ok(entry.absentFromBuild.length > 0);
+    const library = fileURLToPath(
+      new URL(`../node_modules/${entry.package}/lib/`, import.meta.url),
+    );
+    const source = readdirSync(library)
+      .map((name) => readFileSync(`${library}${name}`, "utf8"))
+      .join("\n");
+    for (const signature of entry.absentFromBuild) {
+      assert.ok(
+        source.includes(signature),
+        `"${signature}" is not in ${entry.package}, so its absence from the build proves nothing`,
+      );
+    }
+  }
+});
+
+test("dependency audit is its own job, and the exposure check follows the build", async () => {
+  const { parse } = await import("yaml");
+  const ci = parse(
+    readFileSync(
+      fileURLToPath(new URL("../.github/workflows/ci.yml", import.meta.url)),
+      "utf8",
+    ),
+  );
+  const buildRuns = ci.jobs.build.steps.map((step) => step.run);
+  const auditRuns = ci.jobs.audit.steps.map((step) => step.run);
+
+  // An audit failure must still block deployment, which follows the whole
+  // workflow, without hiding whether the application's own checks pass.
+  assert.ok(auditRuns.includes("npm run audit:dependencies"));
+  assert.equal(buildRuns.includes("npm run audit:dependencies"), false);
+  assert.equal(ci.jobs.build.needs, undefined);
+  assert.ok(
+    buildRuns.indexOf("npm run build") <
+      buildRuns.indexOf("npm run check:audit-exposure"),
+  );
 });

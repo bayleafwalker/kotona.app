@@ -119,11 +119,13 @@ verification code.
 ## Current verification scope
 
 The review on 17 November 2026 ran the repository's own validation target in a
-clean checkout of commit `fddbab2`, on Python 3.13 with the optional JSON Schema
-dependency installed. All 56 unit tests passed. The scenario and candidate
-records validated against their schemas. The deterministic demo reproduced both
-fixture pairs: each baseline failed, each candidate passed, and the event chain
-verified. The committed August campaign outputs matched a rebuild.
+clean checkout of commit
+[`fddbab2`](https://github.com/bayleafwalker/acceptance-lab/commit/fddbab2e26398f0ecddfc89cd291462effdc8e75),
+on Python 3.13 with the optional JSON Schema dependency installed. All 56 unit
+tests passed. The scenario and candidate records validated against their
+schemas. The deterministic demo reproduced both fixture pairs: each baseline
+failed, each candidate passed, and the event chain verified. The committed
+August campaign outputs matched a rebuild.
 
 That is a check of the repository as published. No live model trace was
 captured, no tool was executed, and no promotion decision was enforced anywhere.

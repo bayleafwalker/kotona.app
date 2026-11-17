@@ -5,7 +5,10 @@ import { URL } from "node:url";
 
 import { buildKnowledgeGraph } from "../src/lib/knowledge-map.ts";
 import {
+  clearClusterHeading,
+  knowledgeMapExtent,
   knowledgeMapViewBox,
+  markerObstacle,
   nodeLabelBaseline,
   reserveClusterHeading,
 } from "../src/lib/knowledge-map-layout.ts";
@@ -484,7 +487,7 @@ test("reserves the whole Agent systems heading as its node rings expand", () => 
   }
   assert.match(
     knowledgeMapSource,
-    /const labelY = reserveClusterHeading\(/,
+    /const reservedY = reserveClusterHeading\(/,
     "rendering must use the tested reservation",
   );
   assert.match(
@@ -499,4 +502,46 @@ test("heading reservation includes multiline labels and retains sufficient exist
   assert.equal(nodeLabelBaseline(label), -73);
   assert.equal(reserveClusterHeading(-64, 2, [{ y: -49, label }]), -112);
   assert.equal(reserveClusterHeading(-160, 2, [{ y: -49, label }]), -160);
+});
+
+test("a heading clears markers from any cluster and otherwise stays put", () => {
+  const heading = {
+    x: 400,
+    y: 300,
+    lines: ["Work, institutions, and", "accountability"],
+  };
+
+  assert.deepEqual(
+    clearClusterHeading(heading, [markerObstacle({ x: 900, y: 40 })]),
+    { x: 400, y: 300 },
+    "a heading that is already clear must not move",
+  );
+
+  // A neighbouring ring's node at the end of the first line.
+  const intruder = markerObstacle({ x: 470, y: 298 });
+  const moved = clearClusterHeading(heading, [intruder]);
+  assert.notDeepEqual(moved, { x: 400, y: 300 });
+  assert.deepEqual(
+    clearClusterHeading({ ...heading, ...moved }, [intruder]),
+    moved,
+    "the chosen position is itself clear",
+  );
+  assert.ok(
+    Math.abs(moved.x - 400) + Math.abs(moved.y - 300) <= 120,
+    "the heading stays near the ring it names",
+  );
+});
+
+test("the viewport widens to hold markers and labels beyond the nominal canvas", () => {
+  const extent = knowledgeMapExtent([
+    { x: -34, label: { x: -46, anchor: "end", lines: ["a".repeat(30)] } },
+    { x: 990, label: { x: 1002, anchor: "start", lines: ["b".repeat(20)] } },
+  ]);
+
+  assert.ok(extent.left <= -46 - 30 * 5.6);
+  assert.ok(extent.right >= 1002 + 20 * 5.6);
+  assert.equal(
+    knowledgeMapViewBox([0], extent),
+    `${extent.left} -84 ${extent.right - extent.left} 704`,
+  );
 });

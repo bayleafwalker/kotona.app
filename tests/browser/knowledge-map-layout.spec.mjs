@@ -18,8 +18,9 @@ for (const width of widths) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto("/explore/");
     await expect(page.locator(".knowledge-map-frame svg")).toBeVisible();
+    await page.getByRole("checkbox", { name: "Historical notes" }).check();
 
-    const { clusters, nodes } = await page.evaluate(() => {
+    const { clusters, nodes, markers } = await page.evaluate(() => {
       const measure = (element) => {
         const box = element.getBoundingClientRect();
         return {
@@ -37,6 +38,17 @@ for (const width of widths) {
         nodes: [...document.querySelectorAll(".knowledge-node-label")].map(
           measure,
         ),
+        // Markers of every node the layout places, including historical
+        // ones the reader can reveal. A heading may sit beside a neighbouring
+        // ring, so its own cluster's markers are not the only ones that count.
+        markers: [
+          ...document.querySelectorAll(
+            ".knowledge-node circle, .knowledge-node rect",
+          ),
+        ].map((marker) => ({
+          ...measure(marker),
+          text: marker.closest("[data-node-id]").dataset.nodeId,
+        })),
       };
     });
 
@@ -56,6 +68,15 @@ for (const width of widths) {
     );
 
     expect(collisions).toEqual([]);
+
+    // The label check above cannot see a marker drawn through a heading,
+    // which is how an agent-ring node came to sit on the organizational one.
+    const markerCollisions = clusters.flatMap((cluster) =>
+      markers
+        .filter((marker) => intersects(cluster, marker))
+        .map((marker) => `"${cluster.text}" overlaps marker ${marker.text}`),
+    );
+    expect(markerCollisions).toEqual([]);
 
     // Zero clearance is not a pass worth keeping: the boxes merely fail to
     // intersect, and any font or wrapping change puts them back in contact.

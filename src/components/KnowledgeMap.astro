@@ -3,7 +3,10 @@ import { humanizeLabel } from "../lib/content-labels.js";
 import type { KnowledgeGraph } from "../lib/knowledge-map";
 import {
   clusterHeadingLineHeight,
+  clearClusterHeading,
   knowledgeMapExtent,
+  labelObstacle,
+  markerObstacle,
   knowledgeMapViewBox,
   nodeLabelBaseline,
   reserveClusterHeading,
@@ -82,21 +85,31 @@ const nodeLabel = (node: (typeof graph.nodes)[number]) => {
     anchor: liftVuoro ? "middle" : defaultAnchor,
   };
 };
+// Everything a heading must not be drawn through: every marker on the map,
+// and the project labels that are always visible.
+const headingObstacles = graph.nodes.flatMap((node) => [
+  markerObstacle(node),
+  ...(node.type === "project" ? [labelObstacle(nodeLabel(node))] : []),
+]);
 const clusterLabels = graph.clusters.map((cluster) => {
   const nodes = graph.nodes.filter((node) => node.cluster === cluster.id);
-  const { x, y } = clusterCentres.get(cluster.id)!;
+  const { x: centreX, y } = clusterCentres.get(cluster.id)!;
   const lines = labelLines(cluster.label, 31);
   const preferredY = clusterLabelYOverrides[cluster.id] ?? Math.max(20, y - 95);
   // Every territory reserves its heading above its own markers. A ring that
   // gains a node at its top would otherwise draw that node through the
   // heading, as the architecture ring did.
-  const labelY = reserveClusterHeading(
+  const reservedY = reserveClusterHeading(
     preferredY,
     lines.length,
     nodes.map((node) => ({
       y: node.y,
       label: node.type === "project" ? nodeLabel(node) : undefined,
     })),
+  );
+  const { x, y: labelY } = clearClusterHeading(
+    { x: centreX, y: reservedY, lines },
+    headingObstacles,
   );
   return { cluster, x, lines, labelY };
 });
@@ -480,15 +493,26 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 
     const RANKED_RESULT_LIMIT = 8;
     // The ranker reports the catalog field that matched. Readers get the
-    // same fact in the words the pages use for those fields.
-    const reasonLabels: Record<string, string> = {
-      discoverFor: "Listed for",
-      establishes: "Establishes",
-      terms: "Discussed in the text",
-      title: "Title",
-      summary: "Summary",
-      area: "Area",
-      lifecycle: "Lifecycle",
+    // same fact as a phrase, in the words the pages use for those fields.
+    const reasonPhrase = (reason: { field: string; value: string }) => {
+      switch (reason.field) {
+        case "discoverFor":
+          return `listed for “${reason.value}”`;
+        case "establishes":
+          return `establishes “${reason.value}”`;
+        case "title":
+          return `“${reason.value}” in the title`;
+        case "summary":
+          return `“${reason.value}” in the summary`;
+        case "terms":
+          return `“${reason.value}” in the text`;
+        case "area":
+          return `filed under “${reason.value}”`;
+        case "lifecycle":
+          return reason.value;
+        default:
+          return `${humanizeLabel(reason.field).toLowerCase()} “${reason.value}”`;
+      }
     };
 
     // One ranking drives both the ranked list and what the map and index show.
@@ -580,14 +604,11 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           const reasons = result.reasons
             .filter((reason) => reason.field !== "tags")
             .slice(0, 2)
-            .map(
-              (reason) =>
-                `${reasonLabels[reason.field] ?? humanizeLabel(reason.field)}: ${reason.value}`,
-            );
+            .map(reasonPhrase);
           if (reasons.length > 0) {
             const why = document.createElement("p");
             why.className = "knowledge-result-why";
-            why.textContent = `Matched on ${reasons.join(" · ")}`;
+            why.textContent = `Why this matched: ${reasons.join(" · ")}.`;
             item.appendChild(why);
           }
 

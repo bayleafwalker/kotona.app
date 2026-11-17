@@ -33,7 +33,7 @@ const { failures, accepted } = evaluateAudit(collectAdvisories(report), {
 
 for (const finding of accepted) {
   process.stdout.write(
-    `Accepted until ${finding.acceptance.reviewBy}: ${finding.package} ${finding.id} (${finding.severity}). ${finding.acceptance.reason}\n`,
+    `Accepted until ${finding.acceptance.reviewBy}: ${finding.package} ${finding.id} (${finding.severity}). ${finding.acceptance.reason} ${finding.acceptance.exposure}\n`,
   );
 }
 
