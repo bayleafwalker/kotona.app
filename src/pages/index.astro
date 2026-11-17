@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import HomeEntry from "../components/HomeEntry.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
+  formatDate,
   getPublishedEntries,
   sortByLastVerifiedAndTitle,
 } from "../lib/content";
@@ -19,11 +20,23 @@ const [notes, projects] = await Promise.all([
 const changes = getRecentChanges(notes, projects);
 const [lead, ...otherChanges] = changes;
 const shownPaths = new Set(changes.map((change) => change.href));
-const currentNotesById = new Map(
-  getPublishedEntries(notes)
-    .filter((entry) => entry.data.lifecycle === "current")
-    .map((entry) => [entry.id, entry]),
+const currentNotes = getPublishedEntries(notes).filter(
+  (entry) => entry.data.lifecycle === "current",
 );
+const currentNotesById = new Map(
+  currentNotes.map((entry) => [entry.id, entry]),
+);
+// Counts of what a reader can open from here: current notes, published
+// projects, and the notes that carry a checked exhibit.
+const ledger = [
+  { label: "Notes", value: String(currentNotes.length) },
+  { label: "Projects", value: String(getPublishedEntries(projects).length) },
+  {
+    label: "Exhibits",
+    value: String(currentNotes.filter((entry) => entry.data.exhibit).length),
+  },
+  ...(lead ? [{ label: "Last change", value: formatDate(lead.date) }] : []),
+];
 
 // These are durable reading routes, not permanent occupants of the opening.
 // A missing or retired reference needs an editorial replacement, not silence.
@@ -57,14 +70,24 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
 <BaseLayout>
   <div class="container home">
     <section class="home-intro" aria-labelledby="home-title">
-      <div>
-        <p class="eyebrow">Field notebook</p>
-        <h1 id="home-title">{siteConfig.home.heading}</h1>
+      <p class="eyebrow">Field notebook</p>
+      <h1 id="home-title">{siteConfig.home.heading}</h1>
+      <div class="home-intro-foot">
         <p class="home-description">{siteConfig.home.summary}</p>
+        <a class="home-explore-link" href="/explore/">
+          Find a topic <span aria-hidden="true">↗</span>
+        </a>
       </div>
-      <a class="home-explore-link" href="/explore/">
-        Find a topic <span aria-hidden="true">↗</span>
-      </a>
+      <dl class="home-ledger" aria-label="Published content">
+        {
+          ledger.map((item) => (
+            <div>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </section>
 
     <section class="home-section home-latest" aria-labelledby="latest-heading">
@@ -74,7 +97,7 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
       </div>
       {
         lead ? (
-          <div class="home-current-grid">
+          <div class="home-current">
             <HomeEntry change={lead} variant="lead" />
             {otherChanges.length > 0 && (
               <div class="home-recent-list">
@@ -98,7 +121,7 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
           </div>
           <div class="home-reference-grid">
             {readingRoutes.map(({ entry, href, label }) => (
-              <article class="home-reference">
+              <article class="home-reference" data-role={entry.data.role}>
                 <p class="home-route-label">{label}</p>
                 <h3>
                   <a href={href}>{entry.data.title}</a>
@@ -121,21 +144,23 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
               All projects <span aria-hidden="true">→</span>
             </a>
           </div>
-          <p class="home-section-copy">
-            What exists, what was checked, and what remains uncertain.
-          </p>
-          <div class="home-project-grid">
-            {projectRecords.map((entry) => (
-              <HomeEntry
-                change={{
-                  kind: "project",
-                  entry,
-                  href: `/projects/${entry.id}/`,
-                  date: entry.data.lastVerified,
-                  dateLabel: "Verified",
-                }}
-              />
-            ))}
+          <div>
+            <p class="home-section-copy">
+              What exists, what was checked, and what remains uncertain.
+            </p>
+            <div class="home-project-grid">
+              {projectRecords.map((entry) => (
+                <HomeEntry
+                  change={{
+                    kind: "project",
+                    entry,
+                    href: `/projects/${entry.id}/`,
+                    date: entry.data.lastVerified,
+                    dateLabel: "Verified",
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )

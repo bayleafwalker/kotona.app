@@ -129,7 +129,16 @@ const cspNonce = Astro.locals.cspNonce;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f7f4ec" />
+    <meta
+      name="theme-color"
+      content="#f3f1ea"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#0f1412"
+      media="(prefers-color-scheme: dark)"
+    />
     {canonical ? <link rel="canonical" href={canonicalUrl} /> : null}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link

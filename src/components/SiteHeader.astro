@@ -15,7 +15,9 @@ const isCurrentPage = (href: string) => currentPath === href;
 
 <header class="site-header">
   <div class="container site-header-inner">
-    <a class="site-title" href="/">{siteConfig.title}</a>
+    <a class="site-title" href="/">
+      <span class="site-mark" aria-hidden="true"></span>{siteConfig.title}
+    </a>
 
     <nav class="site-primary" aria-label="Primary">
       <ul class="site-nav">

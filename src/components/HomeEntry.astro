@@ -27,6 +27,7 @@ const action =
   class:list={["home-entry", `home-entry--${variant}`]}
   data-home-entry={href}
   data-home-kind={change.kind}
+  data-role={change.kind === "note" ? change.entry.data.role : undefined}
 >
   <div class="home-entry-meta">
     <time datetime={date.toISOString()}>

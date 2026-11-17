@@ -59,6 +59,8 @@ const noteContext = (entry: (typeof visibleNotes)[number]) =>
               date={entry.data.published}
               draft={entry.data.draft}
               terms={entry.data.terms}
+              role={entry.data.role}
+              lifecycle={entry.data.lifecycle}
             />
           ))}
         </div>
