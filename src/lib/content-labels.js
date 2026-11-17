@@ -71,6 +71,18 @@ export function claimPostureLabel(value) {
 }
 
 /**
+ * The posture word for a label that already says "Claim posture:", so the
+ * stamp on a note reads "Exploratory" where the index reads "Exploratory
+ * claim" -- one vocabulary, and no collision with the "Exploration" role.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+export function claimPostureWord(value) {
+  return claimPostureLabel(value).replace(/ claim$/, "");
+}
+
+/**
  * Keep discovery surfaces consistent: matching role and posture need only one
  * label. The notes index can also include lifecycle without repeating this rule.
  *

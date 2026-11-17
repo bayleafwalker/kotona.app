@@ -773,10 +773,12 @@ main {
     var(--bg-strong);
 }
 
+/* The viewport widens with the drawing, so the map fills the frame and only
+   scrolls once its labels would fall below a readable size. */
 .knowledge-map {
   display: block;
-  width: 62.5rem;
-  min-width: 62.5rem;
+  width: 100%;
+  min-width: 68rem;
   height: auto;
 }
 
@@ -1177,6 +1179,14 @@ main {
 }
 
 /* Explore refinements */
+
+/* A halo keeps a territory heading legible where relation lines cross it. */
+.knowledge-cluster-label {
+  paint-order: stroke;
+  stroke: var(--bg-strong);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
 
 .knowledge-results {
   scroll-margin-top: 5rem;
@@ -2069,6 +2079,22 @@ main {
 
 .related-content li a:hover {
   text-decoration: underline;
+}
+
+.related-citing {
+  margin-top: 0.9rem;
+}
+
+.related-citing summary {
+  min-height: 1.75rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.related-citing summary:hover {
+  color: var(--text);
 }
 
 /* A related note that is no longer current is still worth reading, but not as

@@ -24,7 +24,6 @@ terms:
 tags:
   - agents
   - workflow
-  - authority
   - automation
   - oversight
 summary:

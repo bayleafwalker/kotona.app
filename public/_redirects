@@ -12,5 +12,11 @@
 /projects/sprintctl-and-kctl/ /projects/vuoro/ 301
 /case-studies/:slug   /projects/:slug/ 301
 /case-studies/:slug/  /projects/:slug/ 301
+/tags/auth            /tags/authorization/    301
+/tags/auth/           /tags/authorization/    301
+/tags/authority       /tags/                  301
+/tags/authority/      /tags/                  301
+/tags/decisions       /tags/decision-making/  301
+/tags/decisions/      /tags/decision-making/  301
 /tags/workflows       /tags/workflow/  301
 /tags/workflows/      /tags/workflow/  301

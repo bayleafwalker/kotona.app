@@ -29,7 +29,7 @@ test("a natural-language question ranks results and drives the other views", asy
 
   // Each result says why it ranked where it did.
   await expect(results.first().locator(".knowledge-result-why")).toContainText(
-    "discoverFor",
+    "Listed for",
   );
 
   // The regression: the map and index used to require a contiguous substring,
@@ -76,7 +76,7 @@ test("a term named only in prose retrieves the documents that discuss it", async
   // A prose match is the only reason such a result has, so it has to reach
   // the reader rather than leaving an unexplained entry in the list.
   await expect(results.first().locator(".knowledge-result-why")).toContainText(
-    "terms: togaf",
+    "Discussed in the text: togaf",
   );
 
   // Map, index, and count agree with the ranking, as they do for a question.

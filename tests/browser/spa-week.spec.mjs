@@ -15,9 +15,9 @@ test("the spa toggle projects each fixture result without changing its period", 
   await page.goto("/notes/size-the-spa-to-the-river/");
   const exhibit = page.locator("[data-spa-week]");
   for (const [mode, label] of [
-    ["average", "Weekly averages"],
-    ["hourly", "Worst-week hours"],
-    ["average", "Weekly averages"],
+    ["average", "Weekly total"],
+    ["hourly", "Hour by hour"],
+    ["average", "Weekly total"],
   ]) {
     await exhibit.getByRole("radio", { name: label }).check();
     for (const [key, value] of Object.entries(fixture.expected[mode])) {

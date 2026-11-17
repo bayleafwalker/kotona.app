@@ -29,8 +29,39 @@ export function reserveClusterHeading(
   );
 }
 
+/** Approximate advance of the map's 10px label face, in SVG units. */
+const nodeLabelAdvance = 5.6;
+
+type PlacedLabel = { x: number; anchor: string; lines: string[] };
+
+/**
+ * Horizontal extent of every marker and node label. A ring that grows past
+ * the nominal 0..1000 canvas has to widen the viewport, or its outermost
+ * markers and the labels revealed on hover are cropped at the frame.
+ */
+export function knowledgeMapExtent(nodes: { x: number; label: PlacedLabel }[]) {
+  let left = 0;
+  let right = 1000;
+  for (const { x, label } of nodes) {
+    const width =
+      Math.max(...label.lines.map((line) => line.length)) * nodeLabelAdvance;
+    const labelLeft =
+      label.anchor === "end"
+        ? label.x - width
+        : label.anchor === "middle"
+          ? label.x - width / 2
+          : label.x;
+    left = Math.min(left, x - 10, labelLeft);
+    right = Math.max(right, x + 10, labelLeft + width);
+  }
+  return { left: Math.floor(left - 12), right: Math.ceil(right + 12) };
+}
+
 /** Growing the top reservation must not crop the existing bottom edge. */
-export function knowledgeMapViewBox(headingBaselines: number[]) {
+export function knowledgeMapViewBox(
+  headingBaselines: number[],
+  { left, right }: { left: number; right: number } = { left: 0, right: 1000 },
+) {
   const top = Math.min(-84, ...headingBaselines.map((y) => Math.floor(y - 20)));
-  return `0 ${top} 1000 ${620 - top}`;
+  return `${left} ${top} ${right - left} ${620 - top}`;
 }

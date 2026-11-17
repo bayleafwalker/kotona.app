@@ -20,7 +20,7 @@ tags:
   - agents
   - evidence
   - audit
-  - decisions
+  - decision-making
   - reconciliation
 summary: >-
   Session hooks can capture what happened, cheap models can propose what it

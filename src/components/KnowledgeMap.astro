@@ -3,6 +3,7 @@ import { humanizeLabel } from "../lib/content-labels.js";
 import type { KnowledgeGraph } from "../lib/knowledge-map";
 import {
   clusterHeadingLineHeight,
+  knowledgeMapExtent,
   knowledgeMapViewBox,
   nodeLabelBaseline,
   reserveClusterHeading,
@@ -86,21 +87,24 @@ const clusterLabels = graph.clusters.map((cluster) => {
   const { x, y } = clusterCentres.get(cluster.id)!;
   const lines = labelLines(cluster.label, 31);
   const preferredY = clusterLabelYOverrides[cluster.id] ?? Math.max(20, y - 95);
-  const labelY =
-    cluster.id === "agents-assurance"
-      ? reserveClusterHeading(
-          preferredY,
-          lines.length,
-          nodes.map((node) => ({
-            y: node.y,
-            label: node.type === "project" ? nodeLabel(node) : undefined,
-          })),
-        )
-      : preferredY;
+  // Every territory reserves its heading above its own markers. A ring that
+  // gains a node at its top would otherwise draw that node through the
+  // heading, as the architecture ring did.
+  const labelY = reserveClusterHeading(
+    preferredY,
+    lines.length,
+    nodes.map((node) => ({
+      y: node.y,
+      label: node.type === "project" ? nodeLabel(node) : undefined,
+    })),
+  );
   return { cluster, x, lines, labelY };
 });
 const mapViewBox = knowledgeMapViewBox(
   clusterLabels.map(({ labelY }) => labelY),
+  knowledgeMapExtent(
+    graph.nodes.map((node) => ({ x: node.x, label: nodeLabel(node) })),
+  ),
 );
 const edgeCoordinates = (
   source: (typeof graph.nodes)[number],
@@ -475,6 +479,17 @@ const clusterNodes = graph.clusters.map((cluster) => ({
       : [];
 
     const RANKED_RESULT_LIMIT = 8;
+    // The ranker reports the catalog field that matched. Readers get the
+    // same fact in the words the pages use for those fields.
+    const reasonLabels: Record<string, string> = {
+      discoverFor: "Listed for",
+      establishes: "Establishes",
+      terms: "Discussed in the text",
+      title: "Title",
+      summary: "Summary",
+      area: "Area",
+      lifecycle: "Lifecycle",
+    };
 
     // One ranking drives both the ranked list and what the map and index show.
     // A natural-language question used to empty the map, because the filter
@@ -565,11 +580,14 @@ const clusterNodes = graph.clusters.map((cluster) => ({
           const reasons = result.reasons
             .filter((reason) => reason.field !== "tags")
             .slice(0, 2)
-            .map((reason) => `${reason.field}: ${reason.value}`);
+            .map(
+              (reason) =>
+                `${reasonLabels[reason.field] ?? humanizeLabel(reason.field)}: ${reason.value}`,
+            );
           if (reasons.length > 0) {
             const why = document.createElement("p");
             why.className = "knowledge-result-why";
-            why.textContent = reasons.join(" -- ");
+            why.textContent = `Matched on ${reasons.join(" · ")}`;
             item.appendChild(why);
           }
 

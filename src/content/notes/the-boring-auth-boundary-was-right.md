@@ -18,7 +18,7 @@ summary:
   identity product. The useful decision was to keep identity proof upstream,
   keep authorization local, and demote local login to a narrow break-glass path.
 tags:
-  - auth
+  - authorization
   - architecture
 explorePrompt: >-
   This note is archived: it is a historical architecture decision, and the

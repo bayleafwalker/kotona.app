@@ -36,7 +36,7 @@ test("interrupting at commit leaves the client uncertain until the recorded inqu
   await expect(replay.locator("[data-replay-ack]")).toHaveText(
     "IDEMPOTENT_DUPLICATE",
   );
-  await replay.getByRole("button", { name: "Pause at key checkpoint" }).click();
+  await replay.getByRole("button", { name: "Go to key checkpoint" }).click();
   await expect(replay).toHaveAttribute(
     "data-step",
     "payment.committed-unacknowledged",

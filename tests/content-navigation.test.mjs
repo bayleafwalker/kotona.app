@@ -93,7 +93,7 @@ test("the note template labels format and claim posture explicitly", async () =>
 
   assert.match(
     source,
-    /Claim posture: \{humanizeLabel\(entry\.data\.status\)\}/,
+    /Claim posture: \{claimPostureWord\(entry\.data\.status\)\}/,
   );
   assert.match(source, /Format: \{humanizeLabel\(entry\.data\.role\)\}/);
 });

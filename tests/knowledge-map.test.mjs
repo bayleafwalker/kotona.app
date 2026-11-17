@@ -484,7 +484,7 @@ test("reserves the whole Agent systems heading as its node rings expand", () => 
   }
   assert.match(
     knowledgeMapSource,
-    /cluster\.id === "agents-assurance"[\s\S]{0,100}reserveClusterHeading\(/,
+    /const labelY = reserveClusterHeading\(/,
     "rendering must use the tested reservation",
   );
   assert.match(

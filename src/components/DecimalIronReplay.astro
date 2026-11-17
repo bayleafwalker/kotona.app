@@ -58,7 +58,7 @@ const isNonZero = (difference: string) => !/^0\b/.test(difference);
       Next step <span aria-hidden="true">→</span>
     </button>
     <button type="button" class="checkpoint-button" data-replay-interrupt>
-      Pause at key checkpoint
+      Go to key checkpoint
     </button>
   </div>
   {
@@ -145,6 +145,10 @@ const isNonZero = (difference: string) => !/^0\b/.test(difference);
       }
     </tbody>
   </table>
+  <p class="beacon-note">
+    The beacon lights when a reconciliation finds a difference, and stays lit
+    until a fresh reconciliation finds none.
+  </p>
   <div
     class="conversion"
     data-replay-conversion
@@ -588,6 +592,12 @@ const isNonZero = (difference: string) => !/^0\b/.test(difference);
     font-size: 0.66rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+  .beacon-note {
+    margin: 0.7rem 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.45;
   }
   .conversion {
     border: 1px solid var(--line);

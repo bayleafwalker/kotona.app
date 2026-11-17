@@ -43,7 +43,7 @@ tags:
   - workflow
   - git
   - workspaces
-  - authority
+  - state
 summary: >-
   A multi-repository project folder may assemble member worktrees, shared
   guidance and project context, but it must not acquire ownership of Git,

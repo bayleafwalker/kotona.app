@@ -46,6 +46,7 @@ export { formatDate } from "./content-dates.js";
 
 export {
   claimPostureLabel,
+  claimPostureWord,
   humanizeLabel,
   roleLabel,
 } from "./content-labels.js";

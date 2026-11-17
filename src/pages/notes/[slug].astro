@@ -9,6 +9,7 @@ import ReferenceActions from "../../components/ReferenceActions.astro";
 import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
+  claimPostureWord,
   formatDate,
   getVisibleEntries,
   humanizeLabel,
@@ -66,16 +67,26 @@ const explicitlyRelated = getVisibleEntries(
 const backlinks = visibleNotes.filter((note) =>
   note.data.relates.some((reference) => reference.id === entry.id),
 );
-const relatedById = new Map(
-  [...explicitlyRelated, ...backlinks, ...successorNotes, ...supersededNotes]
+// Notes this one names, and its succession, are its own reading list. Notes
+// that merely cite it accumulate without limit on a hub note, so they are
+// offered separately rather than burying the declared relations.
+const byPublication = (notes: typeof visibleNotes) =>
+  sortByDateAndTitle(
+    notes.map((note) => ({
+      ...note,
+      data: { ...note.data, date: note.data.published },
+    })),
+  );
+const declaredById = new Map(
+  [...explicitlyRelated, ...successorNotes, ...supersededNotes]
     .filter((note) => note.id !== entry.id)
     .map((note) => [note.id, note]),
 );
-const relatedNotes = sortByDateAndTitle(
-  [...relatedById.values()].map((note) => ({
-    ...note,
-    data: { ...note.data, date: note.data.published },
-  })),
+const relatedNotes = byPublication([...declaredById.values()]);
+const citingNotes = byPublication(
+  backlinks.filter(
+    (note) => note.id !== entry.id && !declaredById.has(note.id),
+  ),
 );
 // The eyebrow names what the document is, which is its declared role. A
 // project connection is a relationship and is shown as one below; it does not
@@ -174,7 +185,7 @@ const canonicalNoteUrl = new URL(
 
         <div class="entry-meta note-state" aria-label="Note state">
           <span class="pill pill-accent">
-            Claim posture: {humanizeLabel(entry.data.status)}
+            Claim posture: {claimPostureWord(entry.data.status)}
           </span>
           {" "}
           <span class="pill">Format: {humanizeLabel(entry.data.role)}</span>
@@ -303,22 +314,46 @@ const canonicalNoteUrl = new URL(
       }
 
       {
-        relatedNotes.length > 0 ? (
+        relatedNotes.length > 0 || citingNotes.length > 0 ? (
           <nav class="related-content" aria-labelledby="related-notes-title">
             <h2 id="related-notes-title">Related notes</h2>
-            <ul>
-              {relatedNotes.map((note) => (
-                <li>
-                  <a href={`/notes/${note.id}/`}>{note.data.title}</a>
-                  {note.data.lifecycle === "current" ? null : (
-                    <span class="related-lifecycle">
-                      {" "}
-                      · {humanizeLabel(note.data.lifecycle)}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            {relatedNotes.length > 0 ? (
+              <ul>
+                {relatedNotes.map((note) => (
+                  <li>
+                    <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+                    {note.data.lifecycle === "current" ? null : (
+                      <span class="related-lifecycle">
+                        {" "}
+                        · {humanizeLabel(note.data.lifecycle)}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {citingNotes.length > 0 ? (
+              <details class="related-citing" open={relatedNotes.length === 0}>
+                <summary>
+                  {citingNotes.length === 1
+                    ? "1 note refers to this one"
+                    : `${citingNotes.length} notes refer to this one`}
+                </summary>
+                <ul>
+                  {citingNotes.map((note) => (
+                    <li>
+                      <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+                      {note.data.lifecycle === "current" ? null : (
+                        <span class="related-lifecycle">
+                          {" "}
+                          · {humanizeLabel(note.data.lifecycle)}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : null}
           </nav>
         ) : null
       }
