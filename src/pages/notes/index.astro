@@ -16,8 +16,32 @@ const notes = sortByDateAndTitle(
   })),
 );
 const visibleNotes = getVisibleEntries(notes);
+// "Current" on every row is noise; a note that is no longer current carries
+// its lifecycle as a stamp in the margin instead.
 const noteContext = (entry: (typeof visibleNotes)[number]) =>
-  noteContextLabel(entry.data, { includeLifecycle: true });
+  noteContextLabel(entry.data);
+// Publication months break a long index into findable stretches.
+const monthFormat = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+const months: {
+  id: string;
+  label: string;
+  entries: typeof visibleNotes;
+}[] = [];
+for (const entry of visibleNotes) {
+  const id = entry.data.published.toISOString().slice(0, 7);
+  const last = months.at(-1);
+  if (last?.id === id) last.entries.push(entry);
+  else
+    months.push({
+      id,
+      label: monthFormat.format(entry.data.published),
+      entries: [entry],
+    });
+}
 ---
 
 <BaseLayout
@@ -40,33 +64,59 @@ const noteContext = (entry: (typeof visibleNotes)[number]) =>
       how firmly I hold it, and whether it is still current.
     </p>
     <p class="page-copy">
-      <a href="/notes/">Chronological</a> · <a href="/explore/">Explore map</a> ·
-      <a href="/tags/">Tags</a>
+      Newest first. Also by <a href="/explore/">topic map</a>{" or "}<a
+        href="/tags/">tag</a
+      >.
     </p>
-  </section>
-
-  <section class="page-section">
     {
-      visibleNotes.length > 0 ? (
-        <div class="entry-list">
-          {visibleNotes.map((entry) => (
-            <EntryCard
-              href={`/notes/${entry.id}/`}
-              title={entry.data.title}
-              summary={entry.data.summary}
-              context={noteContext(entry)}
-              tags={entry.data.tags}
-              date={entry.data.published}
-              draft={entry.data.draft}
-              terms={entry.data.terms}
-              role={entry.data.role}
-              lifecycle={entry.data.lifecycle}
-            />
-          ))}
-        </div>
-      ) : (
-        <p class="empty-state">No published notes yet.</p>
-      )
+      months.length > 1 ? (
+        <nav class="index-jump" aria-label="Jump to month">
+          <ul>
+            {months.map((month) => (
+              <li>
+                <a href={`#m-${month.id}`}>{month.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null
     }
   </section>
+
+  {
+    visibleNotes.length > 0 ? (
+      months.map((month) => (
+        <section class="page-section" aria-labelledby={`m-${month.id}`}>
+          <div class="section-heading">
+            <h2 id={`m-${month.id}`}>{month.label}</h2>
+            <span class="section-count">
+              {month.entries.length}{" "}
+              {month.entries.length === 1 ? "note" : "notes"}
+            </span>
+          </div>
+          <div class="entry-list">
+            {month.entries.map((entry) => (
+              <EntryCard
+                href={`/notes/${entry.id}/`}
+                title={entry.data.title}
+                headingLevel={3}
+                summary={entry.data.summary}
+                context={noteContext(entry)}
+                tags={entry.data.tags}
+                date={entry.data.published}
+                draft={entry.data.draft}
+                terms={entry.data.terms}
+                role={entry.data.role}
+                lifecycle={entry.data.lifecycle}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    ) : (
+      <section class="page-section">
+        <p class="empty-state">No published notes yet.</p>
+      </section>
+    )
+  }
 </BaseLayout>

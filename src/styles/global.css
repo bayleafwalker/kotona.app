@@ -384,9 +384,12 @@ main {
 }
 
 .tag-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   text-decoration: none;
 }
 
@@ -445,7 +448,7 @@ main {
 }
 
 .entry-summary {
-  max-width: 44rem;
+  max-width: 40rem;
   margin: 0.6rem 0 0;
   font-size: 1rem;
   line-height: 1.55;
@@ -454,7 +457,7 @@ main {
 .entry-context {
   margin: 0.5rem 0 0;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   line-height: 1.55;
 }
 
@@ -609,13 +612,17 @@ main {
   visibility: visible;
 }
 
+/* Columns, not a grid: an alphabetical list is scanned down, not across. */
 .tag-index-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 0 var(--gutter);
+  columns: 15rem;
+  column-gap: var(--gutter);
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+.tag-index-list li {
+  break-inside: avoid;
 }
 
 .tag-index-list a {
@@ -1169,6 +1176,146 @@ main {
   font-size: 0.7rem;
 }
 
+/* Explore refinements */
+
+.knowledge-results {
+  scroll-margin-top: 5rem;
+}
+
+.knowledge-search input {
+  border-color: var(--muted);
+}
+
+.knowledge-controls input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+/* The map is 80-odd tab stops. Keyboard readers can step over it. */
+.knowledge-skip {
+  margin: 0;
+}
+
+.knowledge-skip a {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.knowledge-skip a:focus {
+  position: static;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.8rem;
+  background: var(--text);
+  clip-path: none;
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.knowledge-detail h2 {
+  margin: 0.2rem 3.75rem 0 0;
+  font-family: var(--font-title);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.knowledge-detail-close {
+  min-height: 1.75rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.knowledge-detail-close:hover {
+  border-color: var(--accent);
+}
+
+/* Entry titles read as entries under their serif group heading, the same way
+   every other index on the site sets them. */
+.knowledge-cluster li > a {
+  font-family: var(--font-title);
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.knowledge-cluster li > a:hover {
+  text-decoration: underline;
+}
+
+/* Index furniture */
+
+.section-count {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.index-jump ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index-jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.page-section :is(h2, h3)[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* A note that is no longer current steps back in the index; its stamp in the
+   margin says why. */
+.entry-card[data-lifecycle]:not([data-lifecycle="current"]) .entry-title a {
+  color: var(--muted);
+}
+
+/* On a note that is not current, lifecycle is the loudest classification. */
+.note-state:has([data-lifecycle]:not([data-lifecycle="current"])) .pill-accent {
+  background: transparent;
+  color: var(--accent);
+}
+
+.note-state .pill[data-lifecycle]:not([data-lifecycle="current"]) {
+  background: var(--warm);
+  color: var(--bg);
+}
+
+.content-header .lifecycle-note {
+  margin: 1.4rem 0 0;
+}
+
+.exhibit-jump {
+  margin: 1rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.exhibit-jump a {
+  color: var(--accent);
+}
+
+#exhibit {
+  scroll-margin-top: 5rem;
+}
+
 /* Notices */
 
 .publication-note,
@@ -1347,6 +1494,7 @@ main {
 
 .term-list {
   display: grid;
+  max-width: var(--reading-width);
   gap: 0.5rem;
   margin: 1.2rem 0 0;
   padding: 0.95rem 0 0;
@@ -1412,6 +1560,12 @@ main {
   font-weight: 600;
 }
 
+.reference-actions :is(a, button) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+}
+
 .reference-actions-copy {
   padding: 0;
   border: 0;
@@ -1450,6 +1604,18 @@ main {
   align-items: baseline;
   gap: 0 0.6rem;
   cursor: pointer;
+}
+
+/* `display: flex` drops the native marker, so the disclosure draws its own. */
+.explore-prompt summary::before {
+  color: var(--accent);
+  font-size: 0.8rem;
+  content: "▸";
+  transition: transform 120ms ease;
+}
+
+.explore-prompt[open] summary::before {
+  transform: rotate(90deg);
 }
 
 .explore-prompt[open] summary {
@@ -2293,6 +2459,7 @@ main {
 }
 
 .changelog-text {
+  max-width: 40rem;
   font-size: 1rem;
   line-height: 1.45;
 }

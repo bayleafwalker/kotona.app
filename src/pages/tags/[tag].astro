@@ -35,9 +35,8 @@ const entryCount = tag.notes.length + tag.projects.length;
     <p class="eyebrow">Tag</p>
     <h1 class="page-title">{tag.label}</h1>
     <p class="page-copy">
-      {entryCount}
-      {entryCount === 1 ? "entry" : "entries"} across current project state and published
-      notes.
+      {`${entryCount} ${entryCount === 1 ? "entry" : "entries"}`} across current project
+      state and published notes.
     </p>
   </section>
 

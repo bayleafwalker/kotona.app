@@ -40,7 +40,8 @@ const {
   lifecycle,
 } = Astro.props;
 const formattedDate = showDate && date ? formatDate(date) : null;
-const showMeta = draft || Boolean(formattedDate);
+const notCurrent = Boolean(lifecycle) && lifecycle !== "current";
+const showMeta = draft || notCurrent || Boolean(formattedDate);
 const Heading = `h${headingLevel}` as "h2" | "h3";
 ---
 
@@ -53,6 +54,11 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
           <time class="pill" datetime={date.toISOString()}>
             {dateLabel ? `${dateLabel} ${formattedDate}` : formattedDate}
           </time>
+        ) : null}
+        {notCurrent && lifecycle ? (
+          <span class="pill" data-lifecycle={lifecycle}>
+            {lifecycle.charAt(0).toUpperCase() + lifecycle.slice(1)}
+          </span>
         ) : null}
       </div>
     ) : null

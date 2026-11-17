@@ -133,6 +133,45 @@ const canonicalNoteUrl = new URL(
           ) : null
         }
 
+        {
+          entry.data.lifecycle !== "current" ? (
+            <aside
+              class="publication-note lifecycle-note"
+              aria-label="Note lifecycle"
+            >
+              <p>
+                <strong>{lifecycleLabel}</strong>
+                {formattedLifecycleDate
+                  ? ` ${formattedLifecycleDate}.`
+                  : "."}{" "}
+                {entry.data.lifecycleReason}
+              </p>
+              {successorNotes.length > 0 ? (
+                <ul>
+                  {successorNotes.map((note) => (
+                    <li>
+                      Successor:{" "}
+                      <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {invalidatingProjects.length > 0 ? (
+                <ul>
+                  {invalidatingProjects.map((project) => (
+                    <li>
+                      Invalidated by project state:{" "}
+                      <a href={`/projects/${project.id}/`}>
+                        {project.data.project}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </aside>
+          ) : null
+        }
+
         <div class="entry-meta note-state" aria-label="Note state">
           <span class="pill pill-accent">
             Claim posture: {humanizeLabel(entry.data.status)}
@@ -152,6 +191,16 @@ const canonicalNoteUrl = new URL(
         </p>
 
         <TagList tags={entry.data.tags} />
+
+        {
+          entry.data.exhibit ? (
+            <p class="exhibit-jump">
+              <a href="#exhibit">
+                Go to the interactive example <span aria-hidden="true">↓</span>
+              </a>
+            </p>
+          ) : null
+        }
 
         {
           projectEntries.length > 0 ? (
@@ -214,45 +263,6 @@ const canonicalNoteUrl = new URL(
               <figcaption>{entry.data.hero.caption}</figcaption>
             ) : null}
           </figure>
-        ) : null
-      }
-
-      {
-        entry.data.lifecycle !== "current" ? (
-          <aside
-            class="publication-note lifecycle-note"
-            aria-label="Note lifecycle"
-          >
-            <p>
-              <strong>{lifecycleLabel}</strong>
-              {formattedLifecycleDate
-                ? ` ${formattedLifecycleDate}.`
-                : "."}{" "}
-              {entry.data.lifecycleReason}
-            </p>
-            {successorNotes.length > 0 ? (
-              <ul>
-                {successorNotes.map((note) => (
-                  <li>
-                    Successor:{" "}
-                    <a href={`/notes/${note.id}/`}>{note.data.title}</a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {invalidatingProjects.length > 0 ? (
-              <ul>
-                {invalidatingProjects.map((project) => (
-                  <li>
-                    Invalidated by project state:{" "}
-                    <a href={`/projects/${project.id}/`}>
-                      {project.data.project}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </aside>
         ) : null
       }
 

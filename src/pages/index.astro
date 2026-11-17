@@ -29,7 +29,7 @@ const currentNotesById = new Map(
 // Counts of what a reader can open from here: current notes, published
 // projects, and the notes that carry a checked exhibit.
 const ledger = [
-  { label: "Notes", value: String(currentNotes.length) },
+  { label: "Current notes", value: String(currentNotes.length) },
   { label: "Projects", value: String(getPublishedEntries(projects).length) },
   {
     label: "Exhibits",
@@ -75,7 +75,7 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
       <div class="home-intro-foot">
         <p class="home-description">{siteConfig.home.summary}</p>
         <a class="home-explore-link" href="/explore/">
-          Find a topic <span aria-hidden="true">↗</span>
+          Find a topic <span aria-hidden="true">→</span>
         </a>
       </div>
       <dl class="home-ledger" aria-label="Published content">

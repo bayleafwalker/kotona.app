@@ -265,6 +265,34 @@ const cspNonce = Astro.locals.cspNonce;
           }
         }
 
+        // A native disclosure stays open until its summary is used again.
+        // As a menu it should also yield to Escape and to a click elsewhere.
+        const elsewhere = document.querySelector(".site-elsewhere");
+        if (elsewhere) {
+          document.addEventListener("keydown", function (nativeEvent) {
+            if (nativeEvent.key !== "Escape" || !elsewhere.open) return;
+            elsewhere.open = false;
+            const summary = elsewhere.querySelector("summary");
+            if (elsewhere.contains(document.activeElement) && summary) {
+              summary.focus();
+            }
+          });
+          document.addEventListener("click", function (nativeEvent) {
+            if (elsewhere.open && !elsewhere.contains(nativeEvent.target)) {
+              elsewhere.open = false;
+            }
+          });
+        }
+
+        // The contents list is a margin annotation on wide screens. In a
+        // single column it stands between the reader and the first paragraph,
+        // so it starts closed there. Without scripting it stays open.
+        if (window.matchMedia("(max-width: 960px)").matches) {
+          document.querySelectorAll(".toc-panel[open]").forEach(function (toc) {
+            toc.open = false;
+          });
+        }
+
         ["pointerenter", "focusin"].forEach(function (event) {
           document.addEventListener(
             event,

@@ -13,8 +13,12 @@
 const displayLabels = new Map([
   ["ai", "AI"],
   ["cli-tooling", "CLI tooling"],
+  ["devops", "DevOps"],
+  ["ev", "EV"],
   ["gitops", "GitOps"],
   ["home-assistant", "Home Assistant"],
+  ["llm", "LLM"],
+  ["mcp", "MCP"],
   ["rag", "RAG"],
 ]);
 

@@ -12,6 +12,7 @@ const timeLabel = (value: string) =>
 ---
 
 <section
+  id="exhibit"
   class="three-clocks exhibit"
   data-three-clocks
   aria-label="Three clocks exhibit"
@@ -321,6 +322,11 @@ const timeLabel = (value: string) =>
     padding-block: 0.55rem;
     overflow-wrap: anywhere;
     vertical-align: top;
+  }
+  /* A label or record id split mid-word reads as two things. */
+  .clock-records th {
+    overflow-wrap: normal;
+    white-space: nowrap;
   }
   .clock-records th:first-child {
     width: 4.6rem;

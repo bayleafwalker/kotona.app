@@ -124,14 +124,22 @@ const edgeCoordinates = (
     y2: target.y - (deltaY / distance) * targetInset,
   };
 };
+// The index shows titles, so it is ordered by title. Graph order follows
+// slugs, which no longer match the titles of renamed notes.
+const byTitle = (left: { title: string }, right: { title: string }) =>
+  left.title.localeCompare(right.title, "en");
 const clusterNodes = graph.clusters.map((cluster) => ({
   ...cluster,
-  current: graph.nodes.filter(
-    (node) => node.cluster === cluster.id && node.lifecycle === "current",
-  ),
-  historical: graph.nodes.filter(
-    (node) => node.cluster === cluster.id && node.lifecycle !== "current",
-  ),
+  current: graph.nodes
+    .filter(
+      (node) => node.cluster === cluster.id && node.lifecycle === "current",
+    )
+    .sort(byTitle),
+  historical: graph.nodes
+    .filter(
+      (node) => node.cluster === cluster.id && node.lifecycle !== "current",
+    )
+    .sort(byTitle),
 }));
 ---
 
@@ -143,7 +151,7 @@ const clusterNodes = graph.clusters.map((cluster) => ({
   />
   <form class="knowledge-controls" aria-label="Filter the knowledge atlas">
     <label class="knowledge-search">
-      <span>Search or ask a question</span>
+      <span>Search by keyword or question</span>
       <input type="search" name="knowledge-search" autocomplete="off" />
     </label>
     <fieldset>
@@ -170,6 +178,9 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     <ol data-knowledge-results-list></ol>
   </section>
 
+  <p class="knowledge-skip">
+    <a href="#knowledge-index-title">Skip the map to the grouped index</a>
+  </p>
   <div class="knowledge-map-stage">
     <div class="knowledge-map-frame" aria-label="Visual knowledge map">
       <svg
@@ -494,23 +505,34 @@ const clusterNodes = graph.clusters.map((cluster) => ({
 
       // The ranked list obeys the same controls as the map and the index.
       // A result the reader has filtered out must not reappear here.
-      const matching = rankedFor(query).filter(
-        (result) =>
-          types.has(result.document.type) &&
-          (showHistory ||
-            !result.document.lifecycle ||
-            result.document.lifecycle === "current"),
+      const ofShownTypes = rankedFor(query).filter((result) =>
+        types.has(result.document.type),
       );
+      const matching = ofShownTypes.filter(
+        (result) =>
+          showHistory ||
+          !result.document.lifecycle ||
+          result.document.lifecycle === "current",
+      );
+      // A match the history filter withheld is still a match. Saying so is
+      // the difference between "nothing was written" and "it is filed away".
+      const withheld = ofShownTypes.length - matching.length;
+      const withheldNote =
+        withheld === 0
+          ? ""
+          : ` ${withheld} historical ${withheld === 1 ? "match is" : "matches are"} hidden; tick Historical notes to include ${withheld === 1 ? "it" : "them"}.`;
       // The list is capped, so it has to say so. Reporting the full match
       // count above a visibly shorter list reads as a rendering fault.
       const ranked = matching.slice(0, RANKED_RESULT_LIMIT);
       if (resultsScope instanceof HTMLElement) {
         resultsScope.textContent =
-          matching.length > ranked.length
-            ? `Showing the top ${ranked.length} of ${matching.length} ranked matches.`
-            : matching.length === 1
-              ? "One ranked match."
-              : `${matching.length} ranked matches.`;
+          (matching.length === 0
+            ? "No ranked match. The grouped index below is complete."
+            : matching.length > ranked.length
+              ? `Showing the top ${ranked.length} of ${matching.length} ranked matches.`
+              : matching.length === 1
+                ? "One ranked match."
+                : `${matching.length} ranked matches.`) + withheldNote;
       }
       resultsRegion.hidden = false;
       resultsList.replaceChildren(
@@ -555,12 +577,8 @@ const clusterNodes = graph.clusters.map((cluster) => ({
         }),
       );
 
-      if (ranked.length === 0) {
-        const empty = document.createElement("li");
-        empty.textContent =
-          "No ranked match. The grouped index below is complete.";
-        resultsList.appendChild(empty);
-      }
+      // An empty ranking is stated above the list, not as a numbered item.
+      resultsList.hidden = ranked.length === 0;
     };
     const detail = explorer.querySelector("[data-knowledge-detail]");
     const detailKind = explorer.querySelector("[data-detail-kind]");
@@ -985,6 +1003,16 @@ const clusterNodes = graph.clusters.map((cluster) => ({
     };
 
     explorer.addEventListener("input", refresh);
+    // Results update as the reader types. Enter would otherwise submit the
+    // form, reload the page, and discard them; bring the list into view.
+    explorer
+      .querySelector(".knowledge-controls")
+      ?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (resultsRegion instanceof HTMLElement && !resultsRegion.hidden) {
+          resultsRegion.scrollIntoView({ block: "start" });
+        }
+      });
     for (const node of nodes) {
       if (!(node instanceof SVGElement)) continue;
       const identify = () => {

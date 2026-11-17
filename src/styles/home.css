@@ -170,7 +170,7 @@ main:has(> .home) {
   margin: 0.55rem 0 0;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.55;
 }
 
@@ -209,6 +209,11 @@ main:has(> .home) {
   padding: 1.75rem 2rem 1.6rem;
   background: var(--panel);
   color: var(--panel-text);
+}
+
+/* The page accent has almost no contrast against the panel. */
+.home-entry--lead :focus-visible {
+  outline-color: var(--panel-accent);
 }
 
 .home-entry--lead .home-entry-meta {
