@@ -25,8 +25,9 @@ python3 docs/experiments/2026-11-20-acceptance-case/run_case.py replay \\
     pinned ? (
       <>
         <p>
-          Site source: <code>{buildRevision}</code>. The Lab revision is fixed
-          separately below. Use new destination directories.
+          Site source: <code class="source-revision">{buildRevision}</code>. The
+          Lab revision is fixed separately below. Use new destination
+          directories.
         </p>
         <pre>
           <code>{command}</code>
@@ -53,3 +54,9 @@ python3 docs/experiments/2026-11-20-acceptance-case/run_case.py replay \\
     observation untouched. Timings and event IDs will differ.
   </p>
 </section>
+
+<style>
+  .source-revision {
+    overflow-wrap: anywhere;
+  }
+</style>
