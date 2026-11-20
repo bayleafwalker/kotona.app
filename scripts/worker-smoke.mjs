@@ -1066,6 +1066,21 @@ async function runChecks(baseUrl) {
           `${where}: ${field} must not contribute a match`,
         );
       }
+      if (probe.onlyMatchReasons) {
+        for (const entry of ranked) {
+          assert(
+            entry.reasons.length > 0 &&
+              entry.reasons.every((reason) =>
+                probe.onlyMatchReasons.some(
+                  (allowed) =>
+                    reason.field === allowed.field &&
+                    reason.value === allowed.value,
+                ),
+              ),
+            `${where}: ${entry.document.path} has unexpected match reasons ${JSON.stringify(entry.reasons)}`,
+          );
+        }
+      }
       if (probe.minResults !== undefined) {
         assert(
           paths.length >= probe.minResults,
@@ -1076,6 +1091,13 @@ async function runChecks(baseUrl) {
         assert(
           paths.length <= probe.maxResults,
           `${where}: ${paths.length} results, wanted at most ${probe.maxResults}`,
+        );
+      }
+      if (probe.maxResultShare !== undefined) {
+        const maximum = Math.floor(searchIndex.length * probe.maxResultShare);
+        assert(
+          paths.length <= maximum,
+          `${where}: ${paths.length} results, wanted at most ${maximum} (${probe.maxResultShare * 100}% of ${searchIndex.length} documents)`,
         );
       }
       if (probe.leadersUnchanged) {

@@ -166,7 +166,9 @@
     "id": "known-miss-wardley-mapping",
     "class": "known limitation",
     "query": "wardley mapping",
-    "note": "The first known phrase-level miss. A document-frequency filter cannot know that `wardley mapping` is one concept while `mapping` is generic, so the query answers on its generic half. Distinctive adjacent phrases would fix this class; widening the term cutoff would not. If this probe starts returning a document about Wardley mapping, the corpus gained one and the fixture is stale.",
-    "maxResults": 6
+    "note": "A document-frequency filter cannot know that `wardley mapping` is one concept while `mapping` is generic, so the query answers only on its generic half. The captured-review note added a seventh such hit. Assert that limitation through the match reasons and non-vacuity, not a fixed corpus-size snapshot. Bound breadth by the existing 15% body-term inclusion policy. The separate `wardley` probe must still return nothing; a document about Wardley mapping would make these expectations stale.",
+    "minResults": 1,
+    "maxResultShare": 0.15,
+    "onlyMatchReasons": [{ "field": "terms", "value": "mapping" }]
   }
 ]
