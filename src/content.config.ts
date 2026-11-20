@@ -28,6 +28,7 @@ const sharedProjectSchema = {
   summary: z.string().max(280).optional(),
   published: z.coerce.date(),
   lastRevised: z.coerce.date(),
+  revisionSummary: z.string().trim().min(20).max(280).optional(),
   lastVerified: z.coerce.date(),
   tags: z.array(z.string().min(1)).default([]),
   terms: z
@@ -97,6 +98,9 @@ const notes = defineCollection({
       area: z.enum(knowledgeAreas),
       published: z.coerce.date(),
       lastRevised: z.coerce.date(),
+      // The substantive change at lastRevised, not a second abstract or a
+      // record of copyedits. Older entries need not invent revision history.
+      revisionSummary: sharedProjectSchema.revisionSummary,
       projects: z.array(reference("projects")).default([]),
       relates: z.array(reference("notes")).default([]),
       tags: z.array(z.string().min(1)).default([]),

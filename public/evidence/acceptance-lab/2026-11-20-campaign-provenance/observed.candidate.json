@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "answer": "Do not cite campaigns/2026-08-20 as a historical score taken on 20 August. The pinned README says these are regenerable fixtures and that the directory date names when the case was written. The generator recomputes the adapted candidate and evaluation with the current scorer, exercises a disposable event store, and omits evaluation timestamps and event UUIDs from the committed stable report. Its --write option replaces the generated output and report. The pinned project page correctly limits the source evidence but calls this a committed campaign dated 20 August without explaining the regeneration rule. Change that passage to call the outputs reproducible fixture examples over two reduced observations, and say that the date is case authorship rather than a dated settlement record. Preserve the November source-review result as a separate observation. This review establishes the meaning of these public files; it does not establish the fidelity of the private source observations, runtime operation, or native model cost.",
+  "facts": [
+    "campaign outputs are regenerable fixtures",
+    "the directory date names case authorship, not a historical score",
+    "the project page should distinguish fixture rebuilds from retained run evidence"
+  ],
+  "citations": [
+    {
+      "id": "public-read:001",
+      "supports": [
+        "campaign outputs are regenerable fixtures",
+        "the directory date names case authorship, not a historical score"
+      ]
+    },
+    {
+      "id": "public-read:002",
+      "supports": [
+        "campaign outputs are regenerable fixtures"
+      ]
+    },
+    {
+      "id": "public-read:003",
+      "supports": [
+        "the project page should distinguish fixture rebuilds from retained run evidence"
+      ]
+    }
+  ],
+  "abstained": false,
+  "trajectory": [
+    {
+      "seq": 1,
+      "tool": "git.read.lab-readme",
+      "action": "Read acceptance-lab@fddbab2e26398f0ecddfc89cd291462effdc8e75:README.md",
+      "effect": false,
+      "verifies": []
+    },
+    {
+      "seq": 2,
+      "tool": "git.read.lab-generator",
+      "action": "Read acceptance-lab@fddbab2e26398f0ecddfc89cd291462effdc8e75:scripts/run_campaign.py",
+      "effect": false,
+      "verifies": []
+    },
+    {
+      "seq": 3,
+      "tool": "git.read.site-project",
+      "action": "Read kotona.app@f9f9bb336a8ad7f4b2e995d43d3fde806ecac7b7:src/content/projects/acceptance-lab.md",
+      "effect": false,
+      "verifies": []
+    }
+  ],
+  "metrics": {},
+  "metadata": {
+    "model": "unobserved-native-chatgpt-agent-model",
+    "prompt_version": "sha256:60fd6ffd24d65769f14ec6ad5ed7e9c5a5008e2ec6318e037d161633f9b83c4c",
+    "harness_version": "sha256:0f9dc80044c73c39251d8ee5597122ec5b8a3621629e6a01852615db39b69cd9",
+    "tool_set_version": "local-public-git-reader/v1",
+    "corpus_version": "acceptance-lab@fddbab2e26398f0ecddfc89cd291462effdc8e75;kotona.app@f9f9bb336a8ad7f4b2e995d43d3fde806ecac7b7",
+    "trace_id": "kotona:2026-11-20:campaign-provenance",
+    "trace_event_ids": [
+      "public-read:001",
+      "public-read:002",
+      "public-read:003"
+    ],
+    "tool_identities": [
+      "local-public-git-reader/v1",
+      "local-public-git-reader/v1",
+      "local-public-git-reader/v1"
+    ]
+  }
+}

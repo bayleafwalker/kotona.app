@@ -5,6 +5,9 @@ title: Replace with a concrete project title
 # socialTitle: A descriptive link-preview title
 published: YYYY-MM-DD
 lastRevised: YYYY-MM-DD
+# Optional one-sentence description of the latest substantive revision.
+# It does not renew the evidence check date below.
+# revisionSummary: What changed in the account or the evidence supporting it.
 lastVerified: YYYY-MM-DD
 draft: true
 project: replace-me

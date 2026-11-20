@@ -6,6 +6,7 @@ import ContentToc from "../../components/ContentToc.astro";
 import ExplorePrompt from "../../components/ExplorePrompt.astro";
 import ExhibitEvidence from "../../components/ExhibitEvidence.astro";
 import ReferenceActions from "../../components/ReferenceActions.astro";
+import RevisionSummary from "../../components/RevisionSummary.astro";
 import TagList from "../../components/TagList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -17,6 +18,7 @@ import {
   sortByDateAndTitle,
 } from "../../lib/content";
 import { generatedOgImagePath } from "../../lib/og-images.js";
+import { getMaterialRevision } from "../../lib/content-revisions.ts";
 import { siteConfig } from "../../site";
 
 const id = Astro.params.slug;
@@ -277,6 +279,7 @@ const canonicalNoteUrl = new URL(
         ) : null
       }
 
+      <RevisionSummary revision={getMaterialRevision(entry.data)} />
       <ContentToc headings={headings} />
 
       {

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "description": "Retained bytes from one warm-context public-source review and its first evaluation; replay writes new results elsewhere.",
+  "recorder_path": "docs/experiments/2026-11-20-acceptance-case/run_case.py",
+  "recorder_sha256": "0f9dc80044c73c39251d8ee5597122ec5b8a3621629e6a01852615db39b69cd9",
+  "files": {
+    "answer.json": "8029bf150495159af1c2a467f550dba49b89a6741cca564d4de65c15a261bf51",
+    "observations/001.json": "3a84878a650674fcec2ca8b99a76b994e236c4a5a90d0c9450fadfb96c9fba38",
+    "observations/002.json": "725dd9da942beb26884ccb196bacfe24112e68ad47960f78c860e877031c9e17",
+    "observations/003.json": "229165b3342db721fb28f860b38840196cb67e5f527130f35f7cafb9c1b69f96",
+    "observed.candidate.json": "68cf1ff71a5eacf52d484d3bc2f2d69313bbee528d765338d1ec01b6243423b7",
+    "observed.events.json": "214d3acbb308c4f038db5103d5132354514ad2b26cad728471df0f4098a1e66e",
+    "results.json": "6b0efab841bfd0e734ca2f4f030cedf364aeaa4f634bbba04775ed2f32061444",
+    "scenario.json": "76a369db7d16a43edc3a2f9b9c1f31749db76954df54e0272a5964ea83445757",
+    "task.json": "60fd6ffd24d65769f14ec6ad5ed7e9c5a5008e2ec6318e037d161633f9b83c4c",
+    "observed.payloads.json": "f6f8d568a820a5160d4ad399a830f32cc1a6d6d81d205289f50fd5612445f16c"
+  },
+  "trust_boundary": "Content digests detect inconsistency relative to this manifest. They do not attest the runner or prevent a publisher rewriting the manifest and evidence together."
+}

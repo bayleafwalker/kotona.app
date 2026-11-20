@@ -45,6 +45,31 @@ const destinations = [
   },
 ];
 
+test("the stable invitation reaches a checked payment case without replacing latest changes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const invitation = page.getByRole("link", {
+    name: "Try a payment with no reply",
+  });
+  await expect(invitation).toHaveAttribute(
+    "href",
+    "/notes/decimal-iron-replay/#exhibit",
+  );
+  await expect(page.locator(leadSelector).locator("h3 a")).toHaveAttribute(
+    "href",
+    expectedChanges[0].href,
+  );
+  await invitation.click();
+  await expect(page).toHaveURL(/\/notes\/decimal-iron-replay\/#exhibit$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Decimal Iron replay",
+  );
+  await expect(page.locator("#exhibit")).toContainText(
+    "The journal commit exists; the client has no acknowledgement.",
+  );
+});
+
 async function expectNoHorizontalOverflow(page) {
   const dimensions = await page.evaluate(() => ({
     page: document.documentElement.scrollWidth,

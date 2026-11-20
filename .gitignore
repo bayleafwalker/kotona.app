@@ -17,6 +17,10 @@ public/exhibits/
 test-results/
 playwright-report/
 
+# Python replay helpers keep their compiled cache local.
+__pycache__/
+*.py[cod]
+
 # Local agent session state and machine-specific tool permissions.
 /.claude/
 

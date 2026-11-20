@@ -1,0 +1,16 @@
+{
+  "id": "campaign-provenance-review",
+  "version": "1.0.0",
+  "request": "Decide whether Acceptance Lab files under campaigns/2026-08-20 can be cited as evidence of a score taken on that date. Read the pinned README, campaign generator, and Kotona project page. State the generation mechanism, what the date means, and the correction the project page needs. Submit a separate answer with evidence references.",
+  "capture_scope": "The three public Git reads explicitly invoked through run_case.py during this delegated agent task. Setup, previous reconnaissance, model deliberation, other session tools, and native provider telemetry are outside the capture. This is a warm-context case, not a blind model evaluation or a complete session trace.",
+  "agent_context": "A ChatGPT delegated agent selected and performed the reads and authored answer.json after inspecting their returned output. The agent had already read source during setup. Exact served model identity, token counts and billing were unavailable to the local recorder.",
+  "authority_scope": "Read-only committed objects in two public repositories. The local recorder identifies its own process and hashes bytes; it is not a provider attestation, sandbox or cryptographic signature.",
+  "task_policy": "The answer must cite all three observed reads, include the declared factual distinctions and abstain from claiming runtime or historical settlement evidence. A USD 1 cost ceiling is declared for qualification; unknown native billing must remain unknown and leave the economics check unestablished.",
+  "required_read_order": ["lab-readme", "lab-generator", "site-project"],
+  "source_revisions": {
+    "acceptance-lab": "fddbab2e26398f0ecddfc89cd291462effdc8e75",
+    "kotona.app": "f9f9bb336a8ad7f4b2e995d43d3fde806ecac7b7"
+  },
+  "negative_controls": "After retaining the actual answer and reads, construct copies with one required read removed, altered stdout, and no observed reads. These are explicit mutations, not separate model attempts. The original observations are retained unchanged.",
+  "comparison": "Compare a small direct evidence checker and Acceptance Lab against the same observed record. Measure their local evaluation time separately from source verification. Do not infer model quality, saved operator time or productivity from the comparison."
+}

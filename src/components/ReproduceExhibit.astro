@@ -1,0 +1,192 @@
+---
+import { buildRevision } from "../build";
+import trace from "../data/exhibits/decimal-iron-replay.json";
+
+type Props = { id: "three-clocks" | "decimal-iron-replay" | "spa-week" };
+const { id } = Astro.props;
+const recipes = {
+  "three-clocks": {
+    note: "three-clocks",
+    mutation: "wrong-parser",
+    expected:
+      "Eleven fixture cases pass. The original calculation is €11,433.07; the corrected parser with the historical reference gives €124.13. Missing historical payloads produce Unavailable.",
+    rejection:
+      "The mutation uses the original parser for the corrected case. The unchanged expectation requires 12,413 EUR cents; the mutated computation returns 1,143,307. The command must exit 1 at published-corrected-recomputation.",
+    browser: "three-clocks",
+  },
+  "decimal-iron-replay": {
+    note: "decimal-iron-replay",
+    mutation: "hide-beacon",
+    expected:
+      "Three recorded scenarios pass their trace checks. The committed payment and its same-identity retry each show one transaction. The EUR discrepancy is 1 cent with the beacon on; fresh reconciliation reduces it to 0 cents with the beacon off.",
+    rejection:
+      "The mutation switches off the recorded beacon while retaining the assertion that observed it on. The command must exit 1 and identify state.beacon_on. This challenges the trace checker; it does not rerun the payment machine.",
+    browser: "decimal-iron-replay",
+  },
+  "spa-week": {
+    note: "size-the-spa-to-the-river",
+    mutation: "net-the-week",
+    expected:
+      "Weekly netting gives 3,640 kWh of imports and no exports. Resolving the same 168 hours gives 6,440 kWh of imports, 2,800 kWh of exports and a 110 kW peak import.",
+    rejection:
+      "The mutation substitutes weekly netting for the hourly calculation. Its 3,640 kWh import result must fail the unchanged hourly expectation of 6,440 kWh. The command must exit 1 at hourly: energy balance in kWh.",
+    browser: "spa-week",
+  },
+};
+const recipe = recipes[id];
+const pinned = /^[a-f0-9]{40}$/.test(buildRevision);
+const checkout = `git clone --no-checkout https://github.com/bayleafwalker/kotona.app.git kotona-reproduce
+cd kotona-reproduce
+git checkout --detach ${buildRevision}
+node scripts/reproduce-exhibit.mjs ${id}`;
+const challenge = `node scripts/reproduce-exhibit.mjs ${id} --mutation ${recipe.mutation}`;
+const browser = `npm ci
+npx playwright install chromium
+npx playwright test tests/browser/${recipe.browser}.spec.mjs`;
+const upstream = `git clone --no-checkout https://github.com/bayleafwalker/decimal-iron.git decimal-iron-reproduce
+cd decimal-iron-reproduce
+git checkout --detach ${trace.implementation.revision}
+python3 -m unittest discover -v
+python3 -m decimal_iron replay --output artifacts/replay.json
+python3 -m decimal_iron replay --check artifacts/replay.json`;
+const body = [
+  `Note: https://kotona.app/notes/${recipe.note}/`,
+  `Site revision: ${buildRevision}`,
+  ...(id === "decimal-iron-replay"
+    ? [`Python reference revision: ${trace.implementation.revision}`]
+    : []),
+  "",
+  "Case or command:",
+  "Expected result:",
+  "Observed result:",
+  "Runtime and operating system:",
+  "Disagreement concerns implementation / claim / applicability:",
+  "",
+  "Include public or synthetic inputs only; remove credentials and private logs.",
+].join("\n");
+const reportHref = `mailto:contact@kotona.app?subject=${encodeURIComponent(`Different result: ${id}`)}&body=${encodeURIComponent(body)}`;
+---
+
+<section
+  class="reproduce-exhibit"
+  id="reproduce"
+  data-exhibit-reproduction={id}
+>
+  <p>
+    Use Git and Node 24.16 or later within Node 24. The calculation and trace
+    checks below use only Node's standard library; no package installation is
+    needed. Work in a new directory.
+  </p>
+  {
+    pinned ? (
+      <>
+        <p>
+          This recipe selects the source revision used by this page:{" "}
+          <a
+            href={`https://github.com/bayleafwalker/kotona.app/commit/${buildRevision}`}
+          >
+            <code>{buildRevision}</code>
+          </a>
+          .
+        </p>
+        <pre>
+          <code class="language-sh">{checkout}</code>
+        </pre>
+      </>
+    ) : (
+      <p>
+        This preview has no source revision. Use the published page's pinned
+        recipe before treating the result as a reproduction.
+      </p>
+    )
+  }
+  <p>
+    <strong>Expected result.</strong>
+    {recipe.expected} A successful run exits 0.
+  </p>
+  <h3>Make one wrong change</h3>
+  <p>{recipe.rejection}</p>
+  <pre><code class="language-sh">{challenge}</code></pre>
+  <p>
+    The mutation changes a copy in memory and leaves the checked expectations
+    untouched. It writes no source or fixture files. Run the first command again
+    to return to the unchanged case. Exit 1 must identify the disagreement
+    described above. Exit 3 means the mutation escaped its check or execution
+    failed elsewhere; it does not establish rejection of the wrong behavior.
+  </p>
+  {
+    id === "decimal-iron-replay" && (
+      <details>
+        <summary>Rerun the Python payment reference</summary>
+        <p>
+          Use Python 3.11 or later and Git, in a separate new directory. These
+          commands execute the file-backed reference machine, its byte terminal,
+          payment adapter, journal replay and three harmful mutations. They need
+          no installed packages or running service.
+        </p>
+        <pre>
+          <code class="language-sh">{upstream}</code>
+        </pre>
+        <p>
+          The export must report verification status <code>passed</code>, three
+          passed scenarios, and three rejected negative controls. The final
+          command executes the cases again and compares the export. Hardware,
+          RTL scenario execution and KESKUS remain skipped.
+        </p>
+        <p>
+          To compare the published fixture itself, download its JSON from the
+          evidence links below and pass that file to{" "}
+          <code>python3 -m decimal_iron replay --check</code>. Object-key order
+          and whitespace may differ; the checked values must agree.
+        </p>
+      </details>
+    )
+  }
+  <details>
+    <summary>Check the browser presentation too</summary>
+    <p>
+      From the same pinned Kotona checkout, install the locked site dependencies
+      and Chromium, then run the focused browser checks. These check the
+      controls and visible results separately from the calculation or trace
+      checks above.
+    </p>
+    <pre><code class="language-sh">{browser}</code></pre>
+  </details>
+  <p class="reproduce-report">
+    <a href={reportHref}>Report a different result</a>
+  </p>
+  <p class="reproduce-scope">
+    The link opens an email draft with the note and revisions. Add the case,
+    expected and observed results, and runtime. A successful reproduction
+    establishes these cases under the stated assumptions; the source bindings
+    below are not a record of your run.
+  </p>
+</section>
+
+<style>
+  .reproduce-exhibit {
+    margin-block: 2.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--accent);
+  }
+  .reproduce-exhibit > :first-child {
+    margin-top: 0;
+  }
+  .reproduce-exhibit details {
+    margin-block: 1.25rem;
+  }
+  .reproduce-exhibit summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .reproduce-exhibit a code {
+    overflow-wrap: anywhere;
+  }
+  .reproduce-report {
+    font-weight: 600;
+  }
+  .reproduce-scope {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>

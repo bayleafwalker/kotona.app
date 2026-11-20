@@ -15,7 +15,11 @@ status: exploration
 lifecycle: current
 area: energy systems
 published: 2026-07-19
-lastRevised: 2026-11-13
+lastRevised: 2026-11-20
+revisionSummary: >-
+  Added a pinned reproduction of the stress week and a netting mutation that
+  must fail the hourly import expectation; the site remains a concept with
+  synthetic inputs.
 projects: []
 relates:
   - delivered-energy
@@ -60,6 +64,7 @@ explorePrompt: >-
 ---
 
 import SpaWeek from "../../components/SpaWeek.astro";
+import ReproduceExhibit from "../../components/ReproduceExhibit.astro";
 
 Size the spa to the river, not the river to the spa.
 
@@ -493,3 +498,7 @@ factor, heat load, recovery efficiency, heat-pump performance, direct-use share,
 pool loss, visitor count, room rate, staffing, capex, and revenue. The model is
 monthly, while the design problem is hourly. The arithmetic makes the dream
 falsifiable, not bankable.
+
+## Reproduce and challenge this result
+
+<ReproduceExhibit id="spa-week" />

@@ -23,29 +23,10 @@ const SEVERITY_RANK = { info: 0, low: 1, moderate: 2, high: 3, critical: 4 };
  * @type {{ id: string, package: string, owner: string, reviewBy: string,
  *   reason: string, exposure: string, absentFromBuild: string[] }[]}
  */
-export const ACCEPTED_ADVISORIES = [
-  {
-    id: "GHSA-fc5q-39xc-vjpf",
-    package: "picomatch",
-    owner: "site maintainer",
-    reviewBy: "2026-12-01",
-    reason:
-      "No patched release exists: the advisory covers every version through " +
-      "4.0.7, the latest. npm's offered fix downgrades Astro by two majors.",
-    exposure:
-      "The flaw needs an attacker-chosen glob pattern. picomatch arrives " +
-      "through astro, vite, tinyglobby, fdir, @astrojs/internal-helpers and " +
-      "anymatch (via unstorage). Its importers in this build are Astro's " +
-      "asset plugin, its content glob loader and plugin filters, which run " +
-      "at build time on patterns from this repository's configuration and " +
-      "on this repository's file paths. The one runtime importer, Astro's " +
-      "in-memory cache provider, matches request query names against " +
-      "configured patterns; this site configures no cache, and the " +
-      "provider is not in the built Worker. No picomatch code is present " +
-      "in the Worker or client output, which the build check enforces.",
-    absentFromBuild: ["noextglob", "nonegate", "POSIX_REGEX_SOURCE"],
-  },
-];
+// On 2026-11-20 the locked dependency tree returned zero npm advisories.
+// Retired GHSA-fc5q-39xc-vjpf under the policy above; a future report of that
+// advisory must fail the gate again rather than inherit the old acceptance.
+export const ACCEPTED_ADVISORIES = [];
 
 /**
  * Advisories reported by `npm audit --json`, de-duplicated. A package that is

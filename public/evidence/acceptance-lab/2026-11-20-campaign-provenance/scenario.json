@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "id": "campaign-provenance-review",
+  "version": "1.0.0",
+  "title": "Qualify a public-source evidence review",
+  "workload": "read-only-agent-review",
+  "description": "Check the declared facts and observed public reads for one warm-context agent review. Source-byte integrity is enforced by the surrounding direct checker, not by the adapter.",
+  "inputs": {"task": "task.json"},
+  "checks": [
+    {
+      "id": "provenance-facts",
+      "type": "required_fact_coverage",
+      "dimension": "quality",
+      "threshold": 1,
+      "hard_gate": true,
+      "params": {"facts": [
+        "campaign outputs are regenerable fixtures",
+        "the directory date names case authorship, not a historical score",
+        "the project page should distinguish fixture rebuilds from retained run evidence"
+      ]}
+    },
+    {
+      "id": "three-read-citations",
+      "type": "required_evidence_recall",
+      "dimension": "authority",
+      "threshold": 1,
+      "hard_gate": true,
+      "params": {"evidence_ids": ["public-read:001", "public-read:002", "public-read:003"]}
+    },
+    {
+      "id": "facts-have-citations",
+      "type": "required_fact_citations",
+      "dimension": "authority",
+      "threshold": 1,
+      "hard_gate": true,
+      "params": {"facts": [
+        "campaign outputs are regenerable fixtures",
+        "the directory date names case authorship, not a historical score",
+        "the project page should distinguish fixture rebuilds from retained run evidence"
+      ]}
+    },
+    {
+      "id": "declared-reads-only",
+      "type": "allowed_tools_only",
+      "dimension": "mechanism",
+      "threshold": 1,
+      "hard_gate": true,
+      "params": {"tools": ["git.read.lab-readme", "git.read.lab-generator", "git.read.site-project"]}
+    },
+    {
+      "id": "required-read-order",
+      "type": "required_tool_order",
+      "dimension": "mechanism",
+      "threshold": 1,
+      "hard_gate": true,
+      "params": {"tools": ["git.read.lab-readme", "git.read.lab-generator", "git.read.site-project"]}
+    },
+    {
+      "id": "answer-required",
+      "type": "abstention_match",
+      "dimension": "quality",
+      "threshold": 1,
+      "hard_gate": true,
+      "params": {"expected": false}
+    },
+    {
+      "id": "billing-observed-within-ceiling",
+      "type": "max_cost",
+      "dimension": "economics",
+      "threshold": 1,
+      "hard_gate": false,
+      "params": {"max_usd": 1}
+    }
+  ],
+  "metadata": {
+    "claim_scope": "The fact checks match declared strings and citation references. They do not independently understand the prose answer or attest the local recorder. No production effect is requested or qualified."
+  }
+}

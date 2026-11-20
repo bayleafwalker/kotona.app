@@ -5,7 +5,10 @@ status: guiding
 lifecycle: current
 area: data architecture
 published: 2026-11-13
-lastRevised: 2026-11-13
+lastRevised: 2026-11-20
+revisionSummary: >-
+  Added a pinned reproduction command and a parser mutation that must fail the
+  unchanged historical expectation.
 projects: []
 relates:
   - schema-on-split
@@ -50,6 +53,7 @@ exhibit:
 ---
 
 import ThreeClocks from "../../components/ThreeClocks.astro";
+import ReproduceExhibit from "../../components/ReproduceExhibit.astro";
 
 Three purchase records can reproduce an old answer, correct an old calculation,
 or calculate with a different reference snapshot. Those are separate questions.
@@ -123,3 +127,7 @@ Bitemporal history is established work. Martin Fowler's
 explains the valid/record distinction and its lineage in Snodgrass and SQL:2011.
 The additional control here makes the interpretation basis explicit; the exhibit
 makes that bounded claim executable.
+
+## Reproduce and challenge this result
+
+<ReproduceExhibit id="three-clocks" />

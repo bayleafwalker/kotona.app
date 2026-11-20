@@ -26,6 +26,13 @@ const currentNotes = getPublishedEntries(notes).filter(
 const currentNotesById = new Map(
   currentNotes.map((entry) => [entry.id, entry]),
 );
+const firstExample = currentNotesById.get("decimal-iron-replay");
+if (!firstExample?.data.exhibit) {
+  throw new Error(
+    "The homepage invitation requires a published Decimal Iron exhibit",
+  );
+}
+const firstExampleHref = `/notes/${firstExample.id}/#exhibit`;
 // Counts of what a reader can open from here: current notes, published
 // projects, and the notes that carry a checked exhibit.
 const ledger = [
@@ -74,9 +81,16 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
       <h1 id="home-title">{siteConfig.home.heading}</h1>
       <div class="home-intro-foot">
         <p class="home-description">{siteConfig.home.summary}</p>
-        <a class="home-explore-link" href="/explore/">
-          Find a topic <span aria-hidden="true">→</span>
-        </a>
+        <div class="home-intro-links">
+          <a class="home-explore-link" href="/explore/">Find a topic</a>
+          <a
+            class="home-example-link"
+            href={firstExampleHref}
+            data-home-example
+          >
+            Try a payment with no reply
+          </a>
+        </div>
       </div>
       <dl class="home-ledger" aria-label="Published content">
         {

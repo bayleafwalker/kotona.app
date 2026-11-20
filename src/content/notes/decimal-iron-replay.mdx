@@ -5,7 +5,11 @@ status: guiding
 lifecycle: current
 area: software assurance
 published: 2026-11-13
-lastRevised: 2026-11-13
+lastRevised: 2026-11-20
+revisionSummary: >-
+  Added separate recipes for checking the recorded trace and rerunning the
+  pinned Python reference, plus a deliberately hidden beacon that must be
+  rejected.
 projects: []
 relates:
   - three-clocks
@@ -55,6 +59,7 @@ exhibit:
 ---
 
 import DecimalIronReplay from "../../components/DecimalIronReplay.astro";
+import ReproduceExhibit from "../../components/ReproduceExhibit.astro";
 
 A payment has committed. The reply has not reached the client. The processor can
 show one transaction while the client still has no answer.
@@ -122,3 +127,7 @@ boundary. It also does not execute KESKUS. The scenario fixture provides a
 shared contract for those adapters; the export reports them as skipped until
 they run. The browser replay is one view of the checked reference, not
 completion of those other implementations.
+
+## Reproduce and challenge this result
+
+<ReproduceExhibit id="decimal-iron-replay" />

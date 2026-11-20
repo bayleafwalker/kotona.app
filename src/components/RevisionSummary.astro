@@ -1,0 +1,41 @@
+---
+import { formatDate } from "../lib/content-dates.js";
+
+type Props = { revision?: { date: Date; summary: string } };
+const { revision } = Astro.props;
+---
+
+{
+  revision && (
+    <aside class="revision-summary" aria-label="Material revision">
+      <p>
+        <strong>
+          Changed{" "}
+          <time datetime={revision.date.toISOString()}>
+            {formatDate(revision.date)}
+          </time>
+        </strong>{" "}
+        {revision.summary}
+      </p>
+    </aside>
+  )
+}
+
+<style>
+  .revision-summary {
+    margin: 1.25rem 0;
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--accent);
+    background: var(--bg-strong);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .revision-summary p {
+    margin: 0;
+  }
+
+  .revision-summary strong {
+    margin-right: 0.35rem;
+  }
+</style>

@@ -35,6 +35,8 @@ lifecycle: current
 area: replace-with-area
 published: 2026-07-13
 lastRevised: 2026-07-13
+# Add only for a later substantive edit, with the same lastRevised date.
+# revisionSummary: What changed in the claim, evidence, or runnable example.
 projects: []
 relates: []
 draft: true
