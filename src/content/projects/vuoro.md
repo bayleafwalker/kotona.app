@@ -122,8 +122,9 @@ The demo's
 [pinned guide](https://github.com/bayleafwalker/vuoro/blob/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6/packages/vuoro-demo/README.md)
 requires Python 3.12+, PostgreSQL 16 tools, Git and a non-root Unix user. It
 starts a private temporary database and loopback service; it accepts no
-production database URL or cloud credentials. Its dependency pins identify the
-client, service and work owner used by this evaluation.
+production database URL or cloud credentials. The demo pins Vuoro client 0.1.2,
+Vuoro service 0.1.97 and Sprintctl 0.22.0. Service 0.1.106 is the separately
+inspected release-preparation candidate.
 
 The scenario follows one work item and its dependent:
 
