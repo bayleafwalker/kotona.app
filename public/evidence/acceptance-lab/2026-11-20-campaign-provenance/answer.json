@@ -1,0 +1,32 @@
+{
+  "schema_version": "1",
+  "answer": "Do not cite campaigns/2026-08-20 as a historical score taken on 20 August. The pinned README says these are regenerable fixtures and that the directory date names when the case was written. The generator recomputes the adapted candidate and evaluation with the current scorer, exercises a disposable event store, and omits evaluation timestamps and event UUIDs from the committed stable report. Its --write option replaces the generated output and report. The pinned project page correctly limits the source evidence but calls this a committed campaign dated 20 August without explaining the regeneration rule. Change that passage to call the outputs reproducible fixture examples over two reduced observations, and say that the date is case authorship rather than a dated settlement record. Preserve the November source-review result as a separate observation. This review establishes the meaning of these public files; it does not establish the fidelity of the private source observations, runtime operation, or native model cost.",
+  "facts": [
+    "campaign outputs are regenerable fixtures",
+    "the directory date names case authorship, not a historical score",
+    "the project page should distinguish fixture rebuilds from retained run evidence"
+  ],
+  "citations": [
+    {
+      "id": "public-read:001",
+      "supports": [
+        "campaign outputs are regenerable fixtures",
+        "the directory date names case authorship, not a historical score"
+      ]
+    },
+    {
+      "id": "public-read:002",
+      "supports": ["campaign outputs are regenerable fixtures"]
+    },
+    {
+      "id": "public-read:003",
+      "supports": ["the project page should distinguish fixture rebuilds from retained run evidence"]
+    }
+  ],
+  "abstained": false,
+  "trajectory": [],
+  "metrics": {},
+  "metadata": {
+    "authorship": "Written by the delegated agent after the three captured public reads. This metadata is not used as runner authority; candidate_from_trace replaces it."
+  }
+}

@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
 import ReferenceActions from "../../components/ReferenceActions.astro";
+import RevisionSummary from "../../components/RevisionSummary.astro";
 import AnnotatedText from "../../components/AnnotatedText.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TagList from "../../components/TagList.astro";
@@ -13,6 +14,7 @@ import {
 } from "../../lib/content";
 import { generatedOgImagePath } from "../../lib/og-images.js";
 import { projectTags } from "../../lib/tag-slug.js";
+import { getMaterialRevision } from "../../lib/content-revisions.ts";
 
 const id = Astro.params.slug;
 const entry = id ? await getEntry("projects", id) : undefined;
@@ -129,6 +131,8 @@ const relatedLinks = [
           </p>
         ) : null
       }
+
+      <RevisionSummary revision={getMaterialRevision(entry.data)} />
 
       <section class="evidence-panel" aria-labelledby="evidence-title">
         <h2 id="evidence-title">Evidence</h2>

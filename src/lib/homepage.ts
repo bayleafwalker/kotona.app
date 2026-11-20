@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
+import { getMaterialRevision } from "./content-revisions.ts";
 
-export type HomepageChange =
+export type HomepageChange = (
   | {
       kind: "note";
       entry: CollectionEntry<"notes">;
@@ -13,8 +14,9 @@ export type HomepageChange =
       entry: CollectionEntry<"projects">;
       href: string;
       date: Date;
-      dateLabel: "Checked";
-    };
+      dateLabel: "Checked" | "Revised";
+    }
+) & { revisionSummary?: string };
 
 /**
  * The homepage follows dated changes to published content, not build dates or
@@ -49,17 +51,25 @@ export function getRecentChanges(
         entry.data.lastRevised.getTime() === entry.data.published.getTime()
           ? "Published"
           : "Revised",
+      revisionSummary: getMaterialRevision(entry.data)?.summary,
     });
   }
 
   for (const entry of projects) {
     if (entry.data.draft) continue;
+    const revision = getMaterialRevision(entry.data);
+    const revisedAfterCheck =
+      revision && revision.date.getTime() > entry.data.lastVerified.getTime();
     changes.push({
       kind: "project",
       entry,
       href: `/projects/${entry.id}/`,
-      date: entry.data.lastVerified,
-      dateLabel: "Checked",
+      date: revisedAfterCheck ? revision.date : entry.data.lastVerified,
+      dateLabel: revisedAfterCheck ? "Revised" : "Checked",
+      revisionSummary:
+        revision && revision.date.getTime() >= entry.data.lastVerified.getTime()
+          ? revision.summary
+          : undefined,
     });
   }
 

@@ -1,0 +1,3 @@
+# Retained observations are byte-bound to the published receipt manifest.
+# Reformatting changes the evidence; the case integrity check verifies it.
+public/evidence/acceptance-lab/2026-11-20-campaign-provenance/

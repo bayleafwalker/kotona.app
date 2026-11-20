@@ -57,6 +57,9 @@ export function referencePrelude(
 
   lines.push(`published: ${yamlString(document.dates.published)}`);
   lines.push(`lastRevised: ${yamlString(document.dates.lastRevised)}`);
+  if (document.revisionSummary) {
+    lines.push(`revisionSummary: ${yamlString(document.revisionSummary)}`);
+  }
   if (document.dates.lastVerified) {
     lines.push(`lastVerified: ${yamlString(document.dates.lastVerified)}`);
   }

@@ -10,6 +10,7 @@ type Props = {
 
 const { change, variant = "compact" } = Astro.props;
 const { entry, date, dateLabel, href } = change;
+const summary = change.revisionSummary ?? entry.data.summary;
 const isExhibit = change.kind === "note" && Boolean(change.entry.data.exhibit);
 const context =
   change.kind === "project"
@@ -46,7 +47,16 @@ const action =
     <a href={href}>{entry.data.title}</a>
   </h3>
   <p class="home-entry-context">{context}</p>
-  {entry.data.summary && <p class="home-entry-summary">{entry.data.summary}</p>}
+  {
+    summary && (
+      <p class="home-entry-summary">
+        {change.revisionSummary && (
+          <span class="home-change-label">Changed</span>
+        )}
+        {summary}
+      </p>
+    )
+  }
   {
     variant === "lead" && (
       <a class="home-entry-action" href={href}>

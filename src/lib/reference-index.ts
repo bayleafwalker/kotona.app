@@ -8,6 +8,7 @@
  */
 
 import { siteDate } from "./content-dates.js";
+import { getMaterialRevision } from "./content-revisions.ts";
 
 export const referencePurposes = [
   "current-project-orientation",
@@ -34,6 +35,7 @@ type SourceEntry = {
   data: {
     title: string;
     summary?: string;
+    revisionSummary?: string;
     draft?: boolean;
     tags?: string[];
     area?: string;
@@ -68,6 +70,8 @@ export type ReferenceDocument = {
   type: "note" | "project";
   title: string;
   summary?: string;
+  /** The latest material change, dated by dates.lastRevised. */
+  revisionSummary?: string;
   url: string;
   representations: ReferenceRepresentation[];
   classification: {
@@ -125,12 +129,14 @@ export function projectReferenceDocument(
   const isNote = entry.collection === "notes";
   const url = new URL(documentPath(entry), baseUrl).toString();
   const scope = entry.data.reference;
+  const revision = getMaterialRevision(entry.data);
 
   return {
     id: entry.id,
     type: isNote ? "note" : "project",
     title: entry.data.title,
     ...(entry.data.summary ? { summary: entry.data.summary } : {}),
+    ...(revision ? { revisionSummary: revision.summary } : {}),
     url,
     representations: [
       { mediaType: "text/html", url, access: "direct" },

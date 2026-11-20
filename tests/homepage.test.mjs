@@ -73,6 +73,31 @@ test("a project enters on its verification date without changing its evidence sc
   );
 });
 
+test("a later material project revision does not masquerade as a new evidence check", () => {
+  const entry = project("revised-account", {
+    lastRevised: new Date("2026-11-20"),
+    revisionSummary:
+      "The current workflow now leads; the old cockpit is historical.",
+  });
+  const [change] = getRecentChanges([], [entry]);
+  assert.equal(change.dateLabel, "Revised");
+  assert.deepEqual(change.date, new Date("2026-11-20"));
+  assert.deepEqual(entry.data.lastVerified, new Date("2026-10-17"));
+  assert.equal(change.revisionSummary, entry.data.revisionSummary);
+});
+
+test("a later evidence check does not borrow the summary of an older revision", () => {
+  const entry = project("checked-again", {
+    lastRevised: new Date("2026-11-17"),
+    lastVerified: new Date("2026-11-20"),
+    revisionSummary: "Added the first public reproduction commands.",
+  });
+  const [change] = getRecentChanges([], [entry]);
+  assert.equal(change.dateLabel, "Checked");
+  assert.deepEqual(change.date, new Date("2026-11-20"));
+  assert.equal(change.revisionSummary, undefined);
+});
+
 test("drafts and every non-current note lifecycle stay out of the public projection", () => {
   const changes = getRecentChanges(
     [

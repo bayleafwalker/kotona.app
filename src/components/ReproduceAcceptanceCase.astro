@@ -1,0 +1,62 @@
+---
+import { buildRevision } from "../build";
+
+const pinned = /^[a-f0-9]{40}$/.test(buildRevision);
+const command = `git clone https://github.com/bayleafwalker/kotona.app.git kotona-case
+git -C kotona-case checkout --detach ${buildRevision}
+git clone https://github.com/bayleafwalker/acceptance-lab.git acceptance-lab-case
+git -C acceptance-lab-case checkout --detach fddbab2e26398f0ecddfc89cd291462effdc8e75
+cd kotona-case
+node --test tests/acceptance-case.test.mjs
+python3 docs/experiments/2026-11-20-acceptance-case/run_case.py replay \\
+  --case-dir public/evidence/acceptance-lab/2026-11-20-campaign-provenance \\
+  --lab ../acceptance-lab-case --site . \\
+  --out "$(mktemp -d)/replay"`;
+---
+
+<section aria-label="Reproduce the retained Acceptance Lab case">
+  <p>
+    Use Python 3.12 or newer, Node 24, and Git. These commands verify the
+    retained bytes and re-evaluate the recorded answer; they do not call a model
+    or repeat the original agent session. Neither repository needs package
+    installation.
+  </p>
+  {
+    pinned ? (
+      <>
+        <p>
+          Site source: <code class="source-revision">{buildRevision}</code>. The
+          Lab revision is fixed separately below. Use new destination
+          directories.
+        </p>
+        <pre>
+          <code>{command}</code>
+        </pre>
+      </>
+    ) : (
+      <p>
+        This preview has no pinned source revision. The published page supplies
+        the complete checkout command once its source commit is known.
+      </p>
+    )
+  }
+  <p>
+    Expected: four integrity tests pass; the observed case is <code
+      >CONDITIONAL</code
+    >{" "}
+    because billing is unknown; all three constructed controls are <code
+      >FAIL</code
+    >{" "}
+    after source verification. The altered-output control remains <code
+      >CONDITIONAL</code
+    >{" "}
+    inside the Lab alone. Replay writes a new result directory and leaves the retained
+    observation untouched. Timings and event IDs will differ.
+  </p>
+</section>
+
+<style>
+  .source-revision {
+    overflow-wrap: anywhere;
+  }
+</style>

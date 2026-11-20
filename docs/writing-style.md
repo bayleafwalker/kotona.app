@@ -248,6 +248,14 @@ conversion funnel.
 
 ## Publication process
 
+For a substantive revision, set `revisionSummary` to one sentence explaining
+what changed in the claim, supporting evidence, or executable example, and date
+it with `lastRevised`. It appears on the document, homepage change and
+publication log. Leave it absent for first publications and ordinary copyedits.
+It describes the latest material revision, not a complete revision ledger; Git
+retains earlier versions. A text revision does not renew `lastVerified`: advance
+that date only when the stated evidence scope was actually checked.
+
 1. Select the storage tier before committing. Public-repository history is a
    publication surface; `draft: true` changes rendering, not visibility.
 2. Finish and review the note.

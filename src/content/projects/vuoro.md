@@ -1,62 +1,61 @@
 ---
 title: "Vuoro: governed work without a cockpit-shaped monolith"
 summary: >-
-  Vuoro is a family of separately owned workflow tools and a planned product
-  direction for portable work, evidence, authority, and learning. The former
-  AgentOps cockpit is retired; current runtime composition is unverified.
+  Vuoro keeps work identity, evidence and acceptance intact when an agent is
+  replaced. Public source offers a disposable settlement evaluation and a dated
+  cross-harness case; current hosted operation remains unverified here.
 published: 2026-04-09
-lastRevised: 2026-10-17
-lastVerified: 2026-10-17
+lastRevised: 2026-11-20
+revisionSummary: >-
+  Replaced the retired cockpit as the main account with the local settlement
+  workflow, current source owners and a bounded recorded handoff; preserved
+  historical evidence and its limits.
+lastVerified: 2026-11-20
 draft: false
 project: vuoro
 kind: engineering
-status: Published reference; current runtime unverified
+status: Local evaluation and recorded handoff; hosted state unverified
 featured: true
 repoUrls:
-  - https://github.com/bayleafwalker/sprintctl
-  - https://github.com/bayleafwalker/kctl
-  - https://github.com/bayleafwalker/actionq
-  - https://github.com/bayleafwalker/actionq-dispatch
-  - https://github.com/bayleafwalker/auditctl
-  - https://github.com/bayleafwalker/agentops
   - https://github.com/bayleafwalker/vuoro
-externalUrl: https://bayleafwalker.github.io/agentops/
+  - https://github.com/bayleafwalker/sprintctl
+  - https://github.com/bayleafwalker/sovite
+  - https://github.com/bayleafwalker/agentops
+externalUrl: https://vuoro.cloud/
 evidence:
   capability: >-
-    Public repositories define separate workflow contracts and a Vuoro
-    composition. The previous AgentOps cockpit application has been removed from
-    source. No current service or deployed composition was verified for this
-    revision.
+    Public source supplies a disposable settlement consumer, separately owned
+    work and execution contracts, and revision-bound documentation retrieval. A
+    public October record describes one accepted hosted-to-native handoff and
+    protected evidence publication.
   latest: >-
-    The owner accepted a revised product direction on 2026-10-15 and a delivery
-    plan on 2026-10-17. Both describe planned scope and gates, not
-    implementation, provisioning, release, or deployment.
+    Source checked 20 November: service 0.1.106 is a release-preparation
+    candidate. The optional demo deliberately pins older client 0.1.2, service
+    0.1.97 and Sprintctl 0.22.0 artifacts for its evaluation.
   proofLinks:
-    - label: Vuoro composition repository
-      href: https://github.com/bayleafwalker/vuoro
-    - label: sprintctl source repository
-      href: https://github.com/bayleafwalker/sprintctl
-    - label: Interactive Vuoro system map
-      href: https://bayleafwalker.github.io/agentops/
-    - label: Accepted Vuoro product direction (2026-10-15)
-      href: https://github.com/bayleafwalker/vuoro/blob/main/docs/direction/2026-10-15-product-direction.md
-    - label: Vuoro product delivery plan (2026-10-17)
-      href: https://github.com/bayleafwalker/vuoro/blob/main/docs/plans/2026-10-17-product-delivery-plan.md
-    - label: AgentOps source snapshot checked 2026-10-17
-      href: https://github.com/bayleafwalker/agentops/commit/b55198b25717ed542ca3e7c0d6ae7376d823ad55
+    - label: Pinned settlement demo and prerequisites
+      href: https://github.com/bayleafwalker/vuoro/blob/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6/packages/vuoro-demo/README.md
+    - label: Dated hosted-to-native case and capture limits
+      href: https://github.com/bayleafwalker/agentops/blob/891d07113323c81589e751bf2e6dad76e4de565c/docs/evidence/2026-10-09-mi1-bindery/README.md
+    - label: Current service candidate and migration boundary
+      href: https://github.com/bayleafwalker/vuoro/blob/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6/packages/vuoro-service/README.md
+    - label: Execution-owner source and hosted limits
+      href: https://github.com/bayleafwalker/sovite/blob/2e2bf52c945819cd8fd710af58c8e22398239c57/README.md
+    - label: Accepted delivery scope and later amendments
+      href: https://github.com/bayleafwalker/vuoro/blob/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6/docs/plans/2026-10-17-product-delivery-plan.md
   integrations:
-    - SQLite
+    - Sprintctl work contracts
+    - Sovite execution contracts
     - PostgreSQL
-    - Former AgentOps cockpit (retired; historical reference)
   knownLimitation: >-
-    Current release, deployment, and live qualification are unverified. The
-    previous public cockpit was removed from AgentOps source; old screenshots
-    and present-tense cockpit descriptions below are historical. The current
-    product direction and delivery plan remain source/planning evidence only.
+    This review inspected public source and ran one local documentation search.
+    It did not rerun settlement, inspect private provider captures, query a
+    hosted service or verify a deployed release. The recorded handoff is one
+    bounded case, with incomplete capture and no comparative cost result.
   nextProof: >-
-    Reconcile current source, release and runtime state, then qualify one
-    reference workflow under the accepted delivery plan. Do not infer deployment
-    or operating status from repository plans or former service versions.
+    Qualify a current installed workflow against a real domain objective,
+    preserve an interrupted operation and its recovery, then record the accepted
+    result, later consequence and operator burden.
 tags:
   - agents
   - workflow
@@ -64,260 +63,177 @@ tags:
 terms:
   - term: Vuoro
     definition:
-      The public label for this family of small, separately owned agent-workflow
-      tools.
-  - term: sprintctl
-    definition:
-      The CLI and schema that own sprint work, dependencies, reservations, and
-      handoffs.
-  - term: kctl
-    definition:
-      The read-only pipeline that turns reviewed sprint history into durable
-      knowledge.
-  - term: actionq
-    definition:
-      The PostgreSQL-backed queue that owns actions, sessions, claims, and
-      outcomes.
-  - term: actionq-dispatch
-    definition:
-      Retired (2026-08-20 tombstone release). It formerly created a bounded
-      workspace, invoked a worker, and recorded the result; the dispatch harness
-      now constructs the workspace and invokes product-native workers directly.
-  - term: auditctl
-    definition:
-      The tool that indexes audit events and emits portable daily evidence
-      shards.
-  - term: agent-cockpit
-    definition:
-      The former AgentOps operator interface, removed from source; references on
-      this page describe historical design and screenshots only.
+      The portable work, evidence and acceptance contracts composed from
+      separately owned workflow tools.
 reference:
   purpose: current-project-orientation
   discoverFor:
-    - why shared Markdown sprint files gave way to schema-enforced sprintctl
-      state and CLI write authority
-    - composing separately owned agent workflow tools without a monolith
-    - binding component and schema compatibility to migration admissibility
+    - evaluating takeover and stale-result refusal in a disposable local
+      workflow
+    - locating the current work, knowledge and execution owners
+    - inspecting a dated hosted-to-native handoff without inferring live
+      readiness
   establishes:
-    - that separate workflow contracts and historical composition designs have
-      existed across these repositories
-    - that version-bound preflight can reject an unsafe schema rollout before it
-      runs
+    - that public source supplies an isolated local settlement evaluation with
+      explicit prerequisites and negative controls
+    - that a public evidence record describes one bounded cross-harness handoff
+      and protected publication, while retaining capture gaps
   doesNotEstablish:
-    - that the v5 two-way comparison can yet attribute cost, or that governed
-      work improved under the composition
-    - operational mileage for kctl and auditctl comparable to sprintctl and the
-      cockpit
+    - current hosted deployment, installed versions or resource-owner
+      qualification
+    - whole-estate capture coverage, general model quality or comparative cost
+      savings
   supplementWith:
-    - current owner release and runtime evidence before relying on any served
-      composition or operational capability
+    - current release and runtime observations before relying on an installed
+      workflow
+    - actual domain outcomes and operator effort before attributing value to the
+      composition
 ---
-
-## Overview
-
-sprintctl started with a mundane failure: humans and agents were editing the
-same Markdown sprint files, and agents kept pattern-matching against the wrong
-piece of prose. Better prompts reduced the frequency but did not change the
-failure mode. The durable fix was to move live sprint state into a schema and
-make a CLI the write authority.
-
-kctl followed as the read-only knowledge path. It consumes sprint history,
-extracts durable and coordination candidates, and puts them through explicit
-review and publication. It does not silently turn every session note into canon,
-and it never writes work back into sprintctl.
-
-## Current source status (2026-10-17)
-
-The previous AgentOps cockpit application is absent from the current AgentOps
-source tree. The site and screenshots later on this page describe the former
-interface and are retained as historical context; they do not establish a
-currently available operator UI. The 2026-10-15 product direction and 2026-10-17
-delivery plan define accepted scope and qualification gates, but explicitly do
-not establish implementation, provisioning, release, or deployment. No current
-Vuoro runtime was reachable for this source review, so its live composition and
-status remain unknown. Source evidence checked 2026-10-17 08:27 UTC: AgentOps
-`main` at `b55198b25717ed542ca3e7c0d6ae7376d823ad55` no longer contains
-`apps/web/`; Vuoro `main` at `b433c8ffebdde81aa0d0fdf97b14182562a864f0` contains
-the accepted direction and delivery plan. A live-site request from the review
-environment could not connect, so no current runtime version or deployment
-status was observed. The verification date records this evidence review, not a
-runtime qualification.
-
-Those two tools are still useful on their own. They are no longer the whole
-story. The same state-ownership rule has grown into Vuoro: each repository owns
-one operational domain. The former agent-cockpit composed their read surfaces
-instead of becoming a new database with opinions about all of them.
-
-The names carry separate meanings. **Vuoro** is the
-[public ecosystem label](https://github.com/bayleafwalker/kctl/blob/c831aa016bdf117310fc66c12e8c2e63d2162155/docs/decisions/2026-07-19-ecosystem-public-label.md).
-`agentops` remains the repository for shared contracts and cross-repository
-plans. Its former `agent-cockpit` application was removed from source. The
-public rename avoids confusing the ecosystem with AgentOps.ai without churning
-implementation names.
-
-## Interactive system map (historical composition)
-
-[Explore the interactive Vuoro system map](https://bayleafwalker.github.io/agentops/)
-for the previous lifecycle model across sprintctl, kctl, actionq, the retired
-actionq-dispatch, auditctl, deployment, and the former agent-cockpit. The map is
-a historical composition illustration; it does not establish current runtime
-availability.
-
-## Historical architecture and communication paths
-
-The following design and operating snapshot reflects the page's last runtime
-verification on 2026-09-07. It is retained for provenance and must not be read
-as current deployment, product, or operator-interface status.
-
-![Vuoro state ownership and communication paths](/images/projects/vuoro/system-shape.svg)
-
-Three modes describe how a request travels, not three competing sources of
-truth. In **local mode**, an agent calls the owning CLI and keeps SQLite state,
-reservation and recovery material, Git worktrees, and filesystem effects on its
-machine. In **remote mode**, that same domain tool uses its shared PostgreSQL
-authority. In **served mode**, the transport-only Vuoro client talks to Vuoro
-service, which authenticates the caller, checks compatibility, and invokes a
-pinned adapter for the owning tool.
-
-The modes compose. A served request can reach a remote authority while the
-worker that receives it still performs bounded Git and filesystem work locally.
-The cockpit reads projections and submits dispatch through the documented API;
-it does not gain a raw write path into the domain databases. None of these
-arrows promises a distributed transaction. Receipts, append-only events,
-idempotency, and explicit recovery carry work across the boundaries.
-
-## System shape
-
-sprintctl owns sprints, work items, dependencies, events, reservations, and
-handoffs. It runs against repo-local SQLite or a shared PostgreSQL backend, and
-a declared backend mismatch fails rather than quietly opening a different source
-of truth. Live coordination is a reservation ledger: a reservation is
-session-bound and advisory, carries no bearer credential, and can be released,
-reassigned, or interrupted by a maintenance sweep after an idle policy window.
-The earlier claim/token model is gone as authority state — schema migrations
-archived the claim rows into a history table, dropped the live claim table, and
-nulled every token, so the archive records who held what and when without
-retaining proof material. Its lineage `lease_epoch` survives only as a column of
-that archive: historical structure, not downstream fencing. Resume and handoff
-commands still turn live state into deterministic context for a new operator or
-agent session.
-
-kctl reads sprintctl events and owns the extraction, review, publication, and
-rendering of knowledge artifacts. The relationship is deliberately one-way.
-Rendered Markdown remains useful for review and Git history, but it is a
-projection, not the live control plane.
-
-The sibling tools fill different gaps:
-
-- `actionq` owns PostgreSQL-backed action and session lifecycles with a strict
-  queue contract and append-only events.
-- `actionq-dispatch` formerly owned the bounded one-action coordinator:
-  worktrees, worker invocation, path ACLs, pre- and post-gates, and result
-  recording through the owning CLIs. It is retired as of 2026-08-20. The
-  dispatch packet harness in `agentops` now constructs the bounded worktree,
-  applies path and command policy, invokes one product-native worker, and runs
-  the gates; actionq records provider references and observed status without
-  spawning or supervising the process.
-- `auditctl` owns a repo-local audit index plus durable daily NDJSON artifacts
-  that can be rebuilt and read independently.
-- `agentops` owns reusable dispatch skills and schemas, cross-repository plans,
-  and the agent-cockpit application. The cockpit reads sprint state, queue
-  sessions, audit artifacts, and cost signals; its writes stay mediated by the
-  owning domain contracts rather than direct database mutation.
-
-The rule across the repositories is simple: state ownership decides repository
-ownership. It is also the main defense against building a cockpit-shaped
-monolith.
 
 ## One work item, including failure
 
-Here is the end-to-end property the system is designed to demonstrate:
+An agent has produced a patch and then disappears. Its successor needs to find
+that exact patch, establish which checks still apply, and finish the work
+without letting a late predecessor settle it again. A dependent task must stay
+blocked until the work owner accepts the result.
 
-1. An operator creates a work item through sprintctl. Sprintctl records the item
-   and event history.
-2. An agent takes a reservation. The reservation is session-bound and advisory —
-   it makes ownership visible to every other session rather than proving it with
-   a credential; the claim/token proof model it replaced survives only as
-   archived history.
-3. Dispatch submits an action through actionq. The dispatch harness creates a
-   bounded worktree, applies path and command policy, invokes one product-native
-   worker, and runs its gates; actionq records provider references and observed
-   status without spawning the process. Until its 2026-08-20 retirement,
-   actionq-dispatch owned this coordination as a separate package.
-4. If the worker fails or returns an invalid result, the result is recorded as
-   failed or rejected. It is not published and does not close the work item.
-5. The same session can resume its reservation; reassignment and release are
-   explicit commands, and an idle reservation is interrupted by the maintenance
-   sweep after a policy window. This is a visibility discipline, not a fencing
-   guarantee — the proof-rotation rule retired with the claim model.
-6. Once a valid result clears independent verification, the owning CLI records
-   completion and releases the reservation. Auditctl indexes portable evidence,
-   and the cockpit projects the sprint, reservation, dispatch, and audit
-   outcome.
+That is the smallest useful entrance to Vuoro. Sprintctl owns work and its
+acceptance decision. Vuoro composes the contracts and retained evidence. Native
+harnesses, or Sovite's installed execution service, do the execution. A
+completed worker process and an accepted work item remain separate events.
 
-This is an acceptance walkthrough, not a claim that the six steps form one
-atomic transaction. The schema transition that was this section's next proof
-completed in August: the v0.1.52 image gated the cutover and managed ActionQ
-schema v12 was validated under the composition. The open proof has moved
-accordingly: oracle attainability is now checked at dispatch time and a first
-two-way scorecard exists, but its direct arm is not packet-isolated, so a
-comparison able to attribute the difference is still owed.
+## What can be inspected or used now
 
-## Historical operating snapshot (last verified 2026-09-07)
+| Scope                  | Public entry point                                                                                                                                                                                                                                  | What it establishes                                                                                                                                        |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Local evaluation       | The [disposable settlement consumer](https://github.com/bayleafwalker/vuoro/blob/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6/packages/vuoro-demo/README.md) has an install recipe, prerequisite check, receipt output and deliberate failure controls. | A route to run the scripted scenario on an owned local database. Its source availability is not a fresh test-pass receipt.                                 |
+| Recorded real work     | The [9 October handoff record](https://github.com/bayleafwalker/agentops/blob/891d07113323c81589e751bf2e6dad76e4de565c/docs/evidence/2026-10-09-mi1-bindery/README.md) links the public report and merged changes.                                  | A bounded published account of hosted-to-native continuation and protected evidence publication. Raw provider captures remain private.                     |
+| Source implementation  | Current work adapters, workspace storage, documentation retrieval and Sovite execution interfaces are in the pinned repositories below.                                                                                                             | Inspectable implementation; installation and live qualification must be checked separately. Service 0.1.106 is explicitly a release-preparation candidate. |
+| Intended outcome       | The amended delivery plan requires a real domain improvement, recoverable operation and measured operator burden.                                                                                                                                   | Accepted delivery scope, with qualification gates still attached.                                                                                          |
+| Historical composition | The former AgentOps cockpit and its earlier system map survive in the historical record below.                                                                                                                                                      | Earlier design and dated operations, with no claim of present availability.                                                                                |
 
-The tools are public and used across active repositories. sprintctl is on the
-0.3.x reservation model with local and remote modes and provenance links; the
-resume outcome is tested end to end, though the single-command bundle surface is
-still a known gap — an operator currently assembles the continuation from a few
-calls. kctl has a functioning two-stream extraction and review pipeline. actionq
-supplies the queue and session read contracts, and auditctl emits portable audit
-shards. actionq-dispatch, the former one-shot coordinator, is retired; the
-dispatch harness invokes product-native workers directly.
+The [hosted pilot](https://vuoro.cloud/) and the
+[interactive showcase](https://demo.vuoro.cloud/) are separate entry points. A
+walkthrough or a source repository does not establish an installed workflow.
 
-The agent-cockpit is live and can show repository and sprint state, claims,
-session and dispatch lifecycles, audit outcomes, and bounded cost or model
-headroom signals. Its dispatch surface forwards work through actionq. sprintctl
-state and workspace artifacts remain separate service contracts rather than
-tables the UI is free to rewrite.
+## Inspect the local settlement workflow
 
-![Agent-cockpit sprint overview showing backlog, claims, and dispatch state](/images/projects/vuoro/cockpit-main.png)
+The demo's
+[pinned guide](https://github.com/bayleafwalker/vuoro/blob/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6/packages/vuoro-demo/README.md)
+requires Python 3.12+, PostgreSQL 16 tools, Git and a non-root Unix user. It
+starts a private temporary database and loopback service; it accepts no
+production database URL or cloud credentials. The demo pins Vuoro client 0.1.2,
+Vuoro service 0.1.97 and Sprintctl 0.22.0. Service 0.1.106 is the separately
+inspected release-preparation candidate.
 
-The screenshot is the current sprint overview: backlog and active work on the
-left, claim-aware work detail in the middle, and dispatch activity in the
-operator surface. It is a composed view of owning systems rather than a new
-state authority.
+The scenario follows one work item and its dependent:
 
-This is a different system from the original pair of pipx-installed SQLite
-tools. Local-first operation is still the default for a small repository, but
-PostgreSQL and agent-cockpit now provide a shared view when work crosses hosts
-or needs an operator surface.
+1. A caller creates work X and dependent Y, reserves an exact release, and
+   records a Git artifact.
+2. A fixture verifier checks that artifact. Artifact acceptance alone leaves X
+   unsettled and Y blocked.
+3. The caller's process is killed. A new caller cannot take over until the work
+   owner considers the first lease stale.
+4. The successor takes over. The predecessor's late result is refused while its
+   payload is retained.
+5. The successor supplies the required checks. The work owner's decision settles
+   X and permits Y to proceed.
+6. The receipt records the operations, expected refusals and cleanup outcome.
+   Success requires confirmed shutdown of the owned service and database.
 
-By 8 August, served composition had reached v0.1.35 with component and schema
-compatibility made explicit. Four capability gates passed, while production
-preflight correctly rejected an unsafe schema-5 rollout. The maintenance bridge
-was staged to make the transition admissible without representing the production
-schema as already migrated. The transition staged there completed later that
-month: the v0.1.52 image carried the sprintctl 0.3.0 reservation-model pin and
-gated the work-schema v12 cutover, with managed ActionQ schema v12 validated
-under the composition. The composition has since advanced to v0.1.59 through
-adapter repins — sprintctl to 0.3.5, auditctl to 0.1.6 — verified against the
-running service on 2026-09-01.
+The guide includes controls for omitted verification, an omitted required check
+and a wrong artifact digest. Those runs must finish as incomplete. The scenario
+uses scripted participants and local evaluation identities. It does not test
+commercial harnesses, a database crash or a production rollout.
+
+## What the recorded handoff actually showed
+
+The public
+[MI-1 case](https://github.com/bayleafwalker/agentops/blob/891d07113323c81589e751bf2e6dad76e4de565c/docs/evidence/2026-10-09-mi1-bindery/README.md)
+records a different exercise. A hosted Claude assessment became a public Git
+handoff. A fresh native Codex session continued from that artifact without the
+predecessor's private conversation, corrected claims and ran targeted tests. The
+report documented a case where changing the decision procedure left its
+advertised implementation hash unchanged.
+
+The case then published the exact report through a separately authorized
+verifier and applier. The record describes refusals for stale or missing proof,
+an interruption after branch publication, and recovery that reused that branch.
+Its public links identify the report and resulting merges. The raw captures and
+owner checkpoints were not re-inspected for this page.
+
+Capture was incomplete even in this narrow case: two of three run records were
+reconstructible, while its single effect was reconstructible. The original
+vendor-comparison track was retired; it produced no comparative cost, quality or
+operator-time result. Those limits prevent this case from becoming a claim about
+all work or today's installation.
+
+## Current source status (2026-11-20)
+
+The current owners differ from the old cockpit account:
+
+- **Sprintctl** retains work lifecycle and acceptance authority. The service
+  composes its released adapter rather than writing around it.
+- **Vuoro workspace** owns reviewed knowledge and versioned artifacts.
+  **vuoro-knowledge** resolves Git-authored documentation and binds retrieved
+  sources to revisions. The two stores have different authority; retired kctl is
+  historical migration input.
+- **Sovite** owns configured execution, admission and result access. Its current
+  source distinguishes standalone operation from workspace-hosted composition;
+  hosted end-to-end acceptance is held, and repository execution remains an
+  opt-in source path.
+- **AgentOps** holds shared guidance, reporting and cross-repository plans. Its
+  former cockpit source was removed. ActionQ's earlier execution plane and
+  actionq-dispatch are historical, rather than the recommended worker path.
+
+This review used these immutable public snapshots:
+
+| Repository | Revision                                                                                               | Material inspected                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Vuoro      | [`b0066ec`](https://github.com/bayleafwalker/vuoro/commit/b0066ec139943316c6ccf7d16bb88e5bd9b1f2a6)    | Demo implementation and tests, package pins, service candidate, workspace and knowledge contracts, amended delivery plan |
+| AgentOps   | [`891d071`](https://github.com/bayleafwalker/agentops/commit/891d07113323c81589e751bf2e6dad76e4de565c) | Current owner descriptions, cockpit retirement and the MI-1 public evidence record                                       |
+| Sovite     | [`2e2bf52`](https://github.com/bayleafwalker/sovite/commit/2e2bf52c945819cd8fd710af58c8e22398239c57)   | Current execution workflows, operating modes and unqualified repository-execution boundaries                             |
+
+The source CLI was invoked directly at that Vuoro revision with Python 3.12.14
+and PyYAML 6.0.3:
+
+```sh
+PYTHONPATH=packages/vuoro-knowledge/src python -c \
+  'from vuoro_knowledge.cli import main; raise SystemExit(main())' \
+  search 'work settlement' --root .
+```
+
+It returned 38 matches with source revision and blob identities. This checks one
+local retrieval path. The settlement demo, private handoff captures and hosted
+services were not exercised in this review. The date above records source
+inspection and that local check; it does not refresh the older runtime
+observations.
+
+## Historical architecture and communication paths
+
+The earlier composition used local, remote and served paths around Sprintctl,
+kctl, ActionQ, Auditctl and an AgentOps cockpit. The cockpit projected the
+owners' records and submitted operations through their interfaces. It did not
+own their databases. The
+[earlier account and diagrams](https://github.com/bayleafwalker/kotona.app/blob/f9f9bb336a8ad7f4b2e995d43d3fde806ecac7b7/src/content/projects/vuoro.md)
+remain available at their published revision.
+
+### Historical operating snapshot (last verified 2026-09-07)
+
+That account recorded a schema-5 preflight refusal, the later service 0.1.52
+work-schema-v12 cutover, and service 0.1.59 observed on 1 September. Its cockpit
+screenshot showed the interface then in use. None of those versions, screenshots
+or operating statements describe a currently verified deployment. The October 17
+source review subsequently recorded the cockpit's removal.
 
 ## Open edges
 
-The substrate has enough parts that it must continually justify them. A tool
-designed to remove coordination ambiguity can recreate it through version drift,
-overlapping commands, or unclear recovery rules between repositories — and that
-is an observed condition, not a hypothetical: the shipped agent skills kept
-teaching the deleted claim model until the 0.3.5 release corrected them.
-Interface contracts and end-to-end verification matter more now than another
-feature in any one CLI.
+The next useful proof is a current installed workflow serving an actual domain
+objective: retain the result through an interruption, reconstruct why it was
+accepted, and observe what happened afterwards. Record operator interventions,
+time and maintenance alongside the achieved result. A successful settlement
+protocol does not by itself establish that the work was useful or cheaper.
 
-kctl and auditctl are also less exercised than sprintctl and agent-cockpit.
-Their clean ownership boundaries are promising, but durable extraction and
-recovery need more operational mileage before they should be treated as settled.
-
-The agent-cockpit write surface should stay narrow. Dispatch and explicit sprint
-operations are useful; turning the UI into a privileged backdoor around
-reservation, queue, or audit rules would recreate the original Markdown problem
-with better CSS.
+Release, installation, current authorization, recovery and domain outcome remain
+separate checks. The amended delivery plan lets independent implementation work
+continue while preserving the qualification gates for each supported workflow.

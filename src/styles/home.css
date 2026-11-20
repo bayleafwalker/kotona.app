@@ -46,12 +46,34 @@ main:has(> .home) {
   line-height: 1.5;
 }
 
-.home-explore-link {
+.home-intro-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 1.25rem;
+}
+
+.home-explore-link,
+.home-example-link {
   flex: 0 0 auto;
   padding-block: 0.4rem;
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.home-example-link {
+  flex-shrink: 1;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+.home-change-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
   font-weight: 600;
 }
 

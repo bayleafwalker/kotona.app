@@ -2,24 +2,20 @@
 import { getCollection } from "astro:content";
 
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { formatDate, getVisibleEntries } from "../lib/content";
+import { formatDate } from "../lib/content";
+import { getPublicationEvents } from "../lib/content-revisions.ts";
 import changelog from "../data/changelog.json";
 
-type ChangelogEntry = { date: string; entry: string; href?: string };
-const notes = getVisibleEntries(await getCollection("notes"));
-const projects = getVisibleEntries(await getCollection("projects"));
-const generatedEntries: ChangelogEntry[] = [
-  ...notes.map((note) => ({
-    date: note.data.published.toISOString(),
-    entry: `Published note: ${note.data.title}.`,
-    href: `/notes/${note.id}/`,
-  })),
-  ...projects.map((project) => ({
-    date: project.data.lastVerified.toISOString(),
-    entry: `Checked project state: ${project.data.project}.`,
-    href: `/projects/${project.id}/`,
-  })),
-];
+type ChangelogEntry = {
+  date: string;
+  entry: string;
+  href?: string;
+  summary?: string;
+};
+const generatedEntries = getPublicationEvents(
+  await getCollection("notes"),
+  await getCollection("projects"),
+);
 const entries = [...(changelog as ChangelogEntry[]), ...generatedEntries]
   .sort(
     (left, right) =>
@@ -40,8 +36,10 @@ const entries = [...(changelog as ChangelogEntry[]), ...generatedEntries]
     <p class="eyebrow">Log</p>
     <h1 class="page-title">Publication and project log</h1>
     <p class="page-copy">
-      Published notes and verified project states are generated from content
-      metadata. Site-level changes remain a small manual record.
+      Publications, material revisions and project evidence checks, with what
+      changed in the claim or its supporting evidence. Revision summaries
+      describe the latest substantive edit; the linked repository retains the
+      full history. Site-level changes remain a small manual record.
     </p>
   </section>
 
@@ -55,6 +53,9 @@ const entries = [...(changelog as ChangelogEntry[]), ...generatedEntries]
             </time>
             <span class="changelog-text">
               {item.href ? <a href={item.href}>{item.entry}</a> : item.entry}
+              {item.summary && (
+                <span class="changelog-summary">{item.summary}</span>
+              )}
             </span>
           </li>
         ))
@@ -62,3 +63,12 @@ const entries = [...(changelog as ChangelogEntry[]), ...generatedEntries]
     </ol>
   </section>
 </BaseLayout>
+
+<style>
+  .changelog-summary {
+    display: block;
+    margin-top: 0.4rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+</style>

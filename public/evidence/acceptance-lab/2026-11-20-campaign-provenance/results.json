@@ -1,0 +1,778 @@
+{
+  "recorded_at": "2026-11-20T20:00:49.359955+00:00",
+  "lab_revision": "fddbab2e26398f0ecddfc89cd291462effdc8e75",
+  "interpretation": "One observed evidence-review run; three constructed controls. No model comparison.",
+  "results": {
+    "observed": {
+      "constructed": false,
+      "evidence_errors": [],
+      "direct_errors": [],
+      "direct_status": "CONDITIONAL",
+      "lab_status_before_evidence_gate": "CONDITIONAL",
+      "status_after_evidence_gate": "CONDITIONAL",
+      "economics": "Native model billing was not observed; budget qualification is withheld.",
+      "timing_ms": {
+        "source_and_digest_verification": 9.311679,
+        "direct_candidate_checks": 0.022626,
+        "lab_adapt_score_record_verify_rebuild": 13.483966
+      },
+      "evaluation": {
+        "run_id": "campaign-provenance:observed",
+        "scenario_id": "campaign-provenance-review",
+        "scenario_version": "1.0.0",
+        "candidate": "observed",
+        "status": "CONDITIONAL",
+        "aggregate_score": 0.8571428571428571,
+        "started_at": "2026-11-20T20:00:49.300360+00:00",
+        "completed_at": "2026-11-20T20:00:49.300443+00:00",
+        "scores": [
+          {
+            "check_id": "provenance-facts",
+            "check_type": "required_fact_coverage",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts present",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "three-read-citations",
+            "check_type": "required_evidence_recall",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required evidence references present",
+            "details": {
+              "required": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "found": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "missing": [],
+              "actual": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ]
+            }
+          },
+          {
+            "check_id": "facts-have-citations",
+            "check_type": "required_fact_citations",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts tied to citations",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "declared-reads-only",
+            "check_type": "allowed_tools_only",
+            "scorer_revision": 2,
+            "dimension": "mechanism",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "All tools were inside the allowlist",
+            "details": {
+              "allowed": [
+                "git.read.lab-generator",
+                "git.read.lab-readme",
+                "git.read.site-project"
+              ],
+              "used": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "violations": []
+            }
+          },
+          {
+            "check_id": "required-read-order",
+            "check_type": "required_tool_order",
+            "scorer_revision": 1,
+            "dimension": "mechanism",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "Matched 3/3 required ordered tools",
+            "details": {
+              "required": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "actual": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "missing_suffix": []
+            }
+          },
+          {
+            "check_id": "answer-required",
+            "check_type": "abstention_match",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "Abstention matched expected=False",
+            "details": {
+              "expected": false,
+              "actual": false
+            }
+          },
+          {
+            "check_id": "billing-observed-within-ceiling",
+            "check_type": "max_cost",
+            "scorer_revision": 1,
+            "dimension": "economics",
+            "score": 0.0,
+            "passed": false,
+            "hard_gate": false,
+            "summary": "Metric cost_usd was not reported",
+            "details": {
+              "metric": "cost_usd",
+              "maximum": 1.0,
+              "actual": null
+            }
+          }
+        ],
+        "scorer_revisions": {
+          "required_fact_coverage": 1,
+          "required_evidence_recall": 1,
+          "required_fact_citations": 1,
+          "allowed_tools_only": 2,
+          "required_tool_order": 1,
+          "abstention_match": 1,
+          "max_cost": 1
+        },
+        "harness_revision": 1,
+        "metadata": {
+          "trace_id": "kotona:2026-11-20:campaign-provenance",
+          "constructed": false
+        }
+      },
+      "event_store_gate": "verified 9 event(s)"
+    },
+    "constructed-missing-read": {
+      "constructed": true,
+      "evidence_errors": [
+        "required public reads are missing or out of order",
+        "site-project: seq disagrees with the declared read",
+        "site-project: event_id disagrees with the declared read"
+      ],
+      "direct_errors": [
+        "required public reads are missing or out of order"
+      ],
+      "direct_status": "FAIL",
+      "lab_status_before_evidence_gate": "FAIL",
+      "status_after_evidence_gate": "FAIL",
+      "economics": "Native model billing was not observed; budget qualification is withheld.",
+      "timing_ms": {
+        "source_and_digest_verification": 9.363057,
+        "direct_candidate_checks": 0.013287,
+        "lab_adapt_score_record_verify_rebuild": 7.269876
+      },
+      "evaluation": {
+        "run_id": "campaign-provenance:constructed-missing-read",
+        "scenario_id": "campaign-provenance-review",
+        "scenario_version": "1.0.0",
+        "candidate": "constructed-missing-read",
+        "status": "FAIL",
+        "aggregate_score": 0.7619047619047619,
+        "started_at": "2026-11-20T20:00:49.323918+00:00",
+        "completed_at": "2026-11-20T20:00:49.323992+00:00",
+        "scores": [
+          {
+            "check_id": "provenance-facts",
+            "check_type": "required_fact_coverage",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts present",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "three-read-citations",
+            "check_type": "required_evidence_recall",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required evidence references present",
+            "details": {
+              "required": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "found": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "missing": [],
+              "actual": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ]
+            }
+          },
+          {
+            "check_id": "facts-have-citations",
+            "check_type": "required_fact_citations",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts tied to citations",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "declared-reads-only",
+            "check_type": "allowed_tools_only",
+            "scorer_revision": 2,
+            "dimension": "mechanism",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "All tools were inside the allowlist",
+            "details": {
+              "allowed": [
+                "git.read.lab-generator",
+                "git.read.lab-readme",
+                "git.read.site-project"
+              ],
+              "used": [
+                "git.read.lab-readme",
+                "git.read.site-project"
+              ],
+              "violations": []
+            }
+          },
+          {
+            "check_id": "required-read-order",
+            "check_type": "required_tool_order",
+            "scorer_revision": 1,
+            "dimension": "mechanism",
+            "score": 0.3333333333333333,
+            "passed": false,
+            "hard_gate": true,
+            "summary": "Matched 1/3 required ordered tools",
+            "details": {
+              "required": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "actual": [
+                "git.read.lab-readme",
+                "git.read.site-project"
+              ],
+              "missing_suffix": [
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ]
+            }
+          },
+          {
+            "check_id": "answer-required",
+            "check_type": "abstention_match",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "Abstention matched expected=False",
+            "details": {
+              "expected": false,
+              "actual": false
+            }
+          },
+          {
+            "check_id": "billing-observed-within-ceiling",
+            "check_type": "max_cost",
+            "scorer_revision": 1,
+            "dimension": "economics",
+            "score": 0.0,
+            "passed": false,
+            "hard_gate": false,
+            "summary": "Metric cost_usd was not reported",
+            "details": {
+              "metric": "cost_usd",
+              "maximum": 1.0,
+              "actual": null
+            }
+          }
+        ],
+        "scorer_revisions": {
+          "required_fact_coverage": 1,
+          "required_evidence_recall": 1,
+          "required_fact_citations": 1,
+          "allowed_tools_only": 2,
+          "required_tool_order": 1,
+          "abstention_match": 1,
+          "max_cost": 1
+        },
+        "harness_revision": 1,
+        "metadata": {
+          "trace_id": "kotona:2026-11-20:campaign-provenance",
+          "constructed": true
+        }
+      },
+      "event_store_gate": "verified 9 event(s)"
+    },
+    "constructed-tampered-output": {
+      "constructed": true,
+      "evidence_errors": [
+        "lab-readme: stdout digest mismatch",
+        "lab-readme: output differs from the pinned Git object"
+      ],
+      "direct_errors": [],
+      "direct_status": "FAIL",
+      "lab_status_before_evidence_gate": "CONDITIONAL",
+      "status_after_evidence_gate": "FAIL",
+      "economics": "Native model billing was not observed; budget qualification is withheld.",
+      "timing_ms": {
+        "source_and_digest_verification": 9.988978,
+        "direct_candidate_checks": 0.011568,
+        "lab_adapt_score_record_verify_rebuild": 7.133027
+      },
+      "evaluation": {
+        "run_id": "campaign-provenance:constructed-tampered-output",
+        "scenario_id": "campaign-provenance-review",
+        "scenario_version": "1.0.0",
+        "candidate": "constructed-tampered-output",
+        "status": "CONDITIONAL",
+        "aggregate_score": 0.8571428571428571,
+        "started_at": "2026-11-20T20:00:49.342201+00:00",
+        "completed_at": "2026-11-20T20:00:49.342267+00:00",
+        "scores": [
+          {
+            "check_id": "provenance-facts",
+            "check_type": "required_fact_coverage",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts present",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "three-read-citations",
+            "check_type": "required_evidence_recall",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required evidence references present",
+            "details": {
+              "required": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "found": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "missing": [],
+              "actual": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ]
+            }
+          },
+          {
+            "check_id": "facts-have-citations",
+            "check_type": "required_fact_citations",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts tied to citations",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "declared-reads-only",
+            "check_type": "allowed_tools_only",
+            "scorer_revision": 2,
+            "dimension": "mechanism",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "All tools were inside the allowlist",
+            "details": {
+              "allowed": [
+                "git.read.lab-generator",
+                "git.read.lab-readme",
+                "git.read.site-project"
+              ],
+              "used": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "violations": []
+            }
+          },
+          {
+            "check_id": "required-read-order",
+            "check_type": "required_tool_order",
+            "scorer_revision": 1,
+            "dimension": "mechanism",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "Matched 3/3 required ordered tools",
+            "details": {
+              "required": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "actual": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "missing_suffix": []
+            }
+          },
+          {
+            "check_id": "answer-required",
+            "check_type": "abstention_match",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "Abstention matched expected=False",
+            "details": {
+              "expected": false,
+              "actual": false
+            }
+          },
+          {
+            "check_id": "billing-observed-within-ceiling",
+            "check_type": "max_cost",
+            "scorer_revision": 1,
+            "dimension": "economics",
+            "score": 0.0,
+            "passed": false,
+            "hard_gate": false,
+            "summary": "Metric cost_usd was not reported",
+            "details": {
+              "metric": "cost_usd",
+              "maximum": 1.0,
+              "actual": null
+            }
+          }
+        ],
+        "scorer_revisions": {
+          "required_fact_coverage": 1,
+          "required_evidence_recall": 1,
+          "required_fact_citations": 1,
+          "allowed_tools_only": 2,
+          "required_tool_order": 1,
+          "abstention_match": 1,
+          "max_cost": 1
+        },
+        "harness_revision": 1,
+        "metadata": {
+          "trace_id": "kotona:2026-11-20:campaign-provenance",
+          "constructed": true
+        }
+      },
+      "event_store_gate": "verified 9 event(s)"
+    },
+    "constructed-empty-trace": {
+      "constructed": true,
+      "evidence_errors": [
+        "required public reads are missing or out of order"
+      ],
+      "direct_errors": [
+        "required public reads are missing or out of order"
+      ],
+      "direct_status": "FAIL",
+      "lab_status_before_evidence_gate": "FAIL",
+      "status_after_evidence_gate": "FAIL",
+      "economics": "Native model billing was not observed; budget qualification is withheld.",
+      "timing_ms": {
+        "source_and_digest_verification": 0.003745,
+        "direct_candidate_checks": 0.010698,
+        "lab_adapt_score_record_verify_rebuild": 8.390848
+      },
+      "evaluation": {
+        "run_id": "campaign-provenance:constructed-empty-trace",
+        "scenario_id": "campaign-provenance-review",
+        "scenario_version": "1.0.0",
+        "candidate": "constructed-empty-trace",
+        "status": "FAIL",
+        "aggregate_score": 0.5714285714285714,
+        "started_at": "2026-11-20T20:00:49.350131+00:00",
+        "completed_at": "2026-11-20T20:00:49.350227+00:00",
+        "scores": [
+          {
+            "check_id": "provenance-facts",
+            "check_type": "required_fact_coverage",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts present",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "three-read-citations",
+            "check_type": "required_evidence_recall",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required evidence references present",
+            "details": {
+              "required": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "found": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ],
+              "missing": [],
+              "actual": [
+                "public-read:001",
+                "public-read:002",
+                "public-read:003"
+              ]
+            }
+          },
+          {
+            "check_id": "facts-have-citations",
+            "check_type": "required_fact_citations",
+            "scorer_revision": 1,
+            "dimension": "authority",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "3/3 required facts tied to citations",
+            "details": {
+              "required": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "found": [
+                "campaign outputs are regenerable fixtures",
+                "the directory date names case authorship, not a historical score",
+                "the project page should distinguish fixture rebuilds from retained run evidence"
+              ],
+              "missing": []
+            }
+          },
+          {
+            "check_id": "declared-reads-only",
+            "check_type": "allowed_tools_only",
+            "scorer_revision": 2,
+            "dimension": "mechanism",
+            "score": 0.0,
+            "passed": false,
+            "hard_gate": true,
+            "summary": "No tool use was observed; allowlist compliance is unestablished",
+            "details": {
+              "allowed": [
+                "git.read.lab-generator",
+                "git.read.lab-readme",
+                "git.read.site-project"
+              ],
+              "used": [],
+              "violations": [],
+              "empty_subject": true
+            }
+          },
+          {
+            "check_id": "required-read-order",
+            "check_type": "required_tool_order",
+            "scorer_revision": 1,
+            "dimension": "mechanism",
+            "score": 0.0,
+            "passed": false,
+            "hard_gate": true,
+            "summary": "Matched 0/3 required ordered tools",
+            "details": {
+              "required": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ],
+              "actual": [],
+              "missing_suffix": [
+                "git.read.lab-readme",
+                "git.read.lab-generator",
+                "git.read.site-project"
+              ]
+            }
+          },
+          {
+            "check_id": "answer-required",
+            "check_type": "abstention_match",
+            "scorer_revision": 1,
+            "dimension": "quality",
+            "score": 1.0,
+            "passed": true,
+            "hard_gate": true,
+            "summary": "Abstention matched expected=False",
+            "details": {
+              "expected": false,
+              "actual": false
+            }
+          },
+          {
+            "check_id": "billing-observed-within-ceiling",
+            "check_type": "max_cost",
+            "scorer_revision": 1,
+            "dimension": "economics",
+            "score": 0.0,
+            "passed": false,
+            "hard_gate": false,
+            "summary": "Metric cost_usd was not reported",
+            "details": {
+              "metric": "cost_usd",
+              "maximum": 1.0,
+              "actual": null
+            }
+          }
+        ],
+        "scorer_revisions": {
+          "required_fact_coverage": 1,
+          "required_evidence_recall": 1,
+          "required_fact_citations": 1,
+          "allowed_tools_only": 2,
+          "required_tool_order": 1,
+          "abstention_match": 1,
+          "max_cost": 1
+        },
+        "harness_revision": 1,
+        "metadata": {
+          "trace_id": "kotona:2026-11-20:campaign-provenance",
+          "constructed": true
+        }
+      },
+      "event_store_gate": "verified 9 event(s)"
+    }
+  }
+}

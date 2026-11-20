@@ -122,11 +122,14 @@ and `docs/templates/post-template.md` for the authoring contract.
 ### Homepage selection
 
 The opening selection is rebuilt from published current notes and published
-projects. Notes enter by `lastRevised`; projects enter by `lastVerified`. The
-date is labelled `Published`, `Revised`, or `Verified`, preserving what changed
-and the project's stated evidence scope. Equal change dates prefer newer
-original publications, then title and stable identity. Drafts and non-current
-notes are excluded in development as well as production.
+projects. Notes enter by `lastRevised`; projects enter by `lastVerified`, unless
+a later material revision has its own `revisionSummary`. The date is labelled
+`Published`, `Revised`, or `Checked`, preserving what changed and the project's
+stated evidence scope. A material revision's summary explains that change on the
+homepage, document and log, and travels in the reference index and Markdown.
+Equal change dates prefer newer original publications, then title and stable
+identity. Drafts and non-current notes are excluded in development as well as
+production.
 
 When publishing or substantively revising several notes on one day, record the
 actual instants in `published` and `lastRevised` with an explicit offset, for
@@ -136,10 +139,12 @@ fallback above. Do not invent retrospective times to choose a lead. Displayed
 dates use `Europe/Helsinki`, including during UTC builds; ordering retains the
 full instant. Project dates keep their existing date-only freshness contract.
 
-Record a substantive note change in `lastRevised` and an actual project review
-in `lastVerified`; do not advance either date for a rebuild, formatting change,
-or homepage placement. The page needs no second list of recent work. Durable
-reading routes are separate from this dated selection.
+Record a substantive document change in `lastRevised` and an actual project
+review in `lastVerified`; do not advance either date for a rebuild, formatting
+change, or homepage placement. An editorial revision does not renew an earlier
+evidence check. The page needs no second list of recent work. Durable reading
+routes and the invitation into the Decimal Iron exhibit are separate from this
+dated selection.
 
 The profile, interactive showcase, and Vuoro site share one `relatedSites`
 definition in `src/site.ts`. The header's native `Elsewhere` disclosure and the
@@ -195,7 +200,9 @@ that image instead. Generated files live under `public/og/generated/` and are
 deliberately ignored because the content metadata is their source of truth.
 
 Published project pages must also keep `lastVerified` current. The freshness
-check enforces date chronology and a maximum verification age of 90 days.
+check requires publication on or before both revision and evidence-review dates,
+refuses future dates, and limits evidence age to 90 days. Revision and review
+may occur in either order; only `lastVerified` determines evidence age.
 
 ## Publication boundary
 
