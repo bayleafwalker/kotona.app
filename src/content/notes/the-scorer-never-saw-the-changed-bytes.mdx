@@ -139,9 +139,11 @@ left alone. The adapter retained read identifiers and tool identities but
 discarded stdout, stderr, exit code, timestamps and digests from the compact
 trajectory. The Lab consequently produced the same hard-gate results.
 
-A separate check compared each recorded output both with its digest and with the
-actual file at the pinned Git commit. That check rejected the changed bytes. Its
-refusal remains visible beside the inner scorer's verdict in the
+The source verifier reported two failures for the added line. The recorded
+stdout digest no longer matched, and stdout differed from the file at the pinned
+Git commit. Recomputing the digest would clear the first check while the pinned
+source comparison would still reject the altered output. Both failures appear
+beside the inner scorer's verdict in the
 [retained results](/evidence/acceptance-lab/2026-11-20-campaign-provenance/results.json).
 The wrapper must enforce that refusal before a downstream consumer uses the
 score.
@@ -194,7 +196,9 @@ retain their original times and identifiers. These hashes detect inconsistency
 relative to the published record; a publisher able to rewrite both record and
 manifest can still rewrite the story. They provide no external signature.
 
-The next useful proof is a second task with an actual failed tool call and a
-runner observation contract that retains its result and billing. Expanding the
-candidate schema should follow that evidence, including which fields its
-consumer needs to verify before accepting a score.
+This replay requires every declared read to exit successfully. A second task
+could record a failed read followed by a successful retry. Keep both outcomes in
+order and require the answer to cite the successful read. That would test
+whether the runner and scorer can distinguish a recovered task from one that
+never obtained the required evidence. Record provider billing separately so the
+budget check can use an observed cost.
