@@ -71,7 +71,7 @@ test("rejects stale and future verification dates", () => {
   assert.match(future.issues.join("\n"), /is after as-of date/);
 });
 
-test("requires real dates in published, lastRevised, and lastVerified order", () => {
+test("requires real revision and evidence dates on or after publication", () => {
   const missing = projectFrontmatter().replace("lastRevised: 2026-04-14\n", "");
   const missingResult = checkProjectSource(missing, {
     filePath: "missing.md",
@@ -108,8 +108,37 @@ test("requires real dates in published, lastRevised, and lastVerified order", ()
   );
   assert.match(
     chronologyResult.issues.join("\n"),
-    /lastRevised .* after lastVerified/,
+    /published .* after lastVerified/,
   );
+});
+
+test("a later editorial revision cannot renew the evidence freshness window", () => {
+  const current = checkProjectSource(
+    projectFrontmatter({ lastRevised: "2026-07-13" }),
+    { filePath: "revised.md", asOf: parseDateOnly("2026-07-13") },
+  );
+  assert.deepEqual(current.issues, []);
+  assert.equal(current.ageDays, 90);
+
+  const stale = checkProjectSource(
+    projectFrontmatter({ lastRevised: "2026-07-14" }),
+    { filePath: "revised.md", asOf: parseDateOnly("2026-07-14") },
+  );
+  assert.equal(stale.ageDays, 91);
+  assert.match(stale.issues.join("\n"), /lastVerified .* 91 days old/);
+});
+
+test("an independent publication or revision date cannot be in the future", () => {
+  for (const field of ["published", "lastRevised"]) {
+    const result = checkProjectSource(
+      projectFrontmatter({ [field]: "2026-07-14" }),
+      { filePath: "future.md", asOf: parseDateOnly("2026-07-13") },
+    );
+    assert.match(
+      result.issues.join("\n"),
+      new RegExp(`${field} .* is after as-of date`),
+    );
+  }
 });
 
 test("CLI --as-of deterministically controls the freshness decision", async (t) => {

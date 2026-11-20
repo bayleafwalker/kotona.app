@@ -121,20 +121,26 @@ export function checkProjectSource(
     }
   }
 
-  if (dates.published && dates.lastRevised) {
-    if (dates.published.epochDay > dates.lastRevised.epochDay) {
+  // Editorial revision and evidence review are independent events. Requiring
+  // a new review date for a later edit would reward invented evidence freshness.
+  for (const field of ["lastRevised", "lastVerified"]) {
+    if (
+      dates.published &&
+      dates[field] &&
+      dates.published.epochDay > dates[field].epochDay
+    ) {
       issues.push(
         `${filePath}: published (${dates.published.value}) must not be after ` +
-          `lastRevised (${dates.lastRevised.value})`,
+          `${field} (${dates[field].value})`,
       );
     }
   }
 
-  if (dates.lastRevised && dates.lastVerified) {
-    if (dates.lastRevised.epochDay > dates.lastVerified.epochDay) {
+  for (const field of REQUIRED_DATE_FIELDS) {
+    if (dates[field] && dates[field].epochDay > asOf.epochDay) {
       issues.push(
-        `${filePath}: lastRevised (${dates.lastRevised.value}) must not be after ` +
-          `lastVerified (${dates.lastVerified.value})`,
+        `${filePath}: ${field} (${dates[field].value}) is after ` +
+          `as-of date (${asOf.value})`,
       );
     }
   }
@@ -143,12 +149,7 @@ export function checkProjectSource(
   if (dates.lastVerified) {
     ageDays = asOf.epochDay - dates.lastVerified.epochDay;
 
-    if (ageDays < 0) {
-      issues.push(
-        `${filePath}: lastVerified (${dates.lastVerified.value}) is after ` +
-          `as-of date (${asOf.value})`,
-      );
-    } else if (ageDays > maxAgeDays) {
+    if (ageDays > maxAgeDays) {
       issues.push(
         `${filePath}: lastVerified (${dates.lastVerified.value}) is ${ageDays} days old ` +
           `as of ${asOf.value}; maximum is ${maxAgeDays} days`,

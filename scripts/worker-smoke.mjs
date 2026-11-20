@@ -918,7 +918,7 @@ async function runChecks(baseUrl) {
     assertIncludes(llms.body, "## Vocabulary", "llms.txt vocabulary section");
     assertIncludes(
       llms.body,
-      "- Vuoro: The public label for this family",
+      "- Vuoro: The portable work, evidence and acceptance contracts composed from separately owned workflow tools.",
       "llms.txt vocabulary entry",
     );
 

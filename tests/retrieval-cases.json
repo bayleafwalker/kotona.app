@@ -13,15 +13,18 @@
     ]
   },
   {
-    "id": "structured-sprint-authority",
-    "question": "Why did agents editing shared Markdown sprint files lead to schema-enforced sprint state, and which project now owns that authority?",
+    "id": "vuoro-current-work-authority",
+    "question": "Which project preserves work identity, evidence and acceptance when an agent is replaced, and which tools currently own work, knowledge and execution?",
     "expectedPath": "/projects/vuoro/",
     "maxRank": 1,
     "requiredPhrases": [
       "## Evidence",
-      "CLI the write authority",
-      "sprintctl owns sprints",
-      "Known limitation"
+      "Sprintctl owns work and its acceptance decision",
+      "retains work lifecycle and acceptance authority",
+      "owns configured execution, admission and result access",
+      "Known limitation",
+      "It did not rerun settlement",
+      "Historical architecture and communication paths"
     ]
   },
   {
