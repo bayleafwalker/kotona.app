@@ -199,6 +199,10 @@ main {
   text-decoration: none;
 }
 
+.site-nav-label-short {
+  display: none;
+}
+
 .site-nav a:hover,
 .site-nav a.is-active {
   color: var(--text);
@@ -2443,6 +2447,28 @@ main {
   .related-sites--footer {
     grid-template-columns: 1fr;
     gap: 0.65rem;
+  }
+}
+
+/* The compact label keeps all six destinations on one row at 320px. The
+   accessible name stays "About this site", and every target stays 44px tall
+   and wide; only the space between targets becomes smaller. */
+@media (max-width: 360px) {
+  .site-nav {
+    gap: 0.125rem;
+  }
+
+  .site-nav a {
+    min-width: 2.75rem;
+    justify-content: center;
+  }
+
+  .site-nav-label-full {
+    display: none;
+  }
+
+  .site-nav-label-short {
+    display: inline;
   }
 }
 

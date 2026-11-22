@@ -28,8 +28,18 @@ const isCurrentPage = (href: string) => currentPath === href;
                 href={item.href}
                 class:list={{ "is-active": isSectionActive(item.href) }}
                 aria-current={isCurrentPage(item.href) ? "page" : undefined}
+                aria-label={item.href === "/about/" ? item.label : undefined}
               >
-                {item.label}
+                {item.href === "/about/" ? (
+                  <>
+                    <span class="site-nav-label-full">{item.label}</span>
+                    <span class="site-nav-label-short" aria-hidden="true">
+                      About
+                    </span>
+                  </>
+                ) : (
+                  item.label
+                )}
               </a>
             </li>
           ))

@@ -71,15 +71,18 @@ those projects use each other's runtimes.
 
 Retired nodes remain in their original region and appear only with history
 enabled or through a historical route. Edges touching them must be historical.
-Retirement, historical maturity, and historical basis must agree so a partial
-metadata edit cannot quietly put the old cockpit back into the current map.
+Relationships can also be historical while both endpoint systems remain current;
+these stay behind the same history control. Retirement, historical maturity, and
+historical basis must agree so a partial metadata edit cannot quietly put the
+old cockpit back into the current map.
 
 ## Routes, backlinks, and layout
 
 Routes are curated reading paths through declared nodes and relationships. They
 can compare separate systems; they are not necessarily end-to-end execution
 traces. Their summaries state that scope. Each route must contain the endpoints
-of its displayed edges, and must opt into history if it names a retired node.
+of its displayed edges, and must opt into history if it names a retired node or
+includes a historical relationship.
 
 `getAtlasMentions` returns both nodes and edges citing an exact collection/id.
 This lets a note link directly to the interface it explains, even when no node

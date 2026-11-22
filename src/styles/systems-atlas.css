@@ -1,8 +1,12 @@
-.atlas-intro {
+.page-intro.atlas-intro {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 3rem;
   align-items: end;
+}
+
+.page-intro.atlas-intro > * {
+  grid-column: auto;
 }
 
 .atlas-intro .page-copy {
@@ -705,7 +709,7 @@
 }
 
 @media (max-width: 1100px) {
-  .atlas-intro {
+  .page-intro.atlas-intro {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
