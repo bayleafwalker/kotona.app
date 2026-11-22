@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 
 import ContentToc from "../../components/ContentToc.astro";
+import AtlasContext from "../../components/AtlasContext.astro";
 import ReferenceActions from "../../components/ReferenceActions.astro";
 import RevisionSummary from "../../components/RevisionSummary.astro";
 import AnnotatedText from "../../components/AnnotatedText.astro";
@@ -106,6 +107,7 @@ const relatedLinks = [
         </p>
 
         <TagList tags={projectTags(entry.data)} />
+        <AtlasContext collection="projects" id={entry.id} />
 
         {
           relatedLinks.length > 0 ? (

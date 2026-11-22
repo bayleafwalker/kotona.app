@@ -360,6 +360,7 @@ async function runChecks(baseUrl) {
       "/notes/schema-on-split/",
       "/notes/intelligence-has-a-lifecycle/",
       "/explore/",
+      "/map/",
     ]) {
       const { body } = await request(path);
       const refusedScripts = [...body.matchAll(/<script\b([^>]*)>/gi)]
@@ -558,6 +559,50 @@ async function runChecks(baseUrl) {
         (node) => Number.isInteger(node.x) && Number.isInteger(node.y),
       ),
       "knowledge graph contains non-deterministic coordinates",
+    );
+  });
+
+  await check("systems atlas and its public graph agree", async () => {
+    const map = await request("/map/");
+    assertEqual(map.response.status, 200, "systems atlas status");
+    assertIncludes(map.body, "data-systems-atlas", "systems atlas root");
+    assertIncludes(map.body, 'id="systems-index"', "systems atlas text index");
+
+    const response = await request("/atlas.json");
+    assertEqual(response.response.status, 200, "systems atlas data status");
+    assertContentType(response.response, "application/json");
+    const atlas = JSON.parse(response.body);
+    assertEqual(atlas.version, 1, "systems atlas data version");
+    assert(atlas.nodes.length > 0, "systems atlas contains no systems");
+    assert(atlas.edges.length > 0, "systems atlas contains no relationships");
+    for (const node of atlas.nodes) {
+      assertIncludes(
+        map.body,
+        `id="node-${node.id}"`,
+        `${node.id} text record`,
+      );
+      for (const source of node.sources) {
+        assertIncludes(
+          map.body,
+          `href="${source.href}"`,
+          `${node.id} source link`,
+        );
+      }
+    }
+    for (const edge of atlas.edges) {
+      assertIncludes(
+        map.body,
+        `id="edge-${edge.id}"`,
+        `${edge.id} text record`,
+      );
+    }
+
+    const discovery = await request("/llms.txt");
+    assertIncludes(discovery.body, "/map/", "systems atlas discovery");
+    assertIncludes(
+      discovery.body,
+      "/atlas.json",
+      "systems atlas data discovery",
     );
   });
 

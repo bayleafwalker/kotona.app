@@ -1,0 +1,79 @@
+---
+import { readSystemsAtlas } from "../lib/read-systems-atlas";
+import { getAtlasMentions } from "../lib/systems-atlas";
+
+type Props = {
+  collection: "notes" | "projects";
+  id: string;
+};
+
+const { collection, id } = Astro.props;
+const atlas = await readSystemsAtlas();
+const mentions = getAtlasMentions(atlas, collection, id);
+const titles = new Map(atlas.nodes.map((node) => [node.id, node.title]));
+const links = [
+  ...mentions.nodes.map((node) => ({
+    href: `/map/#node-${node.id}`,
+    label: node.title,
+  })),
+  ...mentions.edges.map((edge) => ({
+    href: `/map/#edge-${edge.id}`,
+    label: `${titles.get(edge.from)} → ${titles.get(edge.to)}: ${edge.label}`,
+  })),
+];
+---
+
+{
+  links.length > 0 && (
+    <details class="atlas-context" data-atlas-context>
+      <summary>See where this fits</summary>
+      <ul aria-label="Systems and relationships on the map">
+        {links.map((link) => (
+          <li>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  )
+}
+
+<style>
+  .atlas-context {
+    margin-top: 1.25rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+
+  .atlas-context summary {
+    width: fit-content;
+    padding: 0.5rem 0;
+    color: var(--accent);
+    cursor: pointer;
+    text-underline-offset: 0.2em;
+  }
+
+  .atlas-context summary:hover {
+    text-decoration: underline;
+  }
+
+  .atlas-context ul {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+  }
+
+  .atlas-context a {
+    overflow-wrap: anywhere;
+  }
+
+  @media (pointer: coarse) {
+    .atlas-context summary,
+    .atlas-context a {
+      display: inline-block;
+      padding-block: 0.65rem;
+    }
+  }
+</style>

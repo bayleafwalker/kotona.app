@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+
+import SystemsAtlas from "../components/SystemsAtlas.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { buildSystemsAtlas } from "../lib/systems-atlas";
+import "../styles/systems-atlas.css";
+
+export const prerender = true;
+
+const atlas = buildSystemsAtlas([
+  ...(await getCollection("notes")),
+  ...(await getCollection("projects")),
+]);
+---
+
+<BaseLayout
+  title="Systems atlas"
+  description="Explore the projects, services, tools, and ideas behind Kotona. Follow their interfaces, operating foundations, and working notes."
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Explore", path: "/explore/" },
+    { name: "Systems atlas", path: "/map/" },
+  ]}
+>
+  <section class="page-intro atlas-intro">
+    <div>
+      <p class="eyebrow"><a href="/explore/">Explore</a> / Systems</p>
+      <h1 class="page-title">The systems atlas.</h1>
+      <p class="page-copy">
+        What gets built, what keeps it running, and the ideas that connect it.
+        Follow a project into its interfaces, foundations, and working notes.
+      </p>
+    </div>
+    <div class="atlas-intro-side">
+      <p>
+        A public architectural account.<br />Source, proposals, and history stay
+        distinct.
+      </p>
+      <a href="/explore/">Explore the notes →</a>
+    </div>
+  </section>
+  <section class="page-section atlas-page-section" aria-label="Systems atlas">
+    <SystemsAtlas atlas={atlas} />
+  </section>
+</BaseLayout>
