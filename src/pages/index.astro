@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 
 import HomeEntry from "../components/HomeEntry.astro";
+import AtlasTeaser from "../components/AtlasTeaser.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   formatDate,
@@ -126,6 +127,8 @@ const projectRecords = sortByLastVerifiedAndTitle(getPublishedEntries(projects))
         )
       }
     </section>
+
+    <AtlasTeaser />
 
     {
       readingRoutes.length > 0 && (

@@ -1,0 +1,476 @@
+---
+import type { SystemsAtlas } from "../lib/systems-atlas";
+import {
+  atlasEdgePath,
+  atlasLabelLines,
+  atlasViewBox,
+  buildAtlasLayout,
+} from "../lib/systems-atlas-layout";
+
+type Props = { atlas: SystemsAtlas };
+const { atlas } = Astro.props;
+const layout = buildAtlasLayout(atlas);
+const byId = new Map(atlas.nodes.map((node) => [node.id, node]));
+// Short interfaces must remain clickable where a longer branch shares their
+// departure. Paint the long connections first, keeping the short hit target on
+// top and the long connection selectable along its remaining segments.
+const connectionSpan = (edge: SystemsAtlas["edges"][number]) => {
+  const from = layout.nodes.get(edge.from)!;
+  const to = layout.nodes.get(edge.to)!;
+  return Math.abs(to.x - from.x) + Math.abs(to.y - from.y);
+};
+const paintEdges = [...atlas.edges].sort(
+  (left, right) =>
+    connectionSpan(right) - connectionSpan(left) ||
+    left.id.localeCompare(right.id),
+);
+const json = JSON.stringify(atlas).replace(/</g, "\\u003c");
+const stewardship = {
+  built: "Built here",
+  operated: "Operated here",
+  used: "Used here",
+  explored: "Explored here",
+};
+const sourceLabel = (
+  source: SystemsAtlas["nodes"][number]["sources"][number],
+) => (source.collection === "projects" ? "Project record" : "Working note");
+---
+
+<div class="systems-atlas" data-systems-atlas>
+  <div class="atlas-routes atlas-interactive" aria-label="Follow a question">
+    {
+      atlas.routes.map((route, index) => (
+        <button
+          class="atlas-route"
+          type="button"
+          data-route={route.id}
+          aria-pressed="false"
+        >
+          <span class="atlas-route-number">0{index + 1}</span>
+          <span>
+            <span class="atlas-route-question">{route.question}</span>
+            <span class="atlas-route-title">{route.title} →</span>
+          </span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="atlas-toolbar atlas-interactive">
+    <div class="atlas-search">
+      <label for="atlas-search">Find a system</label>
+      <div class="atlas-search-input">
+        <input
+          id="atlas-search"
+          data-atlas-search
+          type="search"
+          placeholder="Project, tool, interface, or idea"
+          autocomplete="off"
+        />
+        <button
+          type="button"
+          class="atlas-text-button"
+          data-clear-search
+          hidden
+        >
+          Clear search
+        </button>
+      </div>
+    </div>
+    <div class="atlas-region-control">
+      <label for="atlas-region">Region</label>
+      <select id="atlas-region" data-region-select>
+        <option value="">Whole landscape</option>
+        {
+          atlas.regions.map((region) => (
+            <option value={region.id}>{region.title}</option>
+          ))
+        }
+      </select>
+    </div>
+    <label class="atlas-history-control">
+      <input type="checkbox" data-atlas-history />
+      Show history
+    </label>
+    <button type="button" class="atlas-reset" data-atlas-reset>Whole map</button
+    >
+  </div>
+
+  <div class="atlas-map-caption">
+    <p data-atlas-result aria-live="polite">
+      {atlas.nodes.filter((node) => node.lifecycle !== "retired").length} systems
+      across {atlas.regions.length} regions
+    </p>
+    <a class="atlas-index-jump" href="#systems-index">Browse the index ↓</a>
+  </div>
+
+  <div class="atlas-graphic">
+    <svg
+      viewBox={atlasViewBox}
+      data-atlas-canvas
+      role="group"
+      aria-labelledby="atlas-graphic-title atlas-graphic-description"
+    >
+      <title id="atlas-graphic-title">
+        Projects and systems in the Kotona estate
+      </title>
+      <desc id="atlas-graphic-description">
+        Six stable regions connect projects, clients, execution, household
+        systems, infrastructure, and experiments. Select a system or a
+        connection for its explanation. The text index contains the same records
+        and links.
+      </desc>
+      <defs>
+        <marker
+          id="atlas-arrow"
+          markerWidth="7"
+          markerHeight="7"
+          refX="5.5"
+          refY="3.5"
+          orient="auto"
+          markerUnits="userSpaceOnUse"
+          ><path d="M 1 1 L 5.5 3.5 L 1 6"></path></marker
+        >
+      </defs>
+      <g class="atlas-territories">
+        {
+          atlas.regions.map((region, index) => {
+            const position = layout.regions.get(region.id)!;
+            return (
+              <g data-atlas-region={region.id}>
+                <rect
+                  class="atlas-territory"
+                  x={position.x}
+                  y={position.y}
+                  width={position.width}
+                  height={position.height}
+                  rx="7"
+                />
+                <text
+                  class="atlas-territory-index"
+                  x={position.x + 22}
+                  y={position.y + 28}
+                >
+                  0{index + 1}
+                </text>
+                <a href={`#region-${region.id}`} data-region-focus={region.id}>
+                  <text
+                    class="atlas-territory-title"
+                    x={position.x + 22}
+                    y={position.y + 57}
+                  >
+                    {region.title}
+                  </text>
+                  <text
+                    class="atlas-territory-open"
+                    x={position.x + position.width - 24}
+                    y={position.y + 56}
+                    text-anchor="end"
+                  >
+                    ↗
+                  </text>
+                </a>
+              </g>
+            );
+          })
+        }
+      </g>
+      <g class="atlas-connections">
+        {
+          paintEdges.map((edge) => (
+            <a
+              href={`#edge-${edge.id}`}
+              data-atlas-edge={edge.id}
+              data-kind={edge.kind}
+              data-state={edge.state}
+              data-in-route="false"
+              data-selected="false"
+              aria-label={`${byId.get(edge.from)!.title}: ${edge.label}: ${byId.get(edge.to)!.title}`}
+            >
+              <title>
+                {edge.label}: {edge.summary}
+              </title>
+              <path
+                class="atlas-edge-hit"
+                d={atlasEdgePath(atlas, edge, layout)}
+              />
+              <path
+                class="atlas-edge-line"
+                d={atlasEdgePath(atlas, edge, layout)}
+                marker-end="url(#atlas-arrow)"
+              />
+            </a>
+          ))
+        }
+      </g>
+      <g class="atlas-system-nodes">
+        {
+          atlas.nodes.map((node) => {
+            const position = layout.nodes.get(node.id)!;
+            const lines = atlasLabelLines(node.title);
+            return (
+              <a
+                href={`#node-${node.id}`}
+                data-atlas-node={node.id}
+                data-region={node.region}
+                data-lifecycle={node.lifecycle}
+                data-maturity={node.maturity}
+                data-stewardship={node.stewardship}
+                data-kind={node.kind}
+                data-in-route="false"
+                data-selected="false"
+                aria-label={`${node.title}: ${node.summary}`}
+              >
+                <title>
+                  {node.title} — {node.summary}
+                </title>
+                <rect
+                  class="atlas-node-shape"
+                  x={position.x}
+                  y={position.y}
+                  width={position.width}
+                  height={position.height}
+                  rx={
+                    node.kind === "environment"
+                      ? 0
+                      : node.kind === "interface"
+                        ? 15
+                        : 4
+                  }
+                />
+                <line
+                  class="atlas-node-mark"
+                  x1={position.x + 1}
+                  x2={position.x + 1}
+                  y1={position.y + 12}
+                  y2={position.y + position.height - 12}
+                />
+                <text
+                  class="atlas-node-title"
+                  x={position.x + 13}
+                  y={
+                    position.y +
+                    position.height / 2 -
+                    ((lines.length - 1) * 18) / 2 +
+                    5
+                  }
+                >
+                  {lines.map((line, index) => (
+                    <tspan x={position.x + 13} dy={index === 0 ? 0 : 18}>
+                      {line}
+                    </tspan>
+                  ))}
+                </text>
+              </a>
+            );
+          })
+        }
+      </g>
+    </svg>
+  </div>
+
+  <div class="atlas-legend">
+    <span
+      ><i class="atlas-key-technical" aria-hidden="true"></i> Technical relationship</span
+    >
+    <span
+      ><i class="atlas-key-proposed" aria-hidden="true"></i> Proposed connection</span
+    >
+    <span
+      ><i class="atlas-key-concept" aria-hidden="true"></i> Shared idea or history</span
+    >
+    <span class="atlas-legend-hint"
+      >Select a connection to read its meaning.</span
+    >
+  </div>
+
+  <section
+    class="atlas-inspector atlas-interactive"
+    data-atlas-inspector
+    aria-labelledby="atlas-inspector-title"
+  >
+    <div class="atlas-inspector-heading">
+      <p class="eyebrow" data-inspector-kicker>The landscape</p>
+      <h2 id="atlas-inspector-title" data-inspector-title aria-live="polite">
+        Choose a system.
+      </h2>
+      <p data-inspector-meta></p>
+      <button
+        type="button"
+        class="atlas-text-button atlas-return"
+        data-atlas-return
+      >
+        <span class="atlas-return-map">Back to the map ↑</span>
+        <span class="atlas-return-index">Browse other systems ↓</span>
+      </button>
+    </div>
+    <div data-inspector-body>
+      <p>
+        Open a project, follow a connection, or use a question to find a route
+        through the map.
+      </p>
+    </div>
+  </section>
+
+  <section
+    class="atlas-index"
+    id="systems-index"
+    aria-labelledby="systems-index-title"
+  >
+    <div class="atlas-index-heading">
+      <div>
+        <p class="eyebrow">The same map, in words</p>
+        <h2 id="systems-index-title">Browse the systems.</h2>
+      </div>
+      <a href="/atlas.json">Architecture data ↗</a>
+    </div>
+    <div class="atlas-index-regions">
+      {
+        atlas.regions.map((region) => (
+          <section
+            class="atlas-index-region"
+            data-index-region={region.id}
+            id={`region-${region.id}`}
+          >
+            <h3>{region.title}</h3>
+            <p class="atlas-index-region-summary">{region.summary}</p>
+            <div class="atlas-index-items">
+              {atlas.nodes
+                .filter((node) => node.region === region.id)
+                .map((node) => (
+                  <details
+                    id={`node-${node.id}`}
+                    class="atlas-index-item"
+                    data-atlas-item={node.id}
+                    data-lifecycle={node.lifecycle}
+                    data-in-route="false"
+                    data-selected="false"
+                  >
+                    <summary>
+                      <span>{node.title}</span>
+                      <span class="atlas-index-state">
+                        {node.lifecycle === "retired"
+                          ? "Retired"
+                          : node.maturity}
+                      </span>
+                    </summary>
+                    <div class="atlas-index-item-body">
+                      <p>{node.summary}</p>
+                      <p class="atlas-item-meta">
+                        {stewardship[node.stewardship]} · {node.kind} ·{" "}
+                        {node.lifecycle}
+                      </p>
+                      <button
+                        type="button"
+                        class="atlas-text-button atlas-interactive"
+                        data-node-select={node.id}
+                      >
+                        Inspect {node.title} →
+                      </button>
+                      <p class="atlas-item-basis">{node.basis.summary}</p>
+                      <ul class="atlas-source-links">
+                        {node.sources.map((source) => (
+                          <li>
+                            <a href={source.href}>{source.title}</a>
+                            <span>{sourceLabel(source)}</span>
+                          </li>
+                        ))}
+                        {node.links.map((link) => (
+                          <li>
+                            <a href={link.href}>{link.label}</a>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul class="atlas-index-relations">
+                        {atlas.edges
+                          .filter(
+                            (edge) =>
+                              edge.from === node.id || edge.to === node.id,
+                          )
+                          .map((edge) => (
+                            <li>
+                              <a
+                                href={`#edge-${edge.id}`}
+                                data-edge-select={edge.id}
+                              >
+                                {edge.label} →{" "}
+                                {
+                                  byId.get(
+                                    edge.from === node.id ? edge.to : edge.from,
+                                  )!.title
+                                }
+                              </a>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  </details>
+                ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="atlas-reference" aria-label="Routes and connections">
+    <details>
+      <summary>Read the routes and connections</summary>
+      <div class="atlas-reference-content">
+        {
+          atlas.routes.map((route) => (
+            <section id={`route-${route.id}`}>
+              <h3>{route.question}</h3>
+              <p>{route.summary}</p>
+              <ol>
+                {route.steps.map((step) => (
+                  <li>
+                    <a href={`#node-${step.nodeId}`}>{step.title}</a> —{" "}
+                    {step.summary}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+        {
+          atlas.edges.map((edge) => (
+            <section id={`edge-${edge.id}`} data-edge-reference={edge.id}>
+              <h3>
+                {byId.get(edge.from)!.title} — {edge.label} —{" "}
+                {byId.get(edge.to)!.title}
+              </h3>
+              <p>{edge.summary}</p>
+              <p class="atlas-item-meta">
+                {edge.kind} · {edge.state}
+              </p>
+              {edge.interface && (
+                <dl class="atlas-interface-fields">
+                  {Object.entries(edge.interface).map(([label, value]) => (
+                    <div>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              <ul class="atlas-source-links">
+                {edge.sources.map((source) => (
+                  <li>
+                    <a href={source.href}>{source.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </details>
+  </section>
+  <script is:inline type="application/json" data-atlas-data set:html={json} />
+</div>
+
+<script>
+  import { initializeSystemsAtlases } from "../lib/systems-atlas-client";
+  initializeSystemsAtlases();
+</script>

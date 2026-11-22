@@ -69,10 +69,11 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/path/to/chrome npm run test:browser
 ```
 
 It covers the seam between what the ranking decides and what Explore presents,
-plus the projection of checked results into each exhibit. CI provisions Chromium
-and runs it on every push and pull request; `npm run validate` still leaves it
-out, because that provisioning is per-machine locally. Run it after changing
-Explore, the knowledge map, or `src/lib/reference-ranking.js`, or an exhibit.
+the systems atlas's navigation and interface details, and the projection of
+checked results into each exhibit. CI provisions Chromium and runs it on every
+push and pull request; `npm run validate` still leaves it out, because that
+provisioning is per-machine locally. Run it after changing Explore, either map,
+shared navigation, `src/lib/reference-ranking.js`, or an exhibit.
 
 Live external-link fetching is intentionally separate from publication CI. A
 weekly and manually dispatched `external links` workflow reports third-party
@@ -152,6 +153,27 @@ footer use that definition; `/about/` describes this notebook and links to the
 separate professional profile. Both the content selection and navigation render
 without client-side JavaScript. Browser checks include phone and desktop
 screenshots retained in the CI run's `browser-review` artifact for seven days.
+
+### Systems atlas
+
+`/map/` connects the systems described by the notebook: projects, tools,
+interfaces, services, environments, and working concepts. Stable regions,
+authored question routes, and selectable relationships lead into the existing
+project records and notes. A textual explorer carries the same content on phones
+and without JavaScript. Retired work is an explicit historical layer.
+
+The public definition lives in `src/data/systems-atlas.ts`; its resolver and
+validation live in `src/lib/systems-atlas.ts`. Sources reference existing note
+and project IDs. The build rejects missing or draft references and invalid
+relationships. Project evidence dates come from those source records, while
+editorial lifecycle and conceptual placement belong to the atlas definition.
+Adding a line does not renew a source review or establish a running integration.
+
+`/atlas.json` publishes the same resolved model. It has its own version and
+leaves the document-oriented `/knowledge.json` contract unchanged. Homepage and
+Explore previews, plus contextual links from source documents, use this model.
+See [the atlas architecture](docs/architecture/systems-atlas.md) for authoring,
+validation, and rollback.
 
 ### Exhibits attached to notes
 

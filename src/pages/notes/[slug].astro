@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 
 import AnnotatedText from "../../components/AnnotatedText.astro";
+import AtlasContext from "../../components/AtlasContext.astro";
 import ContentToc from "../../components/ContentToc.astro";
 import ExplorePrompt from "../../components/ExplorePrompt.astro";
 import ExhibitEvidence from "../../components/ExhibitEvidence.astro";
@@ -204,6 +205,7 @@ const canonicalNoteUrl = new URL(
         </p>
 
         <TagList tags={entry.data.tags} />
+        <AtlasContext collection="notes" id={entry.id} />
 
         {
           entry.data.exhibit ? (

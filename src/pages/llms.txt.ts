@@ -44,6 +44,8 @@ export const GET: APIRoute = async ({ site }) => {
     "",
     `- [Home](${new URL("/", baseUrl)})`,
     `- [Explore](${new URL("/explore/", baseUrl)})`,
+    `- [Systems atlas](${new URL("/map/", baseUrl)})`,
+    `- [Systems atlas data](${new URL("/atlas.json", baseUrl)})`,
     `- [Knowledge graph data](${new URL("/knowledge.json", baseUrl)})`,
     `- [Reference catalog](${new URL("/reference-index.json", baseUrl)})`,
     `- [Projects](${new URL("/projects/", baseUrl)})`,

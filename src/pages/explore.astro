@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 
 import KnowledgeMap from "../components/KnowledgeMap.astro";
+import AtlasTeaser from "../components/AtlasTeaser.astro";
 import { knowledgeClusters } from "../data/knowledge-clusters";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { buildKnowledgeGraph } from "../lib/knowledge-map";
@@ -58,6 +59,7 @@ const searchDocuments = buildReferenceIndex(entries, {
     </p>
   </section>
   <section class="page-section">
+    <AtlasTeaser compact />
     <h2>Reading paths</h2>
     <p class="page-copy">
       The map shows relationships; these are short, ordered routes for a reader
